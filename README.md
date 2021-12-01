@@ -1,13 +1,7 @@
-Welcome! 
+This [bookdown](https://pediot.github.io/portfolio_churn_value/) is being realized as part of our last year in master's degree in economics. It aims at studying a firm's most valuable asset namely its customers. To that end, we adopt a quantitative approach based on econometrics and data analysis with a threefold purpose to : 
 
-This is a minimal example of a book based on R Markdown and **bookdown** (https://github.com/rstudio/bookdown). 
+- model a *customer portfolio* as a set of customer segments; 
+- predict and analyse customer *churn*; 
+- estimate a customer portfolio's overall *value*.
 
-This template provides a skeleton file structure that you can edit to create your book. 
-
-The contents inside the .Rmd files provide some pointers to help you get started, but feel free to also delete the content in each file and start fresh.
-
-Additional resources:
-
-The **bookdown** book: https://bookdown.org/yihui/bookdown/
-
-The **bookdown** package reference site: https://pkgs.rstudio.com/bookdown
+After having defined the subject's key concepts, we apply duration models and machine learning techniques to a [kaggle](https://www.kaggle.com/yeanzc/telco-customer-churn-ibm-dataset) dataset related to customers of a fictional telecommunications service provider (TSP).
