@@ -1,0 +1,47 @@
+```{r setup, echo=FALSE}
+knitr::opts_chunk$set(
+  fig.align = "center", 
+  echo = FALSE, 
+  message = FALSE, 
+  comment = FALSE, 
+  warning = FALSE
+)
+```
+
+# Definitions{#definitions}
+
+## How to define a customer portfolio?
+
+The notion of *portfolio* has greatly evolved before a firm's consumer base was considered as a set of portfolios. In chapter \@ref(literature) a part of the literature review depicts an evolution of the *portfolio management* notion. A customer *portfolio* can be defined as a set of customers divided into several segments (or clusters) based on similar attributes. These discriminant features can be both economic - willingness to pay, budget constraint, etc. - and sociological - gender, age, socio-professional category, etc. . The underlying objective of this segmentation is to optimally allocate the company's resources. When dealing with *customer portfolio management* (CPM), two dimensions can be considered. On the one hand, it can be assumed that a customer stays in the same segment throughout their life in the firm's *portfolio*. On the other hand, a dynamic approach can be adopted as suggested by Homburg on dynamics in customer portfolios [@MANAGING_DYNAMICS_CUSTOMER_PORTFOLIO]. In their article, the authors question the static analysis by assuming that a customer can switch between segments. They explain that one of the firm's objectives is to convert less valuable customers into
+more valuable ones. In this context, customers can also be segmented depending on their *value* to the firm and their cost to serve [@CPM_CRM], as depicted by figure \@ref(fig:cpmmat). 
+
+```{r cpmmat, fig.cap="CPM Matrix", out.height="300px", out.width="300px"}
+knitr::include_graphics(path = "./imgs/cpm_matrix.jpg")
+```
+
+## What is attrition?
+
+Customer *attrition* or churn occurs when a client discontinues using a service or a product offered by a firm. Churn analysis corresponds to measuring the *attrition* rate in the customer base of any company. However, evaluating *attrition* depends on the type of relationship between the firm and its clients. When it is defined by a contract, the customer has to inform the firm about their service termination. In the telecom industry, a consumer is required to notify their telecommunications service provider (TSP) before going to a competing company. In an opposite way, the firm/client relationship can be non-contractual. In that case, the service termination does not need to be notified. *Attrition* then becomes a latent variable and more advanced models are used to make forecasts. 
+
+## What does customer "value" mean?
+
+In *customer portfolio management*, one client's value is represented by the **customer lifetime value** (CLV). CLV is the present *value* of all future purchases made by a customer over their lifetime in the firm's portfolio, taking into account the *attrition* risk. CLV depends both on the purchase recency as well as on the purchasing rate and aims at identifying the most valuable customer groups. Formally, Gupta and Lehmann [@CUSTOMERS_ASSETS] define CLV for customer $i$ as follows: 
+$$CLV_i = \sum_{t=0}^{T_i} \frac{(p_t - c_t)r_{i,t}}{(1+a)^t} - AC_i$$
+
+with, 
+
+- $p_t$ the price paid by customer $i$ at time $t$
+- $c_t$ the cost at time $t$
+- $r_{i,t}$ the **probability that customer $i$ be active** at time $t$
+- $a$ the discount rate
+- $AC_i$ the acquisition cost of customer $i$
+- $T_i$ the duration of observation
+
+An estimation of the portfolio's overall value can be calculated through **customer equity** (CE) which amounts to the sum of all the CLVs. Since CE appears to be a good proxy of the firm's value, the profit maximization program can be rewritten as: 
+$$ 
+\begin{aligned}
+\max_{p} \quad & \textrm{CE} = \sum_{i=1}^{N} \sum_{t=0}^{T_i} \frac{(p_t - c_t)r_{i,t}}{(1+a)^t} - AC_i\\
+\textrm{s.t.} \quad & r_{i,t} \in [0, 1]\\
+  &p_t > c_t    \\
+\end{aligned}
+$$
