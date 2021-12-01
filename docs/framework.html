@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Page not found | Portfolio, Churn &amp; Customer Value</title>
+  <title>Chapter 4 Theoretical Framework | Portfolio, Churn &amp; Customer Value</title>
   <meta name="description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Page not found | Portfolio, Churn &amp; Customer Value" />
+  <meta property="og:title" content="Chapter 4 Theoretical Framework | Portfolio, Churn &amp; Customer Value" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Page not found | Portfolio, Churn &amp; Customer Value" />
+  <meta name="twitter:title" content="Chapter 4 Theoretical Framework | Portfolio, Churn &amp; Customer Value" />
   
   <meta name="twitter:description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-
+<link rel="prev" href="literature.html"/>
+<link rel="next" href="data.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -142,19 +142,95 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="page-not-found" class="section level1">
-<h1>Page not found</h1>
-<p>The page you requested cannot be found (perhaps it was moved or renamed).</p>
-<p>You may want to try searching to find the page's new location, or use
-the table of contents to find the page you are looking for.</p>
+<div id="framework" class="section level1" number="4">
+<h1><span class="header-section-number">Chapter 4</span> Theoretical Framework</h1>
+<p>This chapter presents theoretical basis of the models and the algorithms that we will use to model customer portfolios. As a customer’s lifetime in a portfolio is usually represented by the time to churn, duration models are adapted to the data we have at our disposal. Thus, it is decided to introduce standard survival techniques as well as machine learning algorithms suited to time-to-event data. Methods to estimate customer’s value are also introduced in this chapter.</p>
+<div id="duration-models" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> Duration models</h2>
+<p>According to Cameron &amp; Trivedi <span class="citation">(<a href="#ref-CAMERON_TRIVEDI" role="doc-biblioref">Cameron and Trivedi 2005</a>)</span>, duration models (also called survival models) aims at measuring the time spent in a certain state before transitioning to another state. In Econometrics,</p>
+<ul>
+<li>a <strong>state</strong> corresponds to the class in which an individual <span class="math inline">\(i\)</span> is at time <span class="math inline">\(t\)</span>.</li>
+<li>a <strong>transition</strong> is movement from one state to another.</li>
+<li>a <strong>duration</strong> measures the time spent in a certain state and is also called a <strong>spell</strong> length.</li>
+</ul>
+<p>Since measuring the time until the event is needed for multiple purposes, duration analysis is used in a variety of economic sectors as depicted by the following table.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Economic sector</th>
+<th align="center">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Macroeconomics</td>
+<td align="center">Length of an unemployment spell</td>
+</tr>
+<tr class="even">
+<td align="center">Insurance</td>
+<td align="center">Risk analysis to offer a segmented pricing</td>
+</tr>
+<tr class="odd">
+<td align="center">Engineering</td>
+<td align="center">Time until a device breaks down</td>
+</tr>
+<tr class="even">
+<td align="center">Epidemiology</td>
+<td align="center">Survival time of a virus</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>Churn analysis</strong></td>
+<td align="center"><strong>Time until a customer leave the portfolio</strong></td>
+</tr>
+</tbody>
+</table>
+<div id="censoring-and-truncation" class="section level3" number="4.1.1">
+<h3><span class="header-section-number">4.1.1</span> Censoring and Truncation</h3>
+<p>When dealing with survival data, some observations are usually <strong>censored</strong> meaning they are related to spells which are not completely observed. Duration data can also suffer from a selection bias which is called <strong>truncation</strong>.</p>
+<div id="censoring-mechanisms" class="section level4 unnumbered">
+<h4>Censoring mechanisms</h4>
+<p><strong>Left-censoring</strong> occurs when the event of interest occurs before the beginning of the observation period. For example, an individual is included in a study of duration of unemployment at <span class="math inline">\(t_0\)</span>. At that time he has already been unemployed for a period but he cannot recall exactly the duration of this period. If we observe that he finds a job again at <span class="math inline">\(t_1\)</span>, we can only deduce that the duration of unemployment is bigger than <span class="math inline">\(t_1-t_0\)</span>, this individual is left-censored. Observation 2 on figure <a href="framework.html#fig:censoring">4.1</a> is associated with a left-censored spell <span class="citation">(<a href="#ref-LIU_SCOR" role="doc-biblioref">Liu 2019</a>)</span>.</p>
+<p>A spell is considered <strong>right-censored</strong> when it is observed from time <span class="math inline">\(t_0\)</span> until a censoring time <span class="math inline">\(t_c\)</span> as illustrated by observation 1 on figure <a href="framework.html#fig:censoring">4.1</a>. For instance, the lifetime related to a customer who has not churned at the end of the observation period is right-censored. Let us note <span class="math inline">\(X_i\)</span> the duration of a complete spell and <span class="math inline">\(C_i\)</span> the duration of a right-censored spell. We also note <span class="math inline">\(T_i\)</span> the duration actually observed and <span class="math inline">\(\delta_i\)</span> the censoring indicator such that <span class="math inline">\(\delta_i = 0\)</span> if the spell is censored. Then, <span class="math inline">\((t_1, \delta_1),\dots,(t_N, \delta_N)\)</span> are the realizations of the following random variables:</p>
+<p><span class="math display">\[
+\begin{align}
+T_i &amp; = \min(X_i, C_i) \\
+\delta_i &amp; = \mathbb{1}_{X_i &lt; C_i}
+\end{align}
+\]</span></p>
+</div>
+<div id="selection-bias" class="section level4 unnumbered">
+<h4>Selection bias</h4>
+<p>Survival data suffers from a <strong>selection bias</strong> (or truncation) when only a sub-sample of the population of interest is studied. A customer entering the firm’s portfolio after the end of the study is said to be <strong>right-truncated</strong>, whereas a client who has left the portfolio before the beginning of the study is considered <strong>left-truncated</strong>. Mathematically, a random variable <span class="math inline">\(X\)</span> is truncated by a subset <span class="math inline">\(A \in \mathbb{R}^+\)</span> if instead of <span class="math inline">\(\Omega(X)\)</span>, we solely observe <span class="math inline">\(\Omega(X)\bigcap A\)</span>. On figure <a href="framework.html#fig:censoring">4.1</a>, the first and fifth observations suffers from a selection bias.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:censoring"></span>
+<img src="imgs/censoring_and_truncation.png" alt="Censored and truncated data" width="500px" height="250px" />
+<p class="caption">
+Figure 4.1: Censored and truncated data
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="ML" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Machine Learning techniques</h2>
+
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-CAMERON_TRIVEDI" class="csl-entry">
+Cameron, A. Colin, and Pravin K. Trivedi. 2005. <em>Microeconometrics: Methods and Applications</em>. Edited by Cambridge University Press.
+</div>
+<div id="ref-LIU_SCOR" class="csl-entry">
+Liu, Weinan. 2019. <span>“Inclusive Underwriting: The Case of Cardiovascular Risk Calculator.”</span> PhD thesis, ENSAE ParisTech.
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-
+<a href="literature.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Page not found | Portfolio, Churn &amp; Customer Value</title>
+  <title>Chapter 2 Definitions | Portfolio, Churn &amp; Customer Value</title>
   <meta name="description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Page not found | Portfolio, Churn &amp; Customer Value" />
+  <meta property="og:title" content="Chapter 2 Definitions | Portfolio, Churn &amp; Customer Value" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Page not found | Portfolio, Churn &amp; Customer Value" />
+  <meta name="twitter:title" content="Chapter 2 Definitions | Portfolio, Churn &amp; Customer Value" />
   
   <meta name="twitter:description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-
+<link rel="prev" href="intro.html"/>
+<link rel="next" href="literature.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -142,19 +142,66 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="page-not-found" class="section level1">
-<h1>Page not found</h1>
-<p>The page you requested cannot be found (perhaps it was moved or renamed).</p>
-<p>You may want to try searching to find the page's new location, or use
-the table of contents to find the page you are looking for.</p>
+<div id="definitions" class="section level1" number="2">
+<h1><span class="header-section-number">Chapter 2</span> Definitions</h1>
+<div id="how-to-define-a-customer-portfolio" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> How to define a customer portfolio?</h2>
+<p>The notion of <em>portfolio</em> has greatly evolved before a firm’s consumer base was considered as a set of portfolios. In chapter <a href="literature.html#literature">3</a> a part of the literature review depicts an evolution of the <em>portfolio management</em> notion. A customer <em>portfolio</em> can be defined as a set of customers divided into several segments (or clusters) based on similar attributes. These discriminant features can be both economic - willingness to pay, budget constraint, etc. - and sociological - gender, age, socio-professional category, etc. . The underlying objective of this segmentation is to optimally allocate the company’s resources. When dealing with <em>customer portfolio management</em> (CPM), two dimensions can be considered. On the one hand, it can be assumed that a customer stays in the same segment throughout their life in the firm’s <em>portfolio</em>. On the other hand, a dynamic approach can be adopted as suggested by Homburg on dynamics in customer portfolios <span class="citation">(<a href="#ref-MANAGING_DYNAMICS_CUSTOMER_PORTFOLIO" role="doc-biblioref">Homburg, Steiner, and Totzek 2009</a>)</span>. In their article, the authors question the static analysis by assuming that a customer can switch between segments. They explain that one of the firm’s objectives is to convert less valuable customers into
+more valuable ones. In this context, customers can also be segmented depending on their <em>value</em> to the firm and their cost to serve <span class="citation">(<a href="#ref-CPM_CRM" role="doc-biblioref">Thakur and Workmanb 2016</a>)</span>, as depicted by figure <a href="definitions.html#fig:cpmmat">2.1</a>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:cpmmat"></span>
+<img src="imgs/cpm_matrix.jpg" alt="CPM Matrix" width="300px" height="300px" />
+<p class="caption">
+Figure 2.1: CPM Matrix
+</p>
+</div>
+</div>
+<div id="what-is-attrition" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> What is attrition?</h2>
+<p>Customer <em>attrition</em> or churn occurs when a client discontinues using a service or a product offered by a firm. Churn analysis corresponds to measuring the <em>attrition</em> rate in the customer base of any company. However, evaluating <em>attrition</em> depends on the type of relationship between the firm and its clients. When it is defined by a contract, the customer has to inform the firm about their service termination. In the telecom industry, a consumer is required to notify their telecommunications service provider (TSP) before going to a competing company. In an opposite way, the firm/client relationship can be non-contractual. In that case, the service termination does not need to be notified. <em>Attrition</em> then becomes a latent variable and more advanced models are used to make forecasts.</p>
+</div>
+<div id="what-does-customer-value-mean" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> What does customer “value” mean?</h2>
+<p>In <em>customer portfolio management</em>, one client’s value is represented by the <strong>customer lifetime value</strong> (CLV). CLV is the present <em>value</em> of all future purchases made by a customer over their lifetime in the firm’s portfolio, taking into account the <em>attrition</em> risk. CLV depends both on the purchase recency as well as on the purchasing rate and aims at identifying the most valuable customer groups. Formally, Gupta and Lehmann <span class="citation">(<a href="#ref-CUSTOMERS_ASSETS" role="doc-biblioref">Gupta and Lehmann 2003</a>)</span> define CLV for customer <span class="math inline">\(i\)</span> as follows:
+<span class="math display">\[CLV_i = \sum_{t=0}^{T_i} \frac{(p_t - c_t)r_{i,t}}{(1+a)^t} - AC_i\]</span></p>
+<p>with,</p>
+<ul>
+<li><span class="math inline">\(p_t\)</span> the price paid by customer <span class="math inline">\(i\)</span> at time <span class="math inline">\(t\)</span></li>
+<li><span class="math inline">\(c_t\)</span> the cost at time <span class="math inline">\(t\)</span></li>
+<li><span class="math inline">\(r_{i,t}\)</span> the <strong>probability that customer <span class="math inline">\(i\)</span> be active</strong> at time <span class="math inline">\(t\)</span></li>
+<li><span class="math inline">\(a\)</span> the discount rate</li>
+<li><span class="math inline">\(AC_i\)</span> the acquisition cost of customer <span class="math inline">\(i\)</span></li>
+<li><span class="math inline">\(T_i\)</span> the duration of observation</li>
+</ul>
+<p>An estimation of the portfolio’s overall value can be calculated through <strong>customer equity</strong> (CE) which amounts to the sum of all the CLVs. Since CE appears to be a good proxy of the firm’s value, the profit maximization program can be rewritten as:
+<span class="math display">\[ 
+\begin{aligned}
+\max_{p} \quad &amp; \textrm{CE} = \sum_{i=1}^{N} \sum_{t=0}^{T_i} \frac{(p_t - c_t)r_{i,t}}{(1+a)^t} - AC_i\\
+\textrm{s.t.} \quad &amp; r_{i,t} \in [0, 1]\\
+  &amp;p_t &gt; c_t    \\
+\end{aligned}
+\]</span></p>
+
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-CUSTOMERS_ASSETS" class="csl-entry">
+Gupta, and Donald R. Lehmann. 2003. <span>“Customers as Assets.”</span> <em>Journal of Interactive Marketing</em> 17(1): 9–24.
+</div>
+<div id="ref-MANAGING_DYNAMICS_CUSTOMER_PORTFOLIO" class="csl-entry">
+Homburg, Christian, Viviana V. Steiner, and Dirk Totzek. 2009. <span>“Managing Dynamics in a Customer Portfolio.”</span> <em>Journal of Marketing</em> 73(5): 70–89. <a href="https://doi.org/ 10.1509/jmkg.73.5.70">https://doi.org/ 10.1509/jmkg.73.5.70</a>.
+</div>
+<div id="ref-CPM_CRM" class="csl-entry">
+Thakur, Ramendra, and Letty Workmanb. 2016. <span>“Customer Portfolio Management (CPM) for Improved Customer Relationship Management (CRM): Are Your Customers Platinum, Gold, Silver, or Bronze?”</span> <em>Journal of Business Research</em> 69: 4095–4102.
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-
+<a href="intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="literature.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
