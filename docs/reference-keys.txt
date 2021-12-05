@@ -1,5 +1,6 @@
 fig:cpmmat
 fig:censoring
+fig:survfunplot
 intro
 context
 a-multi-purpose-study
@@ -14,5 +15,7 @@ value
 framework
 duration-models
 censoring-and-truncation
+probabilistic-concepts
+hazard-function
 ML
 data

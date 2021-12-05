@@ -1,3 +1,31 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r echo=FALSE}
+knitr::opts_chunk$set(
+  fig.align = "center", 
+  echo = FALSE, 
+  message = FALSE, 
+  comment = FALSE, 
+  warning = FALSE
+)
+```
+
+```{r packages}
+library(ggplot2)
+library(tidyverse)
+```
+
+```{r plot_config}
+theme_set(theme_minimal())
+plot_col <- "#4DB9A5"
+```
+
+
+
 # Theoretical Framework {#framework}
 
 This chapter presents theoretical basis of the models and the algorithms that we will use to model customer portfolios. As a customer's lifetime in a portfolio is usually represented by the time to churn, duration models are adapted to the data we have at our disposal. Thus, it is decided to introduce standard survival techniques as well as machine learning algorithms suited to time-to-event data. Methods to estimate customer's value are also introduced in this chapter. 
@@ -42,9 +70,48 @@ $$
 
 Survival data suffers from a **selection bias** (or truncation) when only a sub-sample of the population of interest is studied. A customer entering the firm's portfolio after the end of the study is said to be **right-truncated**, whereas a client who has left the portfolio before the beginning of the study is considered **left-truncated**. Mathematically, a random variable $X$ is truncated by a subset $A \in \mathbb{R}^+$ if instead of $\Omega(X)$, we solely observe $\Omega(X)\bigcap A$. On figure \@ref(fig:censoring), the first and fifth observations suffers from a selection bias. 
 
-```{r censoring, echo=FALSE, fig.align="center", fig.cap="Censored and truncated data", out.height="250px", out.width="500px"}
+```{r censoring, echo=FALSE, fig.cap="Censored and truncated data", out.height="250px", out.width="500px"}
 knitr::include_graphics(path = "./imgs/censoring_and_truncation.png")
 ```
+
+## Probabilistic concepts 
+
+In survival analysis, the response variable denoted $T$ is a time-to-event variable. Instead of estimating the expected failure time, survival models estimate the *survival* and *hazard rate* functions which depend on the realization of $T$. 
+
+
+### Survival function {-}
+
+It represents the probability that the considered event occurs after time $t$. For instance, $S(t)$ can measure the probability that a given customer survive in the portfolio at least until time $t$. Mathematically, the survival function is defined as: 
+
+\begin{equation}
+    S(t) = P(T > t) = 1 - F(t)
+    \label{eq:surv_fun}
+\end{equation}
+
+where $F(t)$ is the cumulative distribution function. 
+
+```{r surfunexp}
+x <- seq(0, 10, .01)
+theta <- 1
+surv_exp <- 1 - pexp(q = x, rate = theta)
+surv_fun_plot <- data.frame(x, surv_exp) %>%
+  ggplot(aes(x = x, y = surv_exp)) +
+  geom_line(size = 1, color = plot_col) +
+  xlab("t") + ylab("S(t)") +
+  theme(axis.title = element_text(size = 12), 
+        axis.text = element_text(size = 11))
+ggsave(filename = "./imgs/surv_fun_plot.png", 
+       plot = surv_fun_plot) 
+
+```
+
+```{r survfunplot, echo=FALSE, fig.cap="Survival function $S_T(t)$ with $T \\sim \\mathcal{E} (1)$", out.height="300px", out.width="400px"}
+knitr::include_graphics(path = "./imgs/surv_fun_plot.png")
+```
+
+
+### Hazard function
+
 
 
 ```{r echo=FALSE, eval=FALSE}
