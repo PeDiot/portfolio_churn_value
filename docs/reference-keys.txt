@@ -1,6 +1,13 @@
 fig:cpmmat
+eq:censoring
 fig:censoring
+eq:survfun
 fig:survfunplot
+eq:hazfun
+eq:hazfunbis
+eq:cumhazfun
+fig:cumhazplot
+eq:hazfunproof
 intro
 context
 a-multi-purpose-study
@@ -16,6 +23,6 @@ framework
 duration-models
 censoring-and-truncation
 probabilistic-concepts
-hazard-function
+nonparametric-models
 ML
 data

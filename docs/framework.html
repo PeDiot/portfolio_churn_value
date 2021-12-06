@@ -24,7 +24,7 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2021-12-05" />
+<meta name="date" content="2021-12-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -118,15 +118,16 @@ div.csl-indent {
 <li class="chapter" data-level="4.1" data-path="framework.html"><a href="framework.html#duration-models"><i class="fa fa-check"></i><b>4.1</b> Duration models</a>
 <ul>
 <li class="chapter" data-level="4.1.1" data-path="framework.html"><a href="framework.html#censoring-and-truncation"><i class="fa fa-check"></i><b>4.1.1</b> Censoring and Truncation</a></li>
+<li class="chapter" data-level="4.1.2" data-path="framework.html"><a href="framework.html#probabilistic-concepts"><i class="fa fa-check"></i><b>4.1.2</b> Probabilistic concepts</a></li>
+<li class="chapter" data-level="4.1.3" data-path="framework.html"><a href="framework.html#nonparametric-models"><i class="fa fa-check"></i><b>4.1.3</b> Nonparametric models</a></li>
 </ul></li>
-<li class="chapter" data-level="4.2" data-path="framework.html"><a href="framework.html#probabilistic-concepts"><i class="fa fa-check"></i><b>4.2</b> Probabilistic concepts</a>
-<ul>
-<li class="chapter" data-level="" data-path="framework.html"><a href="framework.html#survival-function"><i class="fa fa-check"></i>Survival function</a></li>
-<li class="chapter" data-level="4.2.1" data-path="framework.html"><a href="framework.html#hazard-function"><i class="fa fa-check"></i><b>4.2.1</b> Hazard function</a></li>
-</ul></li>
-<li class="chapter" data-level="4.3" data-path="framework.html"><a href="framework.html#ML"><i class="fa fa-check"></i><b>4.3</b> Machine Learning techniques</a></li>
+<li class="chapter" data-level="4.2" data-path="framework.html"><a href="framework.html#ML"><i class="fa fa-check"></i><b>4.2</b> Machine Learning techniques</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="data.html"><a href="data.html"><i class="fa fa-check"></i><b>5</b> Data</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html"><i class="fa fa-check"></i>Appendix</a>
+<ul>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#duration-models-1"><i class="fa fa-check"></i>Duration models</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -196,12 +197,13 @@ div.csl-indent {
 <h4>Censoring mechanisms</h4>
 <p><strong>Left-censoring</strong> occurs when the event of interest occurs before the beginning of the observation period. For example, an individual is included in a study of duration of unemployment at <span class="math inline">\(t_0\)</span>. At that time he has already been unemployed for a period but he cannot recall exactly the duration of this period. If we observe that he finds a job again at <span class="math inline">\(t_1\)</span>, we can only deduce that the duration of unemployment is bigger than <span class="math inline">\(t_1-t_0\)</span>, this individual is left-censored. Observation 2 on figure <a href="framework.html#fig:censoring">4.1</a> is associated with a left-censored spell <span class="citation">(<a href="#ref-LIU_SCOR" role="doc-biblioref">Liu 2019</a>)</span>.</p>
 <p>A spell is considered <strong>right-censored</strong> when it is observed from time <span class="math inline">\(t_0\)</span> until a censoring time <span class="math inline">\(t_c\)</span> as illustrated by observation 1 on figure <a href="framework.html#fig:censoring">4.1</a>. For instance, the lifetime related to a customer who has not churned at the end of the observation period is right-censored. Let us note <span class="math inline">\(X_i\)</span> the duration of a complete spell and <span class="math inline">\(C_i\)</span> the duration of a right-censored spell. We also note <span class="math inline">\(T_i\)</span> the duration actually observed and <span class="math inline">\(\delta_i\)</span> the censoring indicator such that <span class="math inline">\(\delta_i = 0\)</span> if the spell is censored. Then, <span class="math inline">\((t_1, \delta_1),\dots,(t_N, \delta_N)\)</span> are the realizations of the following random variables:</p>
-<p><span class="math display">\[
-\begin{align}
-T_i &amp; = \min(X_i, C_i) \\
-\delta_i &amp; = \mathbb{1}_{X_i &lt; C_i}
-\end{align}
-\]</span></p>
+<p><span class="math display" id="eq:censoring">\[\begin{equation}
+  \begin{aligned}
+  T_i &amp; = \min(X_i, C_i) \\
+  \delta_i &amp; = \mathbb{1}_{X_i &lt; C_i}
+  \end{aligned}
+  \tag{4.1}
+\end{equation}\]</span></p>
 </div>
 <div id="selection-bias" class="section level4 unnumbered">
 <h4>Selection bias</h4>
@@ -214,16 +216,15 @@ Figure 4.1: Censored and truncated data
 </div>
 </div>
 </div>
-</div>
-<div id="probabilistic-concepts" class="section level2" number="4.2">
-<h2><span class="header-section-number">4.2</span> Probabilistic concepts</h2>
+<div id="probabilistic-concepts" class="section level3" number="4.1.2">
+<h3><span class="header-section-number">4.1.2</span> Probabilistic concepts</h3>
 <p>In survival analysis, the response variable denoted <span class="math inline">\(T\)</span> is a time-to-event variable. Instead of estimating the expected failure time, survival models estimate the <em>survival</em> and <em>hazard rate</em> functions which depend on the realization of <span class="math inline">\(T\)</span>.</p>
-<div id="survival-function" class="section level3 unnumbered">
-<h3>Survival function</h3>
-<p>It represents the probability that the considered event occurs after time <span class="math inline">\(t\)</span>. For instance, <span class="math inline">\(S(t)\)</span> can measure the probability that a given customer survive in the portfolio at least until time <span class="math inline">\(t\)</span>. Mathematically, the survival function is defined as:</p>
-<p><span class="math display">\[\begin{equation}
-    S(t) = P(T &gt; t) = 1 - F(t)
-    \label{eq:surv_fun}
+<div id="survival-function" class="section level4 unnumbered">
+<h4>Survival function</h4>
+<p>The survival function <span class="math inline">\(S(t)\)</span> represents the probability that the considered event occurs after time <span class="math inline">\(t\)</span>. For instance, <span class="math inline">\(S(t)\)</span> can measure the probability that a given customer survive in the portfolio at least until time <span class="math inline">\(t\)</span>. Mathematically, the survival function is defined as:
+<span class="math display" id="eq:survfun">\[\begin{equation}
+  S(t) = P(T &gt; t) = 1 - F(t)
+  \tag{4.2}
 \end{equation}\]</span></p>
 <p>where <span class="math inline">\(F(t)\)</span> is the cumulative distribution function.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:survfunplot"></span>
@@ -233,12 +234,37 @@ Figure 4.2: Survival function <span class="math inline">\(S_T(t)\)</span> with <
 </p>
 </div>
 </div>
-<div id="hazard-function" class="section level3" number="4.2.1">
-<h3><span class="header-section-number">4.2.1</span> Hazard function</h3>
+<div id="hazard-and-cumulative-hazard-functions" class="section level4 unnumbered">
+<h4>Hazard and Cumulative Hazard functions</h4>
+<p>Another key concept in duration analysis is the hazard function <span class="math inline">\(\lambda(t)\)</span> which approximates the probability that the event occurs at time <span class="math inline">\(t\)</span>. For instance, <span class="math inline">\(\lambda(t)\)</span> can measure the probability that a given individual leaves the firm portfolio at time <span class="math inline">\(t\)</span>. Formally, it is expressed as follows:
+<span class="math display" id="eq:hazfun">\[\begin{equation}
+  \lambda(t) = \lim_{\Delta t \to 0} \frac{P\big[t \leq T &lt; t + \Delta t | T \geq t \big]}{\Delta t}
+  \tag{4.3}
+\end{equation}\]</span></p>
+<p>Using the Bayes formula, equation <a href="framework.html#eq:hazfun">(4.3)</a> can also be written as (see equation <a href="appendix.html#eq:hazfunproof">(5.1)</a> in appendix):
+<span class="math display" id="eq:hazfunbis">\[\begin{equation}
+  \lambda(t) = \frac{-\text{d} \ln \big(S(t)\big)}{\text{d} t}
+  \tag{4.4}
+\end{equation}\]</span></p>
+<p>Finally, integrating the instantaneous hazard function gives the cumulative hazard function which can be more precisely estimated than the hazard function <span class="citation">(<a href="#ref-CAMERON_TRIVEDI" role="doc-biblioref">Cameron and Trivedi 2005</a>)</span> and is defined as:</p>
+<p><span class="math display" id="eq:cumhazfun">\[\begin{equation}
+  \Lambda (t) = \int_{0}^{t} \lambda(s) \text{d}s = \ln \big(S(t)\big)
+  \tag{4.5}
+\end{equation}\]</span></p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:cumhazplot"></span>
+<img src="imgs/cum_haz_plot.png" alt="Cumulative Hazard function $\Lambda_T(t)$ with $T \sim \mathcal{E} (1)$" width="400px" height="300px" />
+<p class="caption">
+Figure 4.3: Cumulative Hazard function <span class="math inline">\(\Lambda_T(t)\)</span> with <span class="math inline">\(T \sim \mathcal{E} (1)\)</span>
+</p>
 </div>
 </div>
-<div id="ML" class="section level2" number="4.3">
-<h2><span class="header-section-number">4.3</span> Machine Learning techniques</h2>
+</div>
+<div id="nonparametric-models" class="section level3" number="4.1.3">
+<h3><span class="header-section-number">4.1.3</span> Nonparametric models</h3>
+</div>
+</div>
+<div id="ML" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Machine Learning techniques</h2>
 
 </div>
 </div>

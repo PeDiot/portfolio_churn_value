@@ -1,0 +1,23 @@
+---
+output: html_document2
+editor_options: 
+  chunk_output_type: console
+---
+
+# Appendix {-#appendix}
+
+## Duration models {-} 
+
+**Hazard function**
+
+\begin{equation}    
+  \begin{aligned}
+  \lambda(t) & = \lim_{\Delta t \to 0} \frac{P\big[t \leq T < t + \Delta t | T \geq t \big]}{\Delta t} \\\\
+  & = \lim_{\Delta t \to 0} \frac{P\big[t \leq T < t + \Delta t \big] / P\big[T \geq t  \big]}{\Delta t} \\\\
+  & = \lim_{\Delta t \to 0} \frac{\big(F(t+\Delta t)-F(t)\big) / \Delta t}{S(t)} \\\\
+  & = \frac{\text{d} F(t) / \text{d} t}{S(t)} \\\\
+  & = \frac{f(t)}{S(t)} \\\\
+  \lambda(t) & = \frac{-\text{d} \ln \big(S(t)\big)}{\text{d} t}
+  \end{aligned}
+  (\#eq:hazfunproof)
+\end{equation}
