@@ -6,6 +6,8 @@ editor_options:
 
 # Appendix {-#appendix}
 
+In this part, some proofs of the mathematical concepts used in the study are derived. 
+
 ## Duration models {-} 
 
 **Hazard function**
