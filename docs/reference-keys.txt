@@ -7,7 +7,14 @@ eq:hazfun
 eq:hazfunbis
 eq:cumhazfun
 fig:cumhazplot
+eq:exposed
+eq:hazest
+eq:kaplanmeier
+eq:greenwood
+eq:nelsonaalen
+eq:survest
 eq:hazfunproof
+eq:linksurvcumhaz
 intro
 context
 a-multi-purpose-study

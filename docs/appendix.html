@@ -24,7 +24,7 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2021-12-06" />
+<meta name="date" content="2021-12-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -92,7 +92,7 @@ div.csl-indent {
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="./">A Minimal Book Example</a></li>
+<li><a href="./">Portfolio, Churn & Customer Value</a></li>
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Abstract</a></li>
@@ -163,6 +163,16 @@ div.csl-indent {
   \lambda(t) &amp; = \frac{-\text{d} \ln \big(S(t)\big)}{\text{d} t}
   \end{aligned}
   \tag{5.1}
+\end{equation}\]</span></p>
+<p><strong>Link between cumulative hazard and survivor functions</strong></p>
+<p><span class="math display" id="eq:linksurvcumhaz">\[\begin{equation}
+  \begin{aligned}
+  \Lambda(t)      &amp; = \int_{0}^{t} \lambda(s)ds \\\\
+  \iff \Lambda(t) &amp; = \int_{0}^{t} \frac{f(s)}{S(s)}ds \\\\
+  \iff \Lambda(t) &amp; = -\ln \big(S(t)\big) \\\\
+  \iff S(t)       &amp; = \exp \big(-\Lambda(t)\big)
+  \end{aligned}
+  \tag{5.2}
 \end{equation}\]</span></p>
 
 </div>

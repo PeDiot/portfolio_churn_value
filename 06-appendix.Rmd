@@ -21,3 +21,19 @@ editor_options:
   \end{aligned}
   (\#eq:hazfunproof)
 \end{equation}
+
+
+**Link between cumulative hazard and survivor functions**
+
+\begin{equation}
+  \begin{aligned}
+  \Lambda(t)      & = \int_{0}^{t} \lambda(s)ds \\\\
+  \iff \Lambda(t) & = \int_{0}^{t} \frac{f(s)}{S(s)}ds \\\\
+  \iff \Lambda(t) & = -\ln \big(S(t)\big) \\\\
+  \iff S(t)       & = \exp \big(-\Lambda(t)\big)
+  \end{aligned}
+  (\#eq:linksurvcumhaz)
+\end{equation}
+
+
+

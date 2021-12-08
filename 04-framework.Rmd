@@ -28,7 +28,7 @@ plot_col <- "#4DB9A5"
 
 # Theoretical Framework {#framework}
 
-This chapter presents theoretical basis of the models and the algorithms that we will use to model customer portfolios. As a customer's lifetime in a portfolio is usually represented by the time to churn, duration models are adapted to the data we have at our disposal. Thus, it is decided to introduce standard survival techniques as well as machine learning algorithms suited to time-to-event data. Methods to estimate customer's value are also introduced in this chapter. 
+This chapter presents theoretical basis of the models and the algorithms that are used to model customer portfolios. As a customer's lifetime in a portfolio is usually represented by the time to churn, duration models are adapted to the data we have at our disposal. Thus, it is decided to introduce standard survival techniques as well as machine learning algorithms suited to time-to-event data. Methods to estimate customer's value are also introduced in this chapter. 
 
 ## Duration models
 
@@ -147,14 +147,65 @@ ggsave(filename = "./imgs/cum_haz_plot.png",
 knitr::include_graphics(path = "./imgs/cum_haz_plot.png")
 ```
 
+Thus, the hazard, survival and cumulative hazard functions are three mathematical functions which describe the same distribution. 
+
 ### Nonparametric models 
 
-```{r echo=FALSE, eval=FALSE}
-knitr::include_app(
-  "https://pdiot.shinyapps.io/visualisation_modeles_duree/", 
-  height = "800px"
-)
-```
+When dealing with duration data, these methods are helpful to have a general overview of the raw (unconditional) hazard. Nonparametric models are rather used for data description rather than prediction. No explanatory variable is included in these models except for treatment variables such as the type of contract a customer has subscribe.  
+
+#### Notations {-}
+
+Let us consider a sample with $N$ observations with $k$ discrete failure time (e.g. a failure can be a churn event), such that $\forall j \in [\![1; k]\!]$ : 
+
+- $t_j$ the $j^{\text{th}}$ discrete failure time, 
+- $d_j$ the number of spells terminating at $t_j$,
+- $m_j$ the number of right-censored spells in the interval $[t_j, t_{j+1}]$,
+- $r_j$ the number of exposed durations right before time $t_j$ such that: 
+\begin{equation}
+  r_j = (d_j + m_j) + \dots + (d_k + m_k) = \sum_{l|l \geq j} (d_l + m_l)
+  (\#eq:exposed)
+\end{equation}
+
+#### Hazard function estimator {-}
+
+As the instantaneous hazard at time $t_j$ is defined as $\lambda_j = P[T=t_j|T\geq t_j]$, a trivial estimator of $\lambda_j$ is obtained by dividing the number of durations for which the event is realized in $t_j$ by the total number of exposed durations at time $t_j^{-}$. Formally, it is expressed as: 
+
+\begin{equation}
+  \hat{\lambda}_j = \frac{d_j}{r_j}
+  (\#eq:hazest)
+\end{equation}
+
+#### Kaplan-Meier estimator {-}
+
+Once the hazard function estimator computed, the discrete-time survivor function can be estimated using the Kaplan-Meier estimator. To estimate the survival at time $t$, this estimator computes the joint probability that a spell stays in the same state until $t$ (e.g. remaining loyal to a firm until a certain time). Mathematically, we have:
+
+\begin{equation}
+  \hat{S}(t) = \Pi_{j|t_j \leq t} \big(1-\hat{\lambda}_j\big) = \Pi_{j|t_j \leq t}\frac{r_j - d_j}{r_j}
+  (\#eq:kaplanmeier)
+\end{equation}
+
+When plotting the survival curve after having performed the Kaplan-Meier estimation, confidence bands are also added to the plot in order to reflect sampling variability [@CAMERON_TRIVEDI]. The confidence interval of the survival function $S(t)$ is derived from the estimate of the variance of $S(t)$ which is obtained by the Grenwood estimate (see equation \@ref(eq:greenwood)).
+
+\begin{equation}
+  \hat{\mathrm{V}}[\hat{S}(t)] = \hat{S}(t)^2 \sum_{j|t_j \leq t} \frac{d_j}{r_j(r_j-d_j)}
+  (\#eq:greenwood)
+\end{equation}
+
+#### Nelson-Aalen estimator {-}
+
+The cumulative hazard function estimate is given by the Nelson-Aalen estimator which consists in summing up the hazard estimates for each failure time. 
+
+\begin{equation}
+  \hat{\Lambda}(t) = \sum_{j | t_j \leq t} \hat{\lambda}_{j} = \sum_{j | t_j \leq t} \frac{d_j}{r_j}
+  (\#eq:nelsonaalen)
+\end{equation}
+
+Exponentiating $\hat{\Lambda}(t)$, one can obtain a second estimate of the survival function (see equation \@ref(eq:linksurvcumhaz) in the appendix): 
+
+\begin{equation}
+    \tilde{S}(t) = \exp \big( -\hat{\Lambda}(t) \big)
+    (\#eq:survest)
+\end{equation}
 
 
 ## Machine Learning techniques {#ML}
