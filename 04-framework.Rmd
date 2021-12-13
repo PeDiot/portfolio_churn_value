@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 
 ```{r packages}
 library(ggplot2)
+library(ggpubr)
 library(tidyverse)
 library(latex2exp)
 ```
@@ -71,7 +72,7 @@ A spell is considered **right-censored** when it is observed from time $t_0$ unt
 
 Survival data suffers from a **selection bias** (or truncation) when only a sub-sample of the population of interest is studied. A customer entering the firm's portfolio after the end of the study is said to be **right-truncated**, whereas a client who has left the portfolio before the beginning of the study is considered **left-truncated**. Mathematically, a random variable $X$ is truncated by a subset $A \in \mathbb{R}^+$ if instead of $\Omega(X)$, we solely observe $\Omega(X)\bigcap A$. On figure \@ref(fig:censoring), the first and fifth observations suffers from a selection bias. 
 
-```{r censoring, echo=FALSE, fig.cap="Censored and truncated data", out.height="250px", out.width="500px"}
+```{r censoring, echo=FALSE, fig.cap="Censored and truncated data", out.height="250pt", out.width="500pt"}
 knitr::include_graphics(path = "./imgs/censoring_and_truncation.png")
 ```
 
@@ -102,10 +103,9 @@ surv_fun_plot <- data.frame(x, surv_exp) %>%
         axis.text = element_text(size = 11))
 ggsave(filename = "./imgs/surv_fun_plot.png", 
        plot = surv_fun_plot) 
-
 ```
 
-```{r survfunplot, echo=FALSE, fig.cap="Survival function $S_T(t)$ with $T \\sim \\mathcal{E} (1)$", out.height="300px", out.width="400px"}
+```{r survfunplot, echo=FALSE, fig.cap="Survival function $S_T(t)$ with $T \\sim \\mathcal{E} (1)$", out.height="300pt", out.width="400pt"}
 knitr::include_graphics(path = "./imgs/surv_fun_plot.png")
 ```
 
@@ -143,7 +143,7 @@ ggsave(filename = "./imgs/cum_haz_plot.png",
        plot = cum_haz_plot) 
 ```
 
-```{r cumhazplot, echo=FALSE, fig.cap="Cumulative Hazard function $\\Lambda_T(t)$ with $T \\sim \\mathcal{E} (1)$", out.height="300px", out.width="400px"}
+```{r cumhazplot, echo=FALSE, fig.cap="Cumulative Hazard function $\\Lambda_T(t)$ with $T \\sim \\mathcal{E} (1)$", out.height="300pt", out.width="400pt"}
 knitr::include_graphics(path = "./imgs/cum_haz_plot.png")
 ```
 
@@ -177,7 +177,7 @@ As the instantaneous hazard at time $t_j$ is defined as $\lambda_j = P[T=t_j|T\g
 
 #### Kaplan-Meier estimator {-}
 
-Once the hazard function estimator computed, the discrete-time survivor function can be estimated using the Kaplan-Meier estimator. To estimate the survival at time $t$, this estimator computes the joint probability that a spell stays in the same state until $t$ (e.g. remaining loyal to a firm until a certain time). Mathematically, we have:
+Once the hazard function estimator computed, the discrete-time survivor function can be estimated using the Kaplan-Meier product-limit estimator. To estimate the survival at time $t$, this estimator computes the joint probability that a spell stays in the same state until $t$ (e.g. remaining loyal to a firm until a certain time). This method is based on conditional probabilities and the survival function estimate is defined as: 
 
 \begin{equation}
   \hat{S}(t) = \Pi_{j|t_j \leq t} \big(1-\hat{\lambda}_j\big) = \Pi_{j|t_j \leq t}\frac{r_j - d_j}{r_j}
@@ -207,6 +207,189 @@ Exponentiating $\hat{\Lambda}(t)$, one can obtain a second estimate of the survi
     (\#eq:survest)
 \end{equation}
 
+
+### Parametric models
+
+The nonparametric estimation is undoubtedly useful when it comes to have a general overview on the survival data. However, one may want to model the hazard and survivor functions with a functional form in which unknown parameters need to be optimized. In parametric estimation, there are two main groups of models to estimate the conditional hazard function $\lambda(t | \pmb{x})$: 
+
+- the Parametric Proportional Hazards models (PH), 
+- the Accelerated Failure Time models (AFT).
+
+When implementing parametric models, $\lambda$, $S$ and $\Lambda$ are expressed based on the chosen parametric form. The instantaneous hazard function can either be constant or monotone. In our study we assume that the explanatory variables are time-constant as we do not have dynamic data at our disposal. 
+
+Parametric estimation has a twofold purpose that is to implement a robust model to estimate the risk that a specific event occurs while identifying the variables (or covariates) which best explain this risk. 
+
+#### Parametric Proportional Hazards models {-}
+
+In PH models,  the instantaneous risk function is \textbf{proportional} to the baseline hazard $\lambda_0 (t,\alpha)$ modulo a \textbf{scaling factor} depending on the covariates $\phi(\pmb{x}, \beta)$. These models allow to generalize the basic survival models to a survival regression model which permits to take individuals' heterogeneity into consideration [@RMS].  The general mathematical formulation is expressed as follows: 
+
+\begin{equation}
+    \lambda(t|\pmb{x}) = \lambda_0 (t,\alpha)  \phi(\pmb{x}, \beta) 
+    (\#eq:ph)
+\end{equation}
+
+The exponential, Weibull, Gompertz and Cox models are PH models since their respective hazards are function of some covariates. 
+
+##### Exponential distribution {-}
+
+The exponential distribution models the time between events in a Poisson process andhas the key property of being *memoryless*. Let us note $T$ a time-to-event variable following such that $T \sim \mathcal{E}(\theta)$ where $\theta$ is the *rate* parameter. In this context, *memorylessness* can be defined as follows: 
+
+\begin{equation}
+  \mathbb{P}(T>t+s | T > t) = \mathbb{P}(T>s)
+  (\#eq:memorylessness)
+\end{equation}
+
+$\forall t \geq 0\ ,\ \theta > 0$ the density, hazard and survival functions can be expressed as:
+
+\begin{equation}
+  \begin{aligned}
+    f_{\theta}(t) & = \theta e^{-\theta t} \\\\
+    \lambda_{\theta}(t) & = \theta \\\\
+    S_{\theta}(t) & = e^{-\theta t} \\\\
+  \end{aligned}
+  (\#eq:exponential)
+\end{equation}
+
+Thus, the exponential distribution is characterized by a **constant** hazard function which is a consequence of *memorylessness*. 
+
+##### Weibull distribution {-}
+
+The Weibull distribution is a less restrictive generalization of the exponential distribution defined by a shape parameter $\nu$ and a scale parameter $\theta$. 
+
+$\forall t \geq 0$ et $k=\nu,\ \theta > 0$ the density, hazard and survival functions can be expressed as:
+
+\begin{equation}
+  \begin{aligned}
+      \lambda_{k,\theta}(t) & = \nu \bigg(\frac{1}{\theta}\bigg)^{\nu} t^{\nu - 1} \\\\
+      S_{k, \nu}(t) & = \exp \Bigg( -\bigg(\frac{1}{\theta}\bigg)^{\nu} t\Bigg) 
+  \end{aligned}
+  (\#eq:weibull)
+\end{equation}
+
+The instantaneous hazard function $\lambda_{\nu,\theta}$ is:
+
+- monotonic **decreasing** if $\nu \in [0, 1]$ (e.g. customer loyalty),
+- **constant** if $\nu=1$ and $T \sim \mathcal{E}(\theta)$,
+- monotonic **increasing** if $\nu > 1$ (e.g. customers leaving the portfolio to a competing firm).
+
+Figure \@ref(fig:weibullplots) illustrate the hazard and survivor functions associated to a variable $T$ which follows a Weibull distribution. The two curves' shape depend both on the shape ($\nu$) and scale parameters ($\theta$). Some remarks can be made looking at the two plots. On the one hand, the higher $\nu$, the more increasing the hazard function. Furthermore, when $\nu < 1$ the hazard function is decreasing meaning that the risk of the event occurring decreases as time goes by. When $\nu > 1$ the hazard function is convex which indicates that a marginal increase in time leads to an increase (decrease) of over one unit in the the hazard (survivor) function. On the other hand, it can be noted that the Weibull distribution corresponds to the exponential distribution when $\nu = \theta = 1$ (see figures \@ref(fig:survfunplot) and \@ref(fig:cumhazplot)). 
+
+```{r weibull, eval=FALSE}
+shape <- c(.5, 1, 1.5, 3)
+scale <- c(1, 2, 3, 4)
+t <- seq(0, 10, .01)
+
+haz_wei <- function(t, shape, scale){
+  return( shape*(1/scale)**shape * t**(shape-1) ) 
+}
+surv_wei <- function(q, shape, scale){
+  return( 1- pweibull(q=q, shape=shape, scale=scale) ) 
+}
+
+make_data_frame <- function(type){
+  
+  # initialize matrix 
+  init <-  matrix(
+    nrow = length(t), 
+    ncol = length(shape)*length(scale)
+  )
+  
+  # name the matrix columns with the combinations (shape, scale)
+  make_colnames <- function(){
+    lapply(
+      shape, 
+      function(sh){
+        lapply(
+          scale, 
+          function(sc){ paste("(", sh, ", ", sc, ")", sep = "") }
+        )
+      }
+    ) %>% unlist()
+  }
+  
+  colnames(init) <- make_colnames()
+  
+  # populate the matrix with either hazard or survival function values
+  for (sh in shape){
+    for (sc in scale){
+      col <- paste("(", sh, ", ", sc, ")", sep = "")
+      if (type == "haz"){ 
+        init[, col] <- haz_wei(t = t, shape = sh, scale = sc) 
+      } 
+      else {
+        init[, col] <- surv_wei(q = t, shape = sh, scale = sc)
+      }
+    }
+  }
+  
+  # convert to dataframe and select interested columns
+  init %>% 
+    as.data.frame() %>%
+    select(c(
+      "(0.5, 2)", "(1, 1)", 
+      "(1, 2)", "(1.5, 3)", 
+      "(3, 4)" 
+    )) %>%
+    mutate(t = t) %>%
+    pivot_longer(cols = 1:5)
+  
+}
+
+haz <- make_data_frame(type = "haz")
+surv <- make_data_frame(type = "surv") 
+```
+
+```{r weibull plots, eval=FALSE}
+make_plot <- function(type){
+  
+  if (type == "haz"){ 
+    data <- haz 
+    ylab <- TeX("$\\lambda(t)$")
+  } 
+  else {
+    data <- surv 
+    ylab <- TeX("$S(t)$")
+  }
+  
+  data %>%
+    ggplot( aes(x = t, y = value, color = name) ) +
+    geom_line(size = .8) +
+    scale_color_brewer(palette = "Set2") +
+    labs( x = TeX("$t$"), y = ylab ) +
+    guides( color = guide_legend( 
+      title = TeX("$(\\nu, \\theta)$"), 
+      title.position = "left", 
+      title.hjust = 1) ) +
+    theme( legend.position = "bottom", 
+           legend.title = element_text(size = 12), 
+           legend.text = element_text(size = 12), 
+           axis.title = element_text(size = 12), 
+           axis.text = element_text(size = 11) ) 
+  
+}
+
+weibull_plots <- ggarrange(
+  make_plot(type = "haz"), 
+  make_plot(type = "surv"), 
+  ncol = 2, 
+  common.legend = T, 
+  legend = "bottom"
+)
+
+ggsave(filename = "./imgs/weibull_plots.png", 
+       plot = weibull_plots, 
+       width = 10, height = 5)
+``` 
+
+
+```{r weibullplots, echo=FALSE, fig.cap="Hazard and Survival functions with $T \\sim \\mathcal{W} (k, \\lambda)$", out.height="350pt", out.width="700pt"}
+knitr::include_graphics(path = "./imgs/weibull_plots.png")
+```
+
+
+#### Accelerated Failure Time models {-}
+
+#### Cox PH model {-}
 
 ## Machine Learning techniques {#ML}
 

@@ -13,6 +13,11 @@ eq:kaplanmeier
 eq:greenwood
 eq:nelsonaalen
 eq:survest
+eq:ph
+eq:memorylessness
+eq:exponential
+eq:weibull
+fig:weibullplots
 eq:hazfunproof
 eq:linksurvcumhaz
 intro
@@ -31,5 +36,6 @@ duration-models
 censoring-and-truncation
 probabilistic-concepts
 nonparametric-models
+parametric-models
 ML
 data

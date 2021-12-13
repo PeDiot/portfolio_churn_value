@@ -24,7 +24,7 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2021-12-08" />
+<meta name="date" content="2021-12-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -120,6 +120,7 @@ div.csl-indent {
 <li class="chapter" data-level="4.1.1" data-path="4.1-duration-models.html"><a href="4.1-duration-models.html#censoring-and-truncation"><i class="fa fa-check"></i><b>4.1.1</b> Censoring and Truncation</a></li>
 <li class="chapter" data-level="4.1.2" data-path="4.1-duration-models.html"><a href="4.1-duration-models.html#probabilistic-concepts"><i class="fa fa-check"></i><b>4.1.2</b> Probabilistic concepts</a></li>
 <li class="chapter" data-level="4.1.3" data-path="4.1-duration-models.html"><a href="4.1-duration-models.html#nonparametric-models"><i class="fa fa-check"></i><b>4.1.3</b> Nonparametric models</a></li>
+<li class="chapter" data-level="4.1.4" data-path="4.1-duration-models.html"><a href="4.1-duration-models.html#parametric-models"><i class="fa fa-check"></i><b>4.1.4</b> Parametric models</a></li>
 </ul></li>
 <li class="chapter" data-level="4.2" data-path="4.2-ML.html"><a href="4.2-ML.html"><i class="fa fa-check"></i><b>4.2</b> Machine Learning techniques</a></li>
 </ul></li>
@@ -131,6 +132,7 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
 </ul>
 
       </nav>
@@ -206,7 +208,7 @@ div.csl-indent {
 <h4>Selection bias</h4>
 <p>Survival data suffers from a <strong>selection bias</strong> (or truncation) when only a sub-sample of the population of interest is studied. A customer entering the firm’s portfolio after the end of the study is said to be <strong>right-truncated</strong>, whereas a client who has left the portfolio before the beginning of the study is considered <strong>left-truncated</strong>. Mathematically, a random variable <span class="math inline">\(X\)</span> is truncated by a subset <span class="math inline">\(A \in \mathbb{R}^+\)</span> if instead of <span class="math inline">\(\Omega(X)\)</span>, we solely observe <span class="math inline">\(\Omega(X)\bigcap A\)</span>. On figure <a href="4.1-duration-models.html#fig:censoring">4.1</a>, the first and fifth observations suffers from a selection bias.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:censoring"></span>
-<img src="imgs/censoring_and_truncation.png" alt="Censored and truncated data" width="500px" height="250px" />
+<img src="imgs/censoring_and_truncation.png" alt="Censored and truncated data" width="500pt" height="250pt" />
 <p class="caption">
 Figure 4.1: Censored and truncated data
 </p>
@@ -225,7 +227,7 @@ Figure 4.1: Censored and truncated data
 \end{equation}\]</span></p>
 <p>where <span class="math inline">\(F(t)\)</span> is the cumulative distribution function.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:survfunplot"></span>
-<img src="imgs/surv_fun_plot.png" alt="Survival function $S_T(t)$ with $T \sim \mathcal{E} (1)$" width="400px" height="300px" />
+<img src="imgs/surv_fun_plot.png" alt="Survival function $S_T(t)$ with $T \sim \mathcal{E} (1)$" width="400pt" height="300pt" />
 <p class="caption">
 Figure 4.2: Survival function <span class="math inline">\(S_T(t)\)</span> with <span class="math inline">\(T \sim \mathcal{E} (1)\)</span>
 </p>
@@ -249,7 +251,7 @@ Figure 4.2: Survival function <span class="math inline">\(S_T(t)\)</span> with <
   \tag{4.5}
 \end{equation}\]</span></p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:cumhazplot"></span>
-<img src="imgs/cum_haz_plot.png" alt="Cumulative Hazard function $\Lambda_T(t)$ with $T \sim \mathcal{E} (1)$" width="400px" height="300px" />
+<img src="imgs/cum_haz_plot.png" alt="Cumulative Hazard function $\Lambda_T(t)$ with $T \sim \mathcal{E} (1)$" width="400pt" height="300pt" />
 <p class="caption">
 Figure 4.3: Cumulative Hazard function <span class="math inline">\(\Lambda_T(t)\)</span> with <span class="math inline">\(T \sim \mathcal{E} (1)\)</span>
 </p>
@@ -284,7 +286,7 @@ r_j = (d_j + m_j) + \dots + (d_k + m_k) = \sum_{l|l \geq j} (d_l + m_l)
 </div>
 <div id="kaplan-meier-estimator" class="section level4 unnumbered">
 <h4>Kaplan-Meier estimator</h4>
-<p>Once the hazard function estimator computed, the discrete-time survivor function can be estimated using the Kaplan-Meier estimator. To estimate the survival at time <span class="math inline">\(t\)</span>, this estimator computes the joint probability that a spell stays in the same state until <span class="math inline">\(t\)</span> (e.g. remaining loyal to a firm until a certain time). Mathematically, we have:</p>
+<p>Once the hazard function estimator computed, the discrete-time survivor function can be estimated using the Kaplan-Meier product-limit estimator. To estimate the survival at time <span class="math inline">\(t\)</span>, this estimator computes the joint probability that a spell stays in the same state until <span class="math inline">\(t\)</span> (e.g. remaining loyal to a firm until a certain time). This method is based on conditional probabilities and the survival function estimate is defined as:</p>
 <p><span class="math display" id="eq:kaplanmeier">\[\begin{equation}
   \hat{S}(t) = \Pi_{j|t_j \leq t} \big(1-\hat{\lambda}_j\big) = \Pi_{j|t_j \leq t}\frac{r_j - d_j}{r_j}
   \tag{4.8}
@@ -309,11 +311,82 @@ r_j = (d_j + m_j) + \dots + (d_k + m_k) = \sum_{l|l \geq j} (d_l + m_l)
 \end{equation}\]</span></p>
 </div>
 </div>
+<div id="parametric-models" class="section level3" number="4.1.4">
+<h3><span class="header-section-number">4.1.4</span> Parametric models</h3>
+<p>The nonparametric estimation is undoubtedly useful when it comes to have a general overview on the survival data. However, one may want to model the hazard and survivor functions with a functional form in which unknown parameters need to be optimized. In parametric estimation, there are two main groups of models to estimate the conditional hazard function <span class="math inline">\(\lambda(t | \pmb{x})\)</span>:</p>
+<ul>
+<li>the Parametric Proportional Hazards models (PH),</li>
+<li>the Accelerated Failure Time models (AFT).</li>
+</ul>
+<p>When implementing parametric models, <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(S\)</span> and <span class="math inline">\(\Lambda\)</span> are expressed based on the chosen parametric form. The instantaneous hazard function can either be constant or monotone. In our study we assume that the explanatory variables are time-constant as we do not have dynamic data at our disposal.</p>
+<p>Parametric estimation has a twofold purpose that is to implement a robust model to estimate the risk that a specific event occurs while identifying the variables (or covariates) which best explain this risk.</p>
+<div id="parametric-proportional-hazards-models" class="section level4 unnumbered">
+<h4>Parametric Proportional Hazards models</h4>
+<p>In PH models, the instantaneous risk function is  to the baseline hazard <span class="math inline">\(\lambda_0 (t,\alpha)\)</span> modulo a  depending on the covariates <span class="math inline">\(\phi(\pmb{x}, \beta)\)</span>. These models allow to generalize the basic survival models to a survival regression model which permits to take individuals’ heterogeneity into consideration <span class="citation">(<a href="#ref-RMS" role="doc-biblioref">Harrell 1984</a>)</span>. The general mathematical formulation is expressed as follows:</p>
+<p><span class="math display" id="eq:ph">\[\begin{equation}
+    \lambda(t|\pmb{x}) = \lambda_0 (t,\alpha)  \phi(\pmb{x}, \beta) 
+    \tag{4.12}
+\end{equation}\]</span></p>
+<p>The exponential, Weibull, Gompertz and Cox models are PH models since their respective hazards are function of some covariates.</p>
+<div id="exponential-distribution" class="section level5 unnumbered">
+<h5>Exponential distribution</h5>
+<p>The exponential distribution models the time between events in a Poisson process andhas the key property of being <em>memoryless</em>. Let us note <span class="math inline">\(T\)</span> a time-to-event variable following such that <span class="math inline">\(T \sim \mathcal{E}(\theta)\)</span> where <span class="math inline">\(\theta\)</span> is the <em>rate</em> parameter. In this context, <em>memorylessness</em> can be defined as follows:</p>
+<p><span class="math display" id="eq:memorylessness">\[\begin{equation}
+  \mathbb{P}(T&gt;t+s | T &gt; t) = \mathbb{P}(T&gt;s)
+  \tag{4.13}
+\end{equation}\]</span></p>
+<p><span class="math inline">\(\forall t \geq 0\ ,\ \theta &gt; 0\)</span> the density, hazard and survival functions can be expressed as:</p>
+<p><span class="math display" id="eq:exponential">\[\begin{equation}
+  \begin{aligned}
+    f_{\theta}(t) &amp; = \theta e^{-\theta t} \\\\
+    \lambda_{\theta}(t) &amp; = \theta \\\\
+    S_{\theta}(t) &amp; = e^{-\theta t} \\\\
+  \end{aligned}
+  \tag{4.14}
+\end{equation}\]</span></p>
+<p>Thus, the exponential distribution is characterized by a <strong>constant</strong> hazard function which is a consequence of <em>memorylessness</em>.</p>
+</div>
+<div id="weibull-distribution" class="section level5 unnumbered">
+<h5>Weibull distribution</h5>
+<p>The Weibull distribution is a less restrictive generalization of the exponential distribution defined by a shape parameter <span class="math inline">\(\nu\)</span> and a scale parameter <span class="math inline">\(\theta\)</span>.</p>
+<p><span class="math inline">\(\forall t \geq 0\)</span> et <span class="math inline">\(k=\nu,\ \theta &gt; 0\)</span> the density, hazard and survival functions can be expressed as:</p>
+<p><span class="math display" id="eq:weibull">\[\begin{equation}
+  \begin{aligned}
+      \lambda_{k,\theta}(t) &amp; = \nu \bigg(\frac{1}{\theta}\bigg)^{\nu} t^{\nu - 1} \\\\
+      S_{k, \nu}(t) &amp; = \exp \Bigg( -\bigg(\frac{1}{\theta}\bigg)^{\nu} t\Bigg) 
+  \end{aligned}
+  \tag{4.15}
+\end{equation}\]</span></p>
+<p>The instantaneous hazard function <span class="math inline">\(\lambda_{\nu,\theta}\)</span> is:</p>
+<ul>
+<li>monotonic <strong>decreasing</strong> if <span class="math inline">\(\nu \in [0, 1]\)</span> (e.g. customer loyalty),</li>
+<li><strong>constant</strong> if <span class="math inline">\(\nu=1\)</span> and <span class="math inline">\(T \sim \mathcal{E}(\theta)\)</span>,</li>
+<li>monotonic <strong>increasing</strong> if <span class="math inline">\(\nu &gt; 1\)</span> (e.g. customers leaving the portfolio to a competing firm).</li>
+</ul>
+<p>Figure <a href="4.1-duration-models.html#fig:weibullplots">4.4</a> illustrate the hazard and survivor functions associated to a variable <span class="math inline">\(T\)</span> which follows a Weibull distribution. The two curves’ shape depend both on the shape (<span class="math inline">\(\nu\)</span>) and scale parameters (<span class="math inline">\(\theta\)</span>). Some remarks can be made looking at the two plots. On the one hand, the higher <span class="math inline">\(\nu\)</span>, the more increasing the hazard function. Furthermore, when <span class="math inline">\(\nu &lt; 1\)</span> the hazard function is decreasing meaning that the risk of the event occurring decreases as time goes by. When <span class="math inline">\(\nu &gt; 1\)</span> the hazard function is convex which indicates that a marginal increase in time leads to an increase (decrease) of over one unit in the the hazard (survivor) function. On the other hand, it can be noted that the Weibull distribution corresponds to the exponential distribution when <span class="math inline">\(\nu = \theta = 1\)</span> (see figures <a href="4.1-duration-models.html#fig:survfunplot">4.2</a> and <a href="4.1-duration-models.html#fig:cumhazplot">4.3</a>).</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:weibullplots"></span>
+<img src="imgs/weibull_plots.png" alt="Hazard and Survival functions with $T \sim \mathcal{W} (k, \lambda)$" width="700pt" height="350pt" />
+<p class="caption">
+Figure 4.4: Hazard and Survival functions with <span class="math inline">\(T \sim \mathcal{W} (k, \lambda)\)</span>
+</p>
+</div>
+</div>
+</div>
+<div id="accelerated-failure-time-models" class="section level4 unnumbered">
+<h4>Accelerated Failure Time models</h4>
+</div>
+<div id="cox-ph-model" class="section level4 unnumbered">
+<h4>Cox PH model</h4>
+</div>
+</div>
 </div>
 <h3>References</h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-CAMERON_TRIVEDI" class="csl-entry">
 Cameron, A. Colin, and Pravin K. Trivedi. 2005. <em>Microeconometrics: Methods and Applications</em>. Edited by Cambridge University Press.
+</div>
+<div id="ref-RMS" class="csl-entry">
+Harrell, Frank. 1984. <em>Regression Modeling Strategies : With Applications to Linear Models, Logistic and Ordinal Regression, and Survival Analysis</em>. Edited by Springer.
 </div>
 <div id="ref-LIU_SCOR" class="csl-entry">
 Liu, Weinan. 2019. <span>“Inclusive Underwriting: The Case of Cardiovascular Risk Calculator.”</span> PhD thesis, ENSAE ParisTech.
@@ -367,7 +440,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": null,
+"download": ["portfolio_churn_value.pdf", "portfolio_churn_value.epub"],
 "search": {
 "engine": "fuse",
 "options": null
