@@ -382,7 +382,7 @@ ggsave(filename = "./imgs/weibull_plots.png",
 ``` 
 
 
-```{r weibullplots, echo=FALSE, fig.cap="Hazard and Survival functions with $T \\sim \\mathcal{W} (k, \\lambda)$", out.height="350pt", out.width="700pt"}
+```{r weibullplots, echo=FALSE, fig.cap="Hazard and Survival functions with $T \\sim \\mathcal{W} (\\nu, \\theta)$", out.height="350pt", out.width="700pt"}
 knitr::include_graphics(path = "./imgs/weibull_plots.png")
 ```
 
