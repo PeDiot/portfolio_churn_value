@@ -55,8 +55,7 @@ monotone-hazard
 concave-and-convex-hazard
 parametric-estimation-with-covariates-aft-models
 semi-parametric-estimation
-pproportional-hazards-models
+proportional-hazards-models
 cox-ph-model
 ml
 data
-proportional-hazards-models

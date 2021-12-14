@@ -81,7 +81,7 @@ knitr::include_graphics(path = "./imgs/censoring_and_truncation.png")
 In survival analysis, the response variable denoted $T$ is a time-to-event variable. Instead of estimating the expected failure time, survival models estimate the *survival* and *hazard rate* functions which depend on the realization of $T$. 
 
 
-#### Survival function
+### Survival function
 
 The survival function $S(t)$ represents the probability that the considered event occurs after time $t$. For instance, $S(t)$ can measure the probability that a given customer survive in the portfolio at least until time $t$. Mathematically, the survival function is defined as: 
 \begin{equation}

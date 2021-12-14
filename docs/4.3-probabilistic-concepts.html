@@ -123,7 +123,8 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="4.3" data-path="4.3-probabilistic-concepts.html"><a href="4.3-probabilistic-concepts.html"><i class="fa fa-check"></i><b>4.3</b> Probabilistic concepts</a>
 <ul>
-<li class="chapter" data-level="4.3.1" data-path="4.3-probabilistic-concepts.html"><a href="4.3-probabilistic-concepts.html#hazard-and-cumulative-hazard-functions"><i class="fa fa-check"></i><b>4.3.1</b> Hazard and Cumulative Hazard functions</a></li>
+<li class="chapter" data-level="4.3.1" data-path="4.3-probabilistic-concepts.html"><a href="4.3-probabilistic-concepts.html#survival-function"><i class="fa fa-check"></i><b>4.3.1</b> Survival function</a></li>
+<li class="chapter" data-level="4.3.2" data-path="4.3-probabilistic-concepts.html"><a href="4.3-probabilistic-concepts.html#hazard-and-cumulative-hazard-functions"><i class="fa fa-check"></i><b>4.3.2</b> Hazard and Cumulative Hazard functions</a></li>
 </ul></li>
 <li class="chapter" data-level="4.4" data-path="4.4-nonparametric-models.html"><a href="4.4-nonparametric-models.html"><i class="fa fa-check"></i><b>4.4</b> Nonparametric models</a>
 <ul>
@@ -175,8 +176,8 @@ div.csl-indent {
 <div id="probabilistic-concepts" class="section level2" number="4.3">
 <h2><span class="header-section-number">4.3</span> Probabilistic concepts</h2>
 <p>In survival analysis, the response variable denoted <span class="math inline">\(T\)</span> is a time-to-event variable. Instead of estimating the expected failure time, survival models estimate the <em>survival</em> and <em>hazard rate</em> functions which depend on the realization of <span class="math inline">\(T\)</span>.</p>
-<div id="survival-function" class="section level4" number="4.3.0.1">
-<h4><span class="header-section-number">4.3.0.1</span> Survival function</h4>
+<div id="survival-function" class="section level3" number="4.3.1">
+<h3><span class="header-section-number">4.3.1</span> Survival function</h3>
 <p>The survival function <span class="math inline">\(S(t)\)</span> represents the probability that the considered event occurs after time <span class="math inline">\(t\)</span>. For instance, <span class="math inline">\(S(t)\)</span> can measure the probability that a given customer survive in the portfolio at least until time <span class="math inline">\(t\)</span>. Mathematically, the survival function is defined as:
 <span class="math display" id="eq:survfun">\[\begin{equation}
   S(t) = P(T &gt; t) = 1 - F(t)
@@ -190,14 +191,14 @@ Figure 4.2: Survival function <span class="math inline">\(S_T(t)\)</span> with <
 </p>
 </div>
 </div>
-<div id="hazard-and-cumulative-hazard-functions" class="section level3" number="4.3.1">
-<h3><span class="header-section-number">4.3.1</span> Hazard and Cumulative Hazard functions</h3>
+<div id="hazard-and-cumulative-hazard-functions" class="section level3" number="4.3.2">
+<h3><span class="header-section-number">4.3.2</span> Hazard and Cumulative Hazard functions</h3>
 <p>Another key concept in duration analysis is the hazard function <span class="math inline">\(\lambda(t)\)</span> which approximates the probability that the event occurs at time <span class="math inline">\(t\)</span>. For instance, <span class="math inline">\(\lambda(t)\)</span> can measure the probability that a given individual leaves the firm portfolio at time <span class="math inline">\(t\)</span>. Formally, it is expressed as follows:
 <span class="math display" id="eq:hazfun">\[\begin{equation}
   \lambda(t) = \lim_{\Delta t \to 0} \frac{P\big[t \leq T &lt; t + \Delta t | T \geq t \big]}{\Delta t}
   \tag{4.3}
 \end{equation}\]</span></p>
-<p>Using the Bayes formula, equation <a href="4.3-probabilistic-concepts.html#eq:hazfun">(4.3)</a> can also be written as (see equation <a href="#eq:hazfunproof">(<strong>??</strong>)</a> in appendix):
+<p>Using the Bayes formula, equation <a href="4.3-probabilistic-concepts.html#eq:hazfun">(4.3)</a> can also be written as (see equation <a href="duration-models.html#eq:hazfunproof">(6.1)</a> in appendix):
 <span class="math display" id="eq:hazfunbis">\[\begin{equation}
   \lambda(t) = \frac{-\text{d} \ln \big(S(t)\big)}{\text{d} t}
   \tag{4.4}

@@ -123,7 +123,8 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="4.3" data-path="4.3-probabilistic-concepts.html"><a href="4.3-probabilistic-concepts.html"><i class="fa fa-check"></i><b>4.3</b> Probabilistic concepts</a>
 <ul>
-<li class="chapter" data-level="4.3.1" data-path="4.3-probabilistic-concepts.html"><a href="4.3-probabilistic-concepts.html#hazard-and-cumulative-hazard-functions"><i class="fa fa-check"></i><b>4.3.1</b> Hazard and Cumulative Hazard functions</a></li>
+<li class="chapter" data-level="4.3.1" data-path="4.3-probabilistic-concepts.html"><a href="4.3-probabilistic-concepts.html#survival-function"><i class="fa fa-check"></i><b>4.3.1</b> Survival function</a></li>
+<li class="chapter" data-level="4.3.2" data-path="4.3-probabilistic-concepts.html"><a href="4.3-probabilistic-concepts.html#hazard-and-cumulative-hazard-functions"><i class="fa fa-check"></i><b>4.3.2</b> Hazard and Cumulative Hazard functions</a></li>
 </ul></li>
 <li class="chapter" data-level="4.4" data-path="4.4-nonparametric-models.html"><a href="4.4-nonparametric-models.html"><i class="fa fa-check"></i><b>4.4</b> Nonparametric models</a>
 <ul>
@@ -217,7 +218,7 @@ r_j = (d_j + m_j) + \dots + (d_k + m_k) = \sum_{l|l \geq j} (d_l + m_l)
   \hat{\Lambda}(t) = \sum_{j | t_j \leq t} \hat{\lambda}_{j} = \sum_{j | t_j \leq t} \frac{d_j}{r_j}
   \tag{4.10}
 \end{equation}\]</span></p>
-<p>Exponentiating <span class="math inline">\(\hat{\Lambda}(t)\)</span>, one can obtain a second estimate of the survival function (see equation <a href="#eq:linksurvcumhaz">(<strong>??</strong>)</a> in the appendix):</p>
+<p>Exponentiating <span class="math inline">\(\hat{\Lambda}(t)\)</span>, one can obtain a second estimate of the survival function (see equation <a href="duration-models.html#eq:linksurvcumhaz">(6.2)</a> in the appendix):</p>
 <p><span class="math display" id="eq:survest">\[\begin{equation}
     \tilde{S}(t) = \exp \big( -\hat{\Lambda}(t) \big)
     \tag{4.11}
