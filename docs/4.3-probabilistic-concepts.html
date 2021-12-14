@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 1 Introduction | Portfolio, Churn &amp; Customer Value</title>
+  <title>4.3 Probabilistic concepts | Portfolio, Churn &amp; Customer Value</title>
   <meta name="description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 1 Introduction | Portfolio, Churn &amp; Customer Value" />
+  <meta property="og:title" content="4.3 Probabilistic concepts | Portfolio, Churn &amp; Customer Value" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 1 Introduction | Portfolio, Churn &amp; Customer Value" />
+  <meta name="twitter:title" content="4.3 Probabilistic concepts | Portfolio, Churn &amp; Customer Value" />
   
   <meta name="twitter:description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="1.1-context.html"/>
+<link rel="prev" href="4.2-censoring-and-truncation.html"/>
+<link rel="next" href="4.4-nonparametric-models.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -141,7 +141,7 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="4.6" data-path="4.6-semi-parametric-estimation.html"><a href="4.6-semi-parametric-estimation.html"><i class="fa fa-check"></i><b>4.6</b> Semi-parametric estimation</a>
 <ul>
-<li class="chapter" data-level="4.6.1" data-path="4.6-semi-parametric-estimation.html"><a href="4.6-semi-parametric-estimation.html#pproportional-hazards-models"><i class="fa fa-check"></i><b>4.6.1</b> Pproportional Hazards models</a></li>
+<li class="chapter" data-level="4.6.1" data-path="4.6-semi-parametric-estimation.html"><a href="4.6-semi-parametric-estimation.html#proportional-hazards-models"><i class="fa fa-check"></i><b>4.6.1</b> Proportional Hazards models</a></li>
 <li class="chapter" data-level="4.6.2" data-path="4.6-semi-parametric-estimation.html"><a href="4.6-semi-parametric-estimation.html#cox-ph-model"><i class="fa fa-check"></i><b>4.6.2</b> Cox PH model</a></li>
 </ul></li>
 </ul></li>
@@ -172,16 +172,63 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="intro" class="section level1" number="1">
-<h1><span class="header-section-number">Chapter 1</span> Introduction</h1>
+<div id="probabilistic-concepts" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> Probabilistic concepts</h2>
+<p>In survival analysis, the response variable denoted <span class="math inline">\(T\)</span> is a time-to-event variable. Instead of estimating the expected failure time, survival models estimate the <em>survival</em> and <em>hazard rate</em> functions which depend on the realization of <span class="math inline">\(T\)</span>.</p>
+<div id="survival-function" class="section level4" number="4.3.0.1">
+<h4><span class="header-section-number">4.3.0.1</span> Survival function</h4>
+<p>The survival function <span class="math inline">\(S(t)\)</span> represents the probability that the considered event occurs after time <span class="math inline">\(t\)</span>. For instance, <span class="math inline">\(S(t)\)</span> can measure the probability that a given customer survive in the portfolio at least until time <span class="math inline">\(t\)</span>. Mathematically, the survival function is defined as:
+<span class="math display" id="eq:survfun">\[\begin{equation}
+  S(t) = P(T &gt; t) = 1 - F(t)
+  \tag{4.2}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(F(t)\)</span> is the cumulative distribution function.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:survfunplot"></span>
+<img src="imgs/surv_fun_plot.png" alt="Survival function $S_T(t)$ with $T \sim \mathcal{E} (1)$" width="400pt" height="300pt" />
+<p class="caption">
+Figure 4.2: Survival function <span class="math inline">\(S_T(t)\)</span> with <span class="math inline">\(T \sim \mathcal{E} (1)\)</span>
+</p>
+</div>
+</div>
+<div id="hazard-and-cumulative-hazard-functions" class="section level3" number="4.3.1">
+<h3><span class="header-section-number">4.3.1</span> Hazard and Cumulative Hazard functions</h3>
+<p>Another key concept in duration analysis is the hazard function <span class="math inline">\(\lambda(t)\)</span> which approximates the probability that the event occurs at time <span class="math inline">\(t\)</span>. For instance, <span class="math inline">\(\lambda(t)\)</span> can measure the probability that a given individual leaves the firm portfolio at time <span class="math inline">\(t\)</span>. Formally, it is expressed as follows:
+<span class="math display" id="eq:hazfun">\[\begin{equation}
+  \lambda(t) = \lim_{\Delta t \to 0} \frac{P\big[t \leq T &lt; t + \Delta t | T \geq t \big]}{\Delta t}
+  \tag{4.3}
+\end{equation}\]</span></p>
+<p>Using the Bayes formula, equation <a href="4.3-probabilistic-concepts.html#eq:hazfun">(4.3)</a> can also be written as (see equation <a href="#eq:hazfunproof">(<strong>??</strong>)</a> in appendix):
+<span class="math display" id="eq:hazfunbis">\[\begin{equation}
+  \lambda(t) = \frac{-\text{d} \ln \big(S(t)\big)}{\text{d} t}
+  \tag{4.4}
+\end{equation}\]</span></p>
+<p>Finally, integrating the instantaneous hazard function gives the cumulative hazard function which can be more precisely estimated than the hazard function <span class="citation">(<a href="#ref-CAMERON_TRIVEDI" role="doc-biblioref">Cameron and Trivedi 2005</a>)</span> and is defined as:</p>
+<p><span class="math display" id="eq:cumhazfun">\[\begin{equation}
+  \Lambda (t) = \int_{0}^{t} \lambda(s) \text{d}s = \ln \big(S(t)\big)
+  \tag{4.5}
+\end{equation}\]</span></p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:cumhazplot"></span>
+<img src="imgs/cum_haz_plot.png" alt="Cumulative Hazard function $\Lambda_T(t)$ with $T \sim \mathcal{E} (1)$" width="400pt" height="300pt" />
+<p class="caption">
+Figure 4.3: Cumulative Hazard function <span class="math inline">\(\Lambda_T(t)\)</span> with <span class="math inline">\(T \sim \mathcal{E} (1)\)</span>
+</p>
+</div>
+<p>Thus, the hazard, survival and cumulative hazard functions are three mathematical functions which describe the same distribution.</p>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-CAMERON_TRIVEDI" class="csl-entry">
+Cameron, A. Colin, and Pravin K. Trivedi. 2005. <em>Microeconometrics: Methods and Applications</em>. Edited by Cambridge University Press.
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="1.1-context.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="4.2-censoring-and-truncation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="4.4-nonparametric-models.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

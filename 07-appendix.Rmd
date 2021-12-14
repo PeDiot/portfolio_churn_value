@@ -29,13 +29,23 @@ In this part, some proofs of the mathematical concepts used in the study are der
 
 \begin{equation}
   \begin{aligned}
-  \Lambda(t)      & = \int_{0}^{t} \lambda(s)ds \\\\
-  \iff \Lambda(t) & = \int_{0}^{t} \frac{f(s)}{S(s)}ds \\\\
-  \iff \Lambda(t) & = -\ln \big(S(t)\big) \\\\
-  \iff S(t)       & = \exp \big(-\Lambda(t)\big)
+       & \Lambda(t) = \int_{0}^{t} \lambda(s)ds \\\\
+  \iff & \Lambda(t) = \int_{0}^{t} \frac{f(s)}{S(s)}ds \\\\
+  \iff & \Lambda(t) = -\ln \big(S(t)\big) \\\\
+  \iff & S(t) = \exp \big(-\Lambda(t)\big)
   \end{aligned}
   (\#eq:linksurvcumhaz)
 \end{equation}
 
+**Hazard function in AFT models**
 
+\begin{equation}
+  \begin{aligned}
+       & \ln t = \pmb{x}^{'}\beta + u \\\\
+  \iff & t = \text{e}^{\pmb{x}^{'}\beta + u} \\\\
+  \iff & t = \text{e}^{\pmb{x}^{'}\beta} v \ \text{with } v = e^u \\\\
+  \iff & \lambda(t|\pmb{x}) = \lambda_0 \big(t \text{e}^{-\pmb{x'}\beta} \big) \text{e}^{\pmb{x'}\beta} \ \text{with } v = t \text{e}^{-\pmb{x'}\beta}
+  \end{aligned}
+  (\#eq:hazaftproof)
+\end{equation}
 

@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 1 Introduction | Portfolio, Churn &amp; Customer Value</title>
+  <title>4.6 Semi-parametric estimation | Portfolio, Churn &amp; Customer Value</title>
   <meta name="description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 1 Introduction | Portfolio, Churn &amp; Customer Value" />
+  <meta property="og:title" content="4.6 Semi-parametric estimation | Portfolio, Churn &amp; Customer Value" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 1 Introduction | Portfolio, Churn &amp; Customer Value" />
+  <meta name="twitter:title" content="4.6 Semi-parametric estimation | Portfolio, Churn &amp; Customer Value" />
   
   <meta name="twitter:description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="1.1-context.html"/>
+<link rel="prev" href="4.5-parametric-models.html"/>
+<link rel="next" href="5-ml.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -141,7 +141,7 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="4.6" data-path="4.6-semi-parametric-estimation.html"><a href="4.6-semi-parametric-estimation.html"><i class="fa fa-check"></i><b>4.6</b> Semi-parametric estimation</a>
 <ul>
-<li class="chapter" data-level="4.6.1" data-path="4.6-semi-parametric-estimation.html"><a href="4.6-semi-parametric-estimation.html#pproportional-hazards-models"><i class="fa fa-check"></i><b>4.6.1</b> Pproportional Hazards models</a></li>
+<li class="chapter" data-level="4.6.1" data-path="4.6-semi-parametric-estimation.html"><a href="4.6-semi-parametric-estimation.html#proportional-hazards-models"><i class="fa fa-check"></i><b>4.6.1</b> Proportional Hazards models</a></li>
 <li class="chapter" data-level="4.6.2" data-path="4.6-semi-parametric-estimation.html"><a href="4.6-semi-parametric-estimation.html#cox-ph-model"><i class="fa fa-check"></i><b>4.6.2</b> Cox PH model</a></li>
 </ul></li>
 </ul></li>
@@ -172,16 +172,49 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="intro" class="section level1" number="1">
-<h1><span class="header-section-number">Chapter 1</span> Introduction</h1>
+<div id="semi-parametric-estimation" class="section level2" number="4.6">
+<h2><span class="header-section-number">4.6</span> Semi-parametric estimation</h2>
+<div id="proportional-hazards-models" class="section level3" number="4.6.1">
+<h3><span class="header-section-number">4.6.1</span> Proportional Hazards models</h3>
+<p>Parametric models assume that the baseline (or raw) hazard belongs to a specific distribution. This assumption can be sometimes too restrictive and semi-parametric models can be more adapted to describe the duration data.</p>
+<p>In <em>proportional hazards</em> (PH) models, the instantaneous risk function is  to the baseline hazard <span class="math inline">\(\lambda_0 (t,\alpha)\)</span> modulo a  depending on the covariates <span class="math inline">\(\phi(\pmb{x}, \beta)\)</span>. These models allow to generalize the basic survival models to a survival regression model which permits to take individuals’ heterogeneity into consideration <span class="citation">(<a href="#ref-RMS" role="doc-biblioref">Harrell 1984</a>)</span>. The general mathematical formulation is expressed as follows:</p>
+<p><span class="math display" id="eq:ph">\[\begin{equation}
+    \lambda(t|\pmb{x}) = \lambda_0 (t,\alpha)  \phi(\pmb{x}, \beta) 
+    \tag{4.17}
+\end{equation}\]</span></p>
+<p>Note that when the function form of <span class="math inline">\(\lambda_0 (t,\alpha)\)</span> is known, we are in the case of parametric estimation. For instance, the exponential, Weibull, Gompertz and Cox models are PH models since their respective hazards are function of some covariates.</p>
+</div>
+<div id="cox-ph-model" class="section level3" number="4.6.2">
+<h3><span class="header-section-number">4.6.2</span> Cox PH model</h3>
+<p>The Cox <em>proportional hazards</em> model is the most popular for the analysis of duration data. This model is said to be semi-parametric as makes no assumption regarding the nature of the baseline hazard function <span class="math inline">\(\lambda_0(t)\)</span>. The parametric part only relies in the modelling of the effect of some covariates on the hazard function <span class="math inline">\(\lambda(t)\)</span>. The relationship between the vector of covariates and the log hazard is linear and the parameters can be estimated by maximizing the log-likelihood. The Cox PH model solely assumes that predictors act multiplicatively on the hazard function.</p>
+<p>The model is formulated as in equation <a href="4.6-semi-parametric-estimation.html#eq:ph">(4.17)</a> with <span class="math inline">\(\phi\)</span> is the exponential function. The conditional hazard function is expressed as follows:</p>
+<p><span class="math display" id="eq:cox">\[\begin{equation}
+    \lambda(t|\pmb{x}) = \lambda_0 (t,\alpha)  \text{e}^{\pmb{x}, \beta}
+    \tag{4.18}
+\end{equation}\]</span></p>
+<p>The Cox model is assumed to be proportional as the relative hazard ratio between two individuals <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> does not vary over time, such that:</p>
+<p><span class="math display" id="eq:prophazratio">\[\begin{equation}
+  \frac{\lambda(t|\pmb{x_i})}{\lambda(t|\pmb{x_j})} = \frac{\text{e}^{\pmb{x_i}, \beta}}{\text{e}^{\pmb{x_j}, \beta}}
+  \tag{4.19}
+\end{equation}\]</span></p>
+<p>The formulation stated in equation <a href="4.6-semi-parametric-estimation.html#eq:prophazratio">(4.19)</a> needs to be verify when one wants to estimated a Cox model on real-life data.</p>
+
+</div>
+</div>
+<!-- </div> -->
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-RMS" class="csl-entry">
+Harrell, Frank. 1984. <em>Regression Modeling Strategies : With Applications to Linear Models, Logistic and Ordinal Regression, and Survival Analysis</em>. Edited by Springer.
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="1.1-context.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="4.5-parametric-models.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="5-ml.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

@@ -27,11 +27,11 @@ plot_col <- "#4DB9A5"
 ```
 
 
-# Theoretical Framework {#framework}
+# Duration models {#duration}
 
-This chapter presents theoretical basis of the models and the algorithms that are used to model customer portfolios. As a customer's lifetime in a portfolio is usually represented by the time to churn, duration models are adapted to the data we have at our disposal. Thus, it is decided to introduce standard survival techniques as well as machine learning algorithms suited to time-to-event data. Methods to estimate customer's value are also introduced in this chapter. 
+This chapter presents theoretical basis of the models that are used to model customer portfolios. As a customer's lifetime in a portfolio is usually represented by the time to churn, duration models are adapted to the data we have at our disposal. Thus, this part focuses on introducing standard survival techniques. 
 
-## Duration models
+## Definition
 
 According to Cameron & Trivedi [@CAMERON_TRIVEDI], duration models (also called survival models) aims at measuring the time spent in a certain state before transitioning to another state. In Econometrics, 
 
@@ -50,11 +50,11 @@ Since measuring the time until the event is needed for multiple purposes, durati
 | **Churn analysis** | **Time until a customer leave the portfolio** |
 
 
-### Censoring and Truncation
+## Censoring and Truncation
 
 When dealing with survival data, some observations are usually **censored** meaning they are related to spells which are not completely observed. Duration data can also suffer from a selection bias which is called **truncation**. 
 
-#### Censoring mechanisms {-}
+### Censoring mechanisms
 
 **Left-censoring** occurs when the event of interest occurs before the beginning of the observation period. For example, an individual is included in a study of duration of unemployment at $t_0$. At that time he has already been unemployed for a period but he cannot recall exactly the duration of this period. If we observe that he finds a job again at $t_1$, we can only deduce that the duration of unemployment is bigger than $t_1-t_0$, this individual is left-censored. Observation 2 on figure \@ref(fig:censoring) is associated with a left-censored spell [@LIU_SCOR].  
 
@@ -68,7 +68,7 @@ A spell is considered **right-censored** when it is observed from time $t_0$ unt
   (\#eq:censoring)
 \end{equation}
 
-#### Selection bias {-} 
+### Selection bias
 
 Survival data suffers from a **selection bias** (or truncation) when only a sub-sample of the population of interest is studied. A customer entering the firm's portfolio after the end of the study is said to be **right-truncated**, whereas a client who has left the portfolio before the beginning of the study is considered **left-truncated**. Mathematically, a random variable $X$ is truncated by a subset $A \in \mathbb{R}^+$ if instead of $\Omega(X)$, we solely observe $\Omega(X)\bigcap A$. On figure \@ref(fig:censoring), the first and fifth observations suffers from a selection bias. 
 
@@ -76,12 +76,12 @@ Survival data suffers from a **selection bias** (or truncation) when only a sub-
 knitr::include_graphics(path = "./imgs/censoring_and_truncation.png")
 ```
 
-### Probabilistic concepts 
+## Probabilistic concepts 
 
 In survival analysis, the response variable denoted $T$ is a time-to-event variable. Instead of estimating the expected failure time, survival models estimate the *survival* and *hazard rate* functions which depend on the realization of $T$. 
 
 
-#### Survival function {-}
+#### Survival function
 
 The survival function $S(t)$ represents the probability that the considered event occurs after time $t$. For instance, $S(t)$ can measure the probability that a given customer survive in the portfolio at least until time $t$. Mathematically, the survival function is defined as: 
 \begin{equation}
@@ -110,7 +110,7 @@ knitr::include_graphics(path = "./imgs/surv_fun_plot.png")
 ```
 
 
-#### Hazard and Cumulative Hazard functions {-}
+### Hazard and Cumulative Hazard functions 
 
 Another key concept in duration analysis is the hazard function $\lambda(t)$ which approximates the probability that the event occurs at time $t$. For instance, $\lambda(t)$ can measure the probability that a given individual leaves the firm portfolio at time $t$. Formally, it is expressed as follows: 
 \begin{equation}
@@ -149,11 +149,11 @@ knitr::include_graphics(path = "./imgs/cum_haz_plot.png")
 
 Thus, the hazard, survival and cumulative hazard functions are three mathematical functions which describe the same distribution. 
 
-### Nonparametric models 
+## Nonparametric models 
 
 When dealing with duration data, these methods are helpful to have a general overview of the raw (unconditional) hazard. Nonparametric models are rather used for data description rather than prediction. No explanatory variable is included in these models except for treatment variables such as the type of contract a customer has subscribe.  
 
-#### Notations {-}
+### Notations
 
 Let us consider a sample with $N$ observations with $k$ discrete failure time (e.g. a failure can be a churn event), such that $\forall j \in [\![1; k]\!]$ : 
 
@@ -166,7 +166,7 @@ Let us consider a sample with $N$ observations with $k$ discrete failure time (e
   (\#eq:exposed)
 \end{equation}
 
-#### Hazard function estimator {-}
+### Hazard function estimator
 
 As the instantaneous hazard at time $t_j$ is defined as $\lambda_j = P[T=t_j|T\geq t_j]$, a trivial estimator of $\lambda_j$ is obtained by dividing the number of durations for which the event is realized in $t_j$ by the total number of exposed durations at time $t_j^{-}$. Formally, it is expressed as: 
 
@@ -175,7 +175,7 @@ As the instantaneous hazard at time $t_j$ is defined as $\lambda_j = P[T=t_j|T\g
   (\#eq:hazest)
 \end{equation}
 
-#### Kaplan-Meier estimator {-}
+### Kaplan-Meier estimator
 
 Once the hazard function estimator computed, the discrete-time survivor function can be estimated using the Kaplan-Meier product-limit estimator. To estimate the survival at time $t$, this estimator computes the joint probability that a spell stays in the same state until $t$ (e.g. remaining loyal to a firm until a certain time). This method is based on conditional probabilities and the survival function estimate is defined as: 
 
@@ -191,7 +191,7 @@ When plotting the survival curve after having performed the Kaplan-Meier estimat
   (\#eq:greenwood)
 \end{equation}
 
-#### Nelson-Aalen estimator {-}
+### Nelson-Aalen estimator
 
 The cumulative hazard function estimate is given by the Nelson-Aalen estimator which consists in summing up the hazard estimates for each failure time. 
 
@@ -207,32 +207,17 @@ Exponentiating $\hat{\Lambda}(t)$, one can obtain a second estimate of the survi
     (\#eq:survest)
 \end{equation}
 
+## Parametric models
 
-### Parametric models
-
-The nonparametric estimation is undoubtedly useful when it comes to have a general overview on the survival data. However, one may want to model the hazard and survivor functions with a functional form in which unknown parameters need to be optimized. In parametric estimation, there are two main groups of models to estimate the conditional hazard function $\lambda(t | \pmb{x})$: 
-
-- the Parametric Proportional Hazards models (PH), 
-- the Accelerated Failure Time models (AFT).
+The nonparametric estimation is undoubtedly useful when it comes to have a general overview on the survival data. However, one may want to model the hazard and survivor functions with a functional form in which unknown parameters need to be optimized. 
 
 When implementing parametric models, $\lambda$, $S$ and $\Lambda$ are expressed based on the chosen parametric form. The instantaneous hazard function can either be constant or monotone. In our study we assume that the explanatory variables are time-constant as we do not have dynamic data at our disposal. 
 
 Parametric estimation has a twofold purpose that is to implement a robust model to estimate the risk that a specific event occurs while identifying the variables (or covariates) which best explain this risk. 
 
-#### Parametric Proportional Hazards models {-}
+### Constant hazard (exponential model)
 
-In PH models,  the instantaneous risk function is \textbf{proportional} to the baseline hazard $\lambda_0 (t,\alpha)$ modulo a \textbf{scaling factor} depending on the covariates $\phi(\pmb{x}, \beta)$. These models allow to generalize the basic survival models to a survival regression model which permits to take individuals' heterogeneity into consideration [@RMS].  The general mathematical formulation is expressed as follows: 
-
-\begin{equation}
-    \lambda(t|\pmb{x}) = \lambda_0 (t,\alpha)  \phi(\pmb{x}, \beta) 
-    (\#eq:ph)
-\end{equation}
-
-The exponential, Weibull, Gompertz and Cox models are PH models since their respective hazards are function of some covariates. 
-
-##### Exponential distribution {-}
-
-The exponential distribution models the time between events in a Poisson process andhas the key property of being *memoryless*. Let us note $T$ a time-to-event variable following such that $T \sim \mathcal{E}(\theta)$ where $\theta$ is the *rate* parameter. In this context, *memorylessness* can be defined as follows: 
+The exponential distribution models the time between events in a Poisson process and has the key property of being *memoryless*. Let us note $T$ a time-to-event variable following such that $T \sim \mathcal{E}(\theta)$ where $\theta$ is the *rate* parameter. In this context, *memorylessness* can be defined as follows: 
 
 \begin{equation}
   \mathbb{P}(T>t+s | T > t) = \mathbb{P}(T>s)
@@ -252,7 +237,9 @@ $\forall t \geq 0\ ,\ \theta > 0$ the density, hazard and survival functions can
 
 Thus, the exponential distribution is characterized by a **constant** hazard function which is a consequence of *memorylessness*. 
 
-##### Weibull distribution {-}
+### Monotone hazard
+
+#### Weibull model {-}
 
 The Weibull distribution is a less restrictive generalization of the exponential distribution defined by a shape parameter $\nu$ and a scale parameter $\theta$. 
 
@@ -386,10 +373,73 @@ ggsave(filename = "./imgs/weibull_plots.png",
 knitr::include_graphics(path = "./imgs/weibull_plots.png")
 ```
 
+#### Other models {-}
 
-#### Accelerated Failure Time models {-}
+Different probabilistic distributions can be chosen the model the hazard and survival functions related to a time-to-event variable. The Gompertz model is usually used for mortality data in biostatistics. The gamma model depends both on the gamma and inverse-gamma distribution and is also based on shape and scale parameters. 
 
-#### Cox PH model {-}
+### Concave and convex hazard
 
-## Machine Learning techniques {#ML}
+When the hazard related to the studied phenomenon varies, the distributions introduced above are limited as they model monotone hazard. The generalized Weibull model appears to be a good choice to estimate phenomena with concave or convex hazard. It is based on three parameters: $\nu$ (shape), $\theta$ (scale) and $\gamma$. When $\gamma = 1$, the generalized Weibull becomes the Weibull distribution $\mathcal{W}(\nu, \theta)$. 
 
+### Parametric estimation with covariates: AFT models
+
+*Accelerated failure time* (AFT) models specify that a set of covariates has a multiplicative impact on the failure time or an additive impact on the log failure time. In other words, the covariate's effect is to increase or decrease the duration of a spell. Modelling $\ln t$ rather than $t$, the AFT model is specified as follows: 
+
+\begin{equation}
+  \ln t = \pmb{x}^{'}\beta + u
+  (\#eq:aft)
+\end{equation}
+
+where $u$ is a random variable following a specific distribution on $(-\infty, \infty)$ which can be: 
+
+- log-normal, 
+- log-logistic, 
+- exponential, 
+- Weibull, 
+- gamma. 
+
+In this context, the instantaneous hazard function can be expressed as follows (see equation \@ref(eq:hazaftproof) in the appendix): 
+
+\begin{equation}
+    \lambda(t|\pmb{x}) = \lambda_0 \big(t \text{e}^{-\pmb{x'}\beta} \big)  \text{e}^{\pmb{x'}\beta}
+    (\#eq:hazaft)
+\end{equation}
+
+where $\lambda_0(.)$ denotes the baseline hazard function. 
+
+When $\text{e}^{-\pmb{x'}\beta} > 1$ the covariates accelerate the baseline hazard whereas the latter is decelerated when $\text{e}^{-\pmb{x'}\beta} < 1$. It can also be noted that in the case of *accelerated failure time* models, for a covariate $x_k > 0$, a negative regression coefficient leads to a smaller survival time. 
+
+## Semi-parametric estimation 
+
+### Proportional Hazards models 
+
+Parametric models assume that the baseline (or raw) hazard belongs to a specific distribution. This assumption can be sometimes too restrictive and semi-parametric models can be more adapted to describe the duration data. 
+
+In *proportional hazards* (PH) models, the instantaneous risk function is \textbf{proportional} to the baseline hazard $\lambda_0 (t,\alpha)$ modulo a \textbf{scaling factor} depending on the covariates $\phi(\pmb{x}, \beta)$. These models allow to generalize the basic survival models to a survival regression model which permits to take individuals' heterogeneity into consideration [@RMS].  The general mathematical formulation is expressed as follows: 
+
+\begin{equation}
+    \lambda(t|\pmb{x}) = \lambda_0 (t,\alpha)  \phi(\pmb{x}, \beta) 
+    (\#eq:ph)
+\end{equation}
+
+Note that when the function form of $\lambda_0 (t,\alpha)$ is known, we are in the case of parametric estimation. For instance, the exponential, Weibull, Gompertz and Cox models are PH models since their respective hazards are function of some covariates. 
+
+### Cox PH model 
+
+The Cox *proportional hazards* model is the most popular for the analysis of duration data. This model is said to be semi-parametric as makes no assumption regarding the nature of the baseline hazard function $\lambda_0(t)$. The parametric part only relies in the modelling of the effect of some covariates on the hazard function $\lambda(t)$. The relationship between the vector of covariates and the log hazard is linear and the parameters can be estimated by maximizing the log-likelihood. The Cox PH model solely assumes that predictors act multiplicatively on the hazard function.
+
+The model is formulated as in equation \@ref(eq:ph) with $\phi$ is the exponential function. The conditional hazard function is expressed as follows: 
+
+\begin{equation}
+    \lambda(t|\pmb{x}) = \lambda_0 (t,\alpha)  \text{e}^{\pmb{x}, \beta}
+    (\#eq:cox)
+\end{equation}
+
+The Cox model is assumed to be proportional as the relative hazard ratio between two individuals $i$ and $j$ does not vary over time, such that: 
+
+\begin{equation}
+  \frac{\lambda(t|\pmb{x_i})}{\lambda(t|\pmb{x_j})} = \frac{\text{e}^{\pmb{x_i}, \beta}}{\text{e}^{\pmb{x_j}, \beta}}
+  (\#eq:prophazratio)
+\end{equation}
+
+The formulation stated in equation \@ref(eq:prophazratio) needs to be verify when one wants to estimated a Cox model on real-life data. 
