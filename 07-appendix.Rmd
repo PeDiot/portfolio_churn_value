@@ -37,15 +37,44 @@ In this part, some proofs of the mathematical concepts used in the study are der
   (\#eq:linksurvcumhaz)
 \end{equation}
 
-**Hazard function in AFT models**
+```{r eval=FALSE}
+# **Hazard function in AFT models**
+
+# \begin{equation}
+# \begin{aligned}
+# & \ln t = \pmb{x}^{'}\beta + u \\\\
+# \iff & t = \text{e}^{\pmb{x}^{'}\beta + u} \\\\
+# \iff & t = \text{e}^{\pmb{x}^{'}\beta} v \ \text{with } v = e^u \\\\
+# \iff & \lambda(t|\pmb{x}) = \lambda_0 \big(t \text{e}^{-\pmb{x'}\beta} \big) \text{e}^{\pmb{x'}\beta} \ \text{with } v = t \text{e}^{-\pmb{x'}\beta}
+# \end{aligned}
+# (\#eq:hazaftproof)
+# \end{equation}
+```
+
+**Partial likelihood function in PH models**
+
+Based on equation \@ref(eq:contribpartiallik), one can derive the probability that all spells completed at $t_j$ ends in the $j^{\text{th}}$ failure time, such that:
 
 \begin{equation}
-  \begin{aligned}
-       & \ln t = \pmb{x}^{'}\beta + u \\\\
-  \iff & t = \text{e}^{\pmb{x}^{'}\beta + u} \\\\
-  \iff & t = \text{e}^{\pmb{x}^{'}\beta} v \ \text{with } v = e^u \\\\
-  \iff & \lambda(t|\pmb{x}) = \lambda_0 \big(t \text{e}^{-\pmb{x'}\beta} \big) \text{e}^{\pmb{x'}\beta} \ \text{with } v = t \text{e}^{-\pmb{x'}\beta}
-  \end{aligned}
-  (\#eq:hazaftproof)
+\begin{aligned}
+  \mathcal{L}_{p,\ t_j} & = \mathbb{P}\big[T_1 = t_j, \dots, T_{d_j} = t_j \ | \ R(t_j)\big] \\\\
+  & = \Pi_{m \in D(t_j)} \ \mathbb{P}\big[T_j = t_j | R(t_j) \big] \\\\
+  & = \Pi_{m \in D(t_j)} \ \frac{\phi(\pmb{\mathrm{x}_j}, \beta)}{\sum_{l \in R(t_j)} \phi(\pmb{\mathrm{x}_l}, \beta)} \\\\
+  & = \Pi_{m \in D(t_j)} \ \phi(\pmb{\mathrm{x}_j}, \beta) \times \Pi_{m \in D(t_j)} \ \frac{1}{\sum_{l \in R(t_j)} \phi(\pmb{\mathrm{x}_l}, \beta)} \\\\
+  \mathcal{L}_{p,\ t_j} & = \frac{\Pi_{m \in D(t_j)} \ \phi(\pmb{\mathrm{x}_j}, \beta)}{\Big[\sum_{l \in R(t_j)} \phi(\pmb{\mathrm{x}_l}, \beta)\Big]^{d_j}}
+\end{aligned}
+(\#eq:partlikproof1)
 \end{equation}
+
+The joint probability over the $k$ ordered discrete failure times then becomes: 
+
+\begin{equation}
+\begin{aligned}
+  \mathcal{L}_p & = \Pi_{j=1}^{k} \ \mathcal{L}_{p,\ t_j} \\\\
+  \mathcal{L}_p & = \Pi_{j=1}^{k} \ \frac{\Pi_{m \in D(t_j)} \ \phi(\pmb{\mathrm{x}_j}, \beta)}{\Big[\sum_{l \in R(t_j)} \phi(\pmb{\mathrm{x}_l}, \beta)\Big]^{d_j}}
+\end{aligned}
+(\#eq:partlikproof2)
+\end{equation}
+  
+
 

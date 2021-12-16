@@ -24,14 +24,14 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2021-12-14" />
+<meta name="date" content="2021-12-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="4.4-nonparametric-models.html"/>
+<link rel="prev" href="4.4-nonparam.html"/>
 <link rel="next" href="4.6-semi-parametric-estimation.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -126,19 +126,18 @@ div.csl-indent {
 <li class="chapter" data-level="4.3.1" data-path="4.3-probabilistic-concepts.html"><a href="4.3-probabilistic-concepts.html#survival-function"><i class="fa fa-check"></i><b>4.3.1</b> Survival function</a></li>
 <li class="chapter" data-level="4.3.2" data-path="4.3-probabilistic-concepts.html"><a href="4.3-probabilistic-concepts.html#hazard-and-cumulative-hazard-functions"><i class="fa fa-check"></i><b>4.3.2</b> Hazard and Cumulative Hazard functions</a></li>
 </ul></li>
-<li class="chapter" data-level="4.4" data-path="4.4-nonparametric-models.html"><a href="4.4-nonparametric-models.html"><i class="fa fa-check"></i><b>4.4</b> Nonparametric models</a>
+<li class="chapter" data-level="4.4" data-path="4.4-nonparam.html"><a href="4.4-nonparam.html"><i class="fa fa-check"></i><b>4.4</b> Nonparametric models</a>
 <ul>
-<li class="chapter" data-level="4.4.1" data-path="4.4-nonparametric-models.html"><a href="4.4-nonparametric-models.html#notations"><i class="fa fa-check"></i><b>4.4.1</b> Notations</a></li>
-<li class="chapter" data-level="4.4.2" data-path="4.4-nonparametric-models.html"><a href="4.4-nonparametric-models.html#hazard-function-estimator"><i class="fa fa-check"></i><b>4.4.2</b> Hazard function estimator</a></li>
-<li class="chapter" data-level="4.4.3" data-path="4.4-nonparametric-models.html"><a href="4.4-nonparametric-models.html#kaplan-meier-estimator"><i class="fa fa-check"></i><b>4.4.3</b> Kaplan-Meier estimator</a></li>
-<li class="chapter" data-level="4.4.4" data-path="4.4-nonparametric-models.html"><a href="4.4-nonparametric-models.html#nelson-aalen-estimator"><i class="fa fa-check"></i><b>4.4.4</b> Nelson-Aalen estimator</a></li>
+<li class="chapter" data-level="4.4.1" data-path="4.4-nonparam.html"><a href="4.4-nonparam.html#notations"><i class="fa fa-check"></i><b>4.4.1</b> Notations</a></li>
+<li class="chapter" data-level="4.4.2" data-path="4.4-nonparam.html"><a href="4.4-nonparam.html#hazard-function-estimator"><i class="fa fa-check"></i><b>4.4.2</b> Hazard function estimator</a></li>
+<li class="chapter" data-level="4.4.3" data-path="4.4-nonparam.html"><a href="4.4-nonparam.html#kaplan-meier-estimator"><i class="fa fa-check"></i><b>4.4.3</b> Kaplan-Meier estimator</a></li>
+<li class="chapter" data-level="4.4.4" data-path="4.4-nonparam.html"><a href="4.4-nonparam.html#nelson-aalen-estimator"><i class="fa fa-check"></i><b>4.4.4</b> Nelson-Aalen estimator</a></li>
 </ul></li>
 <li class="chapter" data-level="4.5" data-path="4.5-parametric-models.html"><a href="4.5-parametric-models.html"><i class="fa fa-check"></i><b>4.5</b> Parametric models</a>
 <ul>
 <li class="chapter" data-level="4.5.1" data-path="4.5-parametric-models.html"><a href="4.5-parametric-models.html#constant-hazard-exponential-model"><i class="fa fa-check"></i><b>4.5.1</b> Constant hazard (exponential model)</a></li>
 <li class="chapter" data-level="4.5.2" data-path="4.5-parametric-models.html"><a href="4.5-parametric-models.html#monotone-hazard"><i class="fa fa-check"></i><b>4.5.2</b> Monotone hazard</a></li>
 <li class="chapter" data-level="4.5.3" data-path="4.5-parametric-models.html"><a href="4.5-parametric-models.html#concave-and-convex-hazard"><i class="fa fa-check"></i><b>4.5.3</b> Concave and convex hazard</a></li>
-<li class="chapter" data-level="4.5.4" data-path="4.5-parametric-models.html"><a href="4.5-parametric-models.html#parametric-estimation-with-covariates-aft-models"><i class="fa fa-check"></i><b>4.5.4</b> Parametric estimation with covariates: AFT models</a></li>
 </ul></li>
 <li class="chapter" data-level="4.6" data-path="4.6-semi-parametric-estimation.html"><a href="4.6-semi-parametric-estimation.html"><i class="fa fa-check"></i><b>4.6</b> Semi-parametric estimation</a>
 <ul>
@@ -232,36 +231,13 @@ Figure 4.4: Hazard and Survival functions with <span class="math inline">\(T \si
 <h3><span class="header-section-number">4.5.3</span> Concave and convex hazard</h3>
 <p>When the hazard related to the studied phenomenon varies, the distributions introduced above are limited as they model monotone hazard. The generalized Weibull model appears to be a good choice to estimate phenomena with concave or convex hazard. It is based on three parameters: <span class="math inline">\(\nu\)</span> (shape), <span class="math inline">\(\theta\)</span> (scale) and <span class="math inline">\(\gamma\)</span>. When <span class="math inline">\(\gamma = 1\)</span>, the generalized Weibull becomes the Weibull distribution <span class="math inline">\(\mathcal{W}(\nu, \theta)\)</span>.</p>
 </div>
-<div id="parametric-estimation-with-covariates-aft-models" class="section level3" number="4.5.4">
-<h3><span class="header-section-number">4.5.4</span> Parametric estimation with covariates: AFT models</h3>
-<p><em>Accelerated failure time</em> (AFT) models specify that a set of covariates has a multiplicative impact on the failure time or an additive impact on the log failure time. In other words, the covariate’s effect is to increase or decrease the duration of a spell. Modelling <span class="math inline">\(\ln t\)</span> rather than <span class="math inline">\(t\)</span>, the AFT model is specified as follows:</p>
-<p><span class="math display" id="eq:aft">\[\begin{equation}
-  \ln t = \pmb{x}^{&#39;}\beta + u
-  \tag{4.15}
-\end{equation}\]</span></p>
-<p>where <span class="math inline">\(u\)</span> is a random variable following a specific distribution on <span class="math inline">\((-\infty, \infty)\)</span> which can be:</p>
-<ul>
-<li>log-normal,</li>
-<li>log-logistic,</li>
-<li>exponential,</li>
-<li>Weibull,</li>
-<li>gamma.</li>
-</ul>
-<p>In this context, the instantaneous hazard function can be expressed as follows (see equation <a href="duration-models.html#eq:hazaftproof">(6.3)</a> in the appendix):</p>
-<p><span class="math display" id="eq:hazaft">\[\begin{equation}
-    \lambda(t|\pmb{x}) = \lambda_0 \big(t \text{e}^{-\pmb{x&#39;}\beta} \big)  \text{e}^{\pmb{x&#39;}\beta}
-    \tag{4.16}
-\end{equation}\]</span></p>
-<p>where <span class="math inline">\(\lambda_0(.)\)</span> denotes the baseline hazard function.</p>
-<p>When <span class="math inline">\(\text{e}^{-\pmb{x&#39;}\beta} &gt; 1\)</span> the covariates accelerate the baseline hazard whereas the latter is decelerated when <span class="math inline">\(\text{e}^{-\pmb{x&#39;}\beta} &lt; 1\)</span>. It can also be noted that in the case of <em>accelerated failure time</em> models, for a covariate <span class="math inline">\(x_k &gt; 0\)</span>, a negative regression coefficient leads to a smaller survival time.</p>
-</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="4.4-nonparametric-models.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="4.4-nonparam.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="4.6-semi-parametric-estimation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>

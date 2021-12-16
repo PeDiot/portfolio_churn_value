@@ -24,7 +24,7 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2021-12-14" />
+<meta name="date" content="2021-12-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -126,19 +126,18 @@ div.csl-indent {
 <li class="chapter" data-level="4.3.1" data-path="4.3-probabilistic-concepts.html"><a href="4.3-probabilistic-concepts.html#survival-function"><i class="fa fa-check"></i><b>4.3.1</b> Survival function</a></li>
 <li class="chapter" data-level="4.3.2" data-path="4.3-probabilistic-concepts.html"><a href="4.3-probabilistic-concepts.html#hazard-and-cumulative-hazard-functions"><i class="fa fa-check"></i><b>4.3.2</b> Hazard and Cumulative Hazard functions</a></li>
 </ul></li>
-<li class="chapter" data-level="4.4" data-path="4.4-nonparametric-models.html"><a href="4.4-nonparametric-models.html"><i class="fa fa-check"></i><b>4.4</b> Nonparametric models</a>
+<li class="chapter" data-level="4.4" data-path="4.4-nonparam.html"><a href="4.4-nonparam.html"><i class="fa fa-check"></i><b>4.4</b> Nonparametric models</a>
 <ul>
-<li class="chapter" data-level="4.4.1" data-path="4.4-nonparametric-models.html"><a href="4.4-nonparametric-models.html#notations"><i class="fa fa-check"></i><b>4.4.1</b> Notations</a></li>
-<li class="chapter" data-level="4.4.2" data-path="4.4-nonparametric-models.html"><a href="4.4-nonparametric-models.html#hazard-function-estimator"><i class="fa fa-check"></i><b>4.4.2</b> Hazard function estimator</a></li>
-<li class="chapter" data-level="4.4.3" data-path="4.4-nonparametric-models.html"><a href="4.4-nonparametric-models.html#kaplan-meier-estimator"><i class="fa fa-check"></i><b>4.4.3</b> Kaplan-Meier estimator</a></li>
-<li class="chapter" data-level="4.4.4" data-path="4.4-nonparametric-models.html"><a href="4.4-nonparametric-models.html#nelson-aalen-estimator"><i class="fa fa-check"></i><b>4.4.4</b> Nelson-Aalen estimator</a></li>
+<li class="chapter" data-level="4.4.1" data-path="4.4-nonparam.html"><a href="4.4-nonparam.html#notations"><i class="fa fa-check"></i><b>4.4.1</b> Notations</a></li>
+<li class="chapter" data-level="4.4.2" data-path="4.4-nonparam.html"><a href="4.4-nonparam.html#hazard-function-estimator"><i class="fa fa-check"></i><b>4.4.2</b> Hazard function estimator</a></li>
+<li class="chapter" data-level="4.4.3" data-path="4.4-nonparam.html"><a href="4.4-nonparam.html#kaplan-meier-estimator"><i class="fa fa-check"></i><b>4.4.3</b> Kaplan-Meier estimator</a></li>
+<li class="chapter" data-level="4.4.4" data-path="4.4-nonparam.html"><a href="4.4-nonparam.html#nelson-aalen-estimator"><i class="fa fa-check"></i><b>4.4.4</b> Nelson-Aalen estimator</a></li>
 </ul></li>
 <li class="chapter" data-level="4.5" data-path="4.5-parametric-models.html"><a href="4.5-parametric-models.html"><i class="fa fa-check"></i><b>4.5</b> Parametric models</a>
 <ul>
 <li class="chapter" data-level="4.5.1" data-path="4.5-parametric-models.html"><a href="4.5-parametric-models.html#constant-hazard-exponential-model"><i class="fa fa-check"></i><b>4.5.1</b> Constant hazard (exponential model)</a></li>
 <li class="chapter" data-level="4.5.2" data-path="4.5-parametric-models.html"><a href="4.5-parametric-models.html#monotone-hazard"><i class="fa fa-check"></i><b>4.5.2</b> Monotone hazard</a></li>
 <li class="chapter" data-level="4.5.3" data-path="4.5-parametric-models.html"><a href="4.5-parametric-models.html#concave-and-convex-hazard"><i class="fa fa-check"></i><b>4.5.3</b> Concave and convex hazard</a></li>
-<li class="chapter" data-level="4.5.4" data-path="4.5-parametric-models.html"><a href="4.5-parametric-models.html#parametric-estimation-with-covariates-aft-models"><i class="fa fa-check"></i><b>4.5.4</b> Parametric estimation with covariates: AFT models</a></li>
 </ul></li>
 <li class="chapter" data-level="4.6" data-path="4.6-semi-parametric-estimation.html"><a href="4.6-semi-parametric-estimation.html"><i class="fa fa-check"></i><b>4.6</b> Semi-parametric estimation</a>
 <ul>
@@ -178,33 +177,63 @@ div.csl-indent {
 <div id="proportional-hazards-models" class="section level3" number="4.6.1">
 <h3><span class="header-section-number">4.6.1</span> Proportional Hazards models</h3>
 <p>Parametric models assume that the baseline (or raw) hazard belongs to a specific distribution. This assumption can be sometimes too restrictive and semi-parametric models can be more adapted to describe the duration data.</p>
-<p>In <em>proportional hazards</em> (PH) models, the instantaneous risk function is  to the baseline hazard <span class="math inline">\(\lambda_0 (t,\alpha)\)</span> modulo a  depending on the covariates <span class="math inline">\(\phi(\pmb{x}, \beta)\)</span>. These models allow to generalize the basic survival models to a survival regression model which permits to take individuals’ heterogeneity into consideration <span class="citation">(<a href="#ref-RMS" role="doc-biblioref">Harrell 1984</a>)</span>. The general mathematical formulation is expressed as follows:</p>
+<p>In <em>proportional hazards</em> (PH) models, the instantaneous risk function is  to the baseline hazard <span class="math inline">\(\lambda_0 (t,\alpha)\)</span> modulo a  depending on the covariates <span class="math inline">\(\phi(\pmb{\mathrm{x}}, \beta)\)</span>. These models allow to generalize the basic survival models to a survival regression model which permits to take individuals’ heterogeneity into consideration <span class="citation">(<a href="#ref-RMS" role="doc-biblioref">Harrell 1984</a>)</span>. The general mathematical formulation is expressed as follows:</p>
 <p><span class="math display" id="eq:ph">\[\begin{equation}
-    \lambda(t|\pmb{x}) = \lambda_0 (t,\alpha)  \phi(\pmb{x}, \beta) 
+    \lambda(t|\pmb{\mathrm{x}}) = \lambda_0 (t,\alpha)  \phi(\pmb{\mathrm{x}}, \beta) 
+    \tag{4.15}
+\end{equation}\]</span></p>
+<p>Note that when the function form of <span class="math inline">\(\lambda_0 (t,\alpha)\)</span> is known, we are in the case of parametric estimation. For instance, the exponential, Weibull and Gompertz models are PH models since their respective hazards are function of some covariates.</p>
+<div id="what-does-proportional-hazards-mean" class="section level4 unnumbered">
+<h4>What does <em>proportional hazards</em> mean?</h4>
+<p>PH models are said to be proportional as the relative hazard ratio between two individuals <span class="math inline">\(i\)</span> and <span class="math inline">\(k\)</span> does not vary over time, such that:</p>
+<p><span class="math display" id="eq:prophazratio">\[\begin{equation}
+  \frac{\lambda(t|\pmb{x_i})}{\lambda(t|\pmb{x_k})} = \frac{\phi(\pmb{x_i}, \beta) }{\phi(\pmb{x_j}, \beta)}
+  \tag{4.16}
+\end{equation}\]</span></p>
+<p>The formulation stated in equation <a href="4.6-semi-parametric-estimation.html#eq:prophazratio">(4.16)</a> needs to be verified when one wants to fit a PH model to real-life data.</p>
+</div>
+<div id="marginal-effects" class="section level4 unnumbered">
+<h4>Marginal effects</h4>
+<p>In <em>proportional hazards</em> models, the marginal effect of covariate <span class="math inline">\(x_j\)</span> on the hazard function can be easily derived since this computation only requires knowledge on <span class="math inline">\(\beta\)</span>. As shown in <span class="citation"><a href="#ref-CAMERON_TRIVEDI" role="doc-biblioref">Cameron and Trivedi</a> (<a href="#ref-CAMERON_TRIVEDI" role="doc-biblioref">2005</a>)</span>, a one-unit increase in the <span class="math inline">\(j^{\text{th}}\)</span> covariate leads to the following variation in the hazard function <em>ceteris paribus</em>:</p>
+<p><span class="math display" id="eq:meph">\[\begin{equation}
+    \frac{\partial \lambda(t|\pmb{\mathrm{x}}, \beta)}{\partial x_j} = \lambda(t|\pmb{\mathrm{x}}, \beta) \frac{\partial \phi(\pmb{\mathrm{x}}, \beta) / \partial x_j}{\phi(\pmb{\mathrm{x}}, \beta) }
     \tag{4.17}
 \end{equation}\]</span></p>
-<p>Note that when the function form of <span class="math inline">\(\lambda_0 (t,\alpha)\)</span> is known, we are in the case of parametric estimation. For instance, the exponential, Weibull, Gompertz and Cox models are PH models since their respective hazards are function of some covariates.</p>
+</div>
+<div id="partial-likelihood-estimation" class="section level4 unnumbered">
+<h4>Partial likelihood estimation</h4>
+<p>The vector of parameters <span class="math inline">\(\beta\)</span> related to the regression part of the PH model is estimated by partial likelihood maximization. The method’s principle consists in only estimating the regression’s parameters <span class="math inline">\(\beta\)</span> by considering the baseline hazard <span class="math inline">\(\lambda_0\)</span> as noise. If desired an estimate of the baseline hazard can be recovered after estimation of <span class="math inline">\(\beta\)</span> using for instance, the Nelson-Aalen estimator (see <a href="4.4-nonparam.html#nonparam">4.4</a>). Cox’s intuition is that no information can be retrieved from the intervals during which no event has occurred and that it is conceivable that <span class="math inline">\(\lambda_0\)</span> is null in these intervals. Thus, solely the set of moments when an event occurs are considered in the estimation method.</p>
+<p>In order to derive the partial likelihood function, let us note <span class="math inline">\(t_j\)</span> the <span class="math inline">\(j^{\text{th}}\)</span> discrete failure time in an <span class="math inline">\(N\)</span>-sample with <span class="math inline">\(j \in [\![1; k]\!]\)</span>, such that:</p>
+<ul>
+<li><span class="math inline">\(t_1 &lt; t_2 &lt; \dots &lt; t_k\)</span>,</li>
+<li><span class="math inline">\(D(t_j) = \{l: t_l = t_j\}\)</span> is the set of spells completed at <span class="math inline">\(t_j\)</span> with <span class="math inline">\(\#D(t_j) = d_j\)</span>,</li>
+<li><span class="math inline">\(R(t_j) = \{l: t_l \geq t_i\}\)</span> is the set of spells at risk at <span class="math inline">\(t_j\)</span>.</li>
+</ul>
+<p>The contribution of a spell in <span class="math inline">\(D(t_j)\)</span> to the likelihood function equals the conditional probability that the spell ends at <span class="math inline">\(t_j\)</span> given it is exposed at that specific time (see <span class="citation"><a href="#ref-CAMERON_TRIVEDI" role="doc-biblioref">Cameron and Trivedi</a> (<a href="#ref-CAMERON_TRIVEDI" role="doc-biblioref">2005</a>)</span> for more details) and can be written as:</p>
+<p><span class="math display" id="eq:contribpartiallik">\[\begin{equation}
+  \mathbb{P}\big[T_j = t_j | R(t_j) \big] = \frac{\phi(\pmb{\mathrm{x}_j}, \beta)}{\sum_{l \in R(t_j)} \phi(\pmb{\mathrm{x}_l}, \beta)}
+  \tag{4.18}
+\end{equation}\]</span></p>
+<p>Given <span class="math inline">\(k\)</span> discrete failure times are considered and that for each of those there is a set <span class="math inline">\(D(t_j)\)</span> of completed spells, Cox defines the partial likelihood function as the joint product of the probability expressed in <a href="4.6-semi-parametric-estimation.html#eq:contribpartiallik">(4.18)</a>, such that:</p>
+<p><span class="math display" id="eq:partlikproof2" id="eq:partlik">\[\begin{equation}
+  \mathcal{L}_p = \Pi_{j=1}^{k} \ \frac{\Pi_{m \in D(tj)} \ \phi(\pmb{\mathrm{x}_j}, \beta)}{\Big[\sum_{l \in R(t_j)} \phi(\pmb{\mathrm{x}_l}, \beta)\Big]^{d_j}}
+  \tag{4.19}
+\end{equation}\]</span></p>
+<p>The latter formulation of the partial likelihood function is explained in more details in equations <a href="duration-models.html#eq:partlikproof1">(6.3)</a> and \tag{4.20} in the appendix.</p>
+</div>
 </div>
 <div id="cox-ph-model" class="section level3" number="4.6.2">
 <h3><span class="header-section-number">4.6.2</span> Cox PH model</h3>
-<p>The Cox <em>proportional hazards</em> model is the most popular for the analysis of duration data. This model is said to be semi-parametric as makes no assumption regarding the nature of the baseline hazard function <span class="math inline">\(\lambda_0(t)\)</span>. The parametric part only relies in the modelling of the effect of some covariates on the hazard function <span class="math inline">\(\lambda(t)\)</span>. The relationship between the vector of covariates and the log hazard is linear and the parameters can be estimated by maximizing the log-likelihood. The Cox PH model solely assumes that predictors act multiplicatively on the hazard function.</p>
-<p>The model is formulated as in equation <a href="4.6-semi-parametric-estimation.html#eq:ph">(4.17)</a> with <span class="math inline">\(\phi\)</span> is the exponential function. The conditional hazard function is expressed as follows:</p>
-<p><span class="math display" id="eq:cox">\[\begin{equation}
-    \lambda(t|\pmb{x}) = \lambda_0 (t,\alpha)  \text{e}^{\pmb{x}, \beta}
-    \tag{4.18}
-\end{equation}\]</span></p>
-<p>The Cox model is assumed to be proportional as the relative hazard ratio between two individuals <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> does not vary over time, such that:</p>
-<p><span class="math display" id="eq:prophazratio">\[\begin{equation}
-  \frac{\lambda(t|\pmb{x_i})}{\lambda(t|\pmb{x_j})} = \frac{\text{e}^{\pmb{x_i}, \beta}}{\text{e}^{\pmb{x_j}, \beta}}
-  \tag{4.19}
-\end{equation}\]</span></p>
-<p>The formulation stated in equation <a href="4.6-semi-parametric-estimation.html#eq:prophazratio">(4.19)</a> needs to be verify when one wants to estimated a Cox model on real-life data.</p>
+<p>The Cox <em>proportional hazards</em> model is the most popular for the analysis of duration data. This model is said to be semi-parametric as makes no assumption regarding the nature of the baseline hazard function <span class="math inline">\(\lambda_0(t)\)</span>. The parametric part only relies in the modelling of the effect of some covariates on the hazard function <span class="math inline">\(\lambda(t)\)</span>. The relationship between the vector of covariates and the log hazard is linear and the parameters can be estimated by maximizing the partial likelihood function. The Cox PH model solely assumes that predictors act multiplicatively on the hazard function. The model is formulated as in equation <a href="4.6-semi-parametric-estimation.html#eq:ph">(4.15)</a> with the exponential function as link function between the hazard and the covariates i.e. <span class="math inline">\(\lambda(t|\pmb{\mathrm{x}}) = \lambda_0 (t,\alpha) \text{e}^{\pmb{\mathrm{x&#39;}} \beta}\)</span>.</p>
 
 </div>
 </div>
 <!-- </div> -->
 <h3>References</h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-CAMERON_TRIVEDI" class="csl-entry">
+Cameron, A. Colin, and Pravin K. Trivedi. 2005. <em>Microeconometrics: Methods and Applications</em>. Edited by Cambridge University Press.
+</div>
 <div id="ref-RMS" class="csl-entry">
 Harrell, Frank. 1984. <em>Regression Modeling Strategies : With Applications to Linear Models, Logistic and Ordinal Regression, and Survival Analysis</em>. Edited by Springer.
 </div>

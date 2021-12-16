@@ -1,4 +1,5 @@
 fig:cpmmat
+fig:timeline
 eq:censoring
 fig:censoring
 eq:survfun
@@ -17,14 +18,15 @@ eq:memorylessness
 eq:exponential
 eq:weibull
 fig:weibullplots
-eq:aft
-eq:hazaft
 eq:ph
-eq:cox
 eq:prophazratio
+eq:meph
+eq:contribpartiallik
+eq:partlik
+eq:partlikproof2
 eq:hazfunproof
 eq:linksurvcumhaz
-eq:hazaftproof
+eq:partlikproof1
 intro
 context
 a-multi-purpose-study
@@ -44,7 +46,7 @@ selection-bias
 probabilistic-concepts
 survival-function
 hazard-and-cumulative-hazard-functions
-nonparametric-models
+nonparam
 notations
 hazard-function-estimator
 kaplan-meier-estimator
@@ -53,7 +55,6 @@ parametric-models
 constant-hazard-exponential-model
 monotone-hazard
 concave-and-convex-hazard
-parametric-estimation-with-covariates-aft-models
 semi-parametric-estimation
 proportional-hazards-models
 cox-ph-model

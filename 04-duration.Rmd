@@ -149,7 +149,7 @@ knitr::include_graphics(path = "./imgs/cum_haz_plot.png")
 
 Thus, the hazard, survival and cumulative hazard functions are three mathematical functions which describe the same distribution. 
 
-## Nonparametric models 
+## Nonparametric models {#nonparam}
 
 When dealing with duration data, these methods are helpful to have a general overview of the raw (unconditional) hazard. Nonparametric models are rather used for data description rather than prediction. No explanatory variable is included in these models except for treatment variables such as the type of contract a customer has subscribe.  
 
@@ -381,65 +381,104 @@ Different probabilistic distributions can be chosen the model the hazard and sur
 
 When the hazard related to the studied phenomenon varies, the distributions introduced above are limited as they model monotone hazard. The generalized Weibull model appears to be a good choice to estimate phenomena with concave or convex hazard. It is based on three parameters: $\nu$ (shape), $\theta$ (scale) and $\gamma$. When $\gamma = 1$, the generalized Weibull becomes the Weibull distribution $\mathcal{W}(\nu, \theta)$. 
 
+```{r eval=FALSE}
 ### Parametric estimation with covariates: AFT models
 
-*Accelerated failure time* (AFT) models specify that a set of covariates has a multiplicative impact on the failure time or an additive impact on the log failure time. In other words, the covariate's effect is to increase or decrease the duration of a spell. Modelling $\ln t$ rather than $t$, the AFT model is specified as follows: 
+#*Accelerated failure time* (AFT) models specify that a set of covariates has a multiplicative impact on the failure time or an additive impact on the log failure time. In other words, the covariate's effect is to increase or decrease the duration of a spell. Modelling $\ln t$ rather than $t$, the AFT model is specified as follows: 
 
-\begin{equation}
-  \ln t = \pmb{x}^{'}\beta + u
-  (\#eq:aft)
-\end{equation}
+#\begin{equation}
+#\ln t = \pmb{\mathrm{x}}^{'}\beta + u
+#(\#eq:aft)
+#\end{equation}
 
-where $u$ is a random variable following a specific distribution on $(-\infty, \infty)$ which can be: 
+#where $u$ is a random variable following a specific distribution on $(-\infty, \infty)$ which can be: 
 
-- log-normal, 
-- log-logistic, 
-- exponential, 
-- Weibull, 
-- gamma. 
+#- log-normal, 
+#- log-logistic, 
+#- exponential, 
+#- Weibull, 
+#- gamma. 
 
-In this context, the instantaneous hazard function can be expressed as follows (see equation \@ref(eq:hazaftproof) in the appendix): 
+#In this context, the instantaneous hazard function can be expressed as follows #(see equation \@ref(eq:hazaftproof) in the appendix): 
 
-\begin{equation}
-    \lambda(t|\pmb{x}) = \lambda_0 \big(t \text{e}^{-\pmb{x'}\beta} \big)  \text{e}^{\pmb{x'}\beta}
-    (\#eq:hazaft)
-\end{equation}
+#\begin{equation}
+#\lambda(t|\pmb{\mathrm{x}}) = \lambda_0 \big(t \text{e}^{-\pmb{\mathrm{x}'}\beta} \big)  \text{e}^{\pmb{\mathrm{x}'}\beta}
+#(\#eq:hazaft)
+#\end{equation}
 
-where $\lambda_0(.)$ denotes the baseline hazard function. 
+#where $\lambda_0(.)$ denotes the baseline hazard function. 
 
-When $\text{e}^{-\pmb{x'}\beta} > 1$ the covariates accelerate the baseline hazard whereas the latter is decelerated when $\text{e}^{-\pmb{x'}\beta} < 1$. It can also be noted that in the case of *accelerated failure time* models, for a covariate $x_k > 0$, a negative regression coefficient leads to a smaller survival time. 
+#When $\text{e}^{-\pmb{\mathrm{x}'}\beta} > 1$ the covariates accelerate the baseline hazard whereas the latter is decelerated when $\text{e}^{-\pmb{\mathrm{x}'}\beta} < 1$. It can also be noted that in the case of *accelerated failure time* models, for a covariate $x_k > 0$, a negative regression coefficient leads to a smaller survival time. 
+
+```
+
+
 
 ## Semi-parametric estimation 
 
-### Proportional Hazards models 
+### Proportional Hazards models
 
 Parametric models assume that the baseline (or raw) hazard belongs to a specific distribution. This assumption can be sometimes too restrictive and semi-parametric models can be more adapted to describe the duration data. 
 
-In *proportional hazards* (PH) models, the instantaneous risk function is \textbf{proportional} to the baseline hazard $\lambda_0 (t,\alpha)$ modulo a \textbf{scaling factor} depending on the covariates $\phi(\pmb{x}, \beta)$. These models allow to generalize the basic survival models to a survival regression model which permits to take individuals' heterogeneity into consideration [@RMS].  The general mathematical formulation is expressed as follows: 
+In *proportional hazards* (PH) models, the instantaneous risk function is \textbf{proportional} to the baseline hazard $\lambda_0 (t,\alpha)$ modulo a \textbf{scaling factor} depending on the covariates $\phi(\pmb{\mathrm{x}}, \beta)$. These models allow to generalize the basic survival models to a survival regression model which permits to take individuals' heterogeneity into consideration [@RMS].  The general mathematical formulation is expressed as follows: 
 
 \begin{equation}
-    \lambda(t|\pmb{x}) = \lambda_0 (t,\alpha)  \phi(\pmb{x}, \beta) 
+    \lambda(t|\pmb{\mathrm{x}}) = \lambda_0 (t,\alpha)  \phi(\pmb{\mathrm{x}}, \beta) 
     (\#eq:ph)
 \end{equation}
 
-Note that when the function form of $\lambda_0 (t,\alpha)$ is known, we are in the case of parametric estimation. For instance, the exponential, Weibull, Gompertz and Cox models are PH models since their respective hazards are function of some covariates. 
+Note that when the function form of $\lambda_0 (t,\alpha)$ is known, we are in the case of parametric estimation. For instance, the exponential, Weibull and Gompertz models are PH models since their respective hazards are function of some covariates. 
 
-### Cox PH model 
+#### What does *proportional hazards* mean? {-}
 
-The Cox *proportional hazards* model is the most popular for the analysis of duration data. This model is said to be semi-parametric as makes no assumption regarding the nature of the baseline hazard function $\lambda_0(t)$. The parametric part only relies in the modelling of the effect of some covariates on the hazard function $\lambda(t)$. The relationship between the vector of covariates and the log hazard is linear and the parameters can be estimated by maximizing the log-likelihood. The Cox PH model solely assumes that predictors act multiplicatively on the hazard function.
-
-The model is formulated as in equation \@ref(eq:ph) with $\phi$ is the exponential function. The conditional hazard function is expressed as follows: 
+PH models are said to be proportional as the relative hazard ratio between two individuals $i$ and $k$ does not vary over time, such that: 
 
 \begin{equation}
-    \lambda(t|\pmb{x}) = \lambda_0 (t,\alpha)  \text{e}^{\pmb{x}, \beta}
-    (\#eq:cox)
-\end{equation}
-
-The Cox model is assumed to be proportional as the relative hazard ratio between two individuals $i$ and $j$ does not vary over time, such that: 
-
-\begin{equation}
-  \frac{\lambda(t|\pmb{x_i})}{\lambda(t|\pmb{x_j})} = \frac{\text{e}^{\pmb{x_i}, \beta}}{\text{e}^{\pmb{x_j}, \beta}}
+  \frac{\lambda(t|\pmb{x_i})}{\lambda(t|\pmb{x_k})} = \frac{\phi(\pmb{x_i}, \beta) }{\phi(\pmb{x_j}, \beta)}
   (\#eq:prophazratio)
 \end{equation}
 
-The formulation stated in equation \@ref(eq:prophazratio) needs to be verify when one wants to estimated a Cox model on real-life data. 
+The formulation stated in equation \@ref(eq:prophazratio) needs to be verified when one wants to fit a PH model to real-life data.
+
+#### Marginal effects {-}
+
+In *proportional hazards* models, the marginal effect of covariate $x_j$ on the hazard function can be easily derived since this computation only requires knowledge on $\beta$. As shown in @CAMERON_TRIVEDI, a one-unit increase in the $j^{\text{th}}$ covariate leads to the following variation in the hazard function *ceteris paribus*: 
+
+\begin{equation}
+    \frac{\partial \lambda(t|\pmb{\mathrm{x}}, \beta)}{\partial x_j} = \lambda(t|\pmb{\mathrm{x}}, \beta) \frac{\partial \phi(\pmb{\mathrm{x}}, \beta) / \partial x_j}{\phi(\pmb{\mathrm{x}}, \beta) }
+    (\#eq:meph)
+\end{equation}
+
+#### Partial likelihood estimation {-}
+
+The vector of parameters $\beta$ related to the regression part of the PH model is estimated by partial likelihood maximization. The method's principle consists in only estimating the regression's parameters $\beta$ by considering the baseline hazard $\lambda_0$ as noise. If desired an estimate of the baseline hazard can be recovered after estimation of $\beta$ using for instance, the Nelson-Aalen estimator (see \@ref(nonparam)). Cox's intuition is that no information can be retrieved from the intervals during which no event has occurred and that it is conceivable that $\lambda_0$ is null in these intervals. Thus, solely the set of moments when an event occurs are considered in the estimation method. 
+
+In order to derive the partial likelihood function, let us note $t_j$ the $j^{\text{th}}$ discrete failure time in an $N$-sample with $j \in [\![1; k]\!]$, such that:
+
+- $t_1 < t_2 < \dots < t_k$, 
+- $D(t_j) = \{l: t_l = t_j\}$ is the set of spells completed at $t_j$ with $\#D(t_j) = d_j$, 
+- $R(t_j) = \{l: t_l \geq t_i\}$ is the set of spells at risk at $t_j$.
+
+The contribution of a spell in $D(t_j)$ to the likelihood function equals the conditional probability that the spell ends at $t_j$ given it is exposed at that specific time (see @CAMERON_TRIVEDI for more details) and can be written as: 
+
+\begin{equation}
+  \mathbb{P}\big[T_j = t_j | R(t_j) \big] = \frac{\phi(\pmb{\mathrm{x}_j}, \beta)}{\sum_{l \in R(t_j)} \phi(\pmb{\mathrm{x}_l}, \beta)}
+  (\#eq:contribpartiallik)
+\end{equation}
+
+Given $k$ discrete failure times are considered and that for each of those there is a set $D(t_j)$ of completed spells, Cox defines the partial likelihood function as the joint product of the probability expressed in \@ref(eq:contribpartiallik), such that:
+
+\begin{equation}
+  \mathcal{L}_p = \Pi_{j=1}^{k} \ \frac{\Pi_{m \in D(tj)} \ \phi(\pmb{\mathrm{x}_j}, \beta)}{\Big[\sum_{l \in R(t_j)} \phi(\pmb{\mathrm{x}_l}, \beta)\Big]^{d_j}}
+  (\#eq:partlik)
+\end{equation}
+
+The latter formulation of the partial likelihood function is explained in more details in equations \@ref(eq:partlikproof1) and (\#eq:partlikproof2) in the appendix. 
+
+### Cox PH model
+
+The Cox *proportional hazards* model is the most popular for the analysis of duration data. This model is said to be semi-parametric as makes no assumption regarding the nature of the baseline hazard function $\lambda_0(t)$. The parametric part only relies in the modelling of the effect of some covariates on the hazard function $\lambda(t)$. The relationship between the vector of covariates and the log hazard is linear and the parameters can be estimated by maximizing the partial likelihood function. The Cox PH model solely assumes that predictors act multiplicatively on the hazard function. The model is formulated as in equation \@ref(eq:ph) with the exponential function as link function between the hazard and the covariates i.e. $\lambda(t|\pmb{\mathrm{x}}) = \lambda_0 (t,\alpha)  \text{e}^{\pmb{\mathrm{x'}} \beta}$. 
+
+
+
+
