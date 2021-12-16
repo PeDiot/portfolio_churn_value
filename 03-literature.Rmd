@@ -1,6 +1,20 @@
+```{r echo=FALSE}
+knitr::opts_chunk$set(
+  fig.align = "center", 
+  echo = FALSE, 
+  message = FALSE, 
+  comment = FALSE, 
+  warning = FALSE
+)
+```
+
 # Literature Review {#literature}
 
 ## On customer portfolio {#portfolio}
+
+```{r timeline, fig.cap="A timeline on the concept of portfolio", out.height="300pt", out.width="400pt"}
+knitr::include_graphics(path = "./imgs/portfolio_timeline.png")
+```
 
 ## On attrition {#attrition}
 

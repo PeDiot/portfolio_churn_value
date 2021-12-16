@@ -1,4 +1,4 @@
-```{r setup, echo=FALSE}
+```{r echo=FALSE}
 knitr::opts_chunk$set(
   fig.align = "center", 
   echo = FALSE, 
