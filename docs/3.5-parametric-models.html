@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>1.2 A multi-purpose study | Portfolio, Churn &amp; Customer Value</title>
+  <title>3.5 Parametric models | Portfolio, Churn &amp; Customer Value</title>
   <meta name="description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="1.2 A multi-purpose study | Portfolio, Churn &amp; Customer Value" />
+  <meta property="og:title" content="3.5 Parametric models | Portfolio, Churn &amp; Customer Value" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="1.2 A multi-purpose study | Portfolio, Churn &amp; Customer Value" />
+  <meta name="twitter:title" content="3.5 Parametric models | Portfolio, Churn &amp; Customer Value" />
   
   <meta name="twitter:description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="1.1-context.html"/>
-<link rel="next" href="1.3-portfoliodef.html"/>
+<link rel="prev" href="3.4-nonparam.html"/>
+<link rel="next" href="3.6-semi-parametric-estimation.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -169,16 +169,73 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="a-multi-purpose-study" class="section level2" number="1.2">
-<h2><span class="header-section-number">1.2</span> A multi-purpose study</h2>
+<div id="parametric-models" class="section level2" number="3.5">
+<h2><span class="header-section-number">3.5</span> Parametric models</h2>
+<p>The nonparametric estimation is undoubtedly useful when it comes to have a general overview on the survival data. However, one may want to model the hazard and survivor functions with a functional form in which unknown parameters need to be optimized.</p>
+<p>When implementing parametric models, <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(S\)</span> and <span class="math inline">\(\Lambda\)</span> are expressed based on the chosen parametric form. The instantaneous hazard function can either be constant or monotone. In our study we assume that the explanatory variables are time-constant as we do not have dynamic data at our disposal.</p>
+<p>Parametric estimation has a twofold purpose that is to implement a robust model to estimate the risk that a specific event occurs while identifying the variables (or covariates) which best explain this risk.</p>
+<div id="constant-hazard-exponential-model" class="section level3" number="3.5.1">
+<h3><span class="header-section-number">3.5.1</span> Constant hazard (exponential model)</h3>
+<p>The exponential distribution models the time between events in a Poisson process and has the key property of being <em>memoryless</em>. Let us note <span class="math inline">\(T\)</span> a time-to-event variable following such that <span class="math inline">\(T \sim \mathcal{E}(\theta)\)</span> where <span class="math inline">\(\theta\)</span> is the <em>rate</em> parameter. In this context, <em>memorylessness</em> can be defined as follows:</p>
+<p><span class="math display" id="eq:memorylessness">\[\begin{equation}
+  \mathbb{P}(T&gt;t+s | T &gt; t) = \mathbb{P}(T&gt;s)
+  \tag{3.12}
+\end{equation}\]</span></p>
+<p><span class="math inline">\(\forall t \geq 0\ ,\ \theta &gt; 0\)</span> the density, hazard and survival functions can be expressed as:</p>
+<p><span class="math display" id="eq:exponential">\[\begin{equation}
+  \begin{aligned}
+    f_{\theta}(t) &amp; = \theta e^{-\theta t} \\\\
+    \lambda_{\theta}(t) &amp; = \theta \\\\
+    S_{\theta}(t) &amp; = e^{-\theta t} \\\\
+  \end{aligned}
+  \tag{3.13}
+\end{equation}\]</span></p>
+<p>Thus, the exponential distribution is characterized by a <strong>constant</strong> hazard function which is a consequence of <em>memorylessness</em>.</p>
+</div>
+<div id="monotone-hazard" class="section level3" number="3.5.2">
+<h3><span class="header-section-number">3.5.2</span> Monotone hazard</h3>
+<div id="weibull-model" class="section level4 unnumbered">
+<h4>Weibull model</h4>
+<p>The Weibull distribution is a less restrictive generalization of the exponential distribution defined by a shape parameter <span class="math inline">\(\nu\)</span> and a scale parameter <span class="math inline">\(\theta\)</span>.</p>
+<p><span class="math inline">\(\forall t \geq 0\)</span> et <span class="math inline">\(k=\nu,\ \theta &gt; 0\)</span> the density, hazard and survival functions can be expressed as:</p>
+<p><span class="math display" id="eq:weibull">\[\begin{equation}
+  \begin{aligned}
+      \lambda_{k,\theta}(t) &amp; = \nu \bigg(\frac{1}{\theta}\bigg)^{\nu} t^{\nu - 1} \\\\
+      S_{k, \nu}(t) &amp; = \exp \Bigg( -\bigg(\frac{1}{\theta}\bigg)^{\nu} t\Bigg) 
+  \end{aligned}
+  \tag{3.14}
+\end{equation}\]</span></p>
+<p>The instantaneous hazard function <span class="math inline">\(\lambda_{\nu,\theta}\)</span> is:</p>
+<ul>
+<li>monotonic <strong>decreasing</strong> if <span class="math inline">\(\nu \in [0, 1]\)</span> (e.g. customer loyalty),</li>
+<li><strong>constant</strong> if <span class="math inline">\(\nu=1\)</span> and <span class="math inline">\(T \sim \mathcal{E}(\theta)\)</span>,</li>
+<li>monotonic <strong>increasing</strong> if <span class="math inline">\(\nu &gt; 1\)</span> (e.g. customers leaving the portfolio to a competing firm).</li>
+</ul>
+<p>Figure <a href="3.5-parametric-models.html#fig:weibullplots">3.4</a> illustrate the hazard and survivor functions associated to a variable <span class="math inline">\(T\)</span> which follows a Weibull distribution. The two curves’ shape depend both on the shape (<span class="math inline">\(\nu\)</span>) and scale parameters (<span class="math inline">\(\theta\)</span>). Some remarks can be made looking at the two plots. On the one hand, the higher <span class="math inline">\(\nu\)</span>, the more increasing the hazard function. Furthermore, when <span class="math inline">\(\nu &lt; 1\)</span> the hazard function is decreasing meaning that the risk of the event occurring decreases as time goes by. When <span class="math inline">\(\nu &gt; 1\)</span> the hazard function is convex which indicates that a marginal increase in time leads to an increase (decrease) of over one unit in the the hazard (survivor) function. On the other hand, it can be noted that the Weibull distribution corresponds to the exponential distribution when <span class="math inline">\(\nu = \theta = 1\)</span> (see figures <a href="3.3-probabilistic-concepts.html#fig:survfunplot">3.2</a> and <a href="3.3-probabilistic-concepts.html#fig:cumhazplot">3.3</a>).</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:weibullplots"></span>
+<img src="imgs/weibull_plots.png" alt="Hazard and Survival functions with $T \sim \mathcal{W} (\nu, \theta)$" width="700pt" height="350pt" />
+<p class="caption">
+Figure 3.4: Hazard and Survival functions with <span class="math inline">\(T \sim \mathcal{W} (\nu, \theta)\)</span>
+</p>
+</div>
+</div>
+<div id="other-models" class="section level4 unnumbered">
+<h4>Other models</h4>
+<p>Different probabilistic distributions can be chosen the model the hazard and survival functions related to a time-to-event variable. The Gompertz model is usually used for mortality data in biostatistics. The gamma model depends both on the gamma and inverse-gamma distribution and is also based on shape and scale parameters.</p>
+</div>
+</div>
+<div id="concave-and-convex-hazard" class="section level3" number="3.5.3">
+<h3><span class="header-section-number">3.5.3</span> Concave and convex hazard</h3>
+<p>When the hazard related to the studied phenomenon varies, the distributions introduced above are limited as they model monotone hazard. The generalized Weibull model appears to be a good choice to estimate phenomena with concave or convex hazard. It is based on three parameters: <span class="math inline">\(\nu\)</span> (shape), <span class="math inline">\(\theta\)</span> (scale) and <span class="math inline">\(\gamma\)</span>. When <span class="math inline">\(\gamma = 1\)</span>, the generalized Weibull becomes the Weibull distribution <span class="math inline">\(\mathcal{W}(\nu, \theta)\)</span>.</p>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="1.1-context.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="1.3-portfoliodef.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="3.4-nonparam.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="3.6-semi-parametric-estimation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

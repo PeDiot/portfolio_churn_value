@@ -30,10 +30,9 @@ eq:partlikproof1
 intro
 context
 a-multi-purpose-study
-definitions
-how-to-define-a-customer-portfolio
-what-is-attrition
-what-does-customer-value-mean
+portfoliodef
+attritiondef
+valuedef
 literature
 portfolio
 attrition

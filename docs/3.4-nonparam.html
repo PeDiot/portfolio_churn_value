@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>1.2 A multi-purpose study | Portfolio, Churn &amp; Customer Value</title>
+  <title>3.4 Nonparametric models | Portfolio, Churn &amp; Customer Value</title>
   <meta name="description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="1.2 A multi-purpose study | Portfolio, Churn &amp; Customer Value" />
+  <meta property="og:title" content="3.4 Nonparametric models | Portfolio, Churn &amp; Customer Value" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="1.2 A multi-purpose study | Portfolio, Churn &amp; Customer Value" />
+  <meta name="twitter:title" content="3.4 Nonparametric models | Portfolio, Churn &amp; Customer Value" />
   
   <meta name="twitter:description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="1.1-context.html"/>
-<link rel="next" href="1.3-portfoliodef.html"/>
+<link rel="prev" href="3.3-probabilistic-concepts.html"/>
+<link rel="next" href="3.5-parametric-models.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -169,16 +169,71 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="a-multi-purpose-study" class="section level2" number="1.2">
-<h2><span class="header-section-number">1.2</span> A multi-purpose study</h2>
+<div id="nonparam" class="section level2" number="3.4">
+<h2><span class="header-section-number">3.4</span> Nonparametric models</h2>
+<p>When dealing with duration data, these methods are helpful to have a general overview of the raw (unconditional) hazard. Nonparametric models are rather used for data description rather than prediction. No explanatory variable is included in these models except for treatment variables such as the type of contract a customer has subscribe.</p>
+<div id="notations" class="section level3" number="3.4.1">
+<h3><span class="header-section-number">3.4.1</span> Notations</h3>
+<p>Let us consider a sample with <span class="math inline">\(N\)</span> observations with <span class="math inline">\(k\)</span> discrete failure time (e.g. a failure can be a churn event), such that <span class="math inline">\(\forall j \in [\![1; k]\!]\)</span> :</p>
+<ul>
+<li><span class="math inline">\(t_j\)</span> the <span class="math inline">\(j^{\text{th}}\)</span> discrete failure time,</li>
+<li><span class="math inline">\(d_j\)</span> the number of spells terminating at <span class="math inline">\(t_j\)</span>,</li>
+<li><span class="math inline">\(m_j\)</span> the number of right-censored spells in the interval <span class="math inline">\([t_j, t_{j+1}]\)</span>,</li>
+<li><span class="math inline">\(r_j\)</span> the number of exposed durations right before time <span class="math inline">\(t_j\)</span> such that:
+<span class="math display" id="eq:exposed">\[\begin{equation}
+r_j = (d_j + m_j) + \dots + (d_k + m_k) = \sum_{l|l \geq j} (d_l + m_l)
+\tag{3.6}
+\end{equation}\]</span></li>
+</ul>
+</div>
+<div id="hazard-function-estimator" class="section level3" number="3.4.2">
+<h3><span class="header-section-number">3.4.2</span> Hazard function estimator</h3>
+<p>As the instantaneous hazard at time <span class="math inline">\(t_j\)</span> is defined as <span class="math inline">\(\lambda_j = P[T=t_j|T\geq t_j]\)</span>, a trivial estimator of <span class="math inline">\(\lambda_j\)</span> is obtained by dividing the number of durations for which the event is realized in <span class="math inline">\(t_j\)</span> by the total number of exposed durations at time <span class="math inline">\(t_j^{-}\)</span>. Formally, it is expressed as:</p>
+<p><span class="math display" id="eq:hazest">\[\begin{equation}
+  \hat{\lambda}_j = \frac{d_j}{r_j}
+  \tag{3.7}
+\end{equation}\]</span></p>
+</div>
+<div id="kaplan-meier-estimator" class="section level3" number="3.4.3">
+<h3><span class="header-section-number">3.4.3</span> Kaplan-Meier estimator</h3>
+<p>Once the hazard function estimator computed, the discrete-time survivor function can be estimated using the Kaplan-Meier product-limit estimator. To estimate the survival at time <span class="math inline">\(t\)</span>, this estimator computes the joint probability that a spell stays in the same state until <span class="math inline">\(t\)</span> (e.g. remaining loyal to a firm until a certain time). This method is based on conditional probabilities and the survival function estimate is defined as:</p>
+<p><span class="math display" id="eq:kaplanmeier">\[\begin{equation}
+  \hat{S}(t) = \Pi_{j|t_j \leq t} \big(1-\hat{\lambda}_j\big) = \Pi_{j|t_j \leq t}\frac{r_j - d_j}{r_j}
+  \tag{3.8}
+\end{equation}\]</span></p>
+<p>When plotting the survival curve after having performed the Kaplan-Meier estimation, confidence bands are also added to the plot in order to reflect sampling variability <span class="citation">(<a href="#ref-CAMERON_TRIVEDI" role="doc-biblioref">Cameron and Trivedi 2005</a>)</span>. The confidence interval of the survival function <span class="math inline">\(S(t)\)</span> is derived from the estimate of the variance of <span class="math inline">\(S(t)\)</span> which is obtained by the Grenwood estimate (see equation <a href="3.4-nonparam.html#eq:greenwood">(3.9)</a>).</p>
+<p><span class="math display" id="eq:greenwood">\[\begin{equation}
+  \hat{\mathrm{V}}[\hat{S}(t)] = \hat{S}(t)^2 \sum_{j|t_j \leq t} \frac{d_j}{r_j(r_j-d_j)}
+  \tag{3.9}
+\end{equation}\]</span></p>
+</div>
+<div id="nelson-aalen-estimator" class="section level3" number="3.4.4">
+<h3><span class="header-section-number">3.4.4</span> Nelson-Aalen estimator</h3>
+<p>The cumulative hazard function estimate is given by the Nelson-Aalen estimator which consists in summing up the hazard estimates for each failure time.</p>
+<p><span class="math display" id="eq:nelsonaalen">\[\begin{equation}
+  \hat{\Lambda}(t) = \sum_{j | t_j \leq t} \hat{\lambda}_{j} = \sum_{j | t_j \leq t} \frac{d_j}{r_j}
+  \tag{3.10}
+\end{equation}\]</span></p>
+<p>Exponentiating <span class="math inline">\(\hat{\Lambda}(t)\)</span>, one can obtain a second estimate of the survival function (see equation <a href="duration-models.html#eq:linksurvcumhaz">(5.2)</a> in the appendix):</p>
+<p><span class="math display" id="eq:survest">\[\begin{equation}
+    \tilde{S}(t) = \exp \big( -\hat{\Lambda}(t) \big)
+    \tag{3.11}
+\end{equation}\]</span></p>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-CAMERON_TRIVEDI" class="csl-entry">
+Cameron, A. Colin, and Pravin K. Trivedi. 2005. <em>Microeconometrics: Methods and Applications</em>. Edited by Cambridge University Press.
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="1.1-context.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="1.3-portfoliodef.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="3.3-probabilistic-concepts.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="3.5-parametric-models.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

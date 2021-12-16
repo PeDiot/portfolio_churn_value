@@ -10,6 +10,8 @@ knitr::opts_chunk$set(
 
 # Literature Review {#literature}
 
+Now the concepts of *portfolio*, *attrition* and *value* have been defined, it seems relevant to take a look at the literature on these notions. The literature review made in this chapter synthesises and analyses the available articles related to customer portfolio modelling, churn analysis as well as customer value estimation. The review combines concepts from Economics, Econometrics and Data Science. 
+
 ## On customer portfolio {#portfolio}
 
 ```{r timeline, fig.cap="A timeline on the concept of portfolio", out.height="300pt", out.width="400pt"}
@@ -20,7 +22,7 @@ knitr::include_graphics(path = "./imgs/portfolio_timeline.png")
 
 ## On customer value {#value}
 
-In recent years, *customer portfolio management* (CPM) has focused on optimizing clients' value to the firm. The company's interest lies in knowing how much net benefit it can expect from a customer *today*. These expectations are then used to implement efficient marketing strategies to get the highest return on investment. To that end, two key metrics are estimated by firms, namely customer lifetime value (CLV) and customer equity (CE) (see chapter \@ref(definitions) for definitions).
+In recent years, *customer portfolio management* (CPM) has focused on optimizing clients' value to the firm. The company's interest lies in knowing how much net benefit it can expect from a customer *today*. These expectations are then used to implement efficient marketing strategies to get the highest return on investment. To that end, two key metrics are estimated by firms, namely customer lifetime value (CLV) and customer equity (CE) (see part \@ref(value) in the introduction for definitions).
 
 According to Blattberg and Deighton, CLV can be defined as the revenues derived from a customer minus the cost to the firm for maintaining the relationship with the customer over time [@CLV_DEF]. As shown by Reinartz and Kumar, CLV modelling depends on the type of relationship a firm has with its clients [@CLV_CONTEXT]. In a contractual relationship, customer defections are observed which means that longer lifetime means higher customer value. Conversely, when the relationship is non-contractual, uncertainty arises between the customer's purchase behavior and lifetime.
 
