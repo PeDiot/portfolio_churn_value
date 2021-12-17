@@ -23,7 +23,7 @@ Such a draft is full of incentives. Tons of questions were asked. Sorting throug
 In order to address them, some objectives have been established:
 
 - Estimate the remaining operational  life of a client / client segment
-- Modeling portfolio value (return, risk) with econometrical techniques
+- Model portfolio value (return, risk) with econometrical techniques
 - Predict churn with machine learning methods for classification
 - Fraction groups of customers according to their value in the portfolio
 
