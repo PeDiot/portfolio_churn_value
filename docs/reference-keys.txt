@@ -25,6 +25,7 @@ eq:contribpartiallik
 eq:partlik
 eq:hazfunproof
 eq:linksurvcumhaz
+eq:contribpartiallikproof
 eq:partlikproof
 eq:partlikproofbis
 intro

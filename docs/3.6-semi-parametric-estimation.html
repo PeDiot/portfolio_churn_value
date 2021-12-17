@@ -182,7 +182,7 @@ div.csl-indent {
 <h4>What does <em>proportional hazards</em> mean?</h4>
 <p>PH models are said to be proportional as the relative hazard ratio between two individuals <span class="math inline">\(i\)</span> and <span class="math inline">\(k\)</span> does not vary over time, such that:</p>
 <p><span class="math display" id="eq:prophazratio">\[\begin{equation}
-  \frac{\lambda(t|\pmb{\mathrm{x}_i})}{\lambda(t|\pmb{\mathrm{x}_k})} = \frac{\phi(\pmb{\mathrm{x}_i}, \beta) }{\phi(\pmb{\mathrm{x}_j}, \beta)}
+  \frac{\lambda(t|\pmb{\mathrm{x}_i})}{\lambda(t|\pmb{\mathrm{x}_k})} = \frac{\phi(\pmb{\mathrm{x}_i}, \beta) }{\phi(\pmb{\mathrm{x}_k}, \beta)}
   \tag{3.16}
 \end{equation}\]</span></p>
 <p>The formulation stated in equation <a href="3.6-semi-parametric-estimation.html#eq:prophazratio">(3.16)</a> needs to be verified when one wants to fit a PH model to real-life data.</p>
@@ -204,7 +204,7 @@ div.csl-indent {
 <li><span class="math inline">\(D(t_j) = \{l: t_l = t_j\}\)</span> is the set of spells completed at <span class="math inline">\(t_j\)</span> with <span class="math inline">\(\#D(t_j) = d_j\)</span>,</li>
 <li><span class="math inline">\(R(t_j) = \{l: t_l \geq t_i\}\)</span> is the set of spells at risk at <span class="math inline">\(t_j\)</span>.</li>
 </ul>
-<p>The contribution of a spell in <span class="math inline">\(D(t_j)\)</span> to the likelihood function equals the conditional probability that the spell ends at <span class="math inline">\(t_j\)</span> given it is exposed at that specific time (see <span class="citation"><a href="#ref-CAMERON_TRIVEDI" role="doc-biblioref">Cameron and Trivedi</a> (<a href="#ref-CAMERON_TRIVEDI" role="doc-biblioref">2005</a>)</span> for more details) and can be written as:</p>
+<p>The contribution of a spell in <span class="math inline">\(D(t_j)\)</span> to the likelihood function equals the conditional probability that the spell ends at <span class="math inline">\(t_j\)</span> given it is exposed at that specific time and can be written as (see <span class="citation"><a href="#ref-CAMERON_TRIVEDI" role="doc-biblioref">Cameron and Trivedi</a> (<a href="#ref-CAMERON_TRIVEDI" role="doc-biblioref">2005</a>)</span> and proof <a href="duration-models.html#eq:contribpartiallikproof">(5.3)</a> for more details):</p>
 <p><span class="math display" id="eq:contribpartiallik">\[\begin{equation}
   \mathbb{P}\big[T_j = t_j | R(t_j) \big] = \frac{\phi(\pmb{\mathrm{x}_j}, \beta)}{\sum_{l \in R(t_j)} \phi(\pmb{\mathrm{x}_l}, \beta)}
   \tag{3.18}
@@ -214,7 +214,7 @@ div.csl-indent {
   \mathcal{L}_p = \Pi_{j=1}^{k} \ \frac{\Pi_{m \in D(tj)} \ \phi(\pmb{\mathrm{x}_j}, \beta)}{\Big[\sum_{l \in R(t_j)} \phi(\pmb{\mathrm{x}_l}, \beta)\Big]^{d_j}}
   \tag{3.19}
 \end{equation}\]</span></p>
-<p>The latter formulation of the partial likelihood function is explained in more details in equations <a href="duration-models.html#eq:partlikproof">(5.3)</a> and <a href="duration-models.html#eq:partlikproofbis">(5.4)</a> in the appendix.</p>
+<p>The latter formulation of the partial likelihood function is explained in more details in equations <a href="duration-models.html#eq:partlikproof">(5.4)</a> and <a href="duration-models.html#eq:partlikproofbis">(5.5)</a> in the appendix.</p>
 </div>
 </div>
 <div id="cox-ph-model" class="section level3" number="3.6.2">
