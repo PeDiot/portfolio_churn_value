@@ -477,7 +477,7 @@ The latter formulation of the partial likelihood function is explained in more d
 
 ### Cox PH model
 
-The Cox *proportional hazards* model is the most popular for the analysis of duration data. This model is said to be semi-parametric as makes no assumption regarding the nature of the baseline hazard function $\lambda_0(t)$. The parametric part only relies in the modelling of the effect of some covariates on the hazard function $\lambda(t)$. The relationship between the vector of covariates and the log hazard is linear and the parameters can be estimated by maximizing the partial likelihood function. The Cox PH model solely assumes that predictors act multiplicatively on the hazard function. The model is formulated as in equation \@ref(eq:ph) with the exponential function as link function between the hazard and the covariates i.e. $\lambda(t|\pmb{\mathrm{x}}) = \lambda_0 (t,\alpha)  \text{e}^{\pmb{\mathrm{x'}} \beta}$. 
+The Cox *proportional hazards* model is the most popular for the analysis of duration data. This model is said to be semi-parametric as it makes no assumption regarding the nature of the baseline hazard function $\lambda_0(t)$. The parametric part only relies in the modelling of the effect of some covariates on the hazard function $\lambda(t)$. The relationship between the vector of covariates and the log hazard is linear and the parameters can be estimated by maximizing the partial likelihood function. The Cox PH model solely assumes that predictors act multiplicatively on the hazard function. The model is formulated as in equation \@ref(eq:ph) with the exponential function as link function between the hazard and the covariates i.e. $\lambda(t|\pmb{\mathrm{x}}) = \lambda_0 (t,\alpha)  \text{e}^{\pmb{\mathrm{x'}} \beta}$. 
 
 
 
