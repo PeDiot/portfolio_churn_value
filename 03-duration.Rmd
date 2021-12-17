@@ -434,7 +434,7 @@ Note that when the function form of $\lambda_0 (t,\alpha)$ is known, we are in t
 PH models are said to be proportional as the relative hazard ratio between two individuals $i$ and $k$ does not vary over time, such that: 
 
 \begin{equation}
-  \frac{\lambda(t|\pmb{\mathrm{x}_i})}{\lambda(t|\pmb{\mathrm{x}_k})} = \frac{\phi(\pmb{\mathrm{x}_i}, \beta) }{\phi(\pmb{\mathrm{x}_j}, \beta)}
+  \frac{\lambda(t|\pmb{\mathrm{x}_i})}{\lambda(t|\pmb{\mathrm{x}_k})} = \frac{\phi(\pmb{\mathrm{x}_i}, \beta) }{\phi(\pmb{\mathrm{x}_k}, \beta)}
   (\#eq:prophazratio)
 \end{equation}
 
@@ -459,7 +459,7 @@ In order to derive the partial likelihood function, let us note $t_j$ the $j^{\t
 - $D(t_j) = \{l: t_l = t_j\}$ is the set of spells completed at $t_j$ with $\#D(t_j) = d_j$, 
 - $R(t_j) = \{l: t_l \geq t_i\}$ is the set of spells at risk at $t_j$.
 
-The contribution of a spell in $D(t_j)$ to the likelihood function equals the conditional probability that the spell ends at $t_j$ given it is exposed at that specific time (see @CAMERON_TRIVEDI for more details) and can be written as: 
+The contribution of a spell in $D(t_j)$ to the likelihood function equals the conditional probability that the spell ends at $t_j$ given it is exposed at that specific time and can be written as (see @CAMERON_TRIVEDI and proof \@ref(eq:contribpartiallikproof) for more details): 
 
 \begin{equation}
   \mathbb{P}\big[T_j = t_j | R(t_j) \big] = \frac{\phi(\pmb{\mathrm{x}_j}, \beta)}{\sum_{l \in R(t_j)} \phi(\pmb{\mathrm{x}_l}, \beta)}

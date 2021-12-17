@@ -51,6 +51,18 @@ In this part, some proofs of the mathematical concepts used in the study are der
 # \end{equation}
 ```
 
+**Contribution to the partial likelihood function in PH models**
+
+\begin{equation}
+\begin{aligned}
+  \mathbb{P}\big[T_j = t_j | R(t_j) \big] & = \frac{\mathbb{P}\big[T_j = t_j | T_j \geq t_j \big]}{\sum_{l \in R(t_j)} \ \mathbb{P}\big[T_l = t_l | T_l \geq t_j \big]} \\\\
+  & = \frac{\lambda_j(t_j|\pmb{\mathrm{x_j}}, \beta)}{\sum_{l \in R(t_j)} \ \lambda_l(t_l|\pmb{\mathrm{x_l}}, \beta)} \\\\
+  & = \frac{\lambda_0 (t_j, \alpha)\phi(\pmb{\mathrm{x_j}}, \beta)}{\sum_{l \in R(t_j)} \ \lambda_0 (t_j, \alpha)\phi(\pmb{\mathrm{x_l}}, \beta)} \\\\
+  \mathbb{P}\big[T_j = t_j | R(t_j) \big] & = \frac{\phi(\pmb{\mathrm{x}_j}, \beta)}{\sum_{l \in R(t_j)} \phi(\pmb{\mathrm{x}_l}, \beta)}
+\end{aligned}
+(\#eq:contribpartiallikproof)
+\end{equation}
+
 **Partial likelihood function in PH models**
 
 Based on equation \@ref(eq:contribpartiallik), one can derive the probability that all spells completed at $t_j$ ends in the $j^{\text{th}}$ failure time, such that:
