@@ -24,7 +24,7 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2021-12-16" />
+<meta name="date" content="2021-12-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -98,11 +98,9 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Abstract</a></li>
 <li class="chapter" data-level="1" data-path="1-intro.html"><a href="1-intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="1.1-context.html"><a href="1.1-context.html"><i class="fa fa-check"></i><b>1.1</b> Context</a></li>
-<li class="chapter" data-level="1.2" data-path="1.2-a-multi-purpose-study.html"><a href="1.2-a-multi-purpose-study.html"><i class="fa fa-check"></i><b>1.2</b> A multi-purpose study</a></li>
-<li class="chapter" data-level="1.3" data-path="1.3-portfoliodef.html"><a href="1.3-portfoliodef.html"><i class="fa fa-check"></i><b>1.3</b> How to define a customer portfolio?</a></li>
-<li class="chapter" data-level="1.4" data-path="1.4-attritiondef.html"><a href="1.4-attritiondef.html"><i class="fa fa-check"></i><b>1.4</b> What is attrition?</a></li>
-<li class="chapter" data-level="1.5" data-path="1.5-valuedef.html"><a href="1.5-valuedef.html"><i class="fa fa-check"></i><b>1.5</b> What does customer “value” mean?</a></li>
+<li class="chapter" data-level="1.1" data-path="1.1-portfoliodef.html"><a href="1.1-portfoliodef.html"><i class="fa fa-check"></i><b>1.1</b> How to define a customer portfolio?</a></li>
+<li class="chapter" data-level="1.2" data-path="1.2-attritiondef.html"><a href="1.2-attritiondef.html"><i class="fa fa-check"></i><b>1.2</b> What is attrition?</a></li>
+<li class="chapter" data-level="1.3" data-path="1.3-valuedef.html"><a href="1.3-valuedef.html"><i class="fa fa-check"></i><b>1.3</b> What does customer “value” mean?</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="2-literature.html"><a href="2-literature.html"><i class="fa fa-check"></i><b>2</b> Literature Review</a>
 <ul>
@@ -184,16 +182,16 @@ div.csl-indent {
 <h4>What does <em>proportional hazards</em> mean?</h4>
 <p>PH models are said to be proportional as the relative hazard ratio between two individuals <span class="math inline">\(i\)</span> and <span class="math inline">\(k\)</span> does not vary over time, such that:</p>
 <p><span class="math display" id="eq:prophazratio">\[\begin{equation}
-  \frac{\lambda(t|\pmb{x_i})}{\lambda(t|\pmb{x_k})} = \frac{\phi(\pmb{x_i}, \beta) }{\phi(\pmb{x_j}, \beta)}
+  \frac{\lambda(t|\pmb{\mathrm{x}_i})}{\lambda(t|\pmb{\mathrm{x}_k})} = \frac{\phi(\pmb{\mathrm{x}_i}, \beta) }{\phi(\pmb{\mathrm{x}_j}, \beta)}
   \tag{3.16}
 \end{equation}\]</span></p>
 <p>The formulation stated in equation <a href="3.6-semi-parametric-estimation.html#eq:prophazratio">(3.16)</a> needs to be verified when one wants to fit a PH model to real-life data.</p>
 </div>
 <div id="marginal-effects" class="section level4 unnumbered">
 <h4>Marginal effects</h4>
-<p>In <em>proportional hazards</em> models, the marginal effect of covariate <span class="math inline">\(x_j\)</span> on the hazard function can be easily derived since this computation only requires knowledge on <span class="math inline">\(\beta\)</span>. As shown in <span class="citation"><a href="#ref-CAMERON_TRIVEDI" role="doc-biblioref">Cameron and Trivedi</a> (<a href="#ref-CAMERON_TRIVEDI" role="doc-biblioref">2005</a>)</span>, a one-unit increase in the <span class="math inline">\(j^{\text{th}}\)</span> covariate leads to the following variation in the hazard function <em>ceteris paribus</em>:</p>
+<p>In <em>proportional hazards</em> models, the marginal effect of covariate <span class="math inline">\(x_p\)</span> on the hazard function can be easily derived since this computation only requires knowledge on <span class="math inline">\(\beta\)</span>. As shown in <span class="citation"><a href="#ref-CAMERON_TRIVEDI" role="doc-biblioref">Cameron and Trivedi</a> (<a href="#ref-CAMERON_TRIVEDI" role="doc-biblioref">2005</a>)</span>, a one-unit increase in the <span class="math inline">\(p^{\text{th}}\)</span> covariate leads to the following variation in the hazard function <em>ceteris paribus</em>:</p>
 <p><span class="math display" id="eq:meph">\[\begin{equation}
-    \frac{\partial \lambda(t|\pmb{\mathrm{x}}, \beta)}{\partial x_j} = \lambda(t|\pmb{\mathrm{x}}, \beta) \frac{\partial \phi(\pmb{\mathrm{x}}, \beta) / \partial x_j}{\phi(\pmb{\mathrm{x}}, \beta) }
+    \frac{\partial \lambda(t|\pmb{\mathrm{x}}, \beta)}{\partial x_p} = \lambda(t|\pmb{\mathrm{x}}, \beta) \frac{\partial \phi(\pmb{\mathrm{x}}, \beta) / \partial x_p}{\phi(\pmb{\mathrm{x}}, \beta) }
     \tag{3.17}
 \end{equation}\]</span></p>
 </div>
@@ -212,11 +210,11 @@ div.csl-indent {
   \tag{3.18}
 \end{equation}\]</span></p>
 <p>Given <span class="math inline">\(k\)</span> discrete failure times are considered and that for each of those there is a set <span class="math inline">\(D(t_j)\)</span> of completed spells, Cox defines the partial likelihood function as the joint product of the probability expressed in <a href="3.6-semi-parametric-estimation.html#eq:contribpartiallik">(3.18)</a>, such that:</p>
-<p><span class="math display" id="eq:partlikproof2" id="eq:partlik">\[\begin{equation}
+<p><span class="math display" id="eq:partlik">\[\begin{equation}
   \mathcal{L}_p = \Pi_{j=1}^{k} \ \frac{\Pi_{m \in D(tj)} \ \phi(\pmb{\mathrm{x}_j}, \beta)}{\Big[\sum_{l \in R(t_j)} \phi(\pmb{\mathrm{x}_l}, \beta)\Big]^{d_j}}
   \tag{3.19}
 \end{equation}\]</span></p>
-<p>The latter formulation of the partial likelihood function is explained in more details in equations <a href="duration-models.html#eq:partlikproof1">(5.3)</a> and \tag{3.20} in the appendix.</p>
+<p>The latter formulation of the partial likelihood function is explained in more details in equations <a href="duration-models.html#eq:partlikproof">(5.3)</a> and <a href="duration-models.html#eq:partlikproofbis">(5.4)</a> in the appendix.</p>
 </div>
 </div>
 <div id="cox-ph-model" class="section level3" number="3.6.2">

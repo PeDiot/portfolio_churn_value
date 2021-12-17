@@ -434,7 +434,7 @@ Note that when the function form of $\lambda_0 (t,\alpha)$ is known, we are in t
 PH models are said to be proportional as the relative hazard ratio between two individuals $i$ and $k$ does not vary over time, such that: 
 
 \begin{equation}
-  \frac{\lambda(t|\pmb{x_i})}{\lambda(t|\pmb{x_k})} = \frac{\phi(\pmb{x_i}, \beta) }{\phi(\pmb{x_j}, \beta)}
+  \frac{\lambda(t|\pmb{\mathrm{x}_i})}{\lambda(t|\pmb{\mathrm{x}_k})} = \frac{\phi(\pmb{\mathrm{x}_i}, \beta) }{\phi(\pmb{\mathrm{x}_j}, \beta)}
   (\#eq:prophazratio)
 \end{equation}
 
@@ -442,10 +442,10 @@ The formulation stated in equation \@ref(eq:prophazratio) needs to be verified w
 
 #### Marginal effects {-}
 
-In *proportional hazards* models, the marginal effect of covariate $x_j$ on the hazard function can be easily derived since this computation only requires knowledge on $\beta$. As shown in @CAMERON_TRIVEDI, a one-unit increase in the $j^{\text{th}}$ covariate leads to the following variation in the hazard function *ceteris paribus*: 
+In *proportional hazards* models, the marginal effect of covariate $x_p$ on the hazard function can be easily derived since this computation only requires knowledge on $\beta$. As shown in @CAMERON_TRIVEDI, a one-unit increase in the $p^{\text{th}}$ covariate leads to the following variation in the hazard function *ceteris paribus*: 
 
 \begin{equation}
-    \frac{\partial \lambda(t|\pmb{\mathrm{x}}, \beta)}{\partial x_j} = \lambda(t|\pmb{\mathrm{x}}, \beta) \frac{\partial \phi(\pmb{\mathrm{x}}, \beta) / \partial x_j}{\phi(\pmb{\mathrm{x}}, \beta) }
+    \frac{\partial \lambda(t|\pmb{\mathrm{x}}, \beta)}{\partial x_p} = \lambda(t|\pmb{\mathrm{x}}, \beta) \frac{\partial \phi(\pmb{\mathrm{x}}, \beta) / \partial x_p}{\phi(\pmb{\mathrm{x}}, \beta) }
     (\#eq:meph)
 \end{equation}
 
@@ -473,7 +473,7 @@ Given $k$ discrete failure times are considered and that for each of those there
   (\#eq:partlik)
 \end{equation}
 
-The latter formulation of the partial likelihood function is explained in more details in equations \@ref(eq:partlikproof1) and (\#eq:partlikproof2) in the appendix. 
+The latter formulation of the partial likelihood function is explained in more details in equations \@ref(eq:partlikproof) and \@ref(eq:partlikproofbis) in the appendix. 
 
 ### Cox PH model
 

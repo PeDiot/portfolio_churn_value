@@ -14,11 +14,35 @@ Now the concepts of *portfolio*, *attrition* and *value* have been defined, it s
 
 ## On customer portfolio {#portfolio}
 
+Over the course of time, there has been a  slight amendment on the area of use of this term. At the outset, this term was principally used in finance (Markowitz 1952). As it went along, this expression is now employed when referring to the CRM (Homburg & Al 2009).
+Customer portfolio analysis enables managers and researchers to capture a customer’s value input to a firm’s portfolio of links rather than analyzing a customer’s value to the firm singly. 
+This term is spread over three distinct ways of treating it.
+For one thing, the most obvious thing might be to cleave the portfolio. What exactly does that mean? Well, the idea is quite clear. The authors consider a 4-branch segmented portfolio:
+
+- Platinium
+- Gold
+- Silver
+- Bronze
+
+With two issues:
+
+- Cost to serve a client
+- Value of this client
+
+The holy grail for a company would be to segment their clients in line with the value they give rise to. 
+One question arises: Would companies treat customer segments differently if they could quantify their current and potential value? At first glance, one might think firms would enjoy having only platinium customers. This seems rational and cogent. Nonetheless, and this also acts as the second way of treatment, in a pre-release version of an article (Alain Bousquet 2021), the writer intends a completely novel and previously unseen idea of estimating a portfolio value. His idea is to rest no longer on the expected value of a portfolio, but rather on its variance. The brief conclusion that comes out is that it is preferable for the portfolio value to have some level of variance. Determining such a level could prove to be somewhat tricky. However the hunch behind that is easily understandable. A firm needs heterogeneous clients so as to properly segment them. Thus, she would be able to able to offer a great range of services.
+Last but not least, both cases above are studied following a static way. A huge intake would be the dynamisation of the problem. As stated by (Christian Homburg, Viviana V. Steiner, & Dirk Totzek 2009), the value a customer has is prone to changes. Let us take the example of a teenager in a telecom company. It is likely he begins with a small monthly fee without lots of features. Nevertheless, when he gets older he will drastically change his consumption. The dynamics of a client are represented by Markov chains (insérer image). Therefor, firms try to estimate churn and status change probabilities over time. Dynamic portfolios get rid of one main concern about static portfolios: its annoying habit of underestimating low-value clients and overestimating high-value clients.
+
+
 ```{r timeline, fig.cap="A timeline on the concept of portfolio", out.height="300pt", out.width="400pt"}
 knitr::include_graphics(path = "./imgs/portfolio_timeline.png")
 ```
 
 ## On attrition {#attrition}
+
+Attrition, or churn, whatever you call it, has become a buzzword these last years. It has sailed among different waterways: econometrics, machine learning...  Naturally enough, churn analysis has begun with the precious help of econometrics. Churn analysis can be seen as an economic problem.  Indeed, churners are really frequent on oligopolistic markets. Moreover, as (Ana Maria Perez Marin 2004) states, there is an asymmetrical information between potential churners (clients) and firms. Her paper aims at estimating the life expectancy of a customer in a firm's portfolio. Let us note her article is based on the insurance market, which has some peculiarities. She introduces a new non-parametric method to estimate customer lifetime duration.
+Subsequently, there are some new survival analysis tools in the field of ML. As read on (Carolina Bellani 2019) The same market is kept: the insurance one. She uses many ML models, among which random forests, logistic regression, neural networks... The data preprocessing she makes is heavy. Indeed, she deals with unbalanced data and thus resorts to undersampling. This problem is common in ML, and it impacts negatively the estimation coherence. In order to get a robust enough model, one has to pick the best classification threshold according to one metric which bears in mind classification mistakes in both classes.
+Ultimately, when a customers churns out of a firm, it may worth it to consider all possible outcomes for the reason he churned. For instance, a client might leave his telecom company because of the lack of services, or because of a terrible 5G reception. Time and time again, there are many sakes possible for the client to leave. That brings on the table our final topic: competing risks. The focus is put on (Dorenda Slof, Flavius Frasincar,Vladyslav Matsiiako 2021). The main interest of competing risk analysis is to determine the reason why the client would churn, and to prevent the churn by operating directly on this problem. They introduce two methods in the article. The first one being the incorporation of text-based data on duration models. For example, they look carefully at the emails sent by the customer to the customer service. By the way, this might be a chance to develop NLP models to try preventing the churn. Then, the second one is to analyse clients' requests, classify them and then stir them in the blender of features, which allows the models gaining performance and reliability.
 
 ## On customer value {#value}
 

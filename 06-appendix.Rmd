@@ -58,12 +58,12 @@ Based on equation \@ref(eq:contribpartiallik), one can derive the probability th
 \begin{equation}
 \begin{aligned}
   \mathcal{L}_{p,\ t_j} & = \mathbb{P}\big[T_1 = t_j, \dots, T_{d_j} = t_j \ | \ R(t_j)\big] \\\\
-  & = \Pi_{m \in D(t_j)} \ \mathbb{P}\big[T_j = t_j | R(t_j) \big] \\\\
-  & = \Pi_{m \in D(t_j)} \ \frac{\phi(\pmb{\mathrm{x}_j}, \beta)}{\sum_{l \in R(t_j)} \phi(\pmb{\mathrm{x}_l}, \beta)} \\\\
-  & = \Pi_{m \in D(t_j)} \ \phi(\pmb{\mathrm{x}_j}, \beta) \times \Pi_{m \in D(t_j)} \ \frac{1}{\sum_{l \in R(t_j)} \phi(\pmb{\mathrm{x}_l}, \beta)} \\\\
-  \mathcal{L}_{p,\ t_j} & = \frac{\Pi_{m \in D(t_j)} \ \phi(\pmb{\mathrm{x}_j}, \beta)}{\Big[\sum_{l \in R(t_j)} \phi(\pmb{\mathrm{x}_l}, \beta)\Big]^{d_j}}
+  & = \Pi_{m \in D(t_j)} \ \mathbb{P}\big[T_m = t_j | R(t_j) \big] \\\\
+  & = \Pi_{m \in D(t_j)} \ \frac{\phi(\pmb{\mathrm{x}_m}, \beta)}{\sum_{l \in R(t_j)} \phi(\pmb{\mathrm{x}_l}, \beta)} \\\\
+  & = \Pi_{m \in D(t_j)} \ \phi(\pmb{\mathrm{x}_m}, \beta) \times \Pi_{m \in D(t_j)} \ \frac{1}{\sum_{l \in R(t_j)} \phi(\pmb{\mathrm{x}_l}, \beta)} \\\\
+  \mathcal{L}_{p,\ t_j} & = \frac{\Pi_{m \in D(t_j)} \ \phi(\pmb{\mathrm{x}_m}, \beta)}{\Big[\sum_{l \in R(t_j)} \phi(\pmb{\mathrm{x}_l}, \beta)\Big]^{d_j}}
 \end{aligned}
-(\#eq:partlikproof1)
+(\#eq:partlikproof)
 \end{equation}
 
 The joint probability over the $k$ ordered discrete failure times then becomes: 
@@ -71,9 +71,9 @@ The joint probability over the $k$ ordered discrete failure times then becomes:
 \begin{equation}
 \begin{aligned}
   \mathcal{L}_p & = \Pi_{j=1}^{k} \ \mathcal{L}_{p,\ t_j} \\\\
-  \mathcal{L}_p & = \Pi_{j=1}^{k} \ \frac{\Pi_{m \in D(t_j)} \ \phi(\pmb{\mathrm{x}_j}, \beta)}{\Big[\sum_{l \in R(t_j)} \phi(\pmb{\mathrm{x}_l}, \beta)\Big]^{d_j}}
+  \mathcal{L}_p & = \Pi_{j=1}^{k} \ \frac{\Pi_{m \in D(t_j)} \ \phi(\pmb{\mathrm{x}_m}, \beta)}{\Big[\sum_{l \in R(t_j)} \phi(\pmb{\mathrm{x}_l}, \beta)\Big]^{d_j}}
 \end{aligned}
-(\#eq:partlikproof2)
+(\#eq:partlikproofbis)
 \end{equation}
   
 

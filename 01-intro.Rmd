@@ -10,11 +10,24 @@ knitr::opts_chunk$set(
 
 # Introduction {#intro}
 
+In a world in which the access to information is almost free or insignificant, and where there is a real plurality of offers, churn analysis has become one of the key points a firm needs to focus on. Whoever says plurality of offers needs to introduce the term "competition". Thereby, the latter is more and more fierce and cutthroat. Furthermore, thanks to some laws, switching costs have decreased significantly. For instance in France, when you switch your internet provider, the new provider pays you off cancellation fees. All of this being said, we shall recall the development, if not the advent of both survival analysis and machine learning. Latter's have enabled companies to really push-up their strategies in terms of customer management and churn analysis.
 
-## Context
+Such a draft is full of incentives. Tons of questions were asked. Sorting through them is no small feet.  After much thought, only a few questions have managed to make out alright. 
+
+- How to model the full value of a customer portfolio?
+- How to partition a client portfolio? Chich criteria can be relied on? Which tools to use?
+- How to predict the lifespan of a customer / customer segment?
+- How to predict churn? How to prevent it?
 
 
-## A multi-purpose study
+In order to address them, some objectives have been established:
+
+- Estimate the remaining operational  life of a client / client segment
+- Modeling portfolio value (return, risk) with econometrical techniques
+- Predict churn with machine learning methods for classification
+- Fraction groups of customers according to their value in the portfolio
+
+Those ones shall be met by the use of advanced techniques of data analysis.
 
 
 ## How to define a customer portfolio? {#portfoliodef}

@@ -23,13 +23,11 @@ eq:prophazratio
 eq:meph
 eq:contribpartiallik
 eq:partlik
-eq:partlikproof2
 eq:hazfunproof
 eq:linksurvcumhaz
-eq:partlikproof1
+eq:partlikproof
+eq:partlikproofbis
 intro
-context
-a-multi-purpose-study
 portfoliodef
 attritiondef
 valuedef
