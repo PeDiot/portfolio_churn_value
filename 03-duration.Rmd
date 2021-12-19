@@ -451,7 +451,7 @@ In *proportional hazards* models, the marginal effect of covariate $x_p$ on the 
 
 #### Partial likelihood estimation {-}
 
-The vector of parameters $\beta$ related to the regression part of the PH model is estimated by partial likelihood maximization. The method's principle consists in only estimating the regression's parameters $\beta$ by considering the baseline hazard $\lambda_0$ as noise. If desired an estimate of the baseline hazard can be recovered after estimation of $\beta$ using for instance, the Nelson-Aalen estimator (see \@ref(nonparam)). Cox's intuition is that no information can be retrieved from the intervals during which no event has occurred and that it is conceivable that $\lambda_0$ is null in these intervals. Thus, solely the set of moments when an event occurs are considered in the estimation method. 
+The vector of parameters $\beta$ related to the regression part of the PH model is estimated by partial likelihood maximization. The method's principle consists in only estimating the regression's parameters $\beta$ by considering the baseline hazard $\lambda_0$ as noise. If desired an estimate of the baseline hazard can be recovered after estimation of $\beta$ using for instance, the Nelson-Aalen estimator (see part \@ref(nonparam)). Cox's intuition is that no information can be retrieved from the intervals during which no event has occurred and that it is conceivable that $\lambda_0$ is null in these intervals. Thus, solely the set of moments when an event occurs are considered in the estimation method. 
 
 In order to derive the partial likelihood function, let us note $t_j$ the $j^{\text{th}}$ discrete failure time in an $N$-sample with $j \in [\![1; k]\!]$, such that:
 
