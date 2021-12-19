@@ -23,6 +23,8 @@ eq:prophazratio
 eq:meph
 eq:contribpartiallik
 eq:partlik
+fig:tree
+eq:chf
 eq:hazfunproof
 eq:linksurvcumhaz
 eq:contribpartiallikproof
@@ -57,4 +59,8 @@ semi-parametric-estimation
 proportional-hazards-models
 cox-ph-model
 ml
+machine-learning-for-survival-data
+survival-trees
+random-survival-forests-rsf
+cox-boosting
 data
