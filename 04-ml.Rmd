@@ -1,8 +1,58 @@
-# Machine Learning techniques {#ml}
+```{r echo=FALSE}
+knitr::opts_chunk$set(
+  fig.align = "center", 
+  echo = FALSE, 
+  message = FALSE, 
+  comment = FALSE, 
+  warning = FALSE
+)
+```
+
+# Machine Learning {#ml}
 
 <center>
+
 *A computer program is said to learn from experience $E$ with respect to some class of tasks $T$ and performance measure $P$ if its performance at tasks in $T$, as measured by $P$, improves with experience $E$.*
 
 *-- Tom M. Mitchell --* 
 
 </center>
+
+<br/>
+
+This chapter introduces machine learning algorithms used to model customers portfolios. We firstly explain the techniques which aims to enrich the standard survival tools defined in the previous chapter. A second part depicts some regression models that are robust to predict *customer lifetime value*. Finally, the prediction performance associated to predictive methods are described. 
+
+## Machine Learning for Survival Data
+
+In chapter \@ref(duration), some important models for duration data have been introduced. Here, emphasize is placed on machine learning algorithms that can also be implemented to predict a time-to-event variable such as the time to churn. 
+
+### Survival Trees
+
+Traditional decision trees, also called CART (Classification And Regression Trees), segment the feature space into multiple rectangles and then fit a simple model to each of these subsets as shown by figure \@ref(fig:tree) [@ML_TREE]. The algorithm is a recursive partitioning which requires a criterion for choosing the *best* split, another criterion for deciding when to stop the splits and a rule for predicting the class of an observation. 
+
+```{r tree, fig.show = "hold", out.width = "50%", out.height="250pt", fig.cap="Clasification decision tree"}
+knitr::include_graphics(path = "./imgs/tree1.png")
+knitr::include_graphics(path = "./imgs/tree2.png")
+```
+
+Survival tree [@SURV_TREE] is the adapted version of CART for duration data. The objective is to use tree based binary splitting algorithm in order to predict hazard rates. To that end, survival time and censoring status are introduced as response variables. The splitting criteria used for survival trees have the same purpose than the criteria used for CART that is to say maximizing between-node heterogeneity or minimizing within-node homogeneity. Nonetheless, node purity is different in the case of survival trees as a node is considered pure if all spells in that node have similar survival duration. The most common criterion is to use the **logrank test** statistic to compare the two groups formed by the children nodes. For each node, every possible split on each feature is being examined. The best split is the one maximizing the survival difference
+between two children nodes. The test statistic is $\chi^2$ distributed which means the higher its value, the higher between-node variability so the better the split.
+
+### Random Survival Forests (RSF)
+
+This algorithm is proposed by @RSF and is an ensemble of decision trees for the analysis of right-censored survival data. As random forests used for regression and classification, RSF are based on bagging which implies that $B$ bootstrap samples are drawn from the original data with 63$\%$ are in the bag data and the remaining part is in the out-of-bag (OOB) data. For each bootstrap sample, a survival tree is grown based on $p$ randomly selected features. Then, the parent node is split using the feature among the selected ones that maximizes survival difference between children nodes. Each tree is grown to full size and each terminal node need to have no less than $d_0$ unique events. The cumulative hazard function (CHF) is computed for each tree using the Nelson-Aalen estimator such as:
+
+\begin{equation}
+  \widehat{H_l}(t) = \sum_{t_{j, l} < t} \frac{d_{j,l}}{r_{j,l}}
+  (\#eq:chf)
+\end{equation}
+
+where $t_{j,l}$ is the $j^{\text{th}}$ distinct event time in leaf $l$, $d_{j,l}$ the number of events completed at $t_{j,l}$ and $r_{j,l}$ the number of spells at risk at $t_{j,l}$. 
+
+All the CHFs are then averaged to obtain the bootstrap ensemble CHF and prediction error is finally computed on the OOB ensemble CHF. 
+
+### Cox Boosting
+
+**Boosting** is an ensemble method which combines several weak predictors into a strong predictor. The idea of most boosting methods is to train predictors sequentially, each trying to correct its predecessor. Cox boosting [@COX_BOOSTING] is designed for high dimension survival data and has the purpose of feature selection while improving the performance of the standard Cox model. The key difference with gradient boosting is that Cox boosting does not update all coefficients at each boosting step, but only update one coefficient that improves the overall fit the most. The loss function is a penalized version of the Cox model's log-likelihood (see equation \@ref(eq:partlik) for the likelihood function of the Cox model). Cox boosting helps measuring variable importance as the coefficients associated to more representative variables will be updated in early steps.
+
+
