@@ -18,8 +18,6 @@ knitr::opts_chunk$set(
 
 </center>
 
-<br/>
-
 This chapter introduces machine learning algorithms used to model customers portfolios. We firstly explain the techniques which aims to enrich the standard survival tools defined in the previous chapter. A second part depicts some regression models that are robust to predict *customer lifetime value*. Finally, the prediction performance associated to predictive methods are described. 
 
 ## Machine Learning for Survival Data
@@ -30,7 +28,7 @@ In chapter \@ref(duration), some important models for duration data have been in
 
 Traditional decision trees, also called CART (Classification And Regression Trees), segment the feature space into multiple rectangles and then fit a simple model to each of these subsets as shown by figure \@ref(fig:tree) [@ML_TREE]. The algorithm is a recursive partitioning which requires a criterion for choosing the *best* split, another criterion for deciding when to stop the splits and a rule for predicting the class of an observation. 
 
-```{r tree, fig.show = "hold", out.width = "50%", out.height="250pt", fig.cap="Clasification decision tree"}
+```{r tree, fig.show = "hold", out.width = "45%", out.height="260pt", fig.cap="Clasification decision tree"}
 knitr::include_graphics(path = "./imgs/tree1.png")
 knitr::include_graphics(path = "./imgs/tree2.png")
 ```
@@ -54,5 +52,154 @@ All the CHFs are then averaged to obtain the bootstrap ensemble CHF and predicti
 ### Cox Boosting
 
 **Boosting** is an ensemble method which combines several weak predictors into a strong predictor. The idea of most boosting methods is to train predictors sequentially, each trying to correct its predecessor. Cox boosting [@COX_BOOSTING] is designed for high dimension survival data and has the purpose of feature selection while improving the performance of the standard Cox model. The key difference with gradient boosting is that Cox boosting does not update all coefficients at each boosting step, but only update one coefficient that improves the overall fit the most. The loss function is a penalized version of the Cox model's log-likelihood (see equation \@ref(eq:partlik) for the likelihood function of the Cox model). Cox boosting helps measuring variable importance as the coefficients associated to more representative variables will be updated in early steps.
+
+## Regression methods
+
+*Customer Lifetime Value* being a quantitative variable, machine learning regression models are adapted to predict this quantity. Regression analysis is a fundamental concept in the field of machine learning. It falls under supervised learning wherein the algorithm is trained with both input features and output labels. It helps in establishing a relationship among the variables by estimating how one variable affects the other. In this context, we present some famous machine learning algorithm that can be implemented to estimate the relationship between several features and a continuous target variable. 
+
+### Linear models
+
+#### Model formulation {-}
+
+Linear models are called that way as the target value is expected to be a linear combination of the features. Let $\hat{y}$ be the vector of predicted values, $\beta$ the set of parameters to optimise and $\pmb{\mathrm{x}}$ the feature vector. The linear relationship between $\hat{y}$ and $\pmb{\mathrm{x}}$ can be written as follows: 
+
+\begin{equation}
+  \hat{\mathrm{y}} = \beta_0 + \beta_1 \mathrm{x}_1 + \dots + \beta_P \mathrm{x}_P
+  (\#eq:linearmodel)
+\end{equation}
+
+with $P$ the number of explanatory variables.
+
+Equation \@ref(eq:linearmodel) can be rewritten in a vectorized way such that $\hat{\mathrm{y}} = \pmb{\mathrm{x}}\beta$.
+
+#### Ordinary Least Squares {-}
+
+The most standard regression algorithm is linear regression in which the loss function is the residual sum of squares between the observed targets in the dataset $\mathrm{y}$ and the targets predicted by the linear formulation $\hat{\mathrm{y}}$. This method is called ordinary least squares (OLS). Mathematically, the set of parameters $\beta$ is chosen with a view of minimizing: 
+\begin{equation}
+  \mathcal{l}_{OLS} = ||\mathrm{y} - \pmb{\mathrm{x}}\beta||_2 = (\mathrm{y} - \pmb{\mathrm{x}}\beta)^{'}(\mathrm{y} - \pmb{\mathrm{x}}\beta)
+  (\#eq:ols)
+\end{equation}
+
+#### Regularization {-}
+
+In order to address some of the problems encountered with the OLS method, regularization can be used. For instance, regularization techniques can be employed when the explanatory variables are highly correlated. 
+
+Ridge regression is a linear regression with a quadratic constraint on the coefficients. Here, the coefficients minimize a penalized residual sum of squares: the higher the penalty term, the more large coefficients are discouraged and the less risk of overfitting. Formally, the ridge loss function is based on $l_2$-norm and is expressed as: 
+
+\begin{equation}
+  \mathcal{l}_{Ridge} = ||\mathrm{y} - \pmb{\mathrm{x}}\beta||_2 + \alpha ||\beta||_2
+  (\#eq:ridge)
+\end{equation}
+
+where $\alpha$ is the shrinkage parameter which controls the penalization on the value of the model's coefficients.
+
+Lasso regression is another example of penalized estimation technique with this time a linear constraint on the $\beta$ vector. It is helpful in reducing the number of features upon which the target variable is dependent. The loss function is based on $l_1$-norm and can be written as follows: 
+
+\begin{equation}
+  \mathcal{l}_{Lasso} = ||\mathrm{y} - \pmb{\mathrm{x}}\beta||_2 + \alpha ||\beta||_1
+  (\#eq:lasso)
+\end{equation}
+
+Finally, ElasticNet is a linear regression model trained with both $l_1$ and $l_2$-norm regularization of the coefficients and is useful when there are multiple features that are correlated with one another. In this context, the loss function is derived as follows: 
+
+\begin{equation}
+  \mathcal{l}_{EN} = ||\mathrm{y} - \pmb{\mathrm{x}}\beta||_2 + \alpha \rho ||\beta||_1 + \alpha \frac{1-\rho}{2} ||\beta||_2
+  (\#eq:elasticnet)
+\end{equation}
+
+#### Gradient Descent {-}
+
+The loss functions presented above need to be optimized to obtain the optimal set of parameters that best represents the linear relationship between $\mathrm{y}$ and $\pmb{\mathrm{x}}$. In other words, a minimization problem needs to be solved. Gradient descent is an algorithm whose goal is to find the maximum (or minimum) of a given function $f$. The gradient of $f$ is defined as the vector of partial derivatives and gives the input direction in which the $f$ most quickly increases. The gradient descent approach consists in picking a random starting point, computing the gradient, taking a small step in the opposite direction of the
+gradient and repeating with the new starting point until some criterion is met. 
+
+### More advanced regression models 
+
+Linear models are considered the most common and easy-to-understand models when it comes to predict a quantitative variable such as customer value. Nonetheless, more advanced techniques can sometimes be implemented in order to obtain more accurate predictions. 
+
+#### Generalized Additive Model (GAM) {-}
+
+GAM is a statistical model in which the response variable $\mathrm{y}$ depends linearly on unknown smooth functions of some feature vector $\pmb{\mathrm{x}}$, and interest focuses on inference about these smooth functions called $f_p$. The $f_p$ functions may be either parametric (polynomial), semi-parametric or nonparametric (smoothing splines) leading to more flexibility in the model’s assumptions on the actual relationship between $\mathrm{y}$ and $\pmb{\mathrm{x}}$. A link function $g$ can also be introduced to specify this relationship and the model's general formulation is as follows:
+
+\begin{equation}
+  g\big(\mathrm{E} [\mathrm{y}] \big) = \sum_{p=1}^P \ f_p(\mathrm{x}_p)
+  (\#eq:gam)
+\end{equation}
+
+#### Other models {-}
+
+State-of-the-art algorithms can also be employed to describe the relationship between the continuous variable and the feature vector. Among them, one can find random forest of regression trees, gradient boosting as well as Multi-layer Perceptron(MLP) regressor. 
+
+
+## Performance Metrics
+
+Once several models have been trained, comparing their performance is an essential step to choose the right model. Statistical metrics helps in the model selection stage by providing an indication of goodness of fit. In other words, they are a measure of how well unseen samples are likely to be predicted by a given model. As two families of algorithms have been introduced, two types of statistical metrics are required. 
+
+### Metrics for Regression models
+
+#### Notations {-}
+
+Let us consider a set of $n$ samples where $y_i$ is the true value and $\hat{y}_i$ the predicted value related to the $i^\text{th}$ sample. 
+
+#### Coefficient of determination {-}
+
+Historically, the $R^2$ score or coefficient of determination is the most common tool to compare the performance of two regression models. It computes the proportion of variance in the target variable that has been explained by the independent variables in the model. Mathematically, we have: 
+
+\begin{equation}
+  R^2 = 1 - \frac{\sum_{i=1}^n \ (y_i - \hat{y}_i)^2}{(y_i - \overline{y})^2}
+  (\#eq:R2)
+\end{equation}
+
+From equation \@ref(eq:R2) it can be derived that $R^2 \in [0, 1]$. A perfect model would obtain an $R^2$ score of 1. Conversely, a constant model that always predicts the expected value of the target, disregarding the input features, would get a score of 0. The $R^2$ value remains to be carefully analysed as a large value does not necessarily mean a high quality model. Indeed, the $R^2$ score being the square of the correlation coefficient, if the latter is close to 1 (or -1), the coefficient of determination will be close to 1. But if the correlation is spurious, the $R^2$ value will be meaningless as well as the trained model (see @BOUSQUET_ECONOMETRICS for more details). 
+
+#### Mean Squared Error (MSE) {-}
+
+MSE can be regarded as a risk metric corresponding to the expected value of the squared error or loss. Formally, MSE is expressed as:
+
+\begin{equation}
+  MSE = \frac{1}{n} \ \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
+  (\#eq:MSE)
+\end{equation}
+
+### Metrics for Survival models
+
+#### Concordance index (C-index) {-}
+
+C-index is a goodness of fit measure for models which produce risk scores. It is commonly used to evaluate risk models in survival analysis, where data may be censored. 
+
+Consider both the observations and prediction values of two instances $(y_1; \hat{y}_1)$ and $(y_2; \hat{y}_2)$. $y_i$ and $\hat{y}_i$ represent respectively the actual observation time and the predicted time. Mathematically, the C-index is defined as the probability to well predict the order of event occurring time for any pair of instances. 
+
+\begin{equation}
+  c = \mathbb{P}\big(\hat{y}_1 > \hat{y}_2 | y_1 > y_2\big)
+  (\#eq:cindex)
+\end{equation}
+
+Another way to write the C-index metric is to compute the ratio between concordant pairs and the total number of pairs. Consider individual $i$ and let $T$ be the time-to-event variable and $\eta_i$ the risk score assigned to $i$ by the model. We say that the pair $(i, j)$ is a concordant pair if $\eta_i > \eta_j$ and $T_i < T_j$, and it is a discordant pair if $\eta_i > \eta_j$ and $T_i > T_j$. If both $T_i$ and $T_j$ are censored, then this pair is not taken into account in the computation. If $T_j$ is censored, then: 
+
+- If $T_j < T_i$ the pair $(i, j)$ is not considered in the computation since the order cannot be determined.
+- If $T_j > T_i$, the order can be determined and $(i, j)$ is concordant if $\eta_i > \eta_j$, discordant otherwise.
+
+Equation \@ref(eq:cindex) can then be rewritten as follows:
+
+\begin{equation}
+c = \frac{\# \text{concordant pairs}}{\# \text{concordant pairs} + \ \text{discordant pairs}} = \frac{\sum_{i \neq j} \pmb{1}_{\eta_i < \eta_j} \pmb{1}_{T_i > T_j}d_j}{\sum_{i \neq j} \pmb{1}_{T_i > T_j}d_j}
+(\#eq:cindex2)
+\end{equation}
+
+with $d_j$ the event indicator variable.
+
+The concordance index ranges between 0 and 1. A C-index below 0.5 indicates a very poor model. A C-index of 0.5 means that the model is rather a non-informative model making random predictions. A model with C-index 1 makes perfect prediction. In general case, a C-index higher than 0.7 indicates a good performance.
+
+#### Brier score {-}
+
+The Brier score is another statistical metric for evaluating duration models' performance and is defined as the mean squared error between the estimated survival probability and the observed survival at time $t$: 
+
+\begin{equation}
+  BS(t) = \frac{1}{N} \sum_{i=1}^{N} \Big(\pmb{1}_{\{t_i>t\}} - \hat{S}(t|\mathrm{x}_i) \Big)^2
+  (\#eq:brier)
+\end{equation}
+
+
+
+
 
 
