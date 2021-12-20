@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>1.2 What is attrition? | Portfolio, Churn &amp; Customer Value</title>
+  <meta name="description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="1.2 What is attrition? | Portfolio, Churn &amp; Customer Value" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="1.2 What is attrition? | Portfolio, Churn &amp; Customer Value" />
+  
+  <meta name="twitter:description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
+  
+
+<meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
+
+
+<meta name="date" content="2021-12-20" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="1.1-portfoliodef.html"/>
+<link rel="next" href="1.3-valuedef.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Portfolio, Churn & Customer Value</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Abstract</a></li>
+<li class="chapter" data-level="1" data-path="1-intro.html"><a href="1-intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="1.1-portfoliodef.html"><a href="1.1-portfoliodef.html"><i class="fa fa-check"></i><b>1.1</b> How to define a customer portfolio?</a></li>
+<li class="chapter" data-level="1.2" data-path="1.2-attritiondef.html"><a href="1.2-attritiondef.html"><i class="fa fa-check"></i><b>1.2</b> What is attrition?</a></li>
+<li class="chapter" data-level="1.3" data-path="1.3-valuedef.html"><a href="1.3-valuedef.html"><i class="fa fa-check"></i><b>1.3</b> What does customer “value” mean?</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="2-literature.html"><a href="2-literature.html"><i class="fa fa-check"></i><b>2</b> Literature Review</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="2.1-portfolio.html"><a href="2.1-portfolio.html"><i class="fa fa-check"></i><b>2.1</b> On customer portfolio</a></li>
+<li class="chapter" data-level="2.2" data-path="2.2-attrition.html"><a href="2.2-attrition.html"><i class="fa fa-check"></i><b>2.2</b> On attrition</a></li>
+<li class="chapter" data-level="2.3" data-path="2.3-value.html"><a href="2.3-value.html"><i class="fa fa-check"></i><b>2.3</b> On customer value</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="3-duration.html"><a href="3-duration.html"><i class="fa fa-check"></i><b>3</b> Duration models</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="3.1-definition.html"><a href="3.1-definition.html"><i class="fa fa-check"></i><b>3.1</b> Definition</a></li>
+<li class="chapter" data-level="3.2" data-path="3.2-censoring-and-truncation.html"><a href="3.2-censoring-and-truncation.html"><i class="fa fa-check"></i><b>3.2</b> Censoring and Truncation</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="3.2-censoring-and-truncation.html"><a href="3.2-censoring-and-truncation.html#censoring-mechanisms"><i class="fa fa-check"></i><b>3.2.1</b> Censoring mechanisms</a></li>
+<li class="chapter" data-level="3.2.2" data-path="3.2-censoring-and-truncation.html"><a href="3.2-censoring-and-truncation.html#selection-bias"><i class="fa fa-check"></i><b>3.2.2</b> Selection bias</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="3.3-probabilistic-concepts.html"><a href="3.3-probabilistic-concepts.html"><i class="fa fa-check"></i><b>3.3</b> Probabilistic concepts</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="3.3-probabilistic-concepts.html"><a href="3.3-probabilistic-concepts.html#survival-function"><i class="fa fa-check"></i><b>3.3.1</b> Survival function</a></li>
+<li class="chapter" data-level="3.3.2" data-path="3.3-probabilistic-concepts.html"><a href="3.3-probabilistic-concepts.html#hazard-and-cumulative-hazard-functions"><i class="fa fa-check"></i><b>3.3.2</b> Hazard and Cumulative Hazard functions</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="3.4-nonparam.html"><a href="3.4-nonparam.html"><i class="fa fa-check"></i><b>3.4</b> Nonparametric models</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="3.4-nonparam.html"><a href="3.4-nonparam.html#notations"><i class="fa fa-check"></i><b>3.4.1</b> Notations</a></li>
+<li class="chapter" data-level="3.4.2" data-path="3.4-nonparam.html"><a href="3.4-nonparam.html#hazard-function-estimator"><i class="fa fa-check"></i><b>3.4.2</b> Hazard function estimator</a></li>
+<li class="chapter" data-level="3.4.3" data-path="3.4-nonparam.html"><a href="3.4-nonparam.html#kaplan-meier-estimator"><i class="fa fa-check"></i><b>3.4.3</b> Kaplan-Meier estimator</a></li>
+<li class="chapter" data-level="3.4.4" data-path="3.4-nonparam.html"><a href="3.4-nonparam.html#nelson-aalen-estimator"><i class="fa fa-check"></i><b>3.4.4</b> Nelson-Aalen estimator</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="3.5-parametric-models.html"><a href="3.5-parametric-models.html"><i class="fa fa-check"></i><b>3.5</b> Parametric models</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="3.5-parametric-models.html"><a href="3.5-parametric-models.html#constant-hazard-exponential-model"><i class="fa fa-check"></i><b>3.5.1</b> Constant hazard (exponential model)</a></li>
+<li class="chapter" data-level="3.5.2" data-path="3.5-parametric-models.html"><a href="3.5-parametric-models.html#monotone-hazard"><i class="fa fa-check"></i><b>3.5.2</b> Monotone hazard</a></li>
+<li class="chapter" data-level="3.5.3" data-path="3.5-parametric-models.html"><a href="3.5-parametric-models.html#concave-and-convex-hazard"><i class="fa fa-check"></i><b>3.5.3</b> Concave and convex hazard</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="3.6-semi-parametric-estimation.html"><a href="3.6-semi-parametric-estimation.html"><i class="fa fa-check"></i><b>3.6</b> Semi-parametric estimation</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="3.6-semi-parametric-estimation.html"><a href="3.6-semi-parametric-estimation.html#proportional-hazards-models"><i class="fa fa-check"></i><b>3.6.1</b> Proportional Hazards models</a></li>
+<li class="chapter" data-level="3.6.2" data-path="3.6-semi-parametric-estimation.html"><a href="3.6-semi-parametric-estimation.html#cox-ph-model"><i class="fa fa-check"></i><b>3.6.2</b> Cox PH model</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="4-ml.html"><a href="4-ml.html"><i class="fa fa-check"></i><b>4</b> Machine Learning</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="4.1-machine-learning-for-survival-data.html"><a href="4.1-machine-learning-for-survival-data.html"><i class="fa fa-check"></i><b>4.1</b> Machine Learning for Survival Data</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="4.1-machine-learning-for-survival-data.html"><a href="4.1-machine-learning-for-survival-data.html#survival-trees"><i class="fa fa-check"></i><b>4.1.1</b> Survival Trees</a></li>
+<li class="chapter" data-level="4.1.2" data-path="4.1-machine-learning-for-survival-data.html"><a href="4.1-machine-learning-for-survival-data.html#random-survival-forests-rsf"><i class="fa fa-check"></i><b>4.1.2</b> Random Survival Forests (RSF)</a></li>
+<li class="chapter" data-level="4.1.3" data-path="4.1-machine-learning-for-survival-data.html"><a href="4.1-machine-learning-for-survival-data.html#cox-boosting"><i class="fa fa-check"></i><b>4.1.3</b> Cox Boosting</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="4.2-regression-methods.html"><a href="4.2-regression-methods.html"><i class="fa fa-check"></i><b>4.2</b> Regression methods</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="4.2-regression-methods.html"><a href="4.2-regression-methods.html#linear-models"><i class="fa fa-check"></i><b>4.2.1</b> Linear models</a></li>
+<li class="chapter" data-level="4.2.2" data-path="4.2-regression-methods.html"><a href="4.2-regression-methods.html#more-advanced-regression-models"><i class="fa fa-check"></i><b>4.2.2</b> More advanced regression models</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="4.3-performance-metrics.html"><a href="4.3-performance-metrics.html"><i class="fa fa-check"></i><b>4.3</b> Performance Metrics</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="4.3-performance-metrics.html"><a href="4.3-performance-metrics.html#metrics-for-regression-models"><i class="fa fa-check"></i><b>4.3.1</b> Metrics for Regression models</a></li>
+<li class="chapter" data-level="4.3.2" data-path="4.3-performance-metrics.html"><a href="4.3-performance-metrics.html#metrics-for-survival-models"><i class="fa fa-check"></i><b>4.3.2</b> Metrics for Survival models</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="5-data.html"><a href="5-data.html"><i class="fa fa-check"></i><b>5</b> Data</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html"><i class="fa fa-check"></i>Appendix</a>
+<ul>
+<li class="chapter" data-level="" data-path="hazard-function.html"><a href="hazard-function.html"><i class="fa fa-check"></i>Hazard function</a></li>
+<li class="chapter" data-level="" data-path="link-between-cumulative-hazard-and-survivor-functions.html"><a href="link-between-cumulative-hazard-and-survivor-functions.html"><i class="fa fa-check"></i>Link between cumulative hazard and survivor functions</a></li>
+<li class="chapter" data-level="" data-path="contribution-to-the-partial-likelihood-function-in-ph-models.html"><a href="contribution-to-the-partial-likelihood-function-in-ph-models.html"><i class="fa fa-check"></i>Contribution to the partial likelihood function in PH models</a></li>
+<li class="chapter" data-level="" data-path="partial-likelihood-function-in-ph-models.html"><a href="partial-likelihood-function-in-ph-models.html"><i class="fa fa-check"></i>Partial likelihood function in PH models</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Portfolio, Churn &amp; Customer Value</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="attritiondef" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> What is attrition?</h2>
+<p>Customer <em>attrition</em> or churn occurs when a client discontinues using a service or a product offered by a firm. Churn analysis corresponds to measuring the <em>attrition</em> rate in the customer base of any company. However, evaluating <em>attrition</em> depends on the type of relationship between the firm and its clients. When it is defined by a contract, the customer has to inform the firm about their service termination. In the telecom industry, a consumer is required to notify their telecommunications service provider (TSP) before going to a competing company. In an opposite way, the firm/client relationship can be non-contractual. In that case, the service termination does not need to be notified. <em>Attrition</em> then becomes a latent variable and more advanced models are used to make forecasts.</p>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="1.1-portfoliodef.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="1.3-valuedef.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["portfolio_churn_value.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
