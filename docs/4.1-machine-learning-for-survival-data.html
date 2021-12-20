@@ -24,7 +24,7 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2021-12-19" />
+<meta name="date" content="2021-12-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="4-ml.html"/>
-<link rel="next" href="5-data.html"/>
+<link rel="next" href="4.2-regression-methods.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -148,11 +148,24 @@ div.csl-indent {
 <li class="chapter" data-level="4.1.2" data-path="4.1-machine-learning-for-survival-data.html"><a href="4.1-machine-learning-for-survival-data.html#random-survival-forests-rsf"><i class="fa fa-check"></i><b>4.1.2</b> Random Survival Forests (RSF)</a></li>
 <li class="chapter" data-level="4.1.3" data-path="4.1-machine-learning-for-survival-data.html"><a href="4.1-machine-learning-for-survival-data.html#cox-boosting"><i class="fa fa-check"></i><b>4.1.3</b> Cox Boosting</a></li>
 </ul></li>
+<li class="chapter" data-level="4.2" data-path="4.2-regression-methods.html"><a href="4.2-regression-methods.html"><i class="fa fa-check"></i><b>4.2</b> Regression methods</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="4.2-regression-methods.html"><a href="4.2-regression-methods.html#linear-models"><i class="fa fa-check"></i><b>4.2.1</b> Linear models</a></li>
+<li class="chapter" data-level="4.2.2" data-path="4.2-regression-methods.html"><a href="4.2-regression-methods.html#more-advanced-regression-models"><i class="fa fa-check"></i><b>4.2.2</b> More advanced regression models</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="4.3-performance-metrics.html"><a href="4.3-performance-metrics.html"><i class="fa fa-check"></i><b>4.3</b> Performance Metrics</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="4.3-performance-metrics.html"><a href="4.3-performance-metrics.html#metrics-for-regression-models"><i class="fa fa-check"></i><b>4.3.1</b> Metrics for Regression models</a></li>
+<li class="chapter" data-level="4.3.2" data-path="4.3-performance-metrics.html"><a href="4.3-performance-metrics.html#metrics-for-survival-models"><i class="fa fa-check"></i><b>4.3.2</b> Metrics for Survival models</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="5-data.html"><a href="5-data.html"><i class="fa fa-check"></i><b>5</b> Data</a></li>
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html"><i class="fa fa-check"></i>Appendix</a>
 <ul>
-<li class="chapter" data-level="" data-path="duration-models.html"><a href="duration-models.html"><i class="fa fa-check"></i>Duration models</a></li>
+<li class="chapter" data-level="" data-path="hazard-function.html"><a href="hazard-function.html"><i class="fa fa-check"></i>Hazard function</a></li>
+<li class="chapter" data-level="" data-path="link-between-cumulative-hazard-and-survivor-functions.html"><a href="link-between-cumulative-hazard-and-survivor-functions.html"><i class="fa fa-check"></i>Link between cumulative hazard and survivor functions</a></li>
+<li class="chapter" data-level="" data-path="contribution-to-the-partial-likelihood-function-in-ph-models.html"><a href="contribution-to-the-partial-likelihood-function-in-ph-models.html"><i class="fa fa-check"></i>Contribution to the partial likelihood function in PH models</a></li>
+<li class="chapter" data-level="" data-path="partial-likelihood-function-in-ph-models.html"><a href="partial-likelihood-function-in-ph-models.html"><i class="fa fa-check"></i>Partial likelihood function in PH models</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -182,7 +195,7 @@ div.csl-indent {
 <h3><span class="header-section-number">4.1.1</span> Survival Trees</h3>
 <p>Traditional decision trees, also called CART (Classification And Regression Trees), segment the feature space into multiple rectangles and then fit a simple model to each of these subsets as shown by figure <a href="4.1-machine-learning-for-survival-data.html#fig:tree">4.1</a> <span class="citation">(<a href="#ref-ML_TREE" role="doc-biblioref">Scholler 2021</a>)</span>. The algorithm is a recursive partitioning which requires a criterion for choosing the <em>best</em> split, another criterion for deciding when to stop the splits and a rule for predicting the class of an observation.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:tree"></span>
-<img src="imgs/tree1.png" alt="Clasification decision tree" width="50%" height="250pt" /><img src="imgs/tree2.png" alt="Clasification decision tree" width="50%" height="250pt" />
+<img src="imgs/tree1.png" alt="Clasification decision tree" width="45%" height="260pt" /><img src="imgs/tree2.png" alt="Clasification decision tree" width="45%" height="260pt" />
 <p class="caption">
 Figure 4.1: Clasification decision tree
 </p>
@@ -202,11 +215,9 @@ between two children nodes. The test statistic is <span class="math inline">\(\c
 </div>
 <div id="cox-boosting" class="section level3" number="4.1.3">
 <h3><span class="header-section-number">4.1.3</span> Cox Boosting</h3>
-<p><strong>Boosting</strong> is an ensemble method which combines several weak predictors into a strong predictor. The idea of most boosting methods is to train predictors sequentially, each trying to correct its predecessor. Cox boosting <span class="citation">(<a href="#ref-COX_BOOSTING" role="doc-biblioref">Binder and Schumacher 2008</a>)</span> is designed for high dimension survival data and has the purpose of feature selection while improving the performance of the standard Cox model. The key difference with gradient boosting is that Cox boosting does not update all coefficients at each boosting step, but only update one coefficient that improves the overall fit the most. The loss function is a penalized version of the Cox model’s log-likelihood (see equation <a href="#eq:partlik">(<strong>??</strong>)</a> for the likelihood function of the Cox model). Cox boosting helps measuring variable importance as the coefficients associated to more representative variables will be updated in early steps.</p>
-
+<p><strong>Boosting</strong> is an ensemble method which combines several weak predictors into a strong predictor. The idea of most boosting methods is to train predictors sequentially, each trying to correct its predecessor. Cox boosting <span class="citation">(<a href="#ref-COX_BOOSTING" role="doc-biblioref">Binder and Schumacher 2008</a>)</span> is designed for high dimension survival data and has the purpose of feature selection while improving the performance of the standard Cox model. The key difference with gradient boosting is that Cox boosting does not update all coefficients at each boosting step, but only update one coefficient that improves the overall fit the most. The loss function is a penalized version of the Cox model’s log-likelihood (see equation <a href="3.6-semi-parametric-estimation.html#eq:partlik">(3.19)</a> for the likelihood function of the Cox model). Cox boosting helps measuring variable importance as the coefficients associated to more representative variables will be updated in early steps.</p>
 </div>
 </div>
-<!-- </div> -->
 <h3>References</h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-COX_BOOSTING" class="csl-entry">
@@ -228,7 +239,7 @@ Scholler, Julie. 2021. <em>M1 Data Mining - Decision Trees</em>. Université de 
         </div>
       </div>
 <a href="4-ml.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="5-data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="4.2-regression-methods.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

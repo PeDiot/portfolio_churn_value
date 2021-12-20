@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Portfolio, Churn &amp; Customer Value</title>
+  <title>Hazard function | Portfolio, Churn &amp; Customer Value</title>
   <meta name="description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Portfolio, Churn &amp; Customer Value" />
+  <meta property="og:title" content="Hazard function | Portfolio, Churn &amp; Customer Value" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Portfolio, Churn &amp; Customer Value" />
+  <meta name="twitter:title" content="Hazard function | Portfolio, Churn &amp; Customer Value" />
   
   <meta name="twitter:description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-<link rel="next" href="1-intro.html"/>
+<link rel="prev" href="appendix.html"/>
+<link rel="next" href="link-between-cumulative-hazard-and-survivor-functions.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -188,30 +188,27 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">Portfolio, Churn &amp; Customer Value</h1>
-<p class="author"><em>Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer</em></p>
-<p class="date"><em>2021-12-20</em></p>
-</div>
-<div id="abstract" class="section level1 unnumbered">
-<h1>Abstract</h1>
-<p>This paper is being realized as part of our last year in master’s degree in economics. It aims at studying the firm’s most valuable asset namely its customers. To that end, we adopt a quantitative approach based on econometrics and data analysis with a threefold purpose to:</p>
-<ul>
-<li>model <em>customer portfolio</em> as a set of customer segments;</li>
-<li>predict and analyse customer <em>churn</em>;</li>
-<li>estimate customer portfolio’s overall <em>value</em>.</li>
-</ul>
-<p>After having defined the subject’s key concepts, we apply duration models and machine learning techniques to a <a href="https://www.kaggle.com/yeanzc/telco-customer-churn-ibm-dataset">kaggle</a> dataset related to customers of a fictional telecommunications service provider (TSP).</p>
-<p><strong><em>Keywords</em></strong>: <em>customer portfolio management (CPM), churn, customer value, duration models, machine learning, telecom.</em></p>
-
+<div id="hazard-function" class="section level2 unnumbered">
+<h2>Hazard function</h2>
+<p><span class="math display" id="eq:hazfunproof">\[\begin{equation}    
+  \begin{aligned}
+  \lambda(t) &amp; = \lim_{\Delta t \to 0} \frac{P\big[t \leq T &lt; t + \Delta t | T \geq t \big]}{\Delta t} \\\\
+  &amp; = \lim_{\Delta t \to 0} \frac{P\big[t \leq T &lt; t + \Delta t \big] / P\big[T \geq t  \big]}{\Delta t} \\\\
+  &amp; = \lim_{\Delta t \to 0} \frac{\big(F(t+\Delta t)-F(t)\big) / \Delta t}{S(t)} \\\\
+  &amp; = \frac{\text{d} F(t) / \text{d} t}{S(t)} \\\\
+  &amp; = \frac{f(t)}{S(t)} \\\\
+  \lambda(t) &amp; = \frac{-\text{d} \ln \big(S(t)\big)}{\text{d} t}
+  \end{aligned}
+  \tag{5.1}
+\end{equation}\]</span></p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-<a href="1-intro.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="appendix.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="link-between-cumulative-hazard-and-survivor-functions.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
