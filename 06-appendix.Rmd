@@ -6,11 +6,9 @@ editor_options:
 
 # Appendix {-#appendix}
 
-Some proofs of the mathematical concepts used in the study are derived. The first part includes proofs related to duration models. 
+Some proofs of the mathematical concepts used in the study are derived, specifically related to duration analysis.  
 
-## Duration models {-} 
-
-**Hazard function**
+## Hazard function {-}
 
 \begin{equation}    
   \begin{aligned}
@@ -25,7 +23,7 @@ Some proofs of the mathematical concepts used in the study are derived. The firs
 \end{equation}
 
 
-**Link between cumulative hazard and survivor functions**
+## Link between cumulative hazard and survivor functions {-}
 
 \begin{equation}
   \begin{aligned}
@@ -51,7 +49,7 @@ Some proofs of the mathematical concepts used in the study are derived. The firs
 # \end{equation}
 ```
 
-**Contribution to the partial likelihood function in PH models**
+## Contribution to the partial likelihood function in PH models {-}
 
 \begin{equation}
 \begin{aligned}
@@ -63,7 +61,7 @@ Some proofs of the mathematical concepts used in the study are derived. The firs
 (\#eq:contribpartiallikproof)
 \end{equation}
 
-**Partial likelihood function in PH models**
+## Partial likelihood function in PH models {-}
 
 Based on equation \@ref(eq:contribpartiallik), one can derive the probability that all spells completed at $t_j$ ends in the $j^{\text{th}}$ failure time, such that:
 
