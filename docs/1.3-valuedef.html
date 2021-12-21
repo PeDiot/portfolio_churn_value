@@ -24,7 +24,7 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2021-12-20" />
+<meta name="date" content="2021-12-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -190,7 +190,7 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="valuedef" class="section level2" number="1.3">
 <h2><span class="header-section-number">1.3</span> What does customer “value” mean?</h2>
-<p>In <em>customer portfolio management</em>, one client’s value is represented by the <strong>customer lifetime value</strong> (CLV). CLV is the present <em>value</em> of all future purchases made by a customer over their lifetime in the firm’s portfolio, taking into account the <em>attrition</em> risk. CLV depends both on the purchase recency as well as on the purchasing rate and aims at identifying the most valuable customer groups. Formally, Gupta and Lehmann <span class="citation">(<a href="#ref-CUSTOMERS_ASSETS" role="doc-biblioref">Gupta and Lehmann 2003</a>)</span> define CLV for customer <span class="math inline">\(i\)</span> as follows:
+<p>In customer <em>portfolio</em> management, one client’s <em>value</em> is represented by the <strong>customer lifetime value</strong> (CLV). CLV is the present <em>value</em> of all future purchases made by a customer over their lifetime in the firm’s portfolio, taking into account the <em>attrition</em> risk. CLV depends both on the purchase recency as well as on the purchasing rate and aims at identifying the most valuable customer groups. Formally, Gupta and Lehmann <span class="citation">(<a href="#ref-CUSTOMERS_ASSETS" role="doc-biblioref">Gupta and Lehmann 2003</a>)</span> define CLV for customer <span class="math inline">\(i\)</span> as follows:
 <span class="math display">\[CLV_i = \sum_{t=0}^{T_i} \frac{(p_t - c_t)r_{i,t}}{(1+a)^t} - AC_i\]</span></p>
 <p>with,</p>
 <ul>
@@ -201,14 +201,16 @@ div.csl-indent {
 <li><span class="math inline">\(AC_i\)</span> the acquisition cost of customer <span class="math inline">\(i\)</span></li>
 <li><span class="math inline">\(T_i\)</span> the duration of observation</li>
 </ul>
-<p>An estimation of the portfolio’s overall value can be calculated through <strong>customer equity</strong> (CE) which amounts to the sum of all the CLVs. Since CE appears to be a good proxy of the firm’s value, the profit maximization program can be rewritten as:
-<span class="math display">\[ 
+<p>An estimation of the portfolio’s overall value can be calculated through <strong>customer equity</strong> (CE) which amounts to the sum of all the CLVs. Since CE appears to be a good proxy of the firm’s value, the firm’s profit-maximization program can be written as:</p>
+<p><span class="math display" id="eq:maxprofit">\[\begin{equation}
 \begin{aligned}
-\max_{p} \quad &amp; \textrm{CE} = \sum_{i=1}^{N} \sum_{t=0}^{T_i} \frac{(p_t - c_t)r_{i,t}}{(1+a)^t} - AC_i\\
+\max_{\mathrm{p}} \quad &amp; \textrm{CE} = \sum_{i=1}^{N} \sum_{t=0}^{T_i} \frac{(p_t - c_t)r_{i,t}}{(1+a)^t} - AC_i\\
 \textrm{s.t.} \quad &amp; r_{i,t} \in [0, 1]\\
   &amp;p_t &gt; c_t    \\
 \end{aligned}
-\]</span></p>
+\tag{1.1}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\mathrm{p}\)</span> is the vector of prices over all the periods that the firm needs to optimize.</p>
 
 </div>
 <!-- </div> -->

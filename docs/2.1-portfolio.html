@@ -24,7 +24,7 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2021-12-20" />
+<meta name="date" content="2021-12-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -190,29 +190,43 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="portfolio" class="section level2" number="2.1">
 <h2><span class="header-section-number">2.1</span> On customer portfolio</h2>
-<p>Over the course of time, there has been a slight amendment on the area of use of this term. At the outset, this term was principally used in finance (Markowitz 1952). As it went along, this expression is now employed when referring to the CRM (Homburg &amp; Al 2009).
-Customer portfolio analysis enables managers and researchers to capture a customer’s value input to a firm’s portfolio of links rather than analyzing a customer’s value to the firm singly.
-This term is spread over three distinct ways of treating it.
-For one thing, the most obvious thing might be to cleave the portfolio. What exactly does that mean? Well, the idea is quite clear. The authors consider a 4-branch segmented portfolio:</p>
-<ul>
-<li>Platinium</li>
-<li>Gold</li>
-<li>Silver</li>
-<li>Bronze</li>
-</ul>
-<p>With two issues:</p>
-<ul>
-<li>Cost to serve a client</li>
-<li>Value of this client</li>
-</ul>
-<p>The holy grail for a company would be to segment their clients in line with the value they give rise to.
-One question arises: Would companies treat customer segments differently if they could quantify their current and potential value? At first glance, one might think firms would enjoy having only platinium customers. This seems rational and cogent. Nonetheless, and this also acts as the second way of treatment, in a pre-release version of an article (Alain Bousquet 2021), the writer intends a completely novel and previously unseen idea of estimating a portfolio value. His idea is to rest no longer on the expected value of a portfolio, but rather on its variance. The brief conclusion that comes out is that it is preferable for the portfolio value to have some level of variance. Determining such a level could prove to be somewhat tricky. However the hunch behind that is easily understandable. A firm needs heterogeneous clients so as to properly segment them. Thus, she would be able to able to offer a great range of services.
-Last but not least, both cases above are studied following a static way. A huge intake would be the dynamisation of the problem. As stated by (Christian Homburg, Viviana V. Steiner, &amp; Dirk Totzek 2009), the value a customer has is prone to changes. Let us take the example of a teenager in a telecom company. It is likely he begins with a small monthly fee without lots of features. Nevertheless, when he gets older he will drastically change his consumption. The dynamics of a client are represented by Markov chains (insérer image). Therefor, firms try to estimate churn and status change probabilities over time. Dynamic portfolios get rid of one main concern about static portfolios: its annoying habit of underestimating low-value clients and overestimating high-value clients.</p>
+<p>Over time, <em>portfolio</em> management methods have been applied to an increasing number of areas. This term is originally used in finance by <span class="citation"><a href="#ref-MARKOWITZ" role="doc-biblioref">Markowitz</a> (<a href="#ref-MARKOWITZ" role="doc-biblioref">1952</a>)</span> with a view of managing equities. He develops a mathematical framework for assembling a portfolio of assets such that the expected return is maximized for a given level of risk. Markowitz’s model is based on diversification which is the idea that owning different kinds of financial assets is less risky than owning only one type. His theory uses the variance of asset prices as a proxy for risk. Later in the 1970-80’s, portfolio models are incorporated into corporate <span class="citation">(<a href="#ref-WIND" role="doc-biblioref">Wind and Mahajan 1981</a>)</span> and marketing <span class="citation">(<a href="#ref-DAY" role="doc-biblioref">Day 1977</a>)</span> strategies for profit-maximization via optimal resource allocation. Then, <span class="citation"><a href="#ref-CAPON" role="doc-biblioref">Capon and Glazer</a> (<a href="#ref-CAPON" role="doc-biblioref">1987</a>)</span> provide insights on efficient management for portfolios of technologies and study how well technological means mobilized by a firm are complement. More recently, in the interest of improving relationships between the firm and its clients, the <em>portfolio</em> modelling approach have focused on effective customer relationship management (CRM) as explained by <span class="citation"><a href="#ref-CPM_CRM" role="doc-biblioref">Thakur and Workman</a> (<a href="#ref-CPM_CRM" role="doc-biblioref">2016</a>)</span>. The following figure depicts the evolution of <em>portfolio</em> analysis through time.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:timeline"></span>
 <img src="imgs/portfolio_timeline.png" alt="A timeline on the concept of portfolio" width="400pt" height="300pt" />
 <p class="caption">
 Figure 2.1: A timeline on the concept of portfolio
 </p>
+</div>
+<p>In their article Thakur and Workman examine how a company can define the
+value of customers and segment these customers into portfolios. They explain how segmentation leads to a better understanding of the relative importance of each customer to the company’s total profit. The authors consider a four-branch segmented portfolio: <em>platinum</em>, <em>gold</em>, <em>silver</em> and <em>bronze</em>. The portfolio segmentation is based both on the cost to serve a client as well as the latter’s value to the firm, as depicted by figure <a href="2.1-portfolio.html#fig:cpmmat">2.2</a>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:cpmmat"></span>
+<img src="imgs/cpm_matrix.jpg" alt="CPM Matrix" width="250pt" height="250pt" />
+<p class="caption">
+Figure 2.2: CPM Matrix
+</p>
+</div>
+<p>According to this repartition into four main groups, Thakur and Workman highlight three strategies the firm can launch in order to efficiently manage its portfolio. Retention aims to induce <em>platinum</em> customers into repeating their purchases as they have a large contribution in the firm’s revenue. Customer relationship development can be used to encourage customers to advance and upgrade to a higher segment. Such a strategy can be efficient for customers with high preference for a certain product or those with potential to shift to higher margin products. Conversely, customer elimination or filtering strategies are set up by the firm to prevent bottom customers who cost more than they are worth from staying in the portfolio.</p>
+<p>As said in the introduction, an interesting improvement of portfolio analysis may be to add a temporal dimension to the models. <span class="citation"><a href="#ref-MANAGING_DYNAMICS_CUSTOMER_PORTFOLIO" role="doc-biblioref">Homburg, Steiner, and Totzek</a> (<a href="#ref-MANAGING_DYNAMICS_CUSTOMER_PORTFOLIO" role="doc-biblioref">2009</a>)</span> show that the dynamic approach minimizes the current bias of underestimating low-value clients and overestimating high-value ones.</p>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-CAPON" class="csl-entry">
+Capon, and Glazer. 1987. <span>“Marketing and Technology: A Strategic Alignment.”</span> <em>Journal of Marketing</em> 51: 1–14.
+</div>
+<div id="ref-DAY" class="csl-entry">
+Day, G. 1977. <span>“Diagnosing the Product Portfolio.”</span> <em>Journal of Marketing</em> 41: 29–38.
+</div>
+<div id="ref-MANAGING_DYNAMICS_CUSTOMER_PORTFOLIO" class="csl-entry">
+Homburg, Christian, Viviana V. Steiner, and Dirk Totzek. 2009. <span>“Managing Dynamics in a Customer Portfolio.”</span> <em>Journal of Marketing</em> 73(5): 70–89. <a href="https://doi.org/ 10.1509/jmkg.73.5.70">https://doi.org/ 10.1509/jmkg.73.5.70</a>.
+</div>
+<div id="ref-MARKOWITZ" class="csl-entry">
+Markowitz, H. 1952. <span>“Portfolio Selection.”</span> <em>Journal of Finance</em> 7(1): 71–91.
+</div>
+<div id="ref-CPM_CRM" class="csl-entry">
+Thakur, Ramendra, and Letty Workman. 2016. <span>“Customer Portfolio Management (CPM) for Improved Customer Relationship Management (CRM): Are Your Customers Platinum, Gold, Silver, or Bronze?”</span> <em>Journal of Business Research</em> 69: 4095–4102.
+</div>
+<div id="ref-WIND" class="csl-entry">
+Wind, Y., and V. Mahajan. 1981. <span>“Designing Product and Business Portfolios.”</span> <em>Harvard Business Review</em> 59(1): 155–65.
 </div>
 </div>
             </section>

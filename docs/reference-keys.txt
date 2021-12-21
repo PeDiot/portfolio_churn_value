@@ -1,5 +1,6 @@
-fig:cpmmat
+eq:maxprofit
 fig:timeline
+fig:cpmmat
 eq:censoring
 fig:censoring
 eq:survfun
