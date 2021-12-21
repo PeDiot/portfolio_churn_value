@@ -5,3 +5,5 @@ This <a href="https://pediot.github.io/portfolio_churn_value/" target="_blank">b
 - estimate a customer portfolio's overall *value*.
 
 After having defined the subject's key concepts, we apply duration models and machine learning techniques to a <a href="https://www.kaggle.com/yeanzc/telco-customer-churn-ibm-dataset" target="_blank">kaggle</a> dataset related to customers of a fictional telecommunications service provider (TSP).
+
+The book can be downloaded to pdf file even though some issues can be noted in image display. 
