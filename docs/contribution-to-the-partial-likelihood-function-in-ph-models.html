@@ -24,7 +24,7 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2021-12-21" />
+<meta name="date" content="2021-12-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -193,9 +193,9 @@ div.csl-indent {
 <p><span class="math display" id="eq:contribpartiallikproof">\[\begin{equation}
 \begin{aligned}
   \mathbb{P}\big[T_j = t_j | R(t_j) \big] &amp; = \frac{\mathbb{P}\big[T_j = t_j | T_j \geq t_j \big]}{\sum_{l \in R(t_j)} \ \mathbb{P}\big[T_l = t_l | T_l \geq t_j \big]} \\\\
-  &amp; = \frac{\lambda_j(t_j|\pmb{\mathrm{x_j}}, \beta)}{\sum_{l \in R(t_j)} \ \lambda_l(t_l|\pmb{\mathrm{x_l}}, \beta)} \\\\
-  &amp; = \frac{\lambda_0 (t_j, \alpha)\phi(\pmb{\mathrm{x_j}}, \beta)}{\sum_{l \in R(t_j)} \ \lambda_0 (t_j, \alpha)\phi(\pmb{\mathrm{x_l}}, \beta)} \\\\
-  \mathbb{P}\big[T_j = t_j | R(t_j) \big] &amp; = \frac{\phi(\pmb{\mathrm{x}_j}, \beta)}{\sum_{l \in R(t_j)} \phi(\pmb{\mathrm{x}_l}, \beta)}
+  &amp; = \frac{\lambda_j(t_j|\mathrm{x_j}, \beta)}{\sum_{l \in R(t_j)} \ \lambda_l(t_l|\mathrm{x_l}, \beta)} \\\\
+  &amp; = \frac{\lambda_0 (t_j, \alpha)\phi(\mathrm{x_j}, \beta)}{\sum_{l \in R(t_j)} \ \lambda_0 (t_j, \alpha)\phi(\mathrm{x_l}, \beta)} \\\\
+  \mathbb{P}\big[T_j = t_j | R(t_j) \big] &amp; = \frac{\phi(\mathrm{x_j}}, \beta)}{\sum_{l \in R(t_j)} \phi(\mathrm{x_l}, \beta)}
 \end{aligned}
 \tag{5.3}
 \end{equation}\]</span></p>

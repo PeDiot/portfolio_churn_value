@@ -24,7 +24,7 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2021-12-21" />
+<meta name="date" content="2021-12-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -190,10 +190,10 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="probabilistic-concepts" class="section level2" number="3.3">
 <h2><span class="header-section-number">3.3</span> Probabilistic concepts</h2>
-<p>In survival analysis, the response variable denoted <span class="math inline">\(T\)</span> is a time-to-event variable. Instead of estimating the expected failure time, survival models estimate the <em>survival</em> and <em>hazard rate</em> functions which depend on the realization of <span class="math inline">\(T\)</span>.</p>
+<p>In survival analysis, the response variable denoted <span class="math inline">\(T\)</span> is a time-to-event variable. Instead of estimating the expected failure time, survival models estimate the <strong>survival</strong> and <strong>hazard rate</strong> functions which depend on the realization of <span class="math inline">\(T\)</span>.</p>
 <div id="survival-function" class="section level3" number="3.3.1">
 <h3><span class="header-section-number">3.3.1</span> Survival function</h3>
-<p>The survival function <span class="math inline">\(S(t)\)</span> represents the probability that the considered event occurs after time <span class="math inline">\(t\)</span>. For instance, <span class="math inline">\(S(t)\)</span> can measure the probability that a given customer survive in the portfolio at least until time <span class="math inline">\(t\)</span>. Mathematically, the survival function is defined as:
+<p>The survival function <span class="math inline">\(S(t)\)</span> represents the probability that the considered event occurs after time <span class="math inline">\(t\)</span>. For instance, <span class="math inline">\(S(t)\)</span> can measure the probability that a given customer survives in the <em>portfolio</em> at least until time <span class="math inline">\(t\)</span>. Mathematically, the survival function is defined as:
 <span class="math display" id="eq:survfun">\[\begin{equation}
   S(t) = P(T &gt; t) = 1 - F(t)
   \tag{3.2}
@@ -208,12 +208,12 @@ Figure 3.2: Survival function <span class="math inline">\(S_T(t)\)</span> with <
 </div>
 <div id="hazard-and-cumulative-hazard-functions" class="section level3" number="3.3.2">
 <h3><span class="header-section-number">3.3.2</span> Hazard and Cumulative Hazard functions</h3>
-<p>Another key concept in duration analysis is the hazard function <span class="math inline">\(\lambda(t)\)</span> which approximates the probability that the event occurs at time <span class="math inline">\(t\)</span>. For instance, <span class="math inline">\(\lambda(t)\)</span> can measure the probability that a given individual leaves the firm portfolio at time <span class="math inline">\(t\)</span>. Formally, it is expressed as follows:
+<p>Another key concept in duration analysis is the hazard function <span class="math inline">\(\lambda(t)\)</span> which approximates the probability that the event occurs at time <span class="math inline">\(t\)</span>. For instance, <span class="math inline">\(\lambda(t)\)</span> can measure the probability that a given individual leaves the firm <em>portfolio</em> at time <span class="math inline">\(t\)</span>. Formally, it is expressed as follows:
 <span class="math display" id="eq:hazfun">\[\begin{equation}
   \lambda(t) = \lim_{\Delta t \to 0} \frac{P\big[t \leq T &lt; t + \Delta t | T \geq t \big]}{\Delta t}
   \tag{3.3}
 \end{equation}\]</span></p>
-<p>Using the Bayes formula, equation <a href="3.3-probabilistic-concepts.html#eq:hazfun">(3.3)</a> can also be written as (see equation <a href="hazard-function.html#eq:hazfunproof">(5.1)</a> in appendix):
+<p>Using the Bayes formula, equation <a href="3.3-probabilistic-concepts.html#eq:hazfun">(3.3)</a> can also be written as (see proof <a href="hazard-function.html#eq:hazfunproof">(5.1)</a> in the appendix):
 <span class="math display" id="eq:hazfunbis">\[\begin{equation}
   \lambda(t) = \frac{-\text{d} \ln \big(S(t)\big)}{\text{d} t}
   \tag{3.4}
@@ -229,7 +229,7 @@ Figure 3.2: Survival function <span class="math inline">\(S_T(t)\)</span> with <
 Figure 3.3: Cumulative Hazard function <span class="math inline">\(\Lambda_T(t)\)</span> with <span class="math inline">\(T \sim \mathcal{E} (1)\)</span>
 </p>
 </div>
-<p>Thus, the hazard, survival and cumulative hazard functions are three mathematical functions which describe the same distribution.</p>
+<p>Thus, <strong>the hazard, survival and cumulative hazard functions</strong> are three mathematical functions which describe the same distribution.</p>
 </div>
 </div>
 <h3>References</h3>

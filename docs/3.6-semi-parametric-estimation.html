@@ -24,7 +24,7 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2021-12-21" />
+<meta name="date" content="2021-12-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -192,8 +192,8 @@ div.csl-indent {
 <h2><span class="header-section-number">3.6</span> Semi-parametric estimation</h2>
 <div id="proportional-hazards-models" class="section level3" number="3.6.1">
 <h3><span class="header-section-number">3.6.1</span> Proportional Hazards models</h3>
-<p>Parametric models assume that the baseline (or raw) hazard belongs to a specific distribution. This assumption can be sometimes too restrictive and semi-parametric models can be more adapted to describe the duration data.</p>
-<p>In <em>proportional hazards</em> (PH) models, the instantaneous risk function is  to the baseline hazard <span class="math inline">\(\lambda_0 (t,\alpha)\)</span> modulo a  depending on the covariates <span class="math inline">\(\phi(\pmb{\mathrm{x}}, \beta)\)</span>. These models allow to generalize the basic survival models to a survival regression model which permits to take individuals’ heterogeneity into consideration <span class="citation">(<a href="#ref-RMS" role="doc-biblioref">Harrell 1984</a>)</span>. The general mathematical formulation is expressed as follows:</p>
+<p>Parametric models assume that the baseline (or raw) hazard follows a specific distribution. This assumption can be sometimes too restrictive and semi-parametric models can be more adapted to describe the duration data.</p>
+<p>In <em>proportional hazards</em> (PH) models, the instantaneous risk function is <strong>proportional</strong> to the baseline hazard <span class="math inline">\(\lambda_0 (t,\alpha)\)</span> modulo a <strong>scaling factor</strong> depending on the covariates <span class="math inline">\(\phi(\pmb{\mathrm{x}}, \beta)\)</span>. These models allow to generalize the basic survival models to a survival regression model which permits to take individuals’ heterogeneity into consideration <span class="citation">(<a href="#ref-RMS" role="doc-biblioref">Harrell 1984</a>)</span>. The general mathematical formulation is expressed as follows:</p>
 <p><span class="math display" id="eq:ph">\[\begin{equation}
     \lambda(t|\pmb{\mathrm{x}}) = \lambda_0 (t,\alpha)  \phi(\pmb{\mathrm{x}}, \beta) 
     \tag{3.15}
@@ -203,7 +203,7 @@ div.csl-indent {
 <h4>What does <em>proportional hazards</em> mean?</h4>
 <p>PH models are said to be proportional as the relative hazard ratio between two individuals <span class="math inline">\(i\)</span> and <span class="math inline">\(k\)</span> does not vary over time, such that:</p>
 <p><span class="math display" id="eq:prophazratio">\[\begin{equation}
-  \frac{\lambda(t|\pmb{\mathrm{x}_i})}{\lambda(t|\pmb{\mathrm{x}_k})} = \frac{\phi(\pmb{\mathrm{x}_i}, \beta) }{\phi(\pmb{\mathrm{x}_k}, \beta)}
+  \frac{\lambda(t|\mathrm{x_i})}{\lambda(t|\mathrm{x_k})} = \frac{\phi(\mathrm{x_i}, \beta) }{\phi(\mathrm{x_k}, \beta)}
   \tag{3.16}
 \end{equation}\]</span></p>
 <p>The formulation stated in equation <a href="3.6-semi-parametric-estimation.html#eq:prophazratio">(3.16)</a> needs to be verified when one wants to fit a PH model to real-life data.</p>
@@ -218,7 +218,7 @@ div.csl-indent {
 </div>
 <div id="partial-likelihood-estimation" class="section level4 unnumbered">
 <h4>Partial likelihood estimation</h4>
-<p>The vector of parameters <span class="math inline">\(\beta\)</span> related to the regression part of the PH model is estimated by partial likelihood maximization. The method’s principle consists in only estimating the regression’s parameters <span class="math inline">\(\beta\)</span> by considering the baseline hazard <span class="math inline">\(\lambda_0\)</span> as noise. If desired an estimate of the baseline hazard can be recovered after estimation of <span class="math inline">\(\beta\)</span> using for instance, the Nelson-Aalen estimator (see part <a href="3.4-nonparam.html#nonparam">3.4</a>). Cox’s intuition is that no information can be retrieved from the intervals during which no event has occurred and that it is conceivable that <span class="math inline">\(\lambda_0\)</span> is null in these intervals. Thus, solely the set of moments when an event occurs are considered in the estimation method.</p>
+<p>The vector of parameters <span class="math inline">\(\beta\)</span> related to the regression part of the PH model is estimated by partial likelihood maximization. The method’s principle consists in only estimating the regression’s parameters <span class="math inline">\(\beta\)</span> by considering the baseline hazard <span class="math inline">\(\lambda_0\)</span> as noise. If desired an estimate of the baseline hazard can be recovered after estimation of <span class="math inline">\(\beta\)</span> using, for instance, the Nelson-Aalen estimator (see part <a href="3.4-nonparam.html#nonparam">3.4</a>). Cox’s intuition is that no information can be retrieved from the intervals during which no event has occurred and that it is conceivable that <span class="math inline">\(\lambda_0\)</span> is null in these intervals. Thus, solely the set of moments when an event occurs are considered in the estimation method.</p>
 <p>In order to derive the partial likelihood function, let us note <span class="math inline">\(t_j\)</span> the <span class="math inline">\(j^{\text{th}}\)</span> discrete failure time in an <span class="math inline">\(N\)</span>-sample with <span class="math inline">\(j \in [\![1; k]\!]\)</span>, such that:</p>
 <ul>
 <li><span class="math inline">\(t_1 &lt; t_2 &lt; \dots &lt; t_k\)</span>,</li>
@@ -227,12 +227,12 @@ div.csl-indent {
 </ul>
 <p>The contribution of a spell in <span class="math inline">\(D(t_j)\)</span> to the likelihood function equals the conditional probability that the spell ends at <span class="math inline">\(t_j\)</span> given it is exposed at that specific time and can be written as (see <span class="citation"><a href="#ref-CAMERON_TRIVEDI" role="doc-biblioref">Cameron and Trivedi</a> (<a href="#ref-CAMERON_TRIVEDI" role="doc-biblioref">2005</a>)</span> and proof <a href="contribution-to-the-partial-likelihood-function-in-ph-models.html#eq:contribpartiallikproof">(5.3)</a> for more details):</p>
 <p><span class="math display" id="eq:contribpartiallik">\[\begin{equation}
-  \mathbb{P}\big[T_j = t_j | R(t_j) \big] = \frac{\phi(\pmb{\mathrm{x}_j}, \beta)}{\sum_{l \in R(t_j)} \phi(\pmb{\mathrm{x}_l}, \beta)}
+  \mathbb{P}\big[T_j = t_j | R(t_j) \big] = \frac{\phi(\mathrm{x_j}, \beta)}{\sum_{l \in R(t_j)} \phi(\mathrm{x_l}, \beta)}
   \tag{3.18}
 \end{equation}\]</span></p>
 <p>Given <span class="math inline">\(k\)</span> discrete failure times are considered and that for each of those there is a set <span class="math inline">\(D(t_j)\)</span> of completed spells, Cox defines the partial likelihood function as the joint product of the probability expressed in <a href="3.6-semi-parametric-estimation.html#eq:contribpartiallik">(3.18)</a>, such that:</p>
 <p><span class="math display" id="eq:partlik">\[\begin{equation}
-  \mathcal{L}_p = \Pi_{j=1}^{k} \ \frac{\Pi_{m \in D(tj)} \ \phi(\pmb{\mathrm{x}_j}, \beta)}{\Big[\sum_{l \in R(t_j)} \phi(\pmb{\mathrm{x}_l}, \beta)\Big]^{d_j}}
+  \mathcal{L}_p = \Pi_{j=1}^{k} \ \frac{\Pi_{m \in D(tj)} \ \phi(\mathrm{x_j}, \beta)}{\Big[\sum_{l \in R(t_j)} \phi(\mathrm{x_l}, \beta)\Big]^{d_j}}
   \tag{3.19}
 \end{equation}\]</span></p>
 <p>The latter formulation of the partial likelihood function is explained in more details in equations <a href="partial-likelihood-function-in-ph-models.html#eq:partlikproof">(5.4)</a> and <a href="partial-likelihood-function-in-ph-models.html#eq:partlikproofbis">(5.5)</a> in the appendix.</p>
@@ -240,7 +240,7 @@ div.csl-indent {
 </div>
 <div id="cox-ph-model" class="section level3" number="3.6.2">
 <h3><span class="header-section-number">3.6.2</span> Cox PH model</h3>
-<p>The Cox <em>proportional hazards</em> model is the most popular for the analysis of duration data. This model is said to be semi-parametric as it makes no assumption regarding the nature of the baseline hazard function <span class="math inline">\(\lambda_0(t)\)</span>. The parametric part only relies in the modelling of the effect of some covariates on the hazard function <span class="math inline">\(\lambda(t)\)</span>. The relationship between the vector of covariates and the log hazard is linear and the parameters can be estimated by maximizing the partial likelihood function. The Cox PH model solely assumes that predictors act multiplicatively on the hazard function. The model is formulated as in equation <a href="3.6-semi-parametric-estimation.html#eq:ph">(3.15)</a> with the exponential function as link function between the hazard and the covariates i.e. <span class="math inline">\(\lambda(t|\pmb{\mathrm{x}}) = \lambda_0 (t,\alpha) \text{e}^{\pmb{\mathrm{x&#39;}} \beta}\)</span>.</p>
+<p>The Cox <em>proportional hazards</em> model is the most popular for the analysis of duration data. This model is said to be semi-parametric as it makes no assumption regarding the nature of the baseline hazard function <span class="math inline">\(\lambda_0(t)\)</span>. The parametric part only relies in the modelling of the effect of some covariates on the hazard function <span class="math inline">\(\lambda(t)\)</span>. The relationship between the vector of covariates and the log hazard is linear and the parameters can be estimated by maximizing the partial likelihood function. The Cox PH model solely assumes that predictors act multiplicatively on the hazard function. The model is formulated as in equation <a href="3.6-semi-parametric-estimation.html#eq:ph">(3.15)</a> with the exponential function as link between the hazard and the covariates i.e. <span class="math inline">\(\lambda(t|\pmb{\mathrm{x}}) = \lambda_0 (t,\alpha) \text{e}^{\pmb{\mathrm{x&#39;}} \beta}\)</span>.</p>
 
 </div>
 </div>

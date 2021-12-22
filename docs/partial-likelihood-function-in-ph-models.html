@@ -24,7 +24,7 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2021-12-21" />
+<meta name="date" content="2021-12-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -195,9 +195,9 @@ div.csl-indent {
 \begin{aligned}
   \mathcal{L}_{p,\ t_j} &amp; = \mathbb{P}\big[T_1 = t_j, \dots, T_{d_j} = t_j \ | \ R(t_j)\big] \\\\
   &amp; = \Pi_{m \in D(t_j)} \ \mathbb{P}\big[T_m = t_j | R(t_j) \big] \\\\
-  &amp; = \Pi_{m \in D(t_j)} \ \frac{\phi(\pmb{\mathrm{x}_m}, \beta)}{\sum_{l \in R(t_j)} \phi(\pmb{\mathrm{x}_l}, \beta)} \\\\
-  &amp; = \Pi_{m \in D(t_j)} \ \phi(\pmb{\mathrm{x}_m}, \beta) \times \Pi_{m \in D(t_j)} \ \frac{1}{\sum_{l \in R(t_j)} \phi(\pmb{\mathrm{x}_l}, \beta)} \\\\
-  \mathcal{L}_{p,\ t_j} &amp; = \frac{\Pi_{m \in D(t_j)} \ \phi(\pmb{\mathrm{x}_m}, \beta)}{\Big[\sum_{l \in R(t_j)} \phi(\pmb{\mathrm{x}_l}, \beta)\Big]^{d_j}}
+  &amp; = \Pi_{m \in D(t_j)} \ \frac{\phi(\mathrm{x_m}, \beta)}{\sum_{l \in R(t_j)} \phi(\mathrm{x_l}, \beta)} \\\\
+  &amp; = \Pi_{m \in D(t_j)} \ \phi(\mathrm{x_m}, \beta) \times \Pi_{m \in D(t_j)} \ \frac{1}{\sum_{l \in R(t_j)} \phi(\mathrm{x_l}, \beta)} \\\\
+  \mathcal{L}_{p,\ t_j} &amp; = \frac{\Pi_{m \in D(t_j)} \ \phi(\mathrm{x_m}, \beta)}{\Big[\sum_{l \in R(t_j)} \phi(\mathrm{x_l}, \beta)\Big]^{d_j}}
 \end{aligned}
 \tag{5.4}
 \end{equation}\]</span></p>
@@ -205,7 +205,7 @@ div.csl-indent {
 <p><span class="math display" id="eq:partlikproofbis">\[\begin{equation}
 \begin{aligned}
   \mathcal{L}_p &amp; = \Pi_{j=1}^{k} \ \mathcal{L}_{p,\ t_j} \\\\
-  \mathcal{L}_p &amp; = \Pi_{j=1}^{k} \ \frac{\Pi_{m \in D(t_j)} \ \phi(\pmb{\mathrm{x}_m}, \beta)}{\Big[\sum_{l \in R(t_j)} \phi(\pmb{\mathrm{x}_l}, \beta)\Big]^{d_j}}
+  \mathcal{L}_p &amp; = \Pi_{j=1}^{k} \ \frac{\Pi_{m \in D(t_j)} \ \phi(\mathrm{x_m}, \beta)}{\Big[\sum_{l \in R(t_j)} \phi(\mathrm{x_l}, \beta)\Big]^{d_j}}
 \end{aligned}
 \tag{5.5}
 \end{equation}\]</span></p>

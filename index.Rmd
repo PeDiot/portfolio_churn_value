@@ -21,8 +21,8 @@ description: This research paper aims at modelling customer portfolio, churn and
 
 This paper is being realized as part of our last year in master's degree in economics. It aims at studying the firm's most valuable asset: its customers. To that end, we adopt a quantitative approach based on a mix of Econometrics and Data Science techniques with a threefold purpose:
 
-- Model *customer portfolio* as a set of customer segments; 
-- Predict and analyze customer *churn*; 
+- Model customer *portfolio* as a set of customer segments; 
+- Predict and analyze customer *attrition*; 
 - Estimate customer portfolio's overall *value*.
 
 After having defined the subject's key concepts, we apply duration models and machine learning algorithms to a [kaggle](https://www.kaggle.com/yeanzc/telco-customer-churn-ibm-dataset) dataset related to customers of a fictional telecommunications service provider (TSP).

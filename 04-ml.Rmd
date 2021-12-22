@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 
 </center>
 
-This chapter introduces machine learning algorithms used to model customers portfolios. We firstly explain the techniques which aims to enrich the standard survival tools defined in the previous chapter. A second part depicts some regression models that are robust to predict *customer lifetime value*. Finally, the prediction performance associated to predictive methods are described. 
+This chapter introduces machine learning algorithms used to model customer *portfolio*. We firstly explain the techniques which aim to enrich the standard survival tools defined in the previous chapter. A second part depicts some regression models that are robust to predict *customer lifetime value*. Finally, the prediction performance associated to predictive methods are described. 
 
 ## Machine Learning for Survival Data
 
@@ -38,7 +38,7 @@ between two children nodes. The test statistic is $\chi^2$ distributed which mea
 
 ### Random Survival Forests (RSF)
 
-This algorithm is proposed by @RSF and is an ensemble of decision trees for the analysis of right-censored survival data. As random forests used for regression and classification, RSF are based on bagging which implies that $B$ bootstrap samples are drawn from the original data with 63$\%$ are in the bag data and the remaining part is in the out-of-bag (OOB) data. For each bootstrap sample, a survival tree is grown based on $p$ randomly selected features. Then, the parent node is split using the feature among the selected ones that maximizes survival difference between children nodes. Each tree is grown to full size and each terminal node need to have no less than $d_0$ unique events. The cumulative hazard function (CHF) is computed for each tree using the Nelson-Aalen estimator such as:
+This algorithm is proposed by @RSF and is an ensemble of decision trees for the analysis of right-censored survival data. As random forests used for regression and classification, RSF are based on **bagging** which implies that $B$ bootstrap samples are drawn from the original data with 63$\%$ of them are in the bag data and the remaining part is in the out-of-bag (OOB) data. For each bootstrap sample, a survival tree is grown based on $p$ randomly selected features. Then, the parent node is split using the feature among the selected ones that maximizes survival difference between children nodes. Each tree is grown to full size and each terminal node needs to have no less than $d_0$ unique events. The cumulative hazard function (CHF) is computed for each tree using the Nelson-Aalen estimator such as:
 
 \begin{equation}
   \widehat{H_l}(t) = \sum_{t_{j, l} < t} \frac{d_{j,l}}{r_{j,l}}
@@ -51,17 +51,17 @@ All the CHFs are then averaged to obtain the bootstrap ensemble CHF and predicti
 
 ### Cox Boosting
 
-**Boosting** is an ensemble method which combines several weak predictors into a strong predictor. The idea of most boosting methods is to train predictors sequentially, each trying to correct its predecessor. Cox boosting [@COX_BOOSTING] is designed for high dimension survival data and has the purpose of feature selection while improving the performance of the standard Cox model. The key difference with gradient boosting is that Cox boosting does not update all coefficients at each boosting step, but only update one coefficient that improves the overall fit the most. The loss function is a penalized version of the Cox model's log-likelihood (see equation \@ref(eq:partlik) for the likelihood function of the Cox model). Cox boosting helps measuring variable importance as the coefficients associated to more representative variables will be updated in early steps.
+**Boosting** is an ensemble method which combines several weak predictors into a strong predictor. The idea of most boosting methods is to train predictors sequentially, each trying to correct its predecessor. Cox boosting [@COX_BOOSTING] is designed for high dimension survival data and has the purpose of feature selection while improving the performance of the standard Cox model. The key difference with gradient boosting is that Cox boosting does not update all coefficients at each boosting step, but only updates the coefficient that improves the overall fit the most. The loss function is a penalized version of the Cox model's log-likelihood (see equation \@ref(eq:partlik) for the likelihood function of the Cox model). Cox boosting helps measuring variable importance as the coefficients associated to more representative variables will be updated in early steps.
 
 ## Regression methods
 
-*Customer Lifetime Value* being a quantitative variable, machine learning regression models are adapted to predict this quantity. Regression analysis is a fundamental concept in the field of machine learning. It falls under supervised learning wherein the algorithm is trained with both input features and output labels. It helps in establishing a relationship among the variables by estimating how one variable affects the other. In this context, we present some famous machine learning algorithm that can be implemented to estimate the relationship between several features and a continuous target variable. 
+*Customer Lifetime Value* being a quantitative variable, machine learning regression models are adapted to predict this quantity. Regression analysis is a fundamental concept in the field of machine learning. It falls under supervised learning wherein the algorithm is trained with both input features and output labels. It helps in establishing a relationship among the variables by estimating how one variable affects the other. In this context, we present some famous machine learning algorithms that can be implemented to estimate the relationship between several features and a continuous target variable. 
 
 ### Linear models
 
 #### Model formulation {-}
 
-Linear models are called that way as the target value is expected to be a linear combination of the features. Let $\hat{y}$ be the vector of predicted values, $\beta$ the set of parameters to optimise and $\pmb{\mathrm{x}}$ the feature vector. The linear relationship between $\hat{y}$ and $\pmb{\mathrm{x}}$ can be written as follows: 
+Linear models are called that way as the target value is expected to be a linear combination of the features. Let $\hat{\mathrm{y}}$ be the vector of predicted values, $\beta$ the set of parameters to optimise and $\pmb{\mathrm{x}}$ the feature vector with $\pmb{\mathrm{x}} = [\pmb{1}, \mathrm{x}_1, \dots, \mathrm{x}_P]$. The linear relationship between $\hat{\mathrm{y}}$ and $\pmb{\mathrm{x}}$ can be written as follows: 
 
 \begin{equation}
   \hat{\mathrm{y}} = \beta_0 + \beta_1 \mathrm{x}_1 + \dots + \beta_P \mathrm{x}_P
@@ -82,7 +82,7 @@ The most standard regression algorithm is linear regression in which the loss fu
 
 #### Regularization {-}
 
-In order to address some of the problems encountered with the OLS method, regularization can be used. For instance, regularization techniques can be employed when the explanatory variables are highly correlated. 
+In order to address some of the problems encountered with the OLS method, regularization can be used. Regularization techniques can be employed when the explanatory variables are highly correlated. 
 
 Ridge regression is a linear regression with a quadratic constraint on the coefficients. Here, the coefficients minimize a penalized residual sum of squares: the higher the penalty term, the more large coefficients are discouraged and the less risk of overfitting. Formally, the ridge loss function is based on $l_2$-norm and is expressed as: 
 
@@ -109,12 +109,11 @@ Finally, ElasticNet is a linear regression model trained with both $l_1$ and $l_
 
 #### Gradient Descent {-}
 
-The loss functions presented above need to be optimized to obtain the optimal set of parameters that best represents the linear relationship between $\mathrm{y}$ and $\pmb{\mathrm{x}}$. In other words, a minimization problem needs to be solved. Gradient descent is an algorithm whose goal is to find the maximum (or minimum) of a given function $f$. The gradient of $f$ is defined as the vector of partial derivatives and gives the input direction in which the $f$ most quickly increases. The gradient descent approach consists in picking a random starting point, computing the gradient, taking a small step in the opposite direction of the
-gradient and repeating with the new starting point until some criterion is met. 
+The loss functions presented above need to be optimized to obtain the optimal set of parameters that best represents the linear relationship between $\mathrm{y}$ and $\pmb{\mathrm{x}}$. In other words, a minimization problem needs to be solved. Gradient descent is an algorithm whose goal is to find the maximum (or minimum) of a given function $f$. The gradient of $f$ is defined as the vector of partial derivatives and gives the input direction in which $f$ most quickly increases. The gradient descent approach consists in picking a random starting point, computing the gradient, taking a small step in the opposite direction of the gradient and repeating with the new starting point until some criterion is met. 
 
 ### More advanced regression models 
 
-Linear models are considered the most common and easy-to-understand models when it comes to predict a quantitative variable such as customer value. Nonetheless, more advanced techniques can sometimes be implemented in order to obtain more accurate predictions. 
+Linear models are considered the most common and easy-to-understand models when it comes to predict a quantitative variable such as customer *value.* Nonetheless, more advanced techniques can sometimes be implemented in order to obtain more accurate predictions. 
 
 #### Generalized Additive Model (GAM) {-}
 
@@ -127,7 +126,7 @@ GAM is a statistical model in which the response variable $\mathrm{y}$ depends l
 
 #### Other models {-}
 
-State-of-the-art algorithms can also be employed to describe the relationship between the continuous variable and the feature vector. Among them, one can find random forest of regression trees, gradient boosting as well as Multi-layer Perceptron(MLP) regressor. 
+State-of-the-art algorithms can also be employed to describe the relationship between the continuous variable and the feature vector. Among them, one can find random forest of regression trees, gradient boosting as well as multi-layer perceptron(MLP) regressor. 
 
 
 ## Performance Metrics
@@ -181,13 +180,16 @@ Another way to write the C-index metric is to compute the ratio between concorda
 Equation \@ref(eq:cindex) can then be rewritten as follows:
 
 \begin{equation}
-c = \frac{\# \text{concordant pairs}}{\# \text{concordant pairs} + \ \text{discordant pairs}} = \frac{\sum_{i \neq j} \pmb{1}_{\eta_i < \eta_j} \pmb{1}_{T_i > T_j}d_j}{\sum_{i \neq j} \pmb{1}_{T_i > T_j}d_j}
+\begin{aligned}
+c & = \frac{\# \text{concordant pairs}}{\# \text{concordant pairs} + \ \text{discordant pairs}} \\\\
+c & = \frac{\sum_{i \neq j} \pmb{1}_{\eta_i < \eta_j} \pmb{1}_{T_i > T_j}d_j}{\sum_{i \neq j} \pmb{1}_{T_i > T_j}d_j}
+\end{aligned}
 (\#eq:cindex2)
 \end{equation}
 
 with $d_j$ the event indicator variable.
 
-The concordance index ranges between 0 and 1. A C-index below 0.5 indicates a very poor model. A C-index of 0.5 means that the model is rather a non-informative model making random predictions. A model with C-index 1 makes perfect prediction. In general case, a C-index higher than 0.7 indicates a good performance.
+The concordance index ranges between 0 and 1. A C-index below 0.5 indicates a very poor model. A C-index of 0.5 means that the model is rather a non-informative model making random predictions. A model with C-index 1 makes perfect prediction. Generally, a C-index higher than 0.7 indicates a good performance.
 
 #### Brier score {-}
 

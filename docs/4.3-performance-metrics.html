@@ -24,7 +24,7 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2021-12-21" />
+<meta name="date" content="2021-12-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -232,11 +232,14 @@ div.csl-indent {
 </ul>
 <p>Equation <a href="4.3-performance-metrics.html#eq:cindex">(4.10)</a> can then be rewritten as follows:</p>
 <p><span class="math display" id="eq:cindex2">\[\begin{equation}
-c = \frac{\# \text{concordant pairs}}{\# \text{concordant pairs} + \ \text{discordant pairs}} = \frac{\sum_{i \neq j} \pmb{1}_{\eta_i &lt; \eta_j} \pmb{1}_{T_i &gt; T_j}d_j}{\sum_{i \neq j} \pmb{1}_{T_i &gt; T_j}d_j}
+\begin{aligned}
+c &amp; = \frac{\# \text{concordant pairs}}{\# \text{concordant pairs} + \ \text{discordant pairs}} \\\\
+c &amp; = \frac{\sum_{i \neq j} \pmb{1}_{\eta_i &lt; \eta_j} \pmb{1}_{T_i &gt; T_j}d_j}{\sum_{i \neq j} \pmb{1}_{T_i &gt; T_j}d_j}
+\end{aligned}
 \tag{4.11}
 \end{equation}\]</span></p>
 <p>with <span class="math inline">\(d_j\)</span> the event indicator variable.</p>
-<p>The concordance index ranges between 0 and 1. A C-index below 0.5 indicates a very poor model. A C-index of 0.5 means that the model is rather a non-informative model making random predictions. A model with C-index 1 makes perfect prediction. In general case, a C-index higher than 0.7 indicates a good performance.</p>
+<p>The concordance index ranges between 0 and 1. A C-index below 0.5 indicates a very poor model. A C-index of 0.5 means that the model is rather a non-informative model making random predictions. A model with C-index 1 makes perfect prediction. Generally, a C-index higher than 0.7 indicates a good performance.</p>
 </div>
 <div id="brier-score" class="section level4 unnumbered">
 <h4>Brier score</h4>

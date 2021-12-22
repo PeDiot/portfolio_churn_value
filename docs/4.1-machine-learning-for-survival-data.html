@@ -24,7 +24,7 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2021-12-21" />
+<meta name="date" content="2021-12-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -205,7 +205,7 @@ between two children nodes. The test statistic is <span class="math inline">\(\c
 </div>
 <div id="random-survival-forests-rsf" class="section level3" number="4.1.2">
 <h3><span class="header-section-number">4.1.2</span> Random Survival Forests (RSF)</h3>
-<p>This algorithm is proposed by <span class="citation"><a href="#ref-RSF" role="doc-biblioref">Ishwaran and al.</a> (<a href="#ref-RSF" role="doc-biblioref">2011</a>)</span> and is an ensemble of decision trees for the analysis of right-censored survival data. As random forests used for regression and classification, RSF are based on bagging which implies that <span class="math inline">\(B\)</span> bootstrap samples are drawn from the original data with 63<span class="math inline">\(\%\)</span> are in the bag data and the remaining part is in the out-of-bag (OOB) data. For each bootstrap sample, a survival tree is grown based on <span class="math inline">\(p\)</span> randomly selected features. Then, the parent node is split using the feature among the selected ones that maximizes survival difference between children nodes. Each tree is grown to full size and each terminal node need to have no less than <span class="math inline">\(d_0\)</span> unique events. The cumulative hazard function (CHF) is computed for each tree using the Nelson-Aalen estimator such as:</p>
+<p>This algorithm is proposed by <span class="citation"><a href="#ref-RSF" role="doc-biblioref">Ishwaran and al.</a> (<a href="#ref-RSF" role="doc-biblioref">2011</a>)</span> and is an ensemble of decision trees for the analysis of right-censored survival data. As random forests used for regression and classification, RSF are based on <strong>bagging</strong> which implies that <span class="math inline">\(B\)</span> bootstrap samples are drawn from the original data with 63<span class="math inline">\(\%\)</span> of them are in the bag data and the remaining part is in the out-of-bag (OOB) data. For each bootstrap sample, a survival tree is grown based on <span class="math inline">\(p\)</span> randomly selected features. Then, the parent node is split using the feature among the selected ones that maximizes survival difference between children nodes. Each tree is grown to full size and each terminal node needs to have no less than <span class="math inline">\(d_0\)</span> unique events. The cumulative hazard function (CHF) is computed for each tree using the Nelson-Aalen estimator such as:</p>
 <p><span class="math display" id="eq:chf">\[\begin{equation}
   \widehat{H_l}(t) = \sum_{t_{j, l} &lt; t} \frac{d_{j,l}}{r_{j,l}}
   \tag{4.1}
@@ -215,7 +215,7 @@ between two children nodes. The test statistic is <span class="math inline">\(\c
 </div>
 <div id="cox-boosting" class="section level3" number="4.1.3">
 <h3><span class="header-section-number">4.1.3</span> Cox Boosting</h3>
-<p><strong>Boosting</strong> is an ensemble method which combines several weak predictors into a strong predictor. The idea of most boosting methods is to train predictors sequentially, each trying to correct its predecessor. Cox boosting <span class="citation">(<a href="#ref-COX_BOOSTING" role="doc-biblioref">Binder and Schumacher 2008</a>)</span> is designed for high dimension survival data and has the purpose of feature selection while improving the performance of the standard Cox model. The key difference with gradient boosting is that Cox boosting does not update all coefficients at each boosting step, but only update one coefficient that improves the overall fit the most. The loss function is a penalized version of the Cox model’s log-likelihood (see equation <a href="3.6-semi-parametric-estimation.html#eq:partlik">(3.19)</a> for the likelihood function of the Cox model). Cox boosting helps measuring variable importance as the coefficients associated to more representative variables will be updated in early steps.</p>
+<p><strong>Boosting</strong> is an ensemble method which combines several weak predictors into a strong predictor. The idea of most boosting methods is to train predictors sequentially, each trying to correct its predecessor. Cox boosting <span class="citation">(<a href="#ref-COX_BOOSTING" role="doc-biblioref">Binder and Schumacher 2008</a>)</span> is designed for high dimension survival data and has the purpose of feature selection while improving the performance of the standard Cox model. The key difference with gradient boosting is that Cox boosting does not update all coefficients at each boosting step, but only updates the coefficient that improves the overall fit the most. The loss function is a penalized version of the Cox model’s log-likelihood (see equation <a href="3.6-semi-parametric-estimation.html#eq:partlik">(3.19)</a> for the likelihood function of the Cox model). Cox boosting helps measuring variable importance as the coefficients associated to more representative variables will be updated in early steps.</p>
 </div>
 </div>
 <h3>References</h3>

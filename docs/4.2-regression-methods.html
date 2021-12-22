@@ -24,7 +24,7 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2021-12-21" />
+<meta name="date" content="2021-12-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -190,12 +190,12 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="regression-methods" class="section level2" number="4.2">
 <h2><span class="header-section-number">4.2</span> Regression methods</h2>
-<p><em>Customer Lifetime Value</em> being a quantitative variable, machine learning regression models are adapted to predict this quantity. Regression analysis is a fundamental concept in the field of machine learning. It falls under supervised learning wherein the algorithm is trained with both input features and output labels. It helps in establishing a relationship among the variables by estimating how one variable affects the other. In this context, we present some famous machine learning algorithm that can be implemented to estimate the relationship between several features and a continuous target variable.</p>
+<p><em>Customer Lifetime Value</em> being a quantitative variable, machine learning regression models are adapted to predict this quantity. Regression analysis is a fundamental concept in the field of machine learning. It falls under supervised learning wherein the algorithm is trained with both input features and output labels. It helps in establishing a relationship among the variables by estimating how one variable affects the other. In this context, we present some famous machine learning algorithms that can be implemented to estimate the relationship between several features and a continuous target variable.</p>
 <div id="linear-models" class="section level3" number="4.2.1">
 <h3><span class="header-section-number">4.2.1</span> Linear models</h3>
 <div id="model-formulation" class="section level4 unnumbered">
 <h4>Model formulation</h4>
-<p>Linear models are called that way as the target value is expected to be a linear combination of the features. Let <span class="math inline">\(\hat{y}\)</span> be the vector of predicted values, <span class="math inline">\(\beta\)</span> the set of parameters to optimise and <span class="math inline">\(\pmb{\mathrm{x}}\)</span> the feature vector. The linear relationship between <span class="math inline">\(\hat{y}\)</span> and <span class="math inline">\(\pmb{\mathrm{x}}\)</span> can be written as follows:</p>
+<p>Linear models are called that way as the target value is expected to be a linear combination of the features. Let <span class="math inline">\(\hat{\mathrm{y}}\)</span> be the vector of predicted values, <span class="math inline">\(\beta\)</span> the set of parameters to optimise and <span class="math inline">\(\pmb{\mathrm{x}}\)</span> the feature vector with <span class="math inline">\(\pmb{\mathrm{x}} = [\pmb{1}, \mathrm{x}_1, \dots, \mathrm{x}_P]\)</span>. The linear relationship between <span class="math inline">\(\hat{\mathrm{y}}\)</span> and <span class="math inline">\(\pmb{\mathrm{x}}\)</span> can be written as follows:</p>
 <p><span class="math display" id="eq:linearmodel">\[\begin{equation}
   \hat{\mathrm{y}} = \beta_0 + \beta_1 \mathrm{x}_1 + \dots + \beta_P \mathrm{x}_P
   \tag{4.2}
@@ -213,7 +213,7 @@ div.csl-indent {
 </div>
 <div id="regularization" class="section level4 unnumbered">
 <h4>Regularization</h4>
-<p>In order to address some of the problems encountered with the OLS method, regularization can be used. For instance, regularization techniques can be employed when the explanatory variables are highly correlated.</p>
+<p>In order to address some of the problems encountered with the OLS method, regularization can be used. Regularization techniques can be employed when the explanatory variables are highly correlated.</p>
 <p>Ridge regression is a linear regression with a quadratic constraint on the coefficients. Here, the coefficients minimize a penalized residual sum of squares: the higher the penalty term, the more large coefficients are discouraged and the less risk of overfitting. Formally, the ridge loss function is based on <span class="math inline">\(l_2\)</span>-norm and is expressed as:</p>
 <p><span class="math display" id="eq:ridge">\[\begin{equation}
   \mathcal{l}_{Ridge} = ||\mathrm{y} - \pmb{\mathrm{x}}\beta||_2 + \alpha ||\beta||_2
@@ -233,13 +233,12 @@ div.csl-indent {
 </div>
 <div id="gradient-descent" class="section level4 unnumbered">
 <h4>Gradient Descent</h4>
-<p>The loss functions presented above need to be optimized to obtain the optimal set of parameters that best represents the linear relationship between <span class="math inline">\(\mathrm{y}\)</span> and <span class="math inline">\(\pmb{\mathrm{x}}\)</span>. In other words, a minimization problem needs to be solved. Gradient descent is an algorithm whose goal is to find the maximum (or minimum) of a given function <span class="math inline">\(f\)</span>. The gradient of <span class="math inline">\(f\)</span> is defined as the vector of partial derivatives and gives the input direction in which the <span class="math inline">\(f\)</span> most quickly increases. The gradient descent approach consists in picking a random starting point, computing the gradient, taking a small step in the opposite direction of the
-gradient and repeating with the new starting point until some criterion is met.</p>
+<p>The loss functions presented above need to be optimized to obtain the optimal set of parameters that best represents the linear relationship between <span class="math inline">\(\mathrm{y}\)</span> and <span class="math inline">\(\pmb{\mathrm{x}}\)</span>. In other words, a minimization problem needs to be solved. Gradient descent is an algorithm whose goal is to find the maximum (or minimum) of a given function <span class="math inline">\(f\)</span>. The gradient of <span class="math inline">\(f\)</span> is defined as the vector of partial derivatives and gives the input direction in which <span class="math inline">\(f\)</span> most quickly increases. The gradient descent approach consists in picking a random starting point, computing the gradient, taking a small step in the opposite direction of the gradient and repeating with the new starting point until some criterion is met.</p>
 </div>
 </div>
 <div id="more-advanced-regression-models" class="section level3" number="4.2.2">
 <h3><span class="header-section-number">4.2.2</span> More advanced regression models</h3>
-<p>Linear models are considered the most common and easy-to-understand models when it comes to predict a quantitative variable such as customer value. Nonetheless, more advanced techniques can sometimes be implemented in order to obtain more accurate predictions.</p>
+<p>Linear models are considered the most common and easy-to-understand models when it comes to predict a quantitative variable such as customer <em>value.</em> Nonetheless, more advanced techniques can sometimes be implemented in order to obtain more accurate predictions.</p>
 <div id="generalized-additive-model-gam" class="section level4 unnumbered">
 <h4>Generalized Additive Model (GAM)</h4>
 <p>GAM is a statistical model in which the response variable <span class="math inline">\(\mathrm{y}\)</span> depends linearly on unknown smooth functions of some feature vector <span class="math inline">\(\pmb{\mathrm{x}}\)</span>, and interest focuses on inference about these smooth functions called <span class="math inline">\(f_p\)</span>. The <span class="math inline">\(f_p\)</span> functions may be either parametric (polynomial), semi-parametric or nonparametric (smoothing splines) leading to more flexibility in the model’s assumptions on the actual relationship between <span class="math inline">\(\mathrm{y}\)</span> and <span class="math inline">\(\pmb{\mathrm{x}}\)</span>. A link function <span class="math inline">\(g\)</span> can also be introduced to specify this relationship and the model’s general formulation is as follows:</p>
@@ -250,7 +249,7 @@ gradient and repeating with the new starting point until some criterion is met.<
 </div>
 <div id="other-models-1" class="section level4 unnumbered">
 <h4>Other models</h4>
-<p>State-of-the-art algorithms can also be employed to describe the relationship between the continuous variable and the feature vector. Among them, one can find random forest of regression trees, gradient boosting as well as Multi-layer Perceptron(MLP) regressor.</p>
+<p>State-of-the-art algorithms can also be employed to describe the relationship between the continuous variable and the feature vector. Among them, one can find random forest of regression trees, gradient boosting as well as multi-layer perceptron(MLP) regressor.</p>
 </div>
 </div>
 </div>
