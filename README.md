@@ -1,7 +1,11 @@
-This <a href="https://pediot.github.io/portfolio_churn_value/" target="_blank">bookdown</a> is being realized as part of our last year in master's degree in economics. It aims at studying a firm's most valuable asset namely its customers. To that end, we adopt a quantitative approach based on econometrics and data analysis with a threefold purpose to : 
+This paper is being realized as part of our last year in master's degree in economics. It aims at studying the firm's most valuable asset: its customers. To that end, we adopt a quantitative approach based on a mix of Econometrics and Data Science techniques with a threefold purpose:
 
-- model a *customer portfolio* as a set of customer segments; 
-- predict and analyse customer *churn*; 
-- estimate a customer portfolio's overall *value*.
+- Model *customer portfolio* as a set of customer segments; 
+- Predict and analyze customer *churn*; 
+- Estimate customer portfolio's overall *value*.
 
-After having defined the subject's key concepts, we apply duration models and machine learning techniques to a <a href="https://www.kaggle.com/yeanzc/telco-customer-churn-ibm-dataset" target="_blank">kaggle</a> dataset related to customers of a fictional telecommunications service provider (TSP).
+After having defined the subject's key concepts, we apply duration models and machine learning algorithms to a [kaggle](https://www.kaggle.com/yeanzc/telco-customer-churn-ibm-dataset) dataset related to customers of a fictional telecommunications service provider (TSP).
+
+***Keywords***: *customer portfolio management (CPM), churn, customer value, duration models, machine learning, telecom.* 
+
+The book can be viewed [here]()https://pediot.github.io/portfolio_churn_value/). It can also be downloaded to pdf file even though some issues can be noted in image display. 
