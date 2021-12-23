@@ -1,3 +1,164 @@
+---
+output: html_document2
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r echo=FALSE}
+knitr::opts_chunk$set(
+  fig.align = "center", 
+  echo = FALSE, 
+  message = FALSE, 
+  comment = FALSE, 
+  warning = FALSE
+)
+```
+
+```{r functions}
+source("functions.R")
+```
+
+
+```{r}
+library(tidyverse)    # data wrangling
+library(ggplot2)      # fancy plots 
+library(ggpubr)       # arrange plots
+
+library(knitr)        # kable
+library(kableExtra)   # fancy tables
+
+library(survival)     # Kaplan-Meier
+library(survminer)    # display survival plots 
+```
+
 # Data {#data}
 
-In this chapter, we introduce the [kaggle](https://www.kaggle.com/yeanzc/telco-customer-churn-ibm-dataset) dataset related to customers of a fictional telecommunications service provider (TSP).
+In this chapter, we introduce the [kaggle](https://www.kaggle.com/yeanzc/telco-customer-churn-ibm-dataset) dataset related to customers of a fictional telecommunications service provider (TSP). In this duration dataset, the `Churn` status variable indicates whether the customer left the firm's *portfolio* within the last month while the `Tenure_Months` variable stands for the duration actually observed. Besides customer *value* can approximated by the `CLTV` variable. 
+
+## General Overview
+
+The data set used in this study contains 29 variables and 7032 customers from a telecom firm. For each client, the data includes: 
+
+- **Demographic** information: `CustomerID`, `City`, `Zip_Code`, `Latitude`, `Longitude`, `Gender`, `Senior_Citizen`, `Partner` and `Dependents`.
+
+- **Customer account** information: `Tenure_Months`, `Contract`, `Paperless_Billing`, `Payment_Method`, `Monthly_Charges`, `Total_Charges`, `Churn_Label`, `Churn_Value`, `Churn_Score`, `CLTV`, `Churn_Reason`.
+
+- **Services** information: `Phone_Service`, `Multiple_Lines`, `Internet_Service`, `Online_Security`, `Online_Backup`, `Device_Protection`, `Tech_Support`, `Streaming_TV`, `Streaming_Movies`.
+
+
+```{r}
+data_path <- "./data/Telco_Cleaned.RData"
+load(data_path)
+```
+
+```{r dataoverview}
+cleaned_data %>%
+  select(c(
+    "CustomerID", 
+    "Monthly_Charges", 
+    "Internet_Service", 
+    "Tenure_Months", 
+    "Churn_Value", 
+    "CLTV"
+  )) %>%
+  head() %>%
+  mykable(title = "Interesting variables for the 5 first customers in the data set")
+```
+
+As shown by table \@ref(tab:dataoverview), the `Churn_Value` status variable indicates whether the customer left the firm's *portfolio* within the last month and `Tenure_Months` is the duration variable. The two features are used as response variables in the survival models. 
+
+## Target Variables
+
+Since the purpose of our study relies in estimating the overall value of this fictional firm's *portfolio*, two groups of target variables can be considered. On the one hand `Churn_Value` and `Tenure_Months` permit to determine whether a customer is active in the *portfolio*. On the other hand, the `CLTV` variable represents each customer's *value* through measurement of customer lifetime value. 
+
+### `Churn_Value` and `Tenure_Months` {-}
+
+As the combination of these two features form the response variable in the duration models, a relevant approach to have an overall description of the risk of *attrition* may be to plot the raw survival curves. It appears interesting to use demographic, account and services variables as treatment when fitting the Kaplan-Meier estimator. 
+
+```{r eval=FALSE}
+demographics <- c("Gender", "Senior_Citizen", "Partner", "Dependents")
+plot_list <- lapply(
+  demographics, 
+  plot_km,
+  surv_data = cleaned_data, 
+  risk_table = F
+)
+demographics_plot <- arrange_ggsurvplots(
+  x = plot_list, 
+  ncol = 2, nrow = 2,
+  print = F
+)
+ggsave(
+  filename = "./imgs/demographics_plot.jpg",
+  plot = demographics_plot, 
+  height = 8, width = 12
+)
+```
+
+```{r kmdemographics, fig.cap="Survival depending on demographic information"}
+knitr::include_graphics(path = "./imgs/demographics_plot.jpg")
+```
+
+```{r eval=FALSE}
+services <- c(
+  "Phone_Service",
+  "Multiple_Lines",
+  "Internet_Service",
+  "Online_Security",
+  "Online_Backup",
+  "Device_Protection", 
+  "Tech_Support",
+  "Streaming_TV",
+  "Streaming_Movies"
+)
+plot_list <- lapply(
+  services, 
+  plot_km,
+  surv_data = cleaned_data, 
+  risk_table = F, 
+  font_size = 14
+)
+services_plot <- arrange_ggsurvplots(
+  x = plot_list, 
+  ncol = 3, nrow = 3,
+  print = F
+)
+ggsave(
+  filename = "./imgs/services_plot.jpg",
+  plot = services_plot, 
+  height = 12, width = 18
+)
+```
+
+```{r kmservices, fig.cap="Survival depending on services information"}
+knitr::include_graphics(path = "./imgs/services_plot.jpg")
+```
+
+```{r kmaccountinfo, eval=FALSE}
+account_info <- c("Contract", "Paperless_Billing", "Payment_Method")
+plot_list <- lapply(
+  account_info, 
+  plot_km,
+  surv_data = cleaned_data, 
+  risk_table = F
+)
+account_info_plot <- arrange_ggsurvplots(
+  x = plot_list, 
+  ncol = 2, nrow = 2,
+  print = F
+)
+ggsave(
+  filename = "./imgs/account_info_plot.jpg",
+  plot = account_info_plot, 
+  height = 8, width = 12
+)
+```
+
+```{r kmcustaccount, fig.cap="Survival depending on customer account information"}
+knitr::include_graphics(path = "./imgs/account_info_plot.jpg")
+```
+
+### `CLTV`
+
+
+
