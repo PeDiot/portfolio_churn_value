@@ -57,7 +57,7 @@ Some proofs of the mathematical concepts used in the study are derived, specific
   \mathbb{P}\big[T_j = t_j | R(t_j) \big] & = \frac{\mathbb{P}\big[T_j = t_j | T_j \geq t_j \big]}{\sum_{l \in R(t_j)} \ \mathbb{P}\big[T_l = t_l | T_l \geq t_j \big]} \\\\
   & = \frac{\lambda_j(t_j|\mathrm{x_j}, \beta)}{\sum_{l \in R(t_j)} \ \lambda_l(t_l|\mathrm{x_l}, \beta)} \\\\
   & = \frac{\lambda_0 (t_j, \alpha)\phi(\mathrm{x_j}, \beta)}{\sum_{l \in R(t_j)} \ \lambda_0 (t_j, \alpha)\phi(\mathrm{x_l}, \beta)} \\\\
-  \mathbb{P}\big[T_j = t_j | R(t_j) \big] & = \frac{\phi(\mathrm{x_j}}, \beta)}{\sum_{l \in R(t_j)} \phi(\mathrm{x_l}, \beta)}
+  \mathbb{P}\big[T_j = t_j | R(t_j) \big] & = \frac{\phi(\mathrm{x_j}, \beta)}{\sum_{l \in R(t_j)} \phi(\mathrm{x_l}, \beta)}
 \end{aligned}
 (\#eq:contribpartiallikproof)
 \end{equation}

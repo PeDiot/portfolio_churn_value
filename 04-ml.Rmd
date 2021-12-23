@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 
 </center>
 
-This chapter introduces machine learning algorithms used to model customer *portfolio*. We firstly explain the techniques which aim to enrich the standard survival tools defined in the previous chapter. A second part depicts some regression models that are robust to predict *customer lifetime value*. Finally, the prediction performance associated to predictive methods are described. 
+This chapter introduces machine learning algorithms used to model customer *portfolio*. We firstly explain the techniques which aim to enrich the standard survival tools defined in the previous chapter. A second part depicts some regression models that are robust to predict customer lifetime value. Finally, the prediction performance associated to predictive methods are described. 
 
 ## Machine Learning for Survival Data
 
@@ -55,7 +55,7 @@ All the CHFs are then averaged to obtain the bootstrap ensemble CHF and predicti
 
 ## Regression methods
 
-*Customer Lifetime Value* being a quantitative variable, machine learning regression models are adapted to predict this quantity. Regression analysis is a fundamental concept in the field of machine learning. It falls under supervised learning wherein the algorithm is trained with both input features and output labels. It helps in establishing a relationship among the variables by estimating how one variable affects the other. In this context, we present some famous machine learning algorithms that can be implemented to estimate the relationship between several features and a continuous target variable. 
+Customer Lifetime Value being a quantitative variable, machine learning regression models are adapted to predict this quantity. Regression analysis is a fundamental concept in the field of machine learning. It falls under supervised learning wherein the algorithm is trained with both input features and output labels. It helps in establishing a relationship among the variables by estimating how one variable affects the other. In this context, we present some famous machine learning algorithms that can be implemented to estimate the relationship between several features and a continuous target variable. 
 
 ### Linear models
 
