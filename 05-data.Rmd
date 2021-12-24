@@ -23,6 +23,7 @@ source("functions.R")
 library(tidyverse)    # data wrangling
 library(ggplot2)      # fancy plots 
 library(ggpubr)       # arrange plots
+library(ggcorrplot)   # fancy correlation plot
 
 library(knitr)        # kable
 library(kableExtra)   # fancy tables
@@ -30,6 +31,11 @@ library(kableExtra)   # fancy tables
 library(survival)     # Kaplan-Meier
 library(survminer)    # display survival plots 
 ```
+
+```{r}
+theme_set(theme_minimal())
+```
+
 
 # Data {#data}
 
@@ -65,15 +71,28 @@ cleaned_data %>%
   mykable(title = "Interesting variables for the 5 first customers in the data set")
 ```
 
-As shown by table \@ref(tab:dataoverview), the `Churn_Value` status variable indicates whether the customer left the firm's *portfolio* within the last month and `Tenure_Months` is the duration variable. The two features are used as response variables in the survival models. 
+As shown by table \@ref(tab:dataoverview), the `Churn_Value` status variable indicates whether the customer left the firm's *portfolio* within the last month and `Tenure_Months` is the duration variable. 
 
-## Target Variables
+Since the purpose of our study relies in estimating the overall value of this fictional firm's *portfolio*, two groups of target variables can be considered. On the one hand `Churn_Value` and `Tenure_Months` permit to determine whether a customer is active in the *portfolio*. They are used as response variables in the survival models. On the other hand, the `CLTV` variable represents each customer's *value* through measurement of customer lifetime value. 
 
-Since the purpose of our study relies in estimating the overall value of this fictional firm's *portfolio*, two groups of target variables can be considered. On the one hand `Churn_Value` and `Tenure_Months` permit to determine whether a customer is active in the *portfolio*. On the other hand, the `CLTV` variable represents each customer's *value* through measurement of customer lifetime value. 
+## `Churn_Value` and `Tenure_Months` 
 
-### `Churn_Value` and `Tenure_Months` {-}
+As the combination of these two features form the response variable in the duration models, a relevant approach to have an overall description of the risk of *attrition* may be to plot the raw survival curves. It appears interesting to use demographic, customer account and services variables as treatment when fitting the Kaplan-Meier estimator.
 
-As the combination of these two features form the response variable in the duration models, a relevant approach to have an overall description of the risk of *attrition* may be to plot the raw survival curves. It appears interesting to use demographic, account and services variables as treatment when fitting the Kaplan-Meier estimator. 
+### Demographic data {-}
+
+```{r chi2demographics}
+chi2_demographics <- lapply(
+  demographics, 
+  chi_2_test_tab, 
+  data = cleaned_data
+) %>%
+  bind_rows() %>%
+  arrange(as.numeric(`p-value`))
+chi2_demographics %>%
+  mykable(title = "Independence $\\chi^2$ test between churn and demographic variables")
+```
+
 
 ```{r eval=FALSE}
 demographics <- c("Gender", "Senior_Citizen", "Partner", "Dependents")
@@ -95,8 +114,22 @@ ggsave(
 )
 ```
 
-```{r kmdemographics, fig.cap="Survival depending on demographic information"}
+```{r kmdemographics, fig.cap="Kaplan-Meier survival function depending on demographic information"}
 knitr::include_graphics(path = "./imgs/demographics_plot.jpg")
+```
+
+### Data on services subscribed {-}
+
+```{r chi2services}
+chi2_services <- lapply(
+  services, 
+  chi_2_test_tab, 
+  data = cleaned_data
+) %>%
+  bind_rows() %>%
+  arrange(as.numeric(`p-value`))
+chi2_services %>%
+  mykable(title = "Independence $\\chi^2$ test between churn and services information variables")
 ```
 
 ```{r eval=FALSE}
@@ -130,8 +163,22 @@ ggsave(
 )
 ```
 
-```{r kmservices, fig.cap="Survival depending on services information"}
+```{r kmservices, fig.cap="Kaplan-Meier survival function depending on services subscribed"}
 knitr::include_graphics(path = "./imgs/services_plot.jpg")
+```
+
+### Customer account data {-}
+
+```{r chi2custaccount}
+chi2_account_info <- lapply(
+  account_info, 
+  chi_2_test_tab, 
+  data = cleaned_data
+) %>%
+  bind_rows() %>%
+  arrange(as.numeric(`p-value`))
+chi2_account_info %>%
+  mykable(title = "Independence $\\chi^2$ test between churn and customer account data")
 ```
 
 ```{r kmaccountinfo, eval=FALSE}
@@ -154,11 +201,209 @@ ggsave(
 )
 ```
 
-```{r kmcustaccount, fig.cap="Survival depending on customer account information"}
+```{r kmcustaccount, fig.cap="Kaplan-Meier survival function depending on customer account information"}
 knitr::include_graphics(path = "./imgs/account_info_plot.jpg")
 ```
 
-### `CLTV`
+## `CLTV`
+
+In the dataset, the *value* of the fictional TSP's customers is measured by the discrete quantitative variable called `CLTV`. In this context, it is decided to draw histogram and density plots related to `CLTV` depending on the explanatory variables. 
+
+### Demographic data {-}
+
+```{r aovdemographics}
+aov_demographics <- lapply(
+  demographics, 
+  aov_test_tab, 
+  data = cleaned_data
+) %>%
+  bind_rows() %>%
+  arrange(as.numeric(`p-value`))
+aov_demographics %>%
+  mykable(title = "Anova test between CLTV and demographic variables")
+```
+
+
+```{r eval=FALSE}
+cltv_demographics_plots <- lapply(
+  demographics, 
+  cltv_hist_dens_plot, 
+  data = cleaned_data
+)
+
+cltv_demographics_plots <- ggarrange(
+  plotlist = cltv_demographics_plots, 
+  ncol = 2, nrow = 2
+)
+
+ggsave(
+  filename = "./imgs/cltv_demographics_plots.jpg",
+  plot = cltv_demographics_plots, 
+  height = 8, width = 12
+)
+```
+
+```{r cltvdemographics, fig.cap="Histogram and density plots of customer lifetime value depending on demographic information"}
+knitr::include_graphics(path = "./imgs/cltv_demographics_plots.jpg")
+```
+
+### Data on services subscribed {-}
+
+```{r aovservices}
+aov_services <- lapply(
+  services, 
+  aov_test_tab, 
+  data = cleaned_data
+) %>%
+  bind_rows() %>%
+  arrange(as.numeric(`p-value`))
+aov_services %>%
+  mykable(title = "Anova test between CLTV and services information variables")
+```
+
+```{r eval=FALSE}
+cltv_services_plots <- lapply(
+  services, 
+  cltv_hist_dens_plot, 
+  data = cleaned_data
+)
+
+cltv_services_plots <- ggarrange(
+  plotlist = cltv_services_plots, 
+  ncol = 3, nrow = 3
+)
+
+ggsave(
+  filename = "./imgs/cltv_services_plots.jpg",
+  plot = cltv_services_plots, 
+  height = 12, width = 18
+)
+```
+
+```{r cltvservices, fig.cap="Histogram and density plots of customer lifetime value depending on services subscribed"}
+knitr::include_graphics(path = "./imgs/cltv_services_plots.jpg")
+```
+
+### Customer account data {-}
+
+```{r aovaccountinfo}
+aov_account_info <- lapply(
+  account_info, 
+  aov_test_tab, 
+  data = cleaned_data
+) %>%
+  bind_rows() %>%
+  arrange(as.numeric(`p-value`))
+aov_account_info %>%
+  mykable(title = "Anova test between CLTV and customer account data")
+```
+
+```{r eval=FALSE}
+cltv_account_info_plots <- lapply(
+  account_info, 
+  cltv_hist_dens_plot, 
+  data = cleaned_data
+)
+
+cltv_account_info_plots <- ggarrange(
+  plotlist = cltv_account_info_plots, 
+  ncol = 2, nrow = 2
+)
+
+ggsave(
+  filename = "./imgs/cltv_account_info_plots.jpg",
+  plot = cltv_account_info_plots, 
+  height = 8, width = 12
+)
+```
+
+```{r cltvaccountinfo, fig.cap="Histogram and density plots of customer lifetime value depending on services subscribed"}
+knitr::include_graphics(path = "./imgs/cltv_account_info_plots.jpg")
+```
+
+### Correlation between `CLTV` and explanatory quantitative variables {-}
+
+```{r eval=FALSE}
+quanti_vars <- cleaned_data %>%
+  select_if(is.numeric) %>%
+  select(-c(
+    "Churn_Score", 
+    "Churn_Value"
+  )) %>%
+  colnames()
+
+corr <- cleaned_data %>%
+  select(all_of(quanti_vars)) %>% 
+  cor()
+
+corr_plot <- ggcorrplot(
+  corr, 
+  hc.order = TRUE, 
+  type = "lower",
+  lab = TRUE,
+  outline.col = "white",
+  colors = c("#CA7E7E", "white", "#7595B3"), 
+  show.legend = F, 
+  tl.cex = 9, lab_size = 3
+)
+
+ggsave(
+  filename = "./imgs/corr_plot.jpg", 
+  plot = corr_plot, 
+  height = 4, width = 6
+)
+```
+
+```{r corrplot, fig.cap="Correlation plot"}
+knitr::include_graphics(path = "./imgs/corr_plot.jpg")
+```
+
+## Churn, duration and customer *value* 
+
+```{r}
+cltv_churn_duration_plot <- cleaned_data %>%
+  ggplot(aes(
+    x = Tenure_Months, 
+    y = CLTV,  
+    fill = Churn_Label
+  )) +
+  geom_bar(stat = "identity", alpha = .5) +
+  scale_fill_brewer(palette = "Set2") +
+  scale_y_continuous(labels = scales::comma) +
+  xlab("Tenure months") +
+  guides(fill=guide_legend(title="Churn")) +
+  theme(
+    axis.title = element_text(size = 9), 
+    axis.text = element_text(size = 8), 
+    legend.title = element_text(size = 9), 
+    legend.text = element_text(size = 9), 
+    legend.position = "top"
+  )
+
+ggsave(
+  filename = "./imgs/cltv_churn_duration_plot.jpg", 
+  plot = cltv_churn_duration_plot, 
+  height = 4, width = 6
+)
+```
+
+```{r aovcltvchurn}
+aov_test_tab(
+  data = cleaned_data, 
+  treatment = "Churn_Label"
+) %>%
+  mykable(title = "Anova test between CLTV and churn status")
+```
+
+```{r eval=FALSE}
+cor(cleaned_data$CLTV, cleaned_data$Tenure_Months)
+```
+
+
+```{r cltvchurndur, fig.cap="Evolution of customer lifetime value depending on tenure months and churn status"}
+knitr::include_graphics(path = "./imgs/cltv_churn_duration_plot.jpg")
+```
+
 
 
 
