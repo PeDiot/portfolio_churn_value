@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 1 Introduction | Portfolio, Churn &amp; Customer Value</title>
+  <title>5.2 Churn_Value and Tenure_Months | Portfolio, Churn &amp; Customer Value</title>
   <meta name="description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 1 Introduction | Portfolio, Churn &amp; Customer Value" />
+  <meta property="og:title" content="5.2 Churn_Value and Tenure_Months | Portfolio, Churn &amp; Customer Value" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 1 Introduction | Portfolio, Churn &amp; Customer Value" />
+  <meta name="twitter:title" content="5.2 Churn_Value and Tenure_Months | Portfolio, Churn &amp; Customer Value" />
   
   <meta name="twitter:description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="1.1-portfoliodef.html"/>
+<link rel="prev" href="5.1-general-overview.html"/>
+<link rel="next" href="5.3-cltv.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -207,29 +207,391 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="intro" class="section level1" number="1">
-<h1><span class="header-section-number">Chapter 1</span> Introduction</h1>
-<p>In a world in which the access to information is almost free or insignificant and where there is a real plurality of offers, churn analysis has become one of the key points a firm needs to focus on. Whoever says plurality of offers needs to introduce the term competition. Thereby, the latter is more and more fierce and cut-throat. Furthermore, switching costs have decreased significantly thanks to market regulation laws. For instance in France, when you switch TSP, the new provider pays you off cancellation fees. All of this being said, it is essential for firms to implement efficient strategies to enhance customer relationships. To that end, the development of both survival models and machine learning algorithms have enabled companies to really push-up their strategies in terms of customer <em>portfolio</em> management, monitoring of <em>attrition</em> and estimation of customer <em>value</em>.</p>
-<p>After careful consideration of the issues at stake, it has been decided to address the following problematic:</p>
-<center>
-<strong><em>How to estimate the overall value of a customer portfolio?</em></strong>
-</center>
-<p><br/></p>
-<p>Several key steps will be focused on in order to provide insights on the previous question:</p>
-<ul>
-<li>Segmentation of customer portfolio as firms generally tend to partition their <em>portfolio</em> into multiple segments.</li>
-<li>Estimation of customer lifetime and churn prediction to identify active customers in the <em>portfolio</em>.</li>
-<li>Measurement of customers’ <em>value.</em></li>
-</ul>
-<p>In the following sections, the concepts of <em>portfolio</em>, <em>attrition</em> and customer <em>value</em> are defined. Then, some pieces of literature review are provided. Before embarking on data analysis and modelling, we present the theoretical basis of the models used in the study. We finally introduce the dataset and implement the methodology with the aim of estimating the overall value related to a fictional customer portfolio of a telecommunications service provider.</p>
+<div id="churn_value-and-tenure_months" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> <code>Churn_Value</code> and <code>Tenure_Months</code></h2>
+<p>As the combination of these two features form the response variable in the duration models, a relevant approach to have an overall description of the risk of <em>attrition</em> may be to plot the raw survival curves. It appears interesting to use demographic, customer account and services variables as treatment when fitting the Kaplan-Meier estimator.</p>
+<div id="demographic-data" class="section level3 unnumbered">
+<h3>Demographic data</h3>
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:chi2demographics">Table 5.2: </span>Independence <span class="math inline">\(\chi^2\)</span> test between churn and demographic variables
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Statistic
+</th>
+<th style="text-align:right;">
+Df
+</th>
+<th style="text-align:right;">
+Critical Value
+</th>
+<th style="text-align:left;">
+p-value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Dependents
+</td>
+<td style="text-align:right;">
+431.65
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.84
+</td>
+<td style="text-align:left;">
+7.1e-96
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Senior_Citizen
+</td>
+<td style="text-align:right;">
+158.44
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.84
+</td>
+<td style="text-align:left;">
+2.5e-36
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Partner
+</td>
+<td style="text-align:right;">
+157.50
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.84
+</td>
+<td style="text-align:left;">
+4e-36
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Gender
+</td>
+<td style="text-align:right;">
+0.48
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.84
+</td>
+<td style="text-align:left;">
+4.9e-01
+</td>
+</tr>
+</tbody>
+</table>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:kmdemographics"></span>
+<img src="imgs/demographics_plot.jpg" alt="Kaplan-Meier survival function depending on demographic information" width="1800" />
+<p class="caption">
+Figure 5.1: Kaplan-Meier survival function depending on demographic information
+</p>
+</div>
+</div>
+<div id="data-on-services-subscribed" class="section level3 unnumbered">
+<h3>Data on services subscribed</h3>
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:chi2services">Table 5.3: </span>Independence <span class="math inline">\(\chi^2\)</span> test between churn and services information variables
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Statistic
+</th>
+<th style="text-align:right;">
+Df
+</th>
+<th style="text-align:right;">
+Critical Value
+</th>
+<th style="text-align:left;">
+p-value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Online_Security
+</td>
+<td style="text-align:right;">
+846.68
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+5.99
+</td>
+<td style="text-align:left;">
+1.4e-184
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tech_Support
+</td>
+<td style="text-align:right;">
+824.93
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+5.99
+</td>
+<td style="text-align:left;">
+7.4e-180
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Internet_Service
+</td>
+<td style="text-align:right;">
+728.70
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+5.99
+</td>
+<td style="text-align:left;">
+5.8e-159
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Online_Backup
+</td>
+<td style="text-align:right;">
+599.18
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+5.99
+</td>
+<td style="text-align:left;">
+7.8e-131
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Device_Protection
+</td>
+<td style="text-align:right;">
+555.88
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+5.99
+</td>
+<td style="text-align:left;">
+2e-121
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Streaming_Movies
+</td>
+<td style="text-align:right;">
+374.27
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+5.99
+</td>
+<td style="text-align:left;">
+5.4e-82
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Streaming_TV
+</td>
+<td style="text-align:right;">
+372.46
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+5.99
+</td>
+<td style="text-align:left;">
+1.3e-81
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Multiple_Lines
+</td>
+<td style="text-align:right;">
+11.27
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+5.99
+</td>
+<td style="text-align:left;">
+3.6e-03
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Phone_Service
+</td>
+<td style="text-align:right;">
+0.87
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.84
+</td>
+<td style="text-align:left;">
+3.5e-01
+</td>
+</tr>
+</tbody>
+</table>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:kmservices"></span>
+<img src="imgs/services_plot.jpg" alt="Kaplan-Meier survival function depending on services subscribed" width="2700" />
+<p class="caption">
+Figure 5.2: Kaplan-Meier survival function depending on services subscribed
+</p>
+</div>
+</div>
+<div id="customer-account-data" class="section level3 unnumbered">
+<h3>Customer account data</h3>
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:chi2custaccount">Table 5.4: </span>Independence <span class="math inline">\(\chi^2\)</span> test between churn and customer account data
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Statistic
+</th>
+<th style="text-align:right;">
+Df
+</th>
+<th style="text-align:right;">
+Critical Value
+</th>
+<th style="text-align:left;">
+p-value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Contract
+</td>
+<td style="text-align:right;">
+1179.55
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+5.99
+</td>
+<td style="text-align:left;">
+7.3e-257
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Payment_Method
+</td>
+<td style="text-align:right;">
+645.43
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+7.81
+</td>
+<td style="text-align:left;">
+1.4e-139
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Paperless_Billing
+</td>
+<td style="text-align:right;">
+256.87
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.84
+</td>
+<td style="text-align:left;">
+8.2e-58
+</td>
+</tr>
+</tbody>
+</table>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:kmcustaccount"></span>
+<img src="imgs/account_info_plot.jpg" alt="Kaplan-Meier survival function depending on customer account information" width="1800" />
+<p class="caption">
+Figure 5.3: Kaplan-Meier survival function depending on customer account information
+</p>
+</div>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="1.1-portfoliodef.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="5.1-general-overview.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="5.3-cltv.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

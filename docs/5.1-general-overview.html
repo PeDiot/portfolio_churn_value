@@ -24,7 +24,7 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2021-12-23" />
+<meta name="date" content="2021-12-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="5-data.html"/>
-<link rel="next" href="5.2-target-variables.html"/>
+<link rel="next" href="5.2-churn_value-and-tenure_months.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -164,11 +164,20 @@ div.csl-indent {
 <li class="chapter" data-level="5" data-path="5-data.html"><a href="5-data.html"><i class="fa fa-check"></i><b>5</b> Data</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="5.1-general-overview.html"><a href="5.1-general-overview.html"><i class="fa fa-check"></i><b>5.1</b> General Overview</a></li>
-<li class="chapter" data-level="5.2" data-path="5.2-target-variables.html"><a href="5.2-target-variables.html"><i class="fa fa-check"></i><b>5.2</b> Target Variables</a>
+<li class="chapter" data-level="5.2" data-path="5.2-churn_value-and-tenure_months.html"><a href="5.2-churn_value-and-tenure_months.html"><i class="fa fa-check"></i><b>5.2</b> <code>Churn_Value</code> and <code>Tenure_Months</code></a>
 <ul>
-<li><a href="5.2-target-variables.html#churn_value-and-tenure_months"><code>Churn_Value</code> and <code>Tenure_Months</code></a></li>
-<li class="chapter" data-level="5.2.1" data-path="5.2-target-variables.html"><a href="5.2-target-variables.html#cltv"><i class="fa fa-check"></i><b>5.2.1</b> <code>CLTV</code></a></li>
+<li class="chapter" data-level="" data-path="5.2-churn_value-and-tenure_months.html"><a href="5.2-churn_value-and-tenure_months.html#demographic-data"><i class="fa fa-check"></i>Demographic data</a></li>
+<li class="chapter" data-level="" data-path="5.2-churn_value-and-tenure_months.html"><a href="5.2-churn_value-and-tenure_months.html#data-on-services-subscribed"><i class="fa fa-check"></i>Data on services subscribed</a></li>
+<li class="chapter" data-level="" data-path="5.2-churn_value-and-tenure_months.html"><a href="5.2-churn_value-and-tenure_months.html#customer-account-data"><i class="fa fa-check"></i>Customer account data</a></li>
 </ul></li>
+<li class="chapter" data-level="5.3" data-path="5.3-cltv.html"><a href="5.3-cltv.html"><i class="fa fa-check"></i><b>5.3</b> <code>CLTV</code></a>
+<ul>
+<li class="chapter" data-level="" data-path="5.3-cltv.html"><a href="5.3-cltv.html#demographic-data-1"><i class="fa fa-check"></i>Demographic data</a></li>
+<li class="chapter" data-level="" data-path="5.3-cltv.html"><a href="5.3-cltv.html#data-on-services-subscribed-1"><i class="fa fa-check"></i>Data on services subscribed</a></li>
+<li class="chapter" data-level="" data-path="5.3-cltv.html"><a href="5.3-cltv.html#customer-account-data-1"><i class="fa fa-check"></i>Customer account data</a></li>
+<li><a href="5.3-cltv.html#correlation-between-cltv-and-explanatory-quantitative-variables">Correlation between <code>CLTV</code> and explanatory quantitative variables</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="5.4-churn-duration-and-customer-value.html"><a href="5.4-churn-duration-and-customer-value.html"><i class="fa fa-check"></i><b>5.4</b> Churn, duration and customer <em>value</em></a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html"><i class="fa fa-check"></i>Appendix</a>
 <ul>
@@ -355,7 +364,8 @@ DSL
 </tr>
 </tbody>
 </table>
-<p>As shown by table <a href="5.1-general-overview.html#tab:dataoverview">5.1</a>, the <code>Churn_Value</code> status variable indicates whether the customer left the firm’s <em>portfolio</em> within the last month and <code>Tenure_Months</code> is the duration variable. The two features are used as response variables in the survival models.</p>
+<p>As shown by table <a href="5.1-general-overview.html#tab:dataoverview">5.1</a>, the <code>Churn_Value</code> status variable indicates whether the customer left the firm’s <em>portfolio</em> within the last month and <code>Tenure_Months</code> is the duration variable.</p>
+<p>Since the purpose of our study relies in estimating the overall value of this fictional firm’s <em>portfolio</em>, two groups of target variables can be considered. On the one hand <code>Churn_Value</code> and <code>Tenure_Months</code> permit to determine whether a customer is active in the <em>portfolio</em>. They are used as response variables in the survival models. On the other hand, the <code>CLTV</code> variable represents each customer’s <em>value</em> through measurement of customer lifetime value.</p>
 </div>
             </section>
 
@@ -363,7 +373,7 @@ DSL
         </div>
       </div>
 <a href="5-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="5.2-target-variables.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="5.2-churn_value-and-tenure_months.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

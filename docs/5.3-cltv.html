@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 1 Introduction | Portfolio, Churn &amp; Customer Value</title>
+  <title>5.3 CLTV | Portfolio, Churn &amp; Customer Value</title>
   <meta name="description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 1 Introduction | Portfolio, Churn &amp; Customer Value" />
+  <meta property="og:title" content="5.3 CLTV | Portfolio, Churn &amp; Customer Value" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 1 Introduction | Portfolio, Churn &amp; Customer Value" />
+  <meta name="twitter:title" content="5.3 CLTV | Portfolio, Churn &amp; Customer Value" />
   
   <meta name="twitter:description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="1.1-portfoliodef.html"/>
+<link rel="prev" href="5.2-churn_value-and-tenure_months.html"/>
+<link rel="next" href="5.4-churn-duration-and-customer-value.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -207,29 +207,400 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="intro" class="section level1" number="1">
-<h1><span class="header-section-number">Chapter 1</span> Introduction</h1>
-<p>In a world in which the access to information is almost free or insignificant and where there is a real plurality of offers, churn analysis has become one of the key points a firm needs to focus on. Whoever says plurality of offers needs to introduce the term competition. Thereby, the latter is more and more fierce and cut-throat. Furthermore, switching costs have decreased significantly thanks to market regulation laws. For instance in France, when you switch TSP, the new provider pays you off cancellation fees. All of this being said, it is essential for firms to implement efficient strategies to enhance customer relationships. To that end, the development of both survival models and machine learning algorithms have enabled companies to really push-up their strategies in terms of customer <em>portfolio</em> management, monitoring of <em>attrition</em> and estimation of customer <em>value</em>.</p>
-<p>After careful consideration of the issues at stake, it has been decided to address the following problematic:</p>
-<center>
-<strong><em>How to estimate the overall value of a customer portfolio?</em></strong>
-</center>
-<p><br/></p>
-<p>Several key steps will be focused on in order to provide insights on the previous question:</p>
-<ul>
-<li>Segmentation of customer portfolio as firms generally tend to partition their <em>portfolio</em> into multiple segments.</li>
-<li>Estimation of customer lifetime and churn prediction to identify active customers in the <em>portfolio</em>.</li>
-<li>Measurement of customers’ <em>value.</em></li>
-</ul>
-<p>In the following sections, the concepts of <em>portfolio</em>, <em>attrition</em> and customer <em>value</em> are defined. Then, some pieces of literature review are provided. Before embarking on data analysis and modelling, we present the theoretical basis of the models used in the study. We finally introduce the dataset and implement the methodology with the aim of estimating the overall value related to a fictional customer portfolio of a telecommunications service provider.</p>
+<div id="cltv" class="section level2" number="5.3">
+<h2><span class="header-section-number">5.3</span> <code>CLTV</code></h2>
+<p>In the dataset, the <em>value</em> of the fictional TSP’s customers is measured by the discrete quantitative variable called <code>CLTV</code>. In this context, it is decided to draw histogram and density plots related to <code>CLTV</code> depending on the explanatory variables.</p>
+<div id="demographic-data-1" class="section level3 unnumbered">
+<h3>Demographic data</h3>
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:aovdemographics">Table 5.5: </span>Anova test between CLTV and demographic variables
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+F statistic
+</th>
+<th style="text-align:right;">
+Df1
+</th>
+<th style="text-align:right;">
+Df2
+</th>
+<th style="text-align:left;">
+p-value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Partner
+</td>
+<td style="text-align:right;">
+139.76
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7030
+</td>
+<td style="text-align:left;">
+6e-32
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Dependents
+</td>
+<td style="text-align:right;">
+24.89
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7030
+</td>
+<td style="text-align:left;">
+6.2e-07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Gender
+</td>
+<td style="text-align:right;">
+0.39
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7030
+</td>
+<td style="text-align:left;">
+5.3e-01
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Senior_Citizen
+</td>
+<td style="text-align:right;">
+0.09
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7030
+</td>
+<td style="text-align:left;">
+7.6e-01
+</td>
+</tr>
+</tbody>
+</table>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:cltvdemographics"></span>
+<img src="imgs/cltv_demographics_plots.jpg" alt="Histogram and density plots of customer lifetime value depending on demographic information" width="1800" />
+<p class="caption">
+Figure 5.4: Histogram and density plots of customer lifetime value depending on demographic information
+</p>
+</div>
+</div>
+<div id="data-on-services-subscribed-1" class="section level3 unnumbered">
+<h3>Data on services subscribed</h3>
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:aovservices">Table 5.6: </span>Anova test between CLTV and services information variables
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+F statistic
+</th>
+<th style="text-align:right;">
+Df1
+</th>
+<th style="text-align:right;">
+Df2
+</th>
+<th style="text-align:left;">
+p-value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Online_Backup
+</td>
+<td style="text-align:right;">
+76.75
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+7029
+</td>
+<td style="text-align:left;">
+1.1e-33
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Online_Security
+</td>
+<td style="text-align:right;">
+74.14
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+7029
+</td>
+<td style="text-align:left;">
+1.4e-32
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Multiple_Lines
+</td>
+<td style="text-align:right;">
+64.81
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+7029
+</td>
+<td style="text-align:left;">
+1.3e-28
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Device_Protection
+</td>
+<td style="text-align:right;">
+57.79
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+7029
+</td>
+<td style="text-align:left;">
+1.3e-25
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tech_Support
+</td>
+<td style="text-align:right;">
+54.33
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+7029
+</td>
+<td style="text-align:left;">
+3.8e-24
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Streaming_Movies
+</td>
+<td style="text-align:right;">
+51.18
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+7029
+</td>
+<td style="text-align:left;">
+8.6e-23
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Streaming_TV
+</td>
+<td style="text-align:right;">
+44.43
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+7029
+</td>
+<td style="text-align:left;">
+6.7e-20
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Phone_Service
+</td>
+<td style="text-align:right;">
+3.65
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7030
+</td>
+<td style="text-align:left;">
+5.6e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Internet_Service
+</td>
+<td style="text-align:right;">
+0.56
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+7029
+</td>
+<td style="text-align:left;">
+5.7e-01
+</td>
+</tr>
+</tbody>
+</table>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:cltvservices"></span>
+<img src="imgs/cltv_services_plots.jpg" alt="Histogram and density plots of customer lifetime value depending on services subscribed" width="2700" />
+<p class="caption">
+Figure 5.5: Histogram and density plots of customer lifetime value depending on services subscribed
+</p>
+</div>
+</div>
+<div id="customer-account-data-1" class="section level3 unnumbered">
+<h3>Customer account data</h3>
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:aovaccountinfo">Table 5.7: </span>Anova test between CLTV and customer account data
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+F statistic
+</th>
+<th style="text-align:right;">
+Df1
+</th>
+<th style="text-align:right;">
+Df2
+</th>
+<th style="text-align:left;">
+p-value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Contract
+</td>
+<td style="text-align:right;">
+274.28
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+7029
+</td>
+<td style="text-align:left;">
+2e-115
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Payment_Method
+</td>
+<td style="text-align:right;">
+52.66
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+7028
+</td>
+<td style="text-align:left;">
+1.2e-33
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Paperless_Billing
+</td>
+<td style="text-align:right;">
+0.77
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7030
+</td>
+<td style="text-align:left;">
+3.8e-01
+</td>
+</tr>
+</tbody>
+</table>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:cltvaccountinfo"></span>
+<img src="imgs/cltv_account_info_plots.jpg" alt="Histogram and density plots of customer lifetime value depending on services subscribed" width="1800" />
+<p class="caption">
+Figure 5.6: Histogram and density plots of customer lifetime value depending on services subscribed
+</p>
+</div>
+</div>
+<div id="correlation-between-cltv-and-explanatory-quantitative-variables" class="section level3 unnumbered">
+<h3>Correlation between <code>CLTV</code> and explanatory quantitative variables</h3>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:corrplot"></span>
+<img src="imgs/corr_plot.jpg" alt="Correlation plot" width="900" />
+<p class="caption">
+Figure 5.7: Correlation plot
+</p>
+</div>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="1.1-portfoliodef.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="5.2-churn_value-and-tenure_months.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="5.4-churn-duration-and-customer-value.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
