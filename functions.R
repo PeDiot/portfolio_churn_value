@@ -72,3 +72,74 @@ plot_km <- function(
   )
   return (surv_plot)
 }
+
+# --- CLTV hist/density plot depending on treatement var ---
+
+cltv_hist_dens_plot <- function(data, treatment) {
+  
+  data %>%
+    ggplot(aes(x = CLTV)) +
+    geom_histogram(
+      aes_string(
+        fill = treatment, 
+        y = "..density.."
+      ), 
+      bins = 100, 
+      alpha = .3, 
+      position = "identity"
+    ) +
+    geom_density(
+      aes_string(color = treatment), 
+      size = .8
+    ) +
+    scale_color_brewer(palette = "Set2") +
+    scale_fill_brewer(palette = "Set2") +
+    scale_x_continuous(labels = scales::comma) +
+    ylab("Density") +
+    theme(legend.position = "top")
+  
+}
+
+# --- Chi2 test table ---
+
+chi_2_test_tab <- function(data, treatment){
+  
+  t <- chisq.test(
+    x = cleaned_data %>% pull(Churn_Label),
+    y = cleaned_data %>% pull(treatment))
+  tc <- qchisq(p = .95, df = t$parameter)
+  tab <- data.frame(
+    t$statistic, 
+    t$parameter, 
+    tc, 
+    format(t$p.value, scientific = TRUE, digits = 2)
+  )
+  colnames(tab) <- c("Statistic", "Df", "Critical Value", "p-value")
+  rownames(tab) <- treatment
+  return(tab)
+  
+}
+
+# --- ANOVA test table ---
+
+aov_test_tab <- function(data, treatment){
+  
+  formula <- formula( paste("CLTV ~", treatment) )
+  anova <- aov(formula = formula, data = cleaned_data)
+  sum_anova <- unlist(summary(anova))
+  tab <- data.frame(
+    sum_anova["F value1"], 
+    sum_anova["Df1"],
+    sum_anova["Df2"],
+    format(sum_anova["Pr(>F)1"], scientific = TRUE, digits = 2)
+  )
+  colnames(tab) <- c(
+    "F statistic",
+    "Df1", 
+    "Df2", 
+    "p-value"
+  )
+  rownames(tab) <- treatment
+  return(tab) 
+  
+}
