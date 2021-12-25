@@ -6,7 +6,7 @@
 ]{book}
 \title{Portfolio, Churn \& Customer Value}
 \author{Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer}
-\date{2021-12-23}
+\date{2021-12-25}
 
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
@@ -921,18 +921,50 @@ CustomerID & Monthly\_Charges & Internet\_Service & Tenure\_Months & Churn\_Valu
 \end{tabular}
 \end{table}
 
-As shown by table \ref{tab:dataoverview}, the \texttt{Churn\_Value} status variable indicates whether the customer left the firm's \emph{portfolio} within the last month and \texttt{Tenure\_Months} is the duration variable. The two features are used as response variables in the survival models.
+As shown by table \ref{tab:dataoverview}, the \texttt{Churn\_Value} status variable indicates whether the customer left the firm's \emph{portfolio} within the last month and \texttt{Tenure\_Months} is the duration variable.
 
-\hypertarget{target-variables}{%
-\section{Target Variables}\label{target-variables}}
-
-Since the purpose of our study relies in estimating the overall value of this fictional firm's \emph{portfolio}, two groups of target variables can be considered. On the one hand \texttt{Churn\_Value} and \texttt{Tenure\_Months} permit to determine whether a customer is active in the \emph{portfolio}. On the other hand, the \texttt{CLTV} variable represents each customer's \emph{value} through measurement of customer lifetime value.
+Since the purpose of our study relies in estimating the overall value of this fictional firm's \emph{portfolio}, two groups of target variables can be considered. On the one hand \texttt{Churn\_Value} and \texttt{Tenure\_Months} permit to determine whether a customer is active in the \emph{portfolio}. They are used as response variables in the survival models. On the other hand, the \texttt{CLTV} variable represents each customer's \emph{value} through measurement of customer lifetime value and is used as target variable in regression models.
 
 \hypertarget{churn_value-and-tenure_months}{%
-\subsection*{\texorpdfstring{\texttt{Churn\_Value} and \texttt{Tenure\_Months}}{Churn\_Value and Tenure\_Months}}\label{churn_value-and-tenure_months}}
-\addcontentsline{toc}{subsection}{\texttt{Churn\_Value} and \texttt{Tenure\_Months}}
+\section{\texorpdfstring{\texttt{Churn\_Value} and \texttt{Tenure\_Months}}{Churn\_Value and Tenure\_Months}}\label{churn_value-and-tenure_months}}
 
-As the combination of these two features form the response variable in the duration models, a relevant approach to have an overall description of the risk of \emph{attrition} may be to plot the raw survival curves. It appears interesting to use demographic, account and services variables as treatment when fitting the Kaplan-Meier estimator.
+As the combination of these two features form the response variable in the duration models, a relevant approach to have an overall description of the risk of \emph{attrition} may be to draw the raw survival curves depending on treatment variables. Pearson's \(\chi^2\) tests are also performed so as to test the statistical relationships between the churn indicator variable and explanatory features. Pearson's \(\chi^2\) test is used to determine whether there is a statistically significant difference between the expected frequencies and the observed frequencies in one or more categories of a contingency table. It is thus adapted to test whether two categorical variables are statistically independent. In this context, it appears interesting to use demographic, customer account and services variables as treatment when fitting the Kaplan-Meier estimator and implementing the tests.
+
+\hypertarget{demographic-data}{%
+\subsection*{Demographic data}\label{demographic-data}}
+\addcontentsline{toc}{subsection}{Demographic data}
+
+Table \ref{tab:chi2demographics} depicts the \(\chi^2\) tests' results performed on demographic variables. Given the \emph{p-values} are ranked in ascending order and given the lower the \emph{p value} the stronger link between two categorical variables, \texttt{Dependents} appears to be the most correlated feature with \texttt{Churn\_Label}. When comparing this result with the corresponding survival plot in figure \ref{fig:kmdemographics}, it can be noted that customers with dependants have a longer lifetime in the \emph{portfolio}. Conversely, \texttt{Gender} and \texttt{Churn\_Label} are statistically independent as stated by the high test's \emph{p value} (\(\approx .49\)).
+
+\begin{table}[H]
+
+\caption{\label{tab:chi2demographics}Independence $\chi^2$ test between churn and demographic variables}
+\centering
+\begin{tabular}[t]{lrrrl}
+\toprule
+  & Statistic & Df & Critical Value & p-value\\
+\midrule
+\cellcolor{gray!6}{Dependents} & \cellcolor{gray!6}{431.65} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{3.84} & \cellcolor{gray!6}{7.1e-96}\\
+Senior\_Citizen & 158.44 & 1 & 3.84 & 2.5e-36\\
+\cellcolor{gray!6}{Partner} & \cellcolor{gray!6}{157.50} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{3.84} & \cellcolor{gray!6}{4e-36}\\
+Gender & 0.48 & 1 & 3.84 & 4.9e-01\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+In section \ref{nonparam}, nonparametric estimation has been introduced focusing on two major estimators: Kaplan-Meier for survival function estimation and Nelson-Aalen for estimating the cumulative hazard function. In this part, it is decided to draw survival curves related to customer lifetime in the portfolio depending on different types of treatment variables. In the figure below, four main results can be highlighted \emph{ceteris paribus}:
+
+\begin{itemize}
+\tightlist
+\item
+  There seems to be no difference in terms of lifetime duration between men and women.
+\item
+  Customers with a partner appear to stay longer in the TSP's \emph{portfolio}.
+\item
+  Not being a senior citizen tends to shorten customer lifetime.
+\item
+  As said before, customer with children or other dependents seem to be more loyal.
+\end{itemize}
 
 \begin{figure}
 
@@ -940,8 +972,40 @@ As the combination of these two features form the response variable in the durat
 
 }
 
-\caption{Survival depending on demographic information}\label{fig:kmdemographics}
+\caption{Kaplan-Meier survival function depending on demographic information}\label{fig:kmdemographics}
 \end{figure}
+
+\hypertarget{data-on-services-subscribed}{%
+\subsection*{Data on services subscribed}\label{data-on-services-subscribed}}
+\addcontentsline{toc}{subsection}{Data on services subscribed}
+
+When dealing with data on customers of a TSP, features related to services subscribed may be relevant to explain the estimated survival of these customers in the \emph{portfolio}.
+
+Table \ref{tab:chi2services} presents results of \(\chi^2\) tests performed between \texttt{Churn\_Label} and each services information variable. As in the previous table, \emph{p-values} are ranked in ascending order. One can note that \texttt{Online\_Security} and \texttt{Tech\_Support} are the most linked to the churn indicator variable. However, variable carrying information on phone services are less correlated to \texttt{Churn\_Label}.
+
+\begin{table}[H]
+
+\caption{\label{tab:chi2services}Independence $\chi^2$ test between churn and services information variables}
+\centering
+\begin{tabular}[t]{lrrrl}
+\toprule
+  & Statistic & Df & Critical Value & p-value\\
+\midrule
+\cellcolor{gray!6}{Online\_Security} & \cellcolor{gray!6}{846.68} & \cellcolor{gray!6}{2} & \cellcolor{gray!6}{5.99} & \cellcolor{gray!6}{1.4e-184}\\
+Tech\_Support & 824.93 & 2 & 5.99 & 7.4e-180\\
+\cellcolor{gray!6}{Internet\_Service} & \cellcolor{gray!6}{728.70} & \cellcolor{gray!6}{2} & \cellcolor{gray!6}{5.99} & \cellcolor{gray!6}{5.8e-159}\\
+Online\_Backup & 599.18 & 2 & 5.99 & 7.8e-131\\
+\cellcolor{gray!6}{Device\_Protection} & \cellcolor{gray!6}{555.88} & \cellcolor{gray!6}{2} & \cellcolor{gray!6}{5.99} & \cellcolor{gray!6}{2e-121}\\
+\addlinespace
+Streaming\_Movies & 374.27 & 2 & 5.99 & 5.4e-82\\
+\cellcolor{gray!6}{Streaming\_TV} & \cellcolor{gray!6}{372.46} & \cellcolor{gray!6}{2} & \cellcolor{gray!6}{5.99} & \cellcolor{gray!6}{1.3e-81}\\
+Multiple\_Lines & 11.27 & 2 & 5.99 & 3.6e-03\\
+\cellcolor{gray!6}{Phone\_Service} & \cellcolor{gray!6}{0.87} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{3.84} & \cellcolor{gray!6}{3.5e-01}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Figure \ref{fig:kmservices} illustrates the \(\chi^2\) tests' results by representing the Kaplan-Meier estimated survivor function related to customer lifetime according to treatment variables on services subscribed. On the one hand, there seems to be no significant difference in terms of survival whether the customer uses phone service. The same remark can be pointed out based on whether the client has multiples lines as \texttt{Phone\_Service} and \texttt{Multiple\_Lines} might be quite correlated. In contrast, huge survival time difference can be noticed between customers with online security and those without, as well as between those having subscribed to technical support and those who have not. Finally, not using Internet service appears to have a positive influence on customer lifetime.
 
 \begin{figure}
 
@@ -949,8 +1013,31 @@ As the combination of these two features form the response variable in the durat
 
 }
 
-\caption{Survival depending on services information}\label{fig:kmservices}
+\caption{Kaplan-Meier survival function depending on services subscribed}\label{fig:kmservices}
 \end{figure}
+
+\hypertarget{customer-account-data}{%
+\subsection*{Customer account data}\label{customer-account-data}}
+\addcontentsline{toc}{subsection}{Customer account data}
+
+Variables on customer account such as the payment method used and the type of contract between the TSP and the client can be rich in information in the estimation of customer lifetime. Indeed, table \ref{tab:chi2custaccount} shows that churn status strongly depends on the three variables, \texttt{Contract} being the most linked.
+
+\begin{table}[H]
+
+\caption{\label{tab:chi2custaccount}Independence $\chi^2$ test between churn and customer account data}
+\centering
+\begin{tabular}[t]{lrrrl}
+\toprule
+  & Statistic & Df & Critical Value & p-value\\
+\midrule
+\cellcolor{gray!6}{Contract} & \cellcolor{gray!6}{1179.55} & \cellcolor{gray!6}{2} & \cellcolor{gray!6}{5.99} & \cellcolor{gray!6}{7.3e-257}\\
+Payment\_Method & 645.43 & 3 & 7.81 & 1.4e-139\\
+\cellcolor{gray!6}{Paperless\_Billing} & \cellcolor{gray!6}{256.87} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{3.84} & \cellcolor{gray!6}{8.2e-58}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Figure \ref{fig:kmcustaccount} enriches the \(\chi^2\) tests' results as it draws survival curves for each treatment variable's categories. When the firm/client contract is type month-to-month, the estimated survivor function decreases far more than for one-year or two-year contracts. In other words, the churn hazard is higher when the contract is renewed each month. This result makes sense as the customer may decide to leave the \emph{portfolio} each month and their are not committed for one or two years. Furthermore, clients with paperless billing contracts are more prone to churn, just like those paying by electronic check. It can be deduce that the \emph{attrition} risk is higher when the payment method is simplified.
 
 \begin{figure}
 
@@ -958,11 +1045,183 @@ As the combination of these two features form the response variable in the durat
 
 }
 
-\caption{Survival depending on customer account information}\label{fig:kmcustaccount}
+\caption{Kaplan-Meier survival function depending on customer account information}\label{fig:kmcustaccount}
 \end{figure}
 
-\hypertarget{cltv}{%
-\subsection{\texorpdfstring{\texttt{CLTV}}{CLTV}}\label{cltv}}
+\hypertarget{cltv-customer-lifetime-value}{%
+\section{\texorpdfstring{\texttt{CLTV}: Customer Lifetime Value}{CLTV: Customer Lifetime Value}}\label{cltv-customer-lifetime-value}}
+
+In the dataset, the \emph{value} of the fictional TSP's customers is measured by the discrete quantitative variable called \texttt{CLTV}. In this context, it is decided to draw histogram and density plots related to \texttt{CLTV} depending on the three types of explanatory variables. Anova tests are also implemented to verify whether \texttt{CLTV} has different values in the categorical features' different groups. Anova is a generalization of the Student's t test allowing to compare more than two groups. The test's statistic computes the ratio between variance between sample and variance within samples and is Fisher distributed. A low ratio indicates that there is no significant difference between the means of the samples being compared.
+
+\hypertarget{demographic-data-1}{%
+\subsection*{Demographic data}\label{demographic-data-1}}
+\addcontentsline{toc}{subsection}{Demographic data}
+
+Based on the Anova tests' results, \texttt{Partner} and \texttt{Dependents} seem to be statistically discriminant in terms of customer lifetime value which is not the case for \texttt{Gender} and \texttt{Senior\_Citizen}.
+
+\begin{table}[H]
+
+\caption{\label{tab:aovdemographics}Anova test between CLTV and demographic variables}
+\centering
+\begin{tabular}[t]{lrrrl}
+\toprule
+  & F statistic & Df1 & Df2 & p-value\\
+\midrule
+\cellcolor{gray!6}{Partner} & \cellcolor{gray!6}{139.76} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{7030} & \cellcolor{gray!6}{6e-32}\\
+Dependents & 24.89 & 1 & 7030 & 6.2e-07\\
+\cellcolor{gray!6}{Gender} & \cellcolor{gray!6}{0.39} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{7030} & \cellcolor{gray!6}{5.3e-01}\\
+Senior\_Citizen & 0.09 & 1 & 7030 & 7.6e-01\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The figure below illustrates how different CLV is between customers with a partner and those without, as well as between those with children o other dependants and those without. To put it another way, having a partner in life of dependants tends to increase customer lifetime value as shown by the two last histograms.
+
+\begin{figure}
+
+{\centering \includegraphics[width=50in]{./imgs/cltv_demographics_plots} 
+
+}
+
+\caption{Histogram and density plots of customer lifetime value depending on demographic information}\label{fig:cltvdemographics}
+\end{figure}
+
+\hypertarget{data-on-services-subscribed-1}{%
+\subsection*{Data on services subscribed}\label{data-on-services-subscribed-1}}
+\addcontentsline{toc}{subsection}{Data on services subscribed}
+
+When on wants to identify factors influencing customer lifetime value, it is relevant to consider variables related to services subscribed by customers. The Anova tests' results indicate that \texttt{CLTV} has significant different values in each group of all services related variables, except for \texttt{Internet\_Service}. The most important different can be noted for \texttt{Online\_Backup} and \texttt{Online\_Security} variables, whereas there is more homogeneity in the \texttt{Phone\_Service} groups.
+
+\begin{table}[H]
+
+\caption{\label{tab:aovservices}Anova test between CLTV and services information variables}
+\centering
+\begin{tabular}[t]{lrrrl}
+\toprule
+  & F statistic & Df1 & Df2 & p-value\\
+\midrule
+\cellcolor{gray!6}{Online\_Backup} & \cellcolor{gray!6}{76.75} & \cellcolor{gray!6}{2} & \cellcolor{gray!6}{7029} & \cellcolor{gray!6}{1.1e-33}\\
+Online\_Security & 74.14 & 2 & 7029 & 1.4e-32\\
+\cellcolor{gray!6}{Multiple\_Lines} & \cellcolor{gray!6}{64.81} & \cellcolor{gray!6}{2} & \cellcolor{gray!6}{7029} & \cellcolor{gray!6}{1.3e-28}\\
+Device\_Protection & 57.79 & 2 & 7029 & 1.3e-25\\
+\cellcolor{gray!6}{Tech\_Support} & \cellcolor{gray!6}{54.33} & \cellcolor{gray!6}{2} & \cellcolor{gray!6}{7029} & \cellcolor{gray!6}{3.8e-24}\\
+\addlinespace
+Streaming\_Movies & 51.18 & 2 & 7029 & 8.6e-23\\
+\cellcolor{gray!6}{Streaming\_TV} & \cellcolor{gray!6}{44.43} & \cellcolor{gray!6}{2} & \cellcolor{gray!6}{7029} & \cellcolor{gray!6}{6.7e-20}\\
+Phone\_Service & 3.65 & 1 & 7030 & 5.6e-02\\
+\cellcolor{gray!6}{Internet\_Service} & \cellcolor{gray!6}{0.56} & \cellcolor{gray!6}{2} & \cellcolor{gray!6}{7029} & \cellcolor{gray!6}{5.7e-01}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+From figure \ref{fig:cltvservices} one can note that subscribing to additional services like having multiple lines, online security and backup, device protection or using the streaming movie service significantly enhance customer lifetime value. These variables may be interesting predictor of the \texttt{CLTV} in regression models.
+
+\begin{figure}
+
+{\centering \includegraphics[width=75in]{./imgs/cltv_services_plots} 
+
+}
+
+\caption{Histogram and density plots of customer lifetime value depending on services subscribed}\label{fig:cltvservices}
+\end{figure}
+
+\hypertarget{customer-account-data-1}{%
+\subsection*{Customer account data}\label{customer-account-data-1}}
+\addcontentsline{toc}{subsection}{Customer account data}
+
+Table \ref{tab:aovaccountinfo} depicts that \texttt{CLTV} is statistically different according to the type of contract and the payment method. However, paperless billing does not seem to influence customer lifetime value.
+
+\begin{table}[H]
+
+\caption{\label{tab:aovaccountinfo}Anova test between CLTV and customer account data}
+\centering
+\begin{tabular}[t]{lrrrl}
+\toprule
+  & F statistic & Df1 & Df2 & p-value\\
+\midrule
+\cellcolor{gray!6}{Contract} & \cellcolor{gray!6}{274.28} & \cellcolor{gray!6}{2} & \cellcolor{gray!6}{7029} & \cellcolor{gray!6}{2e-115}\\
+Payment\_Method & 52.66 & 3 & 7028 & 1.2e-33\\
+\cellcolor{gray!6}{Paperless\_Billing} & \cellcolor{gray!6}{0.77} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{7030} & \cellcolor{gray!6}{3.8e-01}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The three plots below provide details to previous results as it can be noticed that customers paying by credit card of bank transfer have higher CLV than those paying by e-check of mailed check. Besides, clients enrolled in one-year or two-year contracts have greater \emph{value} to thefirm than those who pay on a monthly basis.
+
+\begin{figure}
+
+{\centering \includegraphics[width=50in]{./imgs/cltv_account_info_plots} 
+
+}
+
+\caption{Histogram and density plots of customer lifetime value depending on customer account data}\label{fig:cltvaccountinfo}
+\end{figure}
+
+\hypertarget{correlation-between-cltv-and-explanatory-quantitative-variables}{%
+\subsection*{\texorpdfstring{Correlation between \texttt{CLTV} and explanatory quantitative variables}{Correlation between CLTV and explanatory quantitative variables}}\label{correlation-between-cltv-and-explanatory-quantitative-variables}}
+\addcontentsline{toc}{subsection}{Correlation between \texttt{CLTV} and explanatory quantitative variables}
+
+Plotting the correlation matrix allows to have an overview on the links between the dataset's quantitative variables. The method used is the Pearson correlation coefficient which is defined as follows:
+
+\begin{equation}
+  \rho_{XY} = \frac{\text{cov}(X, Y)}{\sigma_X \sigma_Y}
+  \label{eq:pearson}
+\end{equation}
+
+where \(X\) and \(Y\) are two quantitative random variables, \(\text{cov}\) the covariance function and \(\sigma\) the standard deviation.
+
+On figure \ref{fig:corrplot}, non-significant correlations are crossed-out. It can be noticed that \texttt{CLTV} has the strongest correlation with \texttt{Tenure\_Months} (\(40\%\)), followed by \texttt{Total\_Charges} (\(34\%\)) then \texttt{Monthly\_Charges} (\(10\%\)).
+
+\begin{figure}
+
+{\centering \includegraphics[width=25in]{./imgs/corr_plot} 
+
+}
+
+\caption{Correlation plot}\label{fig:corrplot}
+\end{figure}
+
+\hypertarget{churn-duration-and-customer-value}{%
+\section{\texorpdfstring{Churn, duration and customer \emph{value}}{Churn, duration and customer value}}\label{churn-duration-and-customer-value}}
+
+The final step in the data exploration consists in analyzing the relationship between the three target variables: \texttt{CLTV}, \texttt{Churn\_Label} and \texttt{Tenure\_Months}.
+
+Looking at figure \ref{fig:cltvchurn}, customer lifetime value seems to have higher values for retained customers than for churners as the density is more right-oriented. This result makes sense as retained customers may have longer lifetime leading to higgher CLV.
+
+\begin{figure}
+
+{\centering \includegraphics[width=450pt,height=350pt]{./imgs/cltv_churn_plot} 
+
+}
+
+\caption{Customer lifetime value depending on churn status}\label{fig:cltvchurn}
+\end{figure}
+
+The following histograms are interesting to the extent that the distribution of \texttt{Tenure\_Months} depends on the churn status. From figure \ref{fig:churndur}, one can note an inflation of low and high values for retained customers. The distribution appears to be more homogeneous for retained clients than for churners. These last's tenure months distribution is decreasing and looks like a Poisson distribution with an inflation of low values.
+
+\begin{figure}
+
+{\centering \includegraphics[width=500pt,height=350pt]{./imgs/duration_churn_plot} 
+
+}
+
+\caption{Tenure months depending on churn status}\label{fig:churndur}
+\end{figure}
+
+Eventually, the low \emph{p value} related to the Anova test between \texttt{CLTV} and \texttt{Churn\_Label} indicates that customer lifetime value is statistically different between churner and retained clients.
+
+\begin{table}[H]
+
+\caption{\label{tab:aovcltvchurn}Anova test between CLTV and churn status}
+\centering
+\begin{tabular}[t]{lrrrl}
+\toprule
+  & F statistic & Df1 & Df2 & p-value\\
+\midrule
+\cellcolor{gray!6}{Churn\_Label} & \cellcolor{gray!6}{117.57} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{7030} & \cellcolor{gray!6}{3.5e-27}\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \hypertarget{appendix}{%
 \chapter*{Appendix}\label{appendix}}
