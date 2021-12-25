@@ -10,7 +10,8 @@ knitr::opts_chunk$set(
   echo = FALSE, 
   message = FALSE, 
   comment = FALSE, 
-  warning = FALSE
+  warning = FALSE, 
+  fig.topcaption = TRUE
 )
 ```
 
@@ -73,15 +74,18 @@ cleaned_data %>%
 
 As shown by table \@ref(tab:dataoverview), the `Churn_Value` status variable indicates whether the customer left the firm's *portfolio* within the last month and `Tenure_Months` is the duration variable. 
 
-Since the purpose of our study relies in estimating the overall value of this fictional firm's *portfolio*, two groups of target variables can be considered. On the one hand `Churn_Value` and `Tenure_Months` permit to determine whether a customer is active in the *portfolio*. They are used as response variables in the survival models. On the other hand, the `CLTV` variable represents each customer's *value* through measurement of customer lifetime value. 
+Since the purpose of our study relies in estimating the overall value of this fictional firm's *portfolio*, two groups of target variables can be considered. On the one hand `Churn_Value` and `Tenure_Months` permit to determine whether a customer is active in the *portfolio*. They are used as response variables in the survival models. On the other hand, the `CLTV` variable represents each customer's *value* through measurement of customer lifetime value and is used as target variable in regression models. 
 
 ## `Churn_Value` and `Tenure_Months` 
 
-As the combination of these two features form the response variable in the duration models, a relevant approach to have an overall description of the risk of *attrition* may be to plot the raw survival curves. It appears interesting to use demographic, customer account and services variables as treatment when fitting the Kaplan-Meier estimator.
+As the combination of these two features form the response variable in the duration models, a relevant approach to have an overall description of the risk of *attrition* may be to draw the raw survival curves depending on treatment variables. Pearson's $\chi^2$ tests are also performed so as to test the statistical relationships between the churn indicator variable and explanatory features. Pearson's $\chi^2$ test is used to determine whether there is a statistically significant difference between the expected frequencies and the observed frequencies in one or more categories of a contingency table. It is thus adapted to test whether two categorical variables are statistically independent. In this context, it appears interesting to use demographic, customer account and services variables as treatment when fitting the Kaplan-Meier estimator and implementing the tests. 
 
 ### Demographic data {-}
 
+Table \@ref(tab:chi2demographics) depicts the $\chi^2$ tests' results performed on demographic variables. Given the *p-values* are ranked in ascending order and given the lower the *p value* the stronger link between two categorical variables, `Dependents` appears to be the most correlated feature with `Churn_Label`. When comparing this result with the corresponding survival plot in figure \@ref(fig:kmdemographics), it can be noted that customers with dependants have a longer lifetime in the *portfolio*. Conversely, `Gender` and `Churn_Label` are statistically independent as stated by the high test's *p value* ($\approx .49$). 
+
 ```{r chi2demographics}
+demographics <- c("Gender", "Senior_Citizen", "Partner", "Dependents")
 chi2_demographics <- lapply(
   demographics, 
   chi_2_test_tab, 
@@ -93,9 +97,14 @@ chi2_demographics %>%
   mykable(title = "Independence $\\chi^2$ test between churn and demographic variables")
 ```
 
+In section \@ref(nonparam), nonparametric estimation has been introduced focusing on two major estimators: Kaplan-Meier for survival function estimation and Nelson-Aalen for estimating the cumulative hazard function. In this part, it is decided to draw survival curves related to customer lifetime in the portfolio depending on different types of treatment variables. In the figure below, four main results can be highlighted *ceteris paribus*: 
+
+- There seems to be no difference in terms of lifetime duration between men and women. 
+- Customers with a partner appear to stay longer in the TSP's *portfolio*. 
+- Not being a senior citizen tends to shorten customer lifetime. 
+- As said before, customer with children or other dependents seem to be more loyal. 
 
 ```{r eval=FALSE}
-demographics <- c("Gender", "Senior_Citizen", "Partner", "Dependents")
 plot_list <- lapply(
   demographics, 
   plot_km,
@@ -120,7 +129,22 @@ knitr::include_graphics(path = "./imgs/demographics_plot.jpg")
 
 ### Data on services subscribed {-}
 
+When dealing with data on customers of a TSP, features related to services subscribed may be relevant to explain the estimated survival of these customers in the *portfolio*. 
+
+Table \@ref(tab:chi2services) presents results of $\chi^2$ tests performed between `Churn_Label` and each services information variable. As in the previous table, *p-values* are ranked in ascending order. One can note that `Online_Security` and `Tech_Support` are the most linked to the churn indicator variable. However, variable carrying information on phone services are less correlated to `Churn_Label`.  
+
 ```{r chi2services}
+services <- c(
+  "Phone_Service",
+  "Multiple_Lines",
+  "Internet_Service",
+  "Online_Security",
+  "Online_Backup",
+  "Device_Protection", 
+  "Tech_Support",
+  "Streaming_TV",
+  "Streaming_Movies"
+)
 chi2_services <- lapply(
   services, 
   chi_2_test_tab, 
@@ -133,17 +157,6 @@ chi2_services %>%
 ```
 
 ```{r eval=FALSE}
-services <- c(
-  "Phone_Service",
-  "Multiple_Lines",
-  "Internet_Service",
-  "Online_Security",
-  "Online_Backup",
-  "Device_Protection", 
-  "Tech_Support",
-  "Streaming_TV",
-  "Streaming_Movies"
-)
 plot_list <- lapply(
   services, 
   plot_km,
@@ -163,13 +176,18 @@ ggsave(
 )
 ```
 
+Figure \@ref(fig:kmservices) illustrates the $\chi^2$ tests' results by representing the Kaplan-Meier estimated survivor function related to customer lifetime according to treatment variables on services subscribed. On the one hand, there seems to be no significant difference in terms of survival whether the customer uses phone service. The same remark can be pointed out based on whether the client has multiples lines as `Phone_Service` and `Multiple_Lines` might be quite correlated. In contrast, huge survival time difference can be noticed between customers with online security and those without, as well as between those having subscribed to technical support and those who have not. Finally, not using Internet service appears to have a positive influence on customer lifetime. 
+ 
 ```{r kmservices, fig.cap="Kaplan-Meier survival function depending on services subscribed"}
 knitr::include_graphics(path = "./imgs/services_plot.jpg")
 ```
 
 ### Customer account data {-}
 
+Variables on customer account such as the payment method used and the type of contract between the TSP and the client can be rich in information in the estimation of customer lifetime. Indeed, table \@ref(tab:chi2custaccount) shows that churn status strongly depends on the three variables, `Contract` being the most linked. 
+
 ```{r chi2custaccount}
+account_info <- c("Payment_Method", "Paperless_Billing", "Contract")
 chi2_account_info <- lapply(
   account_info, 
   chi_2_test_tab, 
@@ -182,7 +200,6 @@ chi2_account_info %>%
 ```
 
 ```{r kmaccountinfo, eval=FALSE}
-account_info <- c("Contract", "Paperless_Billing", "Payment_Method")
 plot_list <- lapply(
   account_info, 
   plot_km,
@@ -201,15 +218,19 @@ ggsave(
 )
 ```
 
+Figure \@ref(fig:kmcustaccount) enriches the $\chi^2$ tests' results as it draws survival curves for each treatment variable's categories. When the firm/client contract is type month-to-month, the estimated survivor function decreases far more than for one-year or two-year contracts. In other words, the churn hazard is higher when the contract is renewed each month. This result makes sense as the customer may decide to leave the *portfolio* each month and their are not committed for one or two years. Furthermore, clients with paperless billing contracts are more prone to churn, just like those paying by electronic check. It can be deduce that the *attrition* risk is higher when the payment method is simplified. 
+
 ```{r kmcustaccount, fig.cap="Kaplan-Meier survival function depending on customer account information"}
 knitr::include_graphics(path = "./imgs/account_info_plot.jpg")
 ```
 
-## `CLTV`
+## `CLTV`: Customer Lifetime Value
 
-In the dataset, the *value* of the fictional TSP's customers is measured by the discrete quantitative variable called `CLTV`. In this context, it is decided to draw histogram and density plots related to `CLTV` depending on the explanatory variables. 
+In the dataset, the *value* of the fictional TSP's customers is measured by the discrete quantitative variable called `CLTV`. In this context, it is decided to draw histogram and density plots related to `CLTV` depending on the three types of explanatory variables. Anova tests are also implemented to verify whether `CLTV` has different values in the categorical features' different groups. Anova is a generalization of the Student's t test allowing to compare more than two groups. The test's statistic computes the ratio between variance between sample and variance within samples and is Fisher distributed. A low ratio indicates that there is no significant difference between the means of the samples being compared. 
 
 ### Demographic data {-}
+
+Based on the Anova tests' results, `Partner` and `Dependents` seem to be statistically discriminant in terms of customer lifetime value which is not the case for `Gender` and `Senior_Citizen`. 
 
 ```{r aovdemographics}
 aov_demographics <- lapply(
@@ -223,11 +244,10 @@ aov_demographics %>%
   mykable(title = "Anova test between CLTV and demographic variables")
 ```
 
-
 ```{r eval=FALSE}
 cltv_demographics_plots <- lapply(
   demographics, 
-  cltv_hist_dens_plot, 
+  hist_dens_plot, 
   data = cleaned_data
 )
 
@@ -243,11 +263,15 @@ ggsave(
 )
 ```
 
+The figure below illustrates how different CLV is between customers with a partner and those without, as well as between those with children o other dependants and those without. To put it another way, having a partner in life of dependants tends to increase customer lifetime value as shown by the two last histograms.
+
 ```{r cltvdemographics, fig.cap="Histogram and density plots of customer lifetime value depending on demographic information"}
 knitr::include_graphics(path = "./imgs/cltv_demographics_plots.jpg")
 ```
 
 ### Data on services subscribed {-}
+
+When on wants to identify factors influencing customer lifetime value, it is relevant to consider variables related to services subscribed by customers. The Anova tests' results indicate that `CLTV` has significant different values in each group of all services related variables, except for `Internet_Service`. The most important different can be noted for `Online_Backup` and `Online_Security` variables, whereas there is more homogeneity in the `Phone_Service` groups.
 
 ```{r aovservices}
 aov_services <- lapply(
@@ -264,8 +288,9 @@ aov_services %>%
 ```{r eval=FALSE}
 cltv_services_plots <- lapply(
   services, 
-  cltv_hist_dens_plot, 
-  data = cleaned_data
+  hist_dens_plot, 
+  data = cleaned_data, 
+  base_size = 12
 )
 
 cltv_services_plots <- ggarrange(
@@ -280,11 +305,15 @@ ggsave(
 )
 ```
 
+From figure \@ref(fig:cltvservices) one can note that subscribing to additional services like having multiple lines, online security and backup, device protection or using the streaming movie service significantly enhance customer lifetime value. These variables may be interesting predictor of the `CLTV` in regression models. 
+
 ```{r cltvservices, fig.cap="Histogram and density plots of customer lifetime value depending on services subscribed"}
 knitr::include_graphics(path = "./imgs/cltv_services_plots.jpg")
 ```
 
 ### Customer account data {-}
+
+Table \@ref(tab:aovaccountinfo) depicts that `CLTV` is statistically different according to the type of contract and the payment method. However, paperless billing does not seem to influence customer lifetime value.
 
 ```{r aovaccountinfo}
 aov_account_info <- lapply(
@@ -301,7 +330,7 @@ aov_account_info %>%
 ```{r eval=FALSE}
 cltv_account_info_plots <- lapply(
   account_info, 
-  cltv_hist_dens_plot, 
+  hist_dens_plot, 
   data = cleaned_data
 )
 
@@ -317,11 +346,26 @@ ggsave(
 )
 ```
 
-```{r cltvaccountinfo, fig.cap="Histogram and density plots of customer lifetime value depending on services subscribed"}
+The three plots below provide details to previous results as it can be noticed that customers paying by credit card of bank transfer have higher CLV than those paying by e-check of mailed check. Besides, clients enrolled in one-year or two-year contracts have greater *value* to thefirm than those who pay on a monthly basis. 
+
+
+```{r cltvaccountinfo, fig.cap="Histogram and density plots of customer lifetime value depending on customer account data"}
 knitr::include_graphics(path = "./imgs/cltv_account_info_plots.jpg")
 ```
 
 ### Correlation between `CLTV` and explanatory quantitative variables {-}
+
+Plotting the correlation matrix allows to have an overview on the links between the dataset's quantitative variables. The method used is the Pearson correlation coefficient which is defined as follows: 
+
+\begin{equation}
+  \rho_{XY} = \frac{\text{cov}(X, Y)}{\sigma_X \sigma_Y}
+  (\#eq:pearson)
+\end{equation}
+
+where $X$ and $Y$ are two quantitative random variables, $\cov$ the covariance function and $\sigma$ the standard deviation.
+
+On figure \@ref(fig:corrplot), non-significant correlations are crossed-out. It can be noticed that `CLTV` has the strongest correlation with `Tenure_Months` ($40\%$), followed by `Total_Charges` ($34\%$) then `Monthly_Charges` ($10\%$).
+
 
 ```{r eval=FALSE}
 quanti_vars <- cleaned_data %>%
@@ -335,16 +379,20 @@ quanti_vars <- cleaned_data %>%
 corr <- cleaned_data %>%
   select(all_of(quanti_vars)) %>% 
   cor()
+p_mat <- cleaned_data %>%
+  select(all_of(quanti_vars)) %>% 
+  cor_pmat()
 
 corr_plot <- ggcorrplot(
   corr, 
+  p.mat = p_mat, 
   hc.order = TRUE, 
   type = "lower",
   lab = TRUE,
   outline.col = "white",
   colors = c("#CA7E7E", "white", "#7595B3"), 
   show.legend = F, 
-  tl.cex = 9, lab_size = 3
+  tl.cex = 8, lab_size = 2.5
 )
 
 ggsave(
@@ -360,32 +408,64 @@ knitr::include_graphics(path = "./imgs/corr_plot.jpg")
 
 ## Churn, duration and customer *value* 
 
+The final step in the data exploration consists in analyzing the relationship between the three target variables: `CLTV`, `Churn_Label` and `Tenure_Months`. 
+
+Looking at figure \@ref(fig:cltvchurn), customer lifetime value seems to have higher values for retained customers than for churners as the density is more right-oriented. This result makes sense as retained customers may have longer lifetime leading to higgher CLV.
+
 ```{r}
-cltv_churn_duration_plot <- cleaned_data %>%
-  ggplot(aes(
-    x = Tenure_Months, 
-    y = CLTV,  
-    fill = Churn_Label
-  )) +
-  geom_bar(stat = "identity", alpha = .5) +
-  scale_fill_brewer(palette = "Set2") +
-  scale_y_continuous(labels = scales::comma) +
-  xlab("Tenure months") +
-  guides(fill=guide_legend(title="Churn")) +
-  theme(
-    axis.title = element_text(size = 9), 
-    axis.text = element_text(size = 8), 
-    legend.title = element_text(size = 9), 
-    legend.text = element_text(size = 9), 
-    legend.position = "top"
-  )
+cltv_churn_plot <- hist_dens_plot(
+  data=cleaned_data, 
+  treatment = "Churn_Label", 
+  base_size = 9
+) +
+  guides(fill=guide_legend(title="Churn"),
+         color=guide_legend(title="Churn"))
 
 ggsave(
-  filename = "./imgs/cltv_churn_duration_plot.jpg", 
-  plot = cltv_churn_duration_plot, 
+  filename = "./imgs/cltv_churn_plot.jpg", 
+  plot = cltv_churn_plot, 
   height = 4, width = 6
 )
 ```
+
+The following histograms are interesting to the extent that the distribution of `Tenure_Months` depends on the churn status. From figure \@ref(fig:cltvchurn), one can note an inflation of low and high values for retained customers. The distribution appears to be more homogeneous for retained clients than for churners. These last's tenure months distribution is decreasing and looks like a Poisson distribution with an inflation of low values. 
+
+```{r cltvchurn, fig.cap="Customer lifetime value depending on churn status", out.height="350pt", out.width="450pt"}
+knitr::include_graphics(path = "./imgs/cltv_churn_plot.jpg")
+```
+
+```{r}
+n_bins <- unique(cleaned_data$Tenure_Months) %>% 
+  length()
+duration_churn_plot <- cleaned_data %>%
+  ggplot(aes(
+    x = Tenure_Months,
+    color = Churn_Label,
+    fill = Churn_Label
+  )) +
+  geom_histogram(bins = n_bins, alpha = .4) +
+  labs(x = "Tenure months", y = "Count") +
+  scale_color_brewer(palette = "Set2") +
+  scale_fill_brewer(palette = "Set2") +
+  facet_grid(~ Churn_Label) +
+  guides(fill=guide_legend(title="Churn"),
+         color=guide_legend(title="Churn")) +
+  theme(legend.position = "none", 
+        axis.title = element_text(size = 10), 
+        axis.text = element_text(size = 9))
+
+ggsave(
+  filename = "./imgs/duration_churn_plot.jpg", 
+  plot = duration_churn_plot, 
+  height = 4, width = 6
+)
+```
+
+```{r cltvdur, fig.cap="Tenure months depending on churn status", out.height="350pt", out.width="500pt"}
+knitr::include_graphics(path = "./imgs/duration_churn_plot.jpg")
+```
+
+Eventually, the low *p value* related to the Anova test between `CLTV` and `Churn_Label` indicates that customer lifetime value is statistically different between churner and retained clients.
 
 ```{r aovcltvchurn}
 aov_test_tab(
@@ -400,9 +480,7 @@ cor(cleaned_data$CLTV, cleaned_data$Tenure_Months)
 ```
 
 
-```{r cltvchurndur, fig.cap="Evolution of customer lifetime value depending on tenure months and churn status"}
-knitr::include_graphics(path = "./imgs/cltv_churn_duration_plot.jpg")
-```
+
 
 
 

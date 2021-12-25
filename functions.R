@@ -75,17 +75,23 @@ plot_km <- function(
 
 # --- CLTV hist/density plot depending on treatement var ---
 
-cltv_hist_dens_plot <- function(data, treatment) {
+hist_dens_plot <- function(
+  data, 
+  treatment, 
+  target = "CLTV",
+  base_size = 10
+) {
   
   data %>%
-    ggplot(aes(x = CLTV)) +
+    ggplot(aes_string(x = target)) +
     geom_histogram(
       aes_string(
+        color = treatment, 
         fill = treatment, 
         y = "..density.."
       ), 
       bins = 100, 
-      alpha = .3, 
+      alpha = .2, 
       position = "identity"
     ) +
     geom_density(
@@ -96,7 +102,31 @@ cltv_hist_dens_plot <- function(data, treatment) {
     scale_fill_brewer(palette = "Set2") +
     scale_x_continuous(labels = scales::comma) +
     ylab("Density") +
-    theme(legend.position = "top")
+    theme_minimal(base_size = base_size) +
+    theme(legend.position = "top") 
+  
+}
+
+dens_plot <- function(
+  data, 
+  treatment, 
+  target = "CLTV",
+  base_size = 10
+) { 
+  
+  data %>%
+    ggplot() +
+    geom_density(
+      aes_string(x = target,
+          fill = treatment,
+          color = treatment), 
+      alpha = .5
+    ) +
+    scale_color_brewer(palette = "Set2") +
+    scale_fill_brewer(palette = "Set2") +
+    ylab("Density") +
+    theme_minimal(base_size = base_size) +
+    theme(legend.position = "top") 
   
 }
 
