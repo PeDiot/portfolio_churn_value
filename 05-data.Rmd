@@ -362,7 +362,7 @@ Plotting the correlation matrix allows to have an overview on the links between 
   (\#eq:pearson)
 \end{equation}
 
-where $X$ and $Y$ are two quantitative random variables, $\cov$ the covariance function and $\sigma$ the standard deviation.
+where $X$ and $Y$ are two quantitative random variables, $\text{cov}$ the covariance function and $\sigma$ the standard deviation.
 
 On figure \@ref(fig:corrplot), non-significant correlations are crossed-out. It can be noticed that `CLTV` has the strongest correlation with `Tenure_Months` ($40\%$), followed by `Total_Charges` ($34\%$) then `Monthly_Charges` ($10\%$).
 
