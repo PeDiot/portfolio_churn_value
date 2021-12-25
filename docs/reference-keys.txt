@@ -51,9 +51,11 @@ tab:aovservices
 fig:cltvservices
 tab:aovaccountinfo
 fig:cltvaccountinfo
+eq:pearson
 fig:corrplot
+fig:cltvchurn
+fig:cltvdur
 tab:aovcltvchurn
-fig:cltvchurndur
 eq:hazfunproof
 eq:linksurvcumhaz
 eq:contribpartiallikproof
@@ -101,5 +103,5 @@ metrics-for-survival-models
 data
 general-overview
 churn_value-and-tenure_months
-cltv
+cltv-customer-lifetime-value
 churn-duration-and-customer-value

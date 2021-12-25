@@ -24,7 +24,7 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2021-12-24" />
+<meta name="date" content="2021-12-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -170,12 +170,12 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="5.2-churn_value-and-tenure_months.html"><a href="5.2-churn_value-and-tenure_months.html#data-on-services-subscribed"><i class="fa fa-check"></i>Data on services subscribed</a></li>
 <li class="chapter" data-level="" data-path="5.2-churn_value-and-tenure_months.html"><a href="5.2-churn_value-and-tenure_months.html#customer-account-data"><i class="fa fa-check"></i>Customer account data</a></li>
 </ul></li>
-<li class="chapter" data-level="5.3" data-path="5.3-cltv.html"><a href="5.3-cltv.html"><i class="fa fa-check"></i><b>5.3</b> <code>CLTV</code></a>
+<li class="chapter" data-level="5.3" data-path="5.3-cltv-customer-lifetime-value.html"><a href="5.3-cltv-customer-lifetime-value.html"><i class="fa fa-check"></i><b>5.3</b> <code>CLTV</code>: Customer Lifetime Value</a>
 <ul>
-<li class="chapter" data-level="" data-path="5.3-cltv.html"><a href="5.3-cltv.html#demographic-data-1"><i class="fa fa-check"></i>Demographic data</a></li>
-<li class="chapter" data-level="" data-path="5.3-cltv.html"><a href="5.3-cltv.html#data-on-services-subscribed-1"><i class="fa fa-check"></i>Data on services subscribed</a></li>
-<li class="chapter" data-level="" data-path="5.3-cltv.html"><a href="5.3-cltv.html#customer-account-data-1"><i class="fa fa-check"></i>Customer account data</a></li>
-<li><a href="5.3-cltv.html#correlation-between-cltv-and-explanatory-quantitative-variables">Correlation between <code>CLTV</code> and explanatory quantitative variables</a></li>
+<li class="chapter" data-level="" data-path="5.3-cltv-customer-lifetime-value.html"><a href="5.3-cltv-customer-lifetime-value.html#demographic-data-1"><i class="fa fa-check"></i>Demographic data</a></li>
+<li class="chapter" data-level="" data-path="5.3-cltv-customer-lifetime-value.html"><a href="5.3-cltv-customer-lifetime-value.html#data-on-services-subscribed-1"><i class="fa fa-check"></i>Data on services subscribed</a></li>
+<li class="chapter" data-level="" data-path="5.3-cltv-customer-lifetime-value.html"><a href="5.3-cltv-customer-lifetime-value.html#customer-account-data-1"><i class="fa fa-check"></i>Customer account data</a></li>
+<li><a href="5.3-cltv-customer-lifetime-value.html#correlation-between-cltv-and-explanatory-quantitative-variables">Correlation between <code>CLTV</code> and explanatory quantitative variables</a></li>
 </ul></li>
 <li class="chapter" data-level="5.4" data-path="5.4-churn-duration-and-customer-value.html"><a href="5.4-churn-duration-and-customer-value.html"><i class="fa fa-check"></i><b>5.4</b> Churn, duration and customer <em>value</em></a></li>
 </ul></li>
@@ -247,10 +247,10 @@ div.csl-indent {
 <p>The instantaneous hazard function <span class="math inline">\(\lambda_{\nu,\theta}\)</span> is monotonic <strong>decreasing</strong> if <span class="math inline">\(\nu \in [0, 1]\)</span>. For instance, the <em>attrition</em> risk may decrease as the customer’s duration in the <em>portfolio</em> increases. In this context, the client gets more and more loyal to the firm. If <span class="math inline">\(\nu=1\)</span>, the hazard rate is constant and <span class="math inline">\(T \sim \mathcal{E}(\theta)\)</span>. Converlsely, the hazard function is monotonic <strong>increasing</strong> if <span class="math inline">\(\nu &gt; 1\)</span>. This can be the case when customers tend to continuously search for information on the firm’s competitors, thus becoming more likely to churn as time goes by.</p>
 <p>Figure <a href="3.5-parametric-models.html#fig:weibullplots">3.4</a> illustrates the hazard and survivor functions associated to a Weibull-distributed variable <span class="math inline">\(T\)</span>. The two curves’ shape depend both on the shape (<span class="math inline">\(\nu\)</span>) and scale (<span class="math inline">\(\theta\)</span>) parameters. Some remarks can be made looking at the two plots. When <span class="math inline">\(\nu &lt; 1\)</span> the hazard function is decreasing meaning that the risk of the event occurring decreases as time goes by. When <span class="math inline">\(\nu &gt; 1\)</span> the hazard function is convex which indicates that a marginal increase in time leads to an increase (decrease) of over one unit in the the hazard (survivor) function. The higher the shape parameter, the more increasing the hazard function. When <span class="math inline">\(\nu = \theta = 1\)</span>, it can be noted that the Weibull distribution corresponds to the exponential distribution (see figures <a href="3.3-probabilistic-concepts.html#fig:survfunplot">3.2</a> and <a href="3.3-probabilistic-concepts.html#fig:cumhazplot">3.3</a>).</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:weibullplots"></span>
-<img src="imgs/weibull_plots.png" alt="Hazard and Survival functions with $T \sim \mathcal{W} (\nu, \theta)$" width="700pt" height="350pt" />
 <p class="caption">
 Figure 3.4: Hazard and Survival functions with <span class="math inline">\(T \sim \mathcal{W} (\nu, \theta)\)</span>
 </p>
+<img src="imgs/weibull_plots.png" alt="Hazard and Survival functions with $T \sim \mathcal{W} (\nu, \theta)$" width="700pt" height="350pt" />
 </div>
 </div>
 <div id="other-models" class="section level4 unnumbered">

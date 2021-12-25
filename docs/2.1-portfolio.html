@@ -24,7 +24,7 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2021-12-24" />
+<meta name="date" content="2021-12-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -170,12 +170,12 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="5.2-churn_value-and-tenure_months.html"><a href="5.2-churn_value-and-tenure_months.html#data-on-services-subscribed"><i class="fa fa-check"></i>Data on services subscribed</a></li>
 <li class="chapter" data-level="" data-path="5.2-churn_value-and-tenure_months.html"><a href="5.2-churn_value-and-tenure_months.html#customer-account-data"><i class="fa fa-check"></i>Customer account data</a></li>
 </ul></li>
-<li class="chapter" data-level="5.3" data-path="5.3-cltv.html"><a href="5.3-cltv.html"><i class="fa fa-check"></i><b>5.3</b> <code>CLTV</code></a>
+<li class="chapter" data-level="5.3" data-path="5.3-cltv-customer-lifetime-value.html"><a href="5.3-cltv-customer-lifetime-value.html"><i class="fa fa-check"></i><b>5.3</b> <code>CLTV</code>: Customer Lifetime Value</a>
 <ul>
-<li class="chapter" data-level="" data-path="5.3-cltv.html"><a href="5.3-cltv.html#demographic-data-1"><i class="fa fa-check"></i>Demographic data</a></li>
-<li class="chapter" data-level="" data-path="5.3-cltv.html"><a href="5.3-cltv.html#data-on-services-subscribed-1"><i class="fa fa-check"></i>Data on services subscribed</a></li>
-<li class="chapter" data-level="" data-path="5.3-cltv.html"><a href="5.3-cltv.html#customer-account-data-1"><i class="fa fa-check"></i>Customer account data</a></li>
-<li><a href="5.3-cltv.html#correlation-between-cltv-and-explanatory-quantitative-variables">Correlation between <code>CLTV</code> and explanatory quantitative variables</a></li>
+<li class="chapter" data-level="" data-path="5.3-cltv-customer-lifetime-value.html"><a href="5.3-cltv-customer-lifetime-value.html#demographic-data-1"><i class="fa fa-check"></i>Demographic data</a></li>
+<li class="chapter" data-level="" data-path="5.3-cltv-customer-lifetime-value.html"><a href="5.3-cltv-customer-lifetime-value.html#data-on-services-subscribed-1"><i class="fa fa-check"></i>Data on services subscribed</a></li>
+<li class="chapter" data-level="" data-path="5.3-cltv-customer-lifetime-value.html"><a href="5.3-cltv-customer-lifetime-value.html#customer-account-data-1"><i class="fa fa-check"></i>Customer account data</a></li>
+<li><a href="5.3-cltv-customer-lifetime-value.html#correlation-between-cltv-and-explanatory-quantitative-variables">Correlation between <code>CLTV</code> and explanatory quantitative variables</a></li>
 </ul></li>
 <li class="chapter" data-level="5.4" data-path="5.4-churn-duration-and-customer-value.html"><a href="5.4-churn-duration-and-customer-value.html"><i class="fa fa-check"></i><b>5.4</b> Churn, duration and customer <em>value</em></a></li>
 </ul></li>
@@ -211,18 +211,18 @@ div.csl-indent {
 <h2><span class="header-section-number">2.1</span> On customer portfolio</h2>
 <p><em>Portfolio</em> management methods have been applied to an increasing number of areas over time. This term is originally used in finance by <span class="citation"><a href="#ref-MARKOWITZ" role="doc-biblioref">Markowitz</a> (<a href="#ref-MARKOWITZ" role="doc-biblioref">1952</a>)</span> with a view of managing equities. He develops a mathematical framework for assembling a portfolio of assets such that the expected return is maximized for a given level of risk. Markovitz’s model is based on diversification which is the idea that owning different kinds of financial assets is less risky than owning only one type. His theory uses the variance of asset prices as a proxy for risk. Later in the 1970-80’s, <em>portfolio</em> models are incorporated into corporate <span class="citation">(<a href="#ref-WIND" role="doc-biblioref">Wind and Mahajan 1981</a>)</span> and marketing <span class="citation">(<a href="#ref-DAY" role="doc-biblioref">Day 1977</a>)</span> strategies for profit-maximization via optimal resource allocation. Then, <span class="citation"><a href="#ref-CAPON" role="doc-biblioref">Capon and Glazer</a> (<a href="#ref-CAPON" role="doc-biblioref">1987</a>)</span> provide insights on efficient management for <em>portfolios</em> of technologies and study how well technological means mobilized by a firm are complement. More recently, in the interest of improving relationships between the firm and its clients, the <em>portfolio</em> modelling approach have focused on effective customer relationship management (CRM). The following figure depicts the evolution of <em>portfolio</em> analysis through time.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:timeline"></span>
-<img src="imgs/portfolio_timeline.png" alt="A timeline on the concept of portfolio" width="400pt" height="300pt" />
 <p class="caption">
 Figure 2.1: A timeline on the concept of portfolio
 </p>
+<img src="imgs/portfolio_timeline.png" alt="A timeline on the concept of portfolio" width="400pt" height="300pt" />
 </div>
 <p>In their article <span class="citation"><a href="#ref-CPM_CRM" role="doc-biblioref">Thakur and Workman</a> (<a href="#ref-CPM_CRM" role="doc-biblioref">2016</a>)</span> examine how a company can define the
 value of customers and segment these customers into portfolios. They explain how segmentation leads to better understanding of the relative importance of each customer to the company’s total profit. The authors consider a <em>portfolio</em> segmented into four groups of clients: <em>platinum</em>, <em>gold</em>, <em>silver</em> and <em>bronze</em> customers. The <em>portfolio</em> segmentation is based both on the cost to serve a client as well as the latter’s value to the firm, as depicted by figure <a href="2.1-portfolio.html#fig:cpmmat">2.2</a>.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:cpmmat"></span>
-<img src="imgs/cpm_matrix.jpg" alt="CPM Matrix" width="250pt" height="250pt" />
 <p class="caption">
 Figure 2.2: CPM Matrix
 </p>
+<img src="imgs/cpm_matrix.jpg" alt="CPM Matrix" width="250pt" height="250pt" />
 </div>
 <p>According to this repartition into four main groups, Thakur and Workman highlight three strategies the firm can launch in order to efficiently manage its <em>portfolio</em>. <strong>Retention</strong> aims to induce <em>platinum</em> customers into repeating their purchases as they have a large contribution to the firm’s revenue. <strong>Customer relationship development</strong> can be used to encourage customers to advance and upgrade to a higher segment. Such a strategy can be efficient for customers with high preference for a certain product or those with potential to shift to higher margin products. Conversely, <strong>customer elimination or filtering</strong> strategies are set up by the firm to encourage bottom customers who cost more than they are worth to leave the <strong>portfolio</strong>.</p>
 <p>As said in the introduction, an interesting improvement of portfolio analysis may be to add a temporal dimension to the models. <span class="citation"><a href="#ref-MANAGING_DYNAMICS_CUSTOMER_PORTFOLIO" role="doc-biblioref">Homburg, Steiner, and Totzek</a> (<a href="#ref-MANAGING_DYNAMICS_CUSTOMER_PORTFOLIO" role="doc-biblioref">2009</a>)</span> show that the dynamic approach minimizes the current bias of underestimating low-value clients and overestimating high-value ones.</p>

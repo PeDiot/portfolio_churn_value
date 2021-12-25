@@ -24,7 +24,7 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2021-12-24" />
+<meta name="date" content="2021-12-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -170,12 +170,12 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="5.2-churn_value-and-tenure_months.html"><a href="5.2-churn_value-and-tenure_months.html#data-on-services-subscribed"><i class="fa fa-check"></i>Data on services subscribed</a></li>
 <li class="chapter" data-level="" data-path="5.2-churn_value-and-tenure_months.html"><a href="5.2-churn_value-and-tenure_months.html#customer-account-data"><i class="fa fa-check"></i>Customer account data</a></li>
 </ul></li>
-<li class="chapter" data-level="5.3" data-path="5.3-cltv.html"><a href="5.3-cltv.html"><i class="fa fa-check"></i><b>5.3</b> <code>CLTV</code></a>
+<li class="chapter" data-level="5.3" data-path="5.3-cltv-customer-lifetime-value.html"><a href="5.3-cltv-customer-lifetime-value.html"><i class="fa fa-check"></i><b>5.3</b> <code>CLTV</code>: Customer Lifetime Value</a>
 <ul>
-<li class="chapter" data-level="" data-path="5.3-cltv.html"><a href="5.3-cltv.html#demographic-data-1"><i class="fa fa-check"></i>Demographic data</a></li>
-<li class="chapter" data-level="" data-path="5.3-cltv.html"><a href="5.3-cltv.html#data-on-services-subscribed-1"><i class="fa fa-check"></i>Data on services subscribed</a></li>
-<li class="chapter" data-level="" data-path="5.3-cltv.html"><a href="5.3-cltv.html#customer-account-data-1"><i class="fa fa-check"></i>Customer account data</a></li>
-<li><a href="5.3-cltv.html#correlation-between-cltv-and-explanatory-quantitative-variables">Correlation between <code>CLTV</code> and explanatory quantitative variables</a></li>
+<li class="chapter" data-level="" data-path="5.3-cltv-customer-lifetime-value.html"><a href="5.3-cltv-customer-lifetime-value.html#demographic-data-1"><i class="fa fa-check"></i>Demographic data</a></li>
+<li class="chapter" data-level="" data-path="5.3-cltv-customer-lifetime-value.html"><a href="5.3-cltv-customer-lifetime-value.html#data-on-services-subscribed-1"><i class="fa fa-check"></i>Data on services subscribed</a></li>
+<li class="chapter" data-level="" data-path="5.3-cltv-customer-lifetime-value.html"><a href="5.3-cltv-customer-lifetime-value.html#customer-account-data-1"><i class="fa fa-check"></i>Customer account data</a></li>
+<li><a href="5.3-cltv-customer-lifetime-value.html#correlation-between-cltv-and-explanatory-quantitative-variables">Correlation between <code>CLTV</code> and explanatory quantitative variables</a></li>
 </ul></li>
 <li class="chapter" data-level="5.4" data-path="5.4-churn-duration-and-customer-value.html"><a href="5.4-churn-duration-and-customer-value.html"><i class="fa fa-check"></i><b>5.4</b> Churn, duration and customer <em>value</em></a></li>
 </ul></li>
@@ -244,7 +244,7 @@ div.csl-indent {
 <li><span class="math inline">\(D(t_j) = \{l: t_l = t_j\}\)</span> is the set of spells completed at <span class="math inline">\(t_j\)</span> with <span class="math inline">\(\#D(t_j) = d_j\)</span>,</li>
 <li><span class="math inline">\(R(t_j) = \{l: t_l \geq t_i\}\)</span> is the set of spells at risk at <span class="math inline">\(t_j\)</span>.</li>
 </ul>
-<p>The contribution of a spell in <span class="math inline">\(D(t_j)\)</span> to the likelihood function equals the conditional probability that the spell ends at <span class="math inline">\(t_j\)</span> given it is exposed at that specific time and can be written as (see <span class="citation"><a href="#ref-CAMERON_TRIVEDI" role="doc-biblioref">Cameron and Trivedi</a> (<a href="#ref-CAMERON_TRIVEDI" role="doc-biblioref">2005</a>)</span> and proof <a href="contribution-to-the-partial-likelihood-function-in-ph-models.html#eq:contribpartiallikproof">(5.3)</a> for more details):</p>
+<p>The contribution of a spell in <span class="math inline">\(D(t_j)\)</span> to the likelihood function equals the conditional probability that the spell ends at <span class="math inline">\(t_j\)</span> given it is exposed at that specific time and can be written as (see <span class="citation"><a href="#ref-CAMERON_TRIVEDI" role="doc-biblioref">Cameron and Trivedi</a> (<a href="#ref-CAMERON_TRIVEDI" role="doc-biblioref">2005</a>)</span> and proof <a href="contribution-to-the-partial-likelihood-function-in-ph-models.html#eq:contribpartiallikproof">(5.4)</a> for more details):</p>
 <p><span class="math display" id="eq:contribpartiallik">\[\begin{equation}
   \mathbb{P}\big[T_j = t_j | R(t_j) \big] = \frac{\phi(\mathrm{x_j}, \beta)}{\sum_{l \in R(t_j)} \phi(\mathrm{x_l}, \beta)}
   \tag{3.18}
@@ -254,7 +254,7 @@ div.csl-indent {
   \mathcal{L}_p = \Pi_{j=1}^{k} \ \frac{\Pi_{m \in D(tj)} \ \phi(\mathrm{x_j}, \beta)}{\Big[\sum_{l \in R(t_j)} \phi(\mathrm{x_l}, \beta)\Big]^{d_j}}
   \tag{3.19}
 \end{equation}\]</span></p>
-<p>The latter formulation of the partial likelihood function is explained in more details in equations <a href="partial-likelihood-function-in-ph-models.html#eq:partlikproof">(5.4)</a> and <a href="partial-likelihood-function-in-ph-models.html#eq:partlikproofbis">(5.5)</a> in the appendix.</p>
+<p>The latter formulation of the partial likelihood function is explained in more details in equations <a href="partial-likelihood-function-in-ph-models.html#eq:partlikproof">(5.5)</a> and <a href="partial-likelihood-function-in-ph-models.html#eq:partlikproofbis">(5.6)</a> in the appendix.</p>
 </div>
 </div>
 <div id="cox-ph-model" class="section level3" number="3.6.2">
