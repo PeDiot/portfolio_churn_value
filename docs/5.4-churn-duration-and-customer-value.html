@@ -211,14 +211,14 @@ div.csl-indent {
 <h2><span class="header-section-number">5.4</span> Churn, duration and customer <em>value</em></h2>
 <p>The final step in the data exploration consists in analyzing the relationship between the three target variables: <code>CLTV</code>, <code>Churn_Label</code> and <code>Tenure_Months</code>.</p>
 <p>Looking at figure <a href="5.4-churn-duration-and-customer-value.html#fig:cltvchurn">5.8</a>, customer lifetime value seems to have higher values for retained customers than for churners as the density is more right-oriented. This result makes sense as retained customers may have longer lifetime leading to higgher CLV.</p>
-<p>The following histograms are interesting to the extent that the distribution of <code>Tenure_Months</code> depends on the churn status. From figure <a href="5.4-churn-duration-and-customer-value.html#fig:cltvchurn">5.8</a>, one can note an inflation of low and high values for retained customers. The distribution appears to be more homogeneous for retained clients than for churners. These last’s tenure months distribution is decreasing and looks like a Poisson distribution with an inflation of low values.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:cltvchurn"></span>
 <p class="caption">
 Figure 5.8: Customer lifetime value depending on churn status
 </p>
 <img src="imgs/cltv_churn_plot.jpg" alt="Customer lifetime value depending on churn status" width="450pt" height="350pt" />
 </div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:cltvdur"></span>
+<p>The following histograms are interesting to the extent that the distribution of <code>Tenure_Months</code> depends on the churn status. From figure <a href="5.4-churn-duration-and-customer-value.html#fig:churndur">5.9</a>, one can note an inflation of low and high values for retained customers. The distribution appears to be more homogeneous for retained clients than for churners. These last’s tenure months distribution is decreasing and looks like a Poisson distribution with an inflation of low values.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:churndur"></span>
 <p class="caption">
 Figure 5.9: Tenure months depending on churn status
 </p>

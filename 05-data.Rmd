@@ -428,7 +428,6 @@ ggsave(
 )
 ```
 
-The following histograms are interesting to the extent that the distribution of `Tenure_Months` depends on the churn status. From figure \@ref(fig:cltvchurn), one can note an inflation of low and high values for retained customers. The distribution appears to be more homogeneous for retained clients than for churners. These last's tenure months distribution is decreasing and looks like a Poisson distribution with an inflation of low values. 
 
 ```{r cltvchurn, fig.cap="Customer lifetime value depending on churn status", out.height="350pt", out.width="450pt"}
 knitr::include_graphics(path = "./imgs/cltv_churn_plot.jpg")
@@ -461,7 +460,10 @@ ggsave(
 )
 ```
 
-```{r cltvdur, fig.cap="Tenure months depending on churn status", out.height="350pt", out.width="500pt"}
+The following histograms are interesting to the extent that the distribution of `Tenure_Months` depends on the churn status. From figure \@ref(fig:churndur), one can note an inflation of low and high values for retained customers. The distribution appears to be more homogeneous for retained clients than for churners. These last's tenure months distribution is decreasing and looks like a Poisson distribution with an inflation of low values. 
+
+
+```{r churndur, fig.cap="Tenure months depending on churn status", out.height="350pt", out.width="500pt"}
 knitr::include_graphics(path = "./imgs/duration_churn_plot.jpg")
 ```
 
