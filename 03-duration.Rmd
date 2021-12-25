@@ -10,7 +10,8 @@ knitr::opts_chunk$set(
   echo = FALSE, 
   message = FALSE, 
   comment = FALSE, 
-  warning = FALSE
+  warning = FALSE, 
+  fig.topcaption = TRUE
 )
 ```
 
