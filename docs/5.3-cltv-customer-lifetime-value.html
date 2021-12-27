@@ -24,7 +24,7 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2021-12-25" />
+<meta name="date" content="2021-12-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -138,7 +138,7 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3.6" data-path="3.6-semi-parametric-estimation.html"><a href="3.6-semi-parametric-estimation.html"><i class="fa fa-check"></i><b>3.6</b> Semi-parametric estimation</a>
 <ul>
-<li class="chapter" data-level="3.6.1" data-path="3.6-semi-parametric-estimation.html"><a href="3.6-semi-parametric-estimation.html#proportional-hazards-models"><i class="fa fa-check"></i><b>3.6.1</b> Proportional Hazards models</a></li>
+<li class="chapter" data-level="3.6.1" data-path="3.6-semi-parametric-estimation.html"><a href="3.6-semi-parametric-estimation.html#proportional-hazards-models"><i class="fa fa-check"></i><b>3.6.1</b> <em>Proportional Hazards</em> models</a></li>
 <li class="chapter" data-level="3.6.2" data-path="3.6-semi-parametric-estimation.html"><a href="3.6-semi-parametric-estimation.html#cox-ph-model"><i class="fa fa-check"></i><b>3.6.2</b> Cox PH model</a></li>
 </ul></li>
 </ul></li>
@@ -209,7 +209,7 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="cltv-customer-lifetime-value" class="section level2" number="5.3">
 <h2><span class="header-section-number">5.3</span> <code>CLTV</code>: Customer Lifetime Value</h2>
-<p>In the dataset, the <em>value</em> of the fictional TSP’s customers is measured by the discrete quantitative variable called <code>CLTV</code>. In this context, it is decided to draw histogram and density plots related to <code>CLTV</code> depending on the three types of explanatory variables. Anova tests are also implemented to verify whether <code>CLTV</code> has different values in the categorical features’ different groups. Anova is a generalization of the Student’s t test allowing to compare more than two groups. The test’s statistic computes the ratio between variance between sample and variance within samples and is Fisher distributed. A low ratio indicates that there is no significant difference between the means of the samples being compared.</p>
+<p>In the dataset, the <em>value</em> of the fictional TSP’s customers is measured by the discrete quantitative variable called <code>CLTV</code>. In this context, it is decided to draw histogram and density plots related to <code>CLTV</code> depending on the three types of explanatory variables. Anova tests are also implemented to verify whether <code>CLTV</code> has different values in the treatment variables’ categories. Anova is a generalization of the Student’s t test allowing to compare more than two groups. The test’s statistic computes the ratio between variance between sample and variance within samples and is Fisher distributed. A low ratio indicates that there is no significant difference between the means of the samples being compared.</p>
 <div id="demographic-data-1" class="section level3 unnumbered">
 <h3>Demographic data</h3>
 <p>Based on the Anova tests’ results, <code>Partner</code> and <code>Dependents</code> seem to be statistically discriminant in terms of customer lifetime value which is not the case for <code>Gender</code> and <code>Senior_Citizen</code>.</p>
@@ -306,7 +306,7 @@ Senior_Citizen
 </tr>
 </tbody>
 </table>
-<p>The figure below illustrates how different CLV is between customers with a partner and those without, as well as between those with children o other dependants and those without. To put it another way, having a partner in life of dependants tends to increase customer lifetime value as shown by the two last histograms.</p>
+<p>The figure below illustrates how different CLV is between customers with a partner and those without, as well as between those with children or other dependents and those without. To put it another way, having a partner in life of dependents tends to increase customer lifetime value as shown by the last two plots.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:cltvdemographics"></span>
 <p class="caption">
 Figure 5.4: Histogram and density plots of customer lifetime value depending on demographic information
@@ -316,7 +316,7 @@ Figure 5.4: Histogram and density plots of customer lifetime value depending on 
 </div>
 <div id="data-on-services-subscribed-1" class="section level3 unnumbered">
 <h3>Data on services subscribed</h3>
-<p>When on wants to identify factors influencing customer lifetime value, it is relevant to consider variables related to services subscribed by customers. The Anova tests’ results indicate that <code>CLTV</code> has significant different values in each group of all services related variables, except for <code>Internet_Service</code>. The most important different can be noted for <code>Online_Backup</code> and <code>Online_Security</code> variables, whereas there is more homogeneity in the <code>Phone_Service</code> groups.</p>
+<p>When one wants to identify factors influencing customer lifetime value, it is relevant to consider variables related to services subscribed by customers. The Anova tests’ results indicate that <code>CLTV</code> has significant different values in each group of all services related variables, except for <code>Internet_Service</code>. The most important difference can be noted for <code>Online_Backup</code> and <code>Online_Security</code> variables, whereas there is more homogeneity in the <code>Phone_Service</code> groups.</p>
 <table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:aovservices">Table 5.6: </span>Anova test between CLTV and services information variables
@@ -495,7 +495,7 @@ Internet_Service
 </tr>
 </tbody>
 </table>
-<p>From figure <a href="5.3-cltv-customer-lifetime-value.html#fig:cltvservices">5.5</a> one can note that subscribing to additional services like having multiple lines, online security and backup, device protection or using the streaming movie service significantly enhance customer lifetime value. These variables may be interesting predictor of the <code>CLTV</code> in regression models.</p>
+<p>From figure <a href="5.3-cltv-customer-lifetime-value.html#fig:cltvservices">5.5</a> one can note that subscribing to additional services like having multiple lines, online security and backup, device protection or using the streaming movie service significantly enhance customer lifetime value. These variables may be interesting predictors of <code>CLTV</code> in regression models.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:cltvservices"></span>
 <p class="caption">
 Figure 5.5: Histogram and density plots of customer lifetime value depending on services subscribed
@@ -582,7 +582,7 @@ Paperless_Billing
 </tr>
 </tbody>
 </table>
-<p>The three plots below provide details to previous results as it can be noticed that customers paying by credit card of bank transfer have higher CLV than those paying by e-check of mailed check. Besides, clients enrolled in one-year or two-year contracts have greater <em>value</em> to thefirm than those who pay on a monthly basis.</p>
+<p>The three plots below provide details to previous results as it can be noticed that customers paying by credit card of bank transfer have higher CLV than those paying by e-check of mailed check. Besides, clients enrolled in one-year or two-year contracts have greater <em>value</em> to the firm than those who pay on a monthly basis.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:cltvaccountinfo"></span>
 <p class="caption">
 Figure 5.6: Histogram and density plots of customer lifetime value depending on customer account data
@@ -597,7 +597,7 @@ Figure 5.6: Histogram and density plots of customer lifetime value depending on 
   \rho_{XY} = \frac{\text{cov}(X, Y)}{\sigma_X \sigma_Y}
   \tag{5.1}
 \end{equation}\]</span></p>
-<p>where <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are two quantitative random variables, <span class="math inline">\(\cov\)</span> the covariance function and <span class="math inline">\(\sigma\)</span> the standard deviation.</p>
+<p>where <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are two quantitative random variables, <span class="math inline">\(\text{cov}\)</span> the covariance function and <span class="math inline">\(\sigma\)</span> the standard deviation.</p>
 <p>On figure <a href="5.3-cltv-customer-lifetime-value.html#fig:corrplot">5.7</a>, non-significant correlations are crossed-out. It can be noticed that <code>CLTV</code> has the strongest correlation with <code>Tenure_Months</code> (<span class="math inline">\(40\%\)</span>), followed by <code>Total_Charges</code> (<span class="math inline">\(34\%\)</span>) then <code>Monthly_Charges</code> (<span class="math inline">\(10\%\)</span>).</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:corrplot"></span>
 <p class="caption">

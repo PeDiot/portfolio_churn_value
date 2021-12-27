@@ -24,7 +24,7 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2021-12-25" />
+<meta name="date" content="2021-12-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -138,7 +138,7 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3.6" data-path="3.6-semi-parametric-estimation.html"><a href="3.6-semi-parametric-estimation.html"><i class="fa fa-check"></i><b>3.6</b> Semi-parametric estimation</a>
 <ul>
-<li class="chapter" data-level="3.6.1" data-path="3.6-semi-parametric-estimation.html"><a href="3.6-semi-parametric-estimation.html#proportional-hazards-models"><i class="fa fa-check"></i><b>3.6.1</b> Proportional Hazards models</a></li>
+<li class="chapter" data-level="3.6.1" data-path="3.6-semi-parametric-estimation.html"><a href="3.6-semi-parametric-estimation.html#proportional-hazards-models"><i class="fa fa-check"></i><b>3.6.1</b> <em>Proportional Hazards</em> models</a></li>
 <li class="chapter" data-level="3.6.2" data-path="3.6-semi-parametric-estimation.html"><a href="3.6-semi-parametric-estimation.html#cox-ph-model"><i class="fa fa-check"></i><b>3.6.2</b> Cox PH model</a></li>
 </ul></li>
 </ul></li>
@@ -219,15 +219,18 @@ Figure 4.1: Clasification decision tree
 </p>
 <img src="imgs/tree1.png" alt="Clasification decision tree" width="45%" height="260pt" /><img src="imgs/tree2.png" alt="Clasification decision tree" width="45%" height="260pt" />
 </div>
-<p>Survival tree <span class="citation">(<a href="#ref-SURV_TREE" role="doc-biblioref">LeBlanc and Crowley 1993</a>)</span> is the adapted version of CART for duration data. The objective is to use tree based binary splitting algorithm in order to predict hazard rates. To that end, survival time and censoring status are introduced as response variables. The splitting criteria used for survival trees have the same purpose than the criteria used for CART that is to say maximizing between-node heterogeneity or minimizing within-node homogeneity. Nonetheless, node purity is different in the case of survival trees as a node is considered pure if all spells in that node have similar survival duration. The most common criterion is to use the <strong>logrank test</strong> statistic to compare the two groups formed by the children nodes. For each node, every possible split on each feature is being examined. The best split is the one maximizing the survival difference
-between two children nodes. The test statistic is <span class="math inline">\(\chi^2\)</span> distributed which means the higher its value, the higher between-node variability so the better the split.</p>
+<p>Survival tree <span class="citation">(<a href="#ref-SURV_TREE" role="doc-biblioref">LeBlanc and Crowley 1993</a>)</span> is the adapted version of CART for duration data. The objective is to use tree based binary splitting algorithm in order to predict hazard rates. To that end, survival time and censoring status are introduced as response variables. The splitting criteria used for survival trees have the same purpose than the criteria used for CART that is to say maximizing between-node heterogeneity or minimizing within-node homogeneity. Nonetheless, node purity is different in the case of survival trees as a node is considered pure if all spells in that node have similar survival duration. The most common criterion is the <strong>logrank test</strong> statistic to compare the two groups formed by the children nodes. For each node, every possible split on each feature is being examined. The best split is the one maximizing the survival difference between two children nodes. The test statistic is <span class="math inline">\(\chi^2\)</span> distributed which means the higher its value, the higher between-node variability so the better the split. Let <span class="math inline">\(t_1, \dots, t_k\)</span> be the <span class="math inline">\(k\)</span> ordered failure times. At the <span class="math inline">\(j^{\text{th}}\)</span> failure time, the logrank statistic is expressed as <span class="citation">(<a href="#ref-SEGAL" role="doc-biblioref">Segal 1988</a>)</span>:</p>
+<p><span class="math display" id="eq:logrank">\[\begin{equation}
+  \chi^2_{\text{logrank}} = \frac{\big[\sum_{j=1}^k \ (d_{0j} - r_{0j} \times d_j/r_j) \big]^2}{\sum_{j=1}^k \ \frac{r_{1j}r_{0j}d_j(r_j - d_j)}{r_j^2(r_j -1)}}
+  \tag{4.1}
+\end{equation}\]</span></p>
 </div>
 <div id="random-survival-forests-rsf" class="section level3" number="4.1.2">
 <h3><span class="header-section-number">4.1.2</span> Random Survival Forests (RSF)</h3>
-<p>This algorithm is proposed by <span class="citation"><a href="#ref-RSF" role="doc-biblioref">Ishwaran and al.</a> (<a href="#ref-RSF" role="doc-biblioref">2011</a>)</span> and is an ensemble of decision trees for the analysis of right-censored survival data. As random forests used for regression and classification, RSF are based on <strong>bagging</strong> which implies that <span class="math inline">\(B\)</span> bootstrap samples are drawn from the original data with 63<span class="math inline">\(\%\)</span> of them are in the bag data and the remaining part is in the out-of-bag (OOB) data. For each bootstrap sample, a survival tree is grown based on <span class="math inline">\(p\)</span> randomly selected features. Then, the parent node is split using the feature among the selected ones that maximizes survival difference between children nodes. Each tree is grown to full size and each terminal node needs to have no less than <span class="math inline">\(d_0\)</span> unique events. The cumulative hazard function (CHF) is computed for each tree using the Nelson-Aalen estimator such as:</p>
+<p>This algorithm is proposed by <span class="citation"><a href="#ref-RSF" role="doc-biblioref">Ishwaran and al.</a> (<a href="#ref-RSF" role="doc-biblioref">2011</a>)</span> and is an ensemble of decision trees for the analysis of right-censored survival data. As random forests used for regression and classification, RSF are based on <strong>bagging</strong> which implies that <span class="math inline">\(B\)</span> bootstrap samples are drawn from the original data with 63<span class="math inline">\(\%\)</span> of them in the bag data and the remaining part in the out-of-bag (OOB) data. For each bootstrap sample, a survival tree is grown based on <span class="math inline">\(p\)</span> randomly selected features. Then, the parent node is split using the feature among the selected ones that maximizes survival difference between children nodes. Each tree is grown to full size and each terminal node needs to have no less than <span class="math inline">\(d_0\)</span> unique events. The cumulative hazard function (CHF) is computed for each tree using the Nelson-Aalen estimator such as:</p>
 <p><span class="math display" id="eq:chf">\[\begin{equation}
   \widehat{H_l}(t) = \sum_{t_{j, l} &lt; t} \frac{d_{j,l}}{r_{j,l}}
-  \tag{4.1}
+  \tag{4.2}
 \end{equation}\]</span></p>
 <p>where <span class="math inline">\(t_{j,l}\)</span> is the <span class="math inline">\(j^{\text{th}}\)</span> distinct event time in leaf <span class="math inline">\(l\)</span>, <span class="math inline">\(d_{j,l}\)</span> the number of events completed at <span class="math inline">\(t_{j,l}\)</span> and <span class="math inline">\(r_{j,l}\)</span> the number of spells at risk at <span class="math inline">\(t_{j,l}\)</span>.</p>
 <p>All the CHFs are then averaged to obtain the bootstrap ensemble CHF and prediction error is finally computed on the OOB ensemble CHF.</p>
@@ -250,6 +253,9 @@ LeBlanc, M., and J. Crowley. 1993. <span>“Survival Trees by Goodness of Split.
 </div>
 <div id="ref-ML_TREE" class="csl-entry">
 Scholler, Julie. 2021. <em>M1 Data Mining - Decision Trees</em>. Université de Tours. <a href="https://juliescholler.gitlab.io/files/M1/2021/M1-CM-decision_tree.html">https://juliescholler.gitlab.io/files/M1/2021/M1-CM-decision_tree.html</a>.
+</div>
+<div id="ref-SEGAL" class="csl-entry">
+Segal, Mark Robert. 1988. <span>“Regression Trees for Censored Data.”</span> <em>Biometrics</em> 44(1): 35–47.
 </div>
 </div>
             </section>

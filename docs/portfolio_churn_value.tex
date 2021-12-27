@@ -6,7 +6,7 @@
 ]{book}
 \title{Portfolio, Churn \& Customer Value}
 \author{Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer}
-\date{2021-12-25}
+\date{2021-12-27}
 
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
@@ -143,9 +143,9 @@ Several key steps will be focused on in order to provide insights on the previou
 \item
   Segmentation of customer portfolio as firms generally tend to partition their \emph{portfolio} into multiple segments.
 \item
-  Estimation of customer lifetime and churn prediction to identify active customers in the \emph{portfolio}.
+  Estimation of customer lifetime and prediction of \emph{attrition}.
 \item
-  Measurement of customers' \emph{value.}
+  Measurement of customer \emph{value.}
 \end{itemize}
 
 In the following sections, the concepts of \emph{portfolio}, \emph{attrition} and customer \emph{value} are defined. Then, some pieces of literature review are provided. Before embarking on data analysis and modelling, we present the theoretical basis of the models used in the study. We finally introduce the dataset and implement the methodology with the aim of estimating the overall value related to a fictional customer portfolio of a telecommunications service provider.
@@ -155,12 +155,12 @@ In the following sections, the concepts of \emph{portfolio}, \emph{attrition} an
 
 The notion of \emph{portfolio} has greatly evolved before the firms' consumer base was considered as a \emph{portfolio}. In chapter \ref{literature} a part of the literature review depicts an evolution of the \emph{portfolio} management notion. A customer \emph{portfolio} can be defined as a set of customers divided into several segments (or clusters) based on similar attributes. These discriminant features can be both economic (willingness to pay, budget constraint, etc.) and sociological (gender, age, socio-professional category, etc.). The underlying objective of this segmentation is to optimally allocate the company's resources.
 
-When dealing with customer \emph{portfolio} management (CPM), two dimensions can be considered. On the one hand, it can be assumed that a customer stays in the same segment throughout their life in the firm's \emph{portfolio}. On the other hand, a dynamic approach can be adopted as suggested by Homburg on dynamics in customer portfolios \citep{MANAGING_DYNAMICS_CUSTOMER_PORTFOLIO}. In their article, the authors question the static analysis by assuming that a customer can switch between segments. They explain that one of the firm's objectives is to convert less valuable customers into more valuable ones.
+When dealing with customer \emph{portfolio} management (CPM), two dimensions can be considered. On the one hand, it can be assumed that a customer stays in the same segment throughout their life in the firm's \emph{portfolio}. On the other hand, a dynamic approach can be adopted as suggested by \citet{MANAGING_DYNAMICS_CUSTOMER_PORTFOLIO} on dynamics in customer portfolio. In their article, the authors question the static analysis by assuming that a customer can switch between segments. They explain that one of the firm's objectives is to convert less valuable customers into more valuable ones.
 
 \hypertarget{attritiondef}{%
 \section{What is attrition?}\label{attritiondef}}
 
-Customer \emph{attrition} or churn occurs when a client discontinues using a service or a product offered by a firm. Churn analysis corresponds to measuring the \emph{attrition} rate in the customer base of any company. Evaluating \emph{attrition} depends on the type of relationship between the firm and its clients. When it is defined by a contract, the customer has to inform the firm about their service termination. In the telecom industry, a consumer is required to notify their TSP before going to a competing company. In an opposite way, the firm/client relationship can be non-contractual. In that case, the service termination does not need to be notified. \emph{Attrition} then becomes a latent variable and more advanced models are used to make forecasts.
+Customer \emph{attrition} or churn occurs when a client discontinues using a service or a product offered by a firm. Churn analysis corresponds to both measurement and prediction of the \emph{attrition} rate in the customer base of the company. Evaluating \emph{attrition} depends on the type of relationship between the firm and its clients. When it is defined by a contract, the customer has to inform the firm about their service termination. In the telecom industry, a consumer is required to notify their TSP before going to a competing company. In an opposite way, the firm/client relationship can be non-contractual. In that case, the service termination does not need to be notified. \emph{Attrition} then becomes a latent variable and more advanced models are used to make forecasts.
 
 \hypertarget{valuedef}{%
 \section{What does customer ``value'' mean?}\label{valuedef}}
@@ -886,7 +886,7 @@ The Brier score is another statistical metric for evaluating duration models' pe
 \hypertarget{data}{%
 \chapter{Data}\label{data}}
 
-In this chapter, we introduce the \href{https://www.kaggle.com/yeanzc/telco-customer-churn-ibm-dataset}{kaggle} dataset related to customers of a fictional telecommunications service provider (TSP). In this duration dataset, the \texttt{Churn} status variable indicates whether the customer left the firm's \emph{portfolio} within the last month while the \texttt{Tenure\_Months} variable stands for the duration actually observed. Besides customer \emph{value} can approximated by the \texttt{CLTV} variable.
+In this chapter, we introduce the \href{https://www.kaggle.com/yeanzc/telco-customer-churn-ibm-dataset}{kaggle} dataset related to customers of a fictional telecommunications service provider (TSP). In this duration dataset, the \texttt{Churn\_Value} status variable indicates whether the customer left the firm's \emph{portfolio} within the last month while the \texttt{Tenure\_Months} variable stands for the duration actually observed. Besides customer \emph{value} can be approximated by the \texttt{CLTV} variable.
 
 \hypertarget{general-overview}{%
 \section{General Overview}\label{general-overview}}
@@ -923,12 +923,12 @@ CustomerID & Monthly\_Charges & Internet\_Service & Tenure\_Months & Churn\_Valu
 
 As shown by table \ref{tab:dataoverview}, the \texttt{Churn\_Value} status variable indicates whether the customer left the firm's \emph{portfolio} within the last month and \texttt{Tenure\_Months} is the duration variable.
 
-Since the purpose of our study relies in estimating the overall value of this fictional firm's \emph{portfolio}, two groups of target variables can be considered. On the one hand \texttt{Churn\_Value} and \texttt{Tenure\_Months} permit to determine whether a customer is active in the \emph{portfolio}. They are used as response variables in the survival models. On the other hand, the \texttt{CLTV} variable represents each customer's \emph{value} through measurement of customer lifetime value and is used as target variable in regression models.
+Since the purpose of our study relies in estimating the overall value of this fictional firm's \emph{portfolio}, two groups of target variables can be considered. On the one hand \texttt{Churn\_Value} and \texttt{Tenure\_Months} permit to determine whether a customer is active in the \emph{portfolio}. They are used as response variables in the survival models. On the other hand, the \texttt{CLTV} variable represents each customer's \emph{value} through measurement of customer lifetime value and is used as target in regression models.
 
 \hypertarget{churn_value-and-tenure_months}{%
 \section{\texorpdfstring{\texttt{Churn\_Value} and \texttt{Tenure\_Months}}{Churn\_Value and Tenure\_Months}}\label{churn_value-and-tenure_months}}
 
-As the combination of these two features form the response variable in the duration models, a relevant approach to have an overall description of the risk of \emph{attrition} may be to draw the raw survival curves depending on treatment variables. Pearson's \(\chi^2\) tests are also performed so as to test the statistical relationships between the churn indicator variable and explanatory features. Pearson's \(\chi^2\) test is used to determine whether there is a statistically significant difference between the expected frequencies and the observed frequencies in one or more categories of a contingency table. It is thus adapted to test whether two categorical variables are statistically independent. In this context, it appears interesting to use demographic, customer account and services variables as treatment when fitting the Kaplan-Meier estimator and implementing the tests.
+As the combination of these two features form the response variable in the duration models, a relevant approach to have an overall description of the risk of \emph{attrition} may be to draw the raw survival curves depending on treatment variables. Pearson's \(\chi^2\) tests are also performed so as to test the statistical relationships between the churn indicator variable and explanatory features. Pearson's \(\chi^2\) test determines whether there is a statistically significant difference between the expected frequencies and the observed frequencies in one or more categories of a contingency table. It is thus adapted to test whether two categorical variables are statistically independent. In this context, it appears interesting to use explanatory features related demographic, customer account and services subscribed as treatment variables when fitting the Kaplan-Meier estimator and implementing the tests.
 
 \hypertarget{demographic-data}{%
 \subsection*{Demographic data}\label{demographic-data}}
@@ -961,7 +961,7 @@ In section \ref{nonparam}, nonparametric estimation has been introduced focusing
 \item
   Customers with a partner appear to stay longer in the TSP's \emph{portfolio}.
 \item
-  Not being a senior citizen tends to shorten customer lifetime.
+  Being a senior citizen tends to shorten customer lifetime.
 \item
   As said before, customer with children or other dependents seem to be more loyal.
 \end{itemize}
@@ -1005,7 +1005,7 @@ Multiple\_Lines & 11.27 & 2 & 5.99 & 3.6e-03\\
 \end{tabular}
 \end{table}
 
-Figure \ref{fig:kmservices} illustrates the \(\chi^2\) tests' results by representing the Kaplan-Meier estimated survivor function related to customer lifetime according to treatment variables on services subscribed. On the one hand, there seems to be no significant difference in terms of survival whether the customer uses phone service. The same remark can be pointed out based on whether the client has multiples lines as \texttt{Phone\_Service} and \texttt{Multiple\_Lines} might be quite correlated. In contrast, huge survival time difference can be noticed between customers with online security and those without, as well as between those having subscribed to technical support and those who have not. Finally, not using Internet service appears to have a positive influence on customer lifetime.
+Figure \ref{fig:kmservices} illustrates the \(\chi^2\) tests' results by representing the Kaplan-Meier estimated survivor function related to customer lifetime according to treatment variables on services subscribed. On the one hand, there seems to be no significant difference in terms of survival whether the customer uses phone service or not. The same remark can be pointed out based on whether the client has multiple lines as \texttt{Phone\_Service} and \texttt{Multiple\_Lines} might be quite correlated. In contrast, huge survival time difference can be noticed between customers with online security and those without, as well as between those having subscribed to technical support and those who have not. Finally, not using Internet service appears to have a positive influence on customer lifetime.
 
 \begin{figure}
 
@@ -1020,7 +1020,7 @@ Figure \ref{fig:kmservices} illustrates the \(\chi^2\) tests' results by represe
 \subsection*{Customer account data}\label{customer-account-data}}
 \addcontentsline{toc}{subsection}{Customer account data}
 
-Variables on customer account such as the payment method used and the type of contract between the TSP and the client can be rich in information in the estimation of customer lifetime. Indeed, table \ref{tab:chi2custaccount} shows that churn status strongly depends on the three variables, \texttt{Contract} being the most linked.
+Variables on customer account such as the payment method used and the type of contract between the TSP and the client can be rich in information on customer lifetime. Indeed, table \ref{tab:chi2custaccount} shows that churn status strongly depends on the three variables, \texttt{Contract} being the most linked to \texttt{Churn\_Label}.
 
 \begin{table}[H]
 
@@ -1037,7 +1037,7 @@ Payment\_Method & 645.43 & 3 & 7.81 & 1.4e-139\\
 \end{tabular}
 \end{table}
 
-Figure \ref{fig:kmcustaccount} enriches the \(\chi^2\) tests' results as it draws survival curves for each treatment variable's categories. When the firm/client contract is type month-to-month, the estimated survivor function decreases far more than for one-year or two-year contracts. In other words, the churn hazard is higher when the contract is renewed each month. This result makes sense as the customer may decide to leave the \emph{portfolio} each month and their are not committed for one or two years. Furthermore, clients with paperless billing contracts are more prone to churn, just like those paying by electronic check. It can be deduce that the \emph{attrition} risk is higher when the payment method is simplified.
+Figure \ref{fig:kmcustaccount} enriches the \(\chi^2\) tests' results as it draws survival curves for each treatment variable's categories. When the firm/client contract is type month-to-month, the estimated survivor function decreases far more than for one-year or two-year contracts. In other words, the churn hazard is higher when the contract is renewed each month. This result makes sense as the customer may decide to leave the \emph{portfolio} once the month has ended as they are not commited for one or two years. Furthermore, clients with paperless billing contracts are more prone to churn, just like those paying by electronic check. It can be deduce that the \emph{attrition} risk is higher when the payment method is simplified.
 
 \begin{figure}
 
@@ -1051,7 +1051,7 @@ Figure \ref{fig:kmcustaccount} enriches the \(\chi^2\) tests' results as it draw
 \hypertarget{cltv-customer-lifetime-value}{%
 \section{\texorpdfstring{\texttt{CLTV}: Customer Lifetime Value}{CLTV: Customer Lifetime Value}}\label{cltv-customer-lifetime-value}}
 
-In the dataset, the \emph{value} of the fictional TSP's customers is measured by the discrete quantitative variable called \texttt{CLTV}. In this context, it is decided to draw histogram and density plots related to \texttt{CLTV} depending on the three types of explanatory variables. Anova tests are also implemented to verify whether \texttt{CLTV} has different values in the categorical features' different groups. Anova is a generalization of the Student's t test allowing to compare more than two groups. The test's statistic computes the ratio between variance between sample and variance within samples and is Fisher distributed. A low ratio indicates that there is no significant difference between the means of the samples being compared.
+In the dataset, the \emph{value} of the fictional TSP's customers is measured by the discrete quantitative variable called \texttt{CLTV}. In this context, it is decided to draw histogram and density plots related to \texttt{CLTV} depending on the three types of explanatory variables. Anova tests are also implemented to verify whether \texttt{CLTV} has different values in the treatment variables' categories. Anova is a generalization of the Student's t test allowing to compare more than two groups. The test's statistic computes the ratio between variance between sample and variance within samples and is Fisher distributed. A low ratio indicates that there is no significant difference between the means of the samples being compared.
 
 \hypertarget{demographic-data-1}{%
 \subsection*{Demographic data}\label{demographic-data-1}}
@@ -1075,7 +1075,7 @@ Senior\_Citizen & 0.09 & 1 & 7030 & 7.6e-01\\
 \end{tabular}
 \end{table}
 
-The figure below illustrates how different CLV is between customers with a partner and those without, as well as between those with children o other dependants and those without. To put it another way, having a partner in life of dependants tends to increase customer lifetime value as shown by the two last histograms.
+The figure below illustrates how different CLV is between customers with a partner and those without, as well as between those with children or other dependents and those without. To put it another way, having a partner in life of dependents tends to increase customer lifetime value as shown by the last two plots.
 
 \begin{figure}
 
@@ -1090,7 +1090,7 @@ The figure below illustrates how different CLV is between customers with a partn
 \subsection*{Data on services subscribed}\label{data-on-services-subscribed-1}}
 \addcontentsline{toc}{subsection}{Data on services subscribed}
 
-When on wants to identify factors influencing customer lifetime value, it is relevant to consider variables related to services subscribed by customers. The Anova tests' results indicate that \texttt{CLTV} has significant different values in each group of all services related variables, except for \texttt{Internet\_Service}. The most important different can be noted for \texttt{Online\_Backup} and \texttt{Online\_Security} variables, whereas there is more homogeneity in the \texttt{Phone\_Service} groups.
+When one wants to identify factors influencing customer lifetime value, it is relevant to consider variables related to services subscribed by customers. The Anova tests' results indicate that \texttt{CLTV} has significant different values in each group of all services related variables, except for \texttt{Internet\_Service}. The most important difference can be noted for \texttt{Online\_Backup} and \texttt{Online\_Security} variables, whereas there is more homogeneity in the \texttt{Phone\_Service} groups.
 
 \begin{table}[H]
 
@@ -1114,7 +1114,7 @@ Phone\_Service & 3.65 & 1 & 7030 & 5.6e-02\\
 \end{tabular}
 \end{table}
 
-From figure \ref{fig:cltvservices} one can note that subscribing to additional services like having multiple lines, online security and backup, device protection or using the streaming movie service significantly enhance customer lifetime value. These variables may be interesting predictor of the \texttt{CLTV} in regression models.
+From figure \ref{fig:cltvservices} one can note that subscribing to additional services like having multiple lines, online security and backup, device protection or using the streaming movie service significantly enhance customer lifetime value. These variables may be interesting predictors of \texttt{CLTV} in regression models.
 
 \begin{figure}
 
@@ -1146,7 +1146,7 @@ Payment\_Method & 52.66 & 3 & 7028 & 1.2e-33\\
 \end{tabular}
 \end{table}
 
-The three plots below provide details to previous results as it can be noticed that customers paying by credit card of bank transfer have higher CLV than those paying by e-check of mailed check. Besides, clients enrolled in one-year or two-year contracts have greater \emph{value} to thefirm than those who pay on a monthly basis.
+The three plots below provide details to previous results as it can be noticed that customers paying by credit card of bank transfer have higher CLV than those paying by e-check of mailed check. Besides, clients enrolled in one-year or two-year contracts have greater \emph{value} to the firm than those who pay on a monthly basis.
 
 \begin{figure}
 
@@ -1190,7 +1190,7 @@ Looking at figure \ref{fig:cltvchurn}, customer lifetime value seems to have hig
 
 \begin{figure}
 
-{\centering \includegraphics[width=450pt,height=350pt]{./imgs/cltv_churn_plot} 
+{\centering \includegraphics[width=450pt,height=300pt]{./imgs/cltv_churn_plot} 
 
 }
 
@@ -1201,7 +1201,7 @@ The following histograms are interesting to the extent that the distribution of 
 
 \begin{figure}
 
-{\centering \includegraphics[width=500pt,height=350pt]{./imgs/duration_churn_plot} 
+{\centering \includegraphics[width=500pt,height=300pt]{./imgs/duration_churn_plot} 
 
 }
 

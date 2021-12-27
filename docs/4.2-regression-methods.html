@@ -24,7 +24,7 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2021-12-25" />
+<meta name="date" content="2021-12-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -138,7 +138,7 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3.6" data-path="3.6-semi-parametric-estimation.html"><a href="3.6-semi-parametric-estimation.html"><i class="fa fa-check"></i><b>3.6</b> Semi-parametric estimation</a>
 <ul>
-<li class="chapter" data-level="3.6.1" data-path="3.6-semi-parametric-estimation.html"><a href="3.6-semi-parametric-estimation.html#proportional-hazards-models"><i class="fa fa-check"></i><b>3.6.1</b> Proportional Hazards models</a></li>
+<li class="chapter" data-level="3.6.1" data-path="3.6-semi-parametric-estimation.html"><a href="3.6-semi-parametric-estimation.html#proportional-hazards-models"><i class="fa fa-check"></i><b>3.6.1</b> <em>Proportional Hazards</em> models</a></li>
 <li class="chapter" data-level="3.6.2" data-path="3.6-semi-parametric-estimation.html"><a href="3.6-semi-parametric-estimation.html#cox-ph-model"><i class="fa fa-check"></i><b>3.6.2</b> Cox PH model</a></li>
 </ul></li>
 </ul></li>
@@ -217,17 +217,17 @@ div.csl-indent {
 <p>Linear models are called that way as the target value is expected to be a linear combination of the features. Let <span class="math inline">\(\hat{\mathrm{y}}\)</span> be the vector of predicted values, <span class="math inline">\(\beta\)</span> the set of parameters to optimise and <span class="math inline">\(\pmb{\mathrm{x}}\)</span> the feature vector with <span class="math inline">\(\pmb{\mathrm{x}} = [\pmb{1}, \mathrm{x}_1, \dots, \mathrm{x}_P]\)</span>. The linear relationship between <span class="math inline">\(\hat{\mathrm{y}}\)</span> and <span class="math inline">\(\pmb{\mathrm{x}}\)</span> can be written as follows:</p>
 <p><span class="math display" id="eq:linearmodel">\[\begin{equation}
   \hat{\mathrm{y}} = \beta_0 + \beta_1 \mathrm{x}_1 + \dots + \beta_P \mathrm{x}_P
-  \tag{4.2}
+  \tag{4.3}
 \end{equation}\]</span></p>
 <p>with <span class="math inline">\(P\)</span> the number of explanatory variables.</p>
-<p>Equation <a href="4.2-regression-methods.html#eq:linearmodel">(4.2)</a> can be rewritten in a vectorized way such that <span class="math inline">\(\hat{\mathrm{y}} = \pmb{\mathrm{x}}\beta\)</span>.</p>
+<p>Equation <a href="4.2-regression-methods.html#eq:linearmodel">(4.3)</a> can be rewritten in a vectorized way such that <span class="math inline">\(\hat{\mathrm{y}} = \pmb{\mathrm{x}}\beta\)</span>.</p>
 </div>
 <div id="ordinary-least-squares" class="section level4 unnumbered">
 <h4>Ordinary Least Squares</h4>
 <p>The most standard regression algorithm is linear regression in which the loss function is the residual sum of squares between the observed targets in the dataset <span class="math inline">\(\mathrm{y}\)</span> and the targets predicted by the linear formulation <span class="math inline">\(\hat{\mathrm{y}}\)</span>. This method is called ordinary least squares (OLS). Mathematically, the set of parameters <span class="math inline">\(\beta\)</span> is chosen with a view of minimizing:
 <span class="math display" id="eq:ols">\[\begin{equation}
   \mathcal{l}_{OLS} = ||\mathrm{y} - \pmb{\mathrm{x}}\beta||_2 = (\mathrm{y} - \pmb{\mathrm{x}}\beta)^{&#39;}(\mathrm{y} - \pmb{\mathrm{x}}\beta)
-  \tag{4.3}
+  \tag{4.4}
 \end{equation}\]</span></p>
 </div>
 <div id="regularization" class="section level4 unnumbered">
@@ -236,18 +236,18 @@ div.csl-indent {
 <p>Ridge regression is a linear regression with a quadratic constraint on the coefficients. Here, the coefficients minimize a penalized residual sum of squares: the higher the penalty term, the more large coefficients are discouraged and the less risk of overfitting. Formally, the ridge loss function is based on <span class="math inline">\(l_2\)</span>-norm and is expressed as:</p>
 <p><span class="math display" id="eq:ridge">\[\begin{equation}
   \mathcal{l}_{Ridge} = ||\mathrm{y} - \pmb{\mathrm{x}}\beta||_2 + \alpha ||\beta||_2
-  \tag{4.4}
+  \tag{4.5}
 \end{equation}\]</span></p>
 <p>where <span class="math inline">\(\alpha\)</span> is the shrinkage parameter which controls the penalization on the value of the model’s coefficients.</p>
 <p>Lasso regression is another example of penalized estimation technique with this time a linear constraint on the <span class="math inline">\(\beta\)</span> vector. It is helpful in reducing the number of features upon which the target variable is dependent. The loss function is based on <span class="math inline">\(l_1\)</span>-norm and can be written as follows:</p>
 <p><span class="math display" id="eq:lasso">\[\begin{equation}
   \mathcal{l}_{Lasso} = ||\mathrm{y} - \pmb{\mathrm{x}}\beta||_2 + \alpha ||\beta||_1
-  \tag{4.5}
+  \tag{4.6}
 \end{equation}\]</span></p>
 <p>Finally, ElasticNet is a linear regression model trained with both <span class="math inline">\(l_1\)</span> and <span class="math inline">\(l_2\)</span>-norm regularization of the coefficients and is useful when there are multiple features that are correlated with one another. In this context, the loss function is derived as follows:</p>
 <p><span class="math display" id="eq:elasticnet">\[\begin{equation}
   \mathcal{l}_{EN} = ||\mathrm{y} - \pmb{\mathrm{x}}\beta||_2 + \alpha \rho ||\beta||_1 + \alpha \frac{1-\rho}{2} ||\beta||_2
-  \tag{4.6}
+  \tag{4.7}
 \end{equation}\]</span></p>
 </div>
 <div id="gradient-descent" class="section level4 unnumbered">
@@ -263,12 +263,12 @@ div.csl-indent {
 <p>GAM is a statistical model in which the response variable <span class="math inline">\(\mathrm{y}\)</span> depends linearly on unknown smooth functions of some feature vector <span class="math inline">\(\pmb{\mathrm{x}}\)</span>, and interest focuses on inference about these smooth functions called <span class="math inline">\(f_p\)</span>. The <span class="math inline">\(f_p\)</span> functions may be either parametric (polynomial), semi-parametric or nonparametric (smoothing splines) leading to more flexibility in the model’s assumptions on the actual relationship between <span class="math inline">\(\mathrm{y}\)</span> and <span class="math inline">\(\pmb{\mathrm{x}}\)</span>. A link function <span class="math inline">\(g\)</span> can also be introduced to specify this relationship and the model’s general formulation is as follows:</p>
 <p><span class="math display" id="eq:gam">\[\begin{equation}
   g\big(\mathrm{E} [\mathrm{y}] \big) = \sum_{p=1}^P \ f_p(\mathrm{x}_p)
-  \tag{4.7}
+  \tag{4.8}
 \end{equation}\]</span></p>
 </div>
 <div id="other-models-1" class="section level4 unnumbered">
 <h4>Other models</h4>
-<p>State-of-the-art algorithms can also be employed to describe the relationship between the continuous variable and the feature vector. Among them, one can find random forest of regression trees, gradient boosting as well as multi-layer perceptron(MLP) regressor.</p>
+<p>State-of-the-art algorithms can also be employed to describe the relationship between the continuous variable and the feature vector. Among them, one can find random forest of regression trees, gradient boosting as well as multi-layer perceptron (MLP) regressor.</p>
 </div>
 </div>
 </div>

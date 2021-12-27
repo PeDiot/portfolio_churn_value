@@ -24,7 +24,7 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2021-12-25" />
+<meta name="date" content="2021-12-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -138,7 +138,7 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="3.6" data-path="3.6-semi-parametric-estimation.html"><a href="3.6-semi-parametric-estimation.html"><i class="fa fa-check"></i><b>3.6</b> Semi-parametric estimation</a>
 <ul>
-<li class="chapter" data-level="3.6.1" data-path="3.6-semi-parametric-estimation.html"><a href="3.6-semi-parametric-estimation.html#proportional-hazards-models"><i class="fa fa-check"></i><b>3.6.1</b> Proportional Hazards models</a></li>
+<li class="chapter" data-level="3.6.1" data-path="3.6-semi-parametric-estimation.html"><a href="3.6-semi-parametric-estimation.html#proportional-hazards-models"><i class="fa fa-check"></i><b>3.6.1</b> <em>Proportional Hazards</em> models</a></li>
 <li class="chapter" data-level="3.6.2" data-path="3.6-semi-parametric-estimation.html"><a href="3.6-semi-parametric-estimation.html#cox-ph-model"><i class="fa fa-check"></i><b>3.6.2</b> Cox PH model</a></li>
 </ul></li>
 </ul></li>
@@ -209,7 +209,7 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="churn_value-and-tenure_months" class="section level2" number="5.2">
 <h2><span class="header-section-number">5.2</span> <code>Churn_Value</code> and <code>Tenure_Months</code></h2>
-<p>As the combination of these two features form the response variable in the duration models, a relevant approach to have an overall description of the risk of <em>attrition</em> may be to draw the raw survival curves depending on treatment variables. Pearson’s <span class="math inline">\(\chi^2\)</span> tests are also performed so as to test the statistical relationships between the churn indicator variable and explanatory features. Pearson’s <span class="math inline">\(\chi^2\)</span> test is used to determine whether there is a statistically significant difference between the expected frequencies and the observed frequencies in one or more categories of a contingency table. It is thus adapted to test whether two categorical variables are statistically independent. In this context, it appears interesting to use demographic, customer account and services variables as treatment when fitting the Kaplan-Meier estimator and implementing the tests.</p>
+<p>As the combination of these two features form the response variable in the duration models, a relevant approach to have an overall description of the risk of <em>attrition</em> may be to draw the raw survival curves depending on treatment variables. Pearson’s <span class="math inline">\(\chi^2\)</span> tests are also performed so as to test the statistical relationships between the churn indicator variable and explanatory features. Pearson’s <span class="math inline">\(\chi^2\)</span> test determines whether there is a statistically significant difference between the expected frequencies and the observed frequencies in one or more categories of a contingency table. It is thus adapted to test whether two categorical variables are statistically independent. In this context, it appears interesting to use explanatory features related demographic, customer account and services subscribed as treatment variables when fitting the Kaplan-Meier estimator and implementing the tests.</p>
 <div id="demographic-data" class="section level3 unnumbered">
 <h3>Demographic data</h3>
 <p>Table <a href="5.2-churn_value-and-tenure_months.html#tab:chi2demographics">5.2</a> depicts the <span class="math inline">\(\chi^2\)</span> tests’ results performed on demographic variables. Given the <em>p-values</em> are ranked in ascending order and given the lower the <em>p value</em> the stronger link between two categorical variables, <code>Dependents</code> appears to be the most correlated feature with <code>Churn_Label</code>. When comparing this result with the corresponding survival plot in figure <a href="5.2-churn_value-and-tenure_months.html#fig:kmdemographics">5.1</a>, it can be noted that customers with dependants have a longer lifetime in the <em>portfolio</em>. Conversely, <code>Gender</code> and <code>Churn_Label</code> are statistically independent as stated by the high test’s <em>p value</em> (<span class="math inline">\(\approx .49\)</span>).</p>
@@ -310,7 +310,7 @@ Gender
 <ul>
 <li>There seems to be no difference in terms of lifetime duration between men and women.</li>
 <li>Customers with a partner appear to stay longer in the TSP’s <em>portfolio</em>.</li>
-<li>Not being a senior citizen tends to shorten customer lifetime.</li>
+<li>Being a senior citizen tends to shorten customer lifetime.</li>
 <li>As said before, customer with children or other dependents seem to be more loyal.</li>
 </ul>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:kmdemographics"></span>
@@ -502,7 +502,7 @@ Phone_Service
 </tr>
 </tbody>
 </table>
-<p>Figure <a href="5.2-churn_value-and-tenure_months.html#fig:kmservices">5.2</a> illustrates the <span class="math inline">\(\chi^2\)</span> tests’ results by representing the Kaplan-Meier estimated survivor function related to customer lifetime according to treatment variables on services subscribed. On the one hand, there seems to be no significant difference in terms of survival whether the customer uses phone service. The same remark can be pointed out based on whether the client has multiples lines as <code>Phone_Service</code> and <code>Multiple_Lines</code> might be quite correlated. In contrast, huge survival time difference can be noticed between customers with online security and those without, as well as between those having subscribed to technical support and those who have not. Finally, not using Internet service appears to have a positive influence on customer lifetime.</p>
+<p>Figure <a href="5.2-churn_value-and-tenure_months.html#fig:kmservices">5.2</a> illustrates the <span class="math inline">\(\chi^2\)</span> tests’ results by representing the Kaplan-Meier estimated survivor function related to customer lifetime according to treatment variables on services subscribed. On the one hand, there seems to be no significant difference in terms of survival whether the customer uses phone service or not. The same remark can be pointed out based on whether the client has multiple lines as <code>Phone_Service</code> and <code>Multiple_Lines</code> might be quite correlated. In contrast, huge survival time difference can be noticed between customers with online security and those without, as well as between those having subscribed to technical support and those who have not. Finally, not using Internet service appears to have a positive influence on customer lifetime.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:kmservices"></span>
 <p class="caption">
 Figure 5.2: Kaplan-Meier survival function depending on services subscribed
@@ -512,7 +512,7 @@ Figure 5.2: Kaplan-Meier survival function depending on services subscribed
 </div>
 <div id="customer-account-data" class="section level3 unnumbered">
 <h3>Customer account data</h3>
-<p>Variables on customer account such as the payment method used and the type of contract between the TSP and the client can be rich in information in the estimation of customer lifetime. Indeed, table <a href="5.2-churn_value-and-tenure_months.html#tab:chi2custaccount">5.4</a> shows that churn status strongly depends on the three variables, <code>Contract</code> being the most linked.</p>
+<p>Variables on customer account such as the payment method used and the type of contract between the TSP and the client can be rich in information on customer lifetime. Indeed, table <a href="5.2-churn_value-and-tenure_months.html#tab:chi2custaccount">5.4</a> shows that churn status strongly depends on the three variables, <code>Contract</code> being the most linked to <code>Churn_Label</code>.</p>
 <table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:chi2custaccount">Table 5.4: </span>Independence <span class="math inline">\(\chi^2\)</span> test between churn and customer account data
@@ -589,7 +589,7 @@ Paperless_Billing
 </tr>
 </tbody>
 </table>
-<p>Figure <a href="5.2-churn_value-and-tenure_months.html#fig:kmcustaccount">5.3</a> enriches the <span class="math inline">\(\chi^2\)</span> tests’ results as it draws survival curves for each treatment variable’s categories. When the firm/client contract is type month-to-month, the estimated survivor function decreases far more than for one-year or two-year contracts. In other words, the churn hazard is higher when the contract is renewed each month. This result makes sense as the customer may decide to leave the <em>portfolio</em> each month and their are not committed for one or two years. Furthermore, clients with paperless billing contracts are more prone to churn, just like those paying by electronic check. It can be deduce that the <em>attrition</em> risk is higher when the payment method is simplified.</p>
+<p>Figure <a href="5.2-churn_value-and-tenure_months.html#fig:kmcustaccount">5.3</a> enriches the <span class="math inline">\(\chi^2\)</span> tests’ results as it draws survival curves for each treatment variable’s categories. When the firm/client contract is type month-to-month, the estimated survivor function decreases far more than for one-year or two-year contracts. In other words, the churn hazard is higher when the contract is renewed each month. This result makes sense as the customer may decide to leave the <em>portfolio</em> once the month has ended as they are not commited for one or two years. Furthermore, clients with paperless billing contracts are more prone to churn, just like those paying by electronic check. It can be deduce that the <em>attrition</em> risk is higher when the payment method is simplified.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:kmcustaccount"></span>
 <p class="caption">
 Figure 5.3: Kaplan-Meier survival function depending on customer account information
