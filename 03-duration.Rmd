@@ -92,7 +92,7 @@ The survival function $S(t)$ represents the probability that the considered even
 
 where $F(t)$ is the cumulative distribution function. 
 
-```{r survfunexp}
+```{r survfunexp, eval=FALSE}
 x <- seq(0, 10, .01)
 theta <- 1
 surv_exp <- 1 - pexp(q = x, rate = theta)
@@ -132,7 +132,7 @@ Finally, integrating the instantaneous hazard function gives the cumulative haza
   (\#eq:cumhazfun)
 \end{equation}
 
-```{r}
+```{r eval=FALSE}
 cum_haz <- x 
 cum_haz_plot <- data.frame(x, cum_haz) %>%
   ggplot(aes(x = x, y = cum_haz)) +
