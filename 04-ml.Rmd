@@ -34,12 +34,16 @@ knitr::include_graphics(path = "./imgs/tree1.png")
 knitr::include_graphics(path = "./imgs/tree2.png")
 ```
 
-Survival tree [@SURV_TREE] is the adapted version of CART for duration data. The objective is to use tree based binary splitting algorithm in order to predict hazard rates. To that end, survival time and censoring status are introduced as response variables. The splitting criteria used for survival trees have the same purpose than the criteria used for CART that is to say maximizing between-node heterogeneity or minimizing within-node homogeneity. Nonetheless, node purity is different in the case of survival trees as a node is considered pure if all spells in that node have similar survival duration. The most common criterion is to use the **logrank test** statistic to compare the two groups formed by the children nodes. For each node, every possible split on each feature is being examined. The best split is the one maximizing the survival difference
-between two children nodes. The test statistic is $\chi^2$ distributed which means the higher its value, the higher between-node variability so the better the split.
+Survival tree [@SURV_TREE] is the adapted version of CART for duration data. The objective is to use tree based binary splitting algorithm in order to predict hazard rates. To that end, survival time and censoring status are introduced as response variables. The splitting criteria used for survival trees have the same purpose than the criteria used for CART that is to say maximizing between-node heterogeneity or minimizing within-node homogeneity. Nonetheless, node purity is different in the case of survival trees as a node is considered pure if all spells in that node have similar survival duration. The most common criterion is the **logrank test** statistic to compare the two groups formed by the children nodes. For each node, every possible split on each feature is being examined. The best split is the one maximizing the survival difference between two children nodes. The test statistic is $\chi^2$ distributed which means the higher its value, the higher between-node variability so the better the split. Let $t_1, \dots, t_k$ be the $k$ ordered failure times. At the $j^{\text{th}}$ failure time, the logrank statistic is expressed as [@SEGAL]: 
+
+\begin{equation}
+  \chi^2_{\text{logrank}} = \frac{\big[\sum_{j=1}^k \ (d_{0j} - r_{0j} \times d_j/r_j) \big]^2}{\sum_{j=1}^k \ \frac{r_{1j}r_{0j}d_j(r_j - d_j)}{r_j^2(r_j -1)}}
+  (\#eq:logrank)
+\end{equation}
 
 ### Random Survival Forests (RSF)
 
-This algorithm is proposed by @RSF and is an ensemble of decision trees for the analysis of right-censored survival data. As random forests used for regression and classification, RSF are based on **bagging** which implies that $B$ bootstrap samples are drawn from the original data with 63$\%$ of them are in the bag data and the remaining part is in the out-of-bag (OOB) data. For each bootstrap sample, a survival tree is grown based on $p$ randomly selected features. Then, the parent node is split using the feature among the selected ones that maximizes survival difference between children nodes. Each tree is grown to full size and each terminal node needs to have no less than $d_0$ unique events. The cumulative hazard function (CHF) is computed for each tree using the Nelson-Aalen estimator such as:
+This algorithm is proposed by @RSF and is an ensemble of decision trees for the analysis of right-censored survival data. As random forests used for regression and classification, RSF are based on **bagging** which implies that $B$ bootstrap samples are drawn from the original data with 63$\%$ of them in the bag data and the remaining part in the out-of-bag (OOB) data. For each bootstrap sample, a survival tree is grown based on $p$ randomly selected features. Then, the parent node is split using the feature among the selected ones that maximizes survival difference between children nodes. Each tree is grown to full size and each terminal node needs to have no less than $d_0$ unique events. The cumulative hazard function (CHF) is computed for each tree using the Nelson-Aalen estimator such as:
 
 \begin{equation}
   \widehat{H_l}(t) = \sum_{t_{j, l} < t} \frac{d_{j,l}}{r_{j,l}}
@@ -127,7 +131,7 @@ GAM is a statistical model in which the response variable $\mathrm{y}$ depends l
 
 #### Other models {-}
 
-State-of-the-art algorithms can also be employed to describe the relationship between the continuous variable and the feature vector. Among them, one can find random forest of regression trees, gradient boosting as well as multi-layer perceptron(MLP) regressor. 
+State-of-the-art algorithms can also be employed to describe the relationship between the continuous variable and the feature vector. Among them, one can find random forest of regression trees, gradient boosting as well as multi-layer perceptron (MLP) regressor. 
 
 
 ## Performance Metrics
@@ -182,7 +186,7 @@ Equation \@ref(eq:cindex) can then be rewritten as follows:
 
 \begin{equation}
 \begin{aligned}
-c & = \frac{\# \text{concordant pairs}}{\# \text{concordant pairs} + \ \text{discordant pairs}} \\\\
+c & = \frac{\# \text{concordant pairs}}{\# \text{concordant pairs} + \# \text{discordant pairs}} \\\\
 c & = \frac{\sum_{i \neq j} \pmb{1}_{\eta_i < \eta_j} \pmb{1}_{T_i > T_j}d_j}{\sum_{i \neq j} \pmb{1}_{T_i > T_j}d_j}
 \end{aligned}
 (\#eq:cindex2)
