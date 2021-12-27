@@ -165,7 +165,7 @@ Customer \emph{attrition} or churn occurs when a client discontinues using a ser
 \hypertarget{valuedef}{%
 \section{What does customer ``value'' mean?}\label{valuedef}}
 
-In customer \emph{portfolio} management, one client's \emph{value} is represented by the \textbf{customer lifetime value} (CLV). CLV is the present \emph{value} of all future purchases made by a customer over their lifetime in the firm's portfolio, taking into account the \emph{attrition} risk. CLV depends both on the purchase recency as well as on the purchasing rate and aims at identifying the most valuable customer groups. Formally, Gupta and Lehmann \citep{CUSTOMERS_ASSETS} define CLV for customer \(i\) as follows:
+In customer \emph{portfolio} management, one client's \emph{value} is represented by the \textbf{customer lifetime value} (CLV). CLV is the present \emph{value} of all future purchases made by a customer over their lifetime in the firm's portfolio, taking into account the \emph{attrition} risk. CLV depends both on the purchase recency as well as on the purchasing rate and aims at identifying the most valuable customer groups. Formally, \citet{CUSTOMERS_ASSETS} define CLV for customer \(i\) as follows:
 
 \begin{equation}
   CLV_i = \sum_{t=0}^{T} \frac{(p_t - c_t)r_{i,t}}{(1+a)^t} - AC_i
@@ -179,7 +179,7 @@ with,
 \item
   \(p_t\) the price paid by customer \(i\) at time \(t\)
 \item
-  \(c_t\) the cost at time \(t\)
+  \(c_t\) the marginal cost at time \(t\)
 \item
   \(r_{i,t}\) the \textbf{probability that customer \(i\) be active} at time \(t\)
 \item
@@ -201,7 +201,7 @@ An estimation of the portfolio's overall value can be calculated through \textbf
 \label{eq:maxprofit}
 \end{equation}
 
-where \(\mathrm{p}\) is the vector of prices over all the periods that the firm needs to optimize.
+where \(\mathrm{p}\) is the vector of prices over all periods that the firm needs to optimize.
 
 \hypertarget{literature}{%
 \chapter{Literature Review}\label{literature}}
@@ -211,7 +211,7 @@ Now the concepts of \emph{portfolio}, \emph{attrition} and \emph{value} have bee
 \hypertarget{portfolio}{%
 \section{On customer portfolio}\label{portfolio}}
 
-\emph{Portfolio} management methods have been applied to an increasing number of areas over time. This term is originally used in finance by \citet{MARKOWITZ} with a view of managing equities. He develops a mathematical framework for assembling a portfolio of assets such that the expected return is maximized for a given level of risk. Markovitz's model is based on diversification which is the idea that owning different kinds of financial assets is less risky than owning only one type. His theory uses the variance of asset prices as a proxy for risk. Later in the 1970-80's, \emph{portfolio} models are incorporated into corporate \citep{WIND} and marketing \citep{DAY} strategies for profit-maximization via optimal resource allocation. Then, \citet{CAPON} provide insights on efficient management for \emph{portfolios} of technologies and study how well technological means mobilized by a firm are complement. More recently, in the interest of improving relationships between the firm and its clients, the \emph{portfolio} modelling approach have focused on effective customer relationship management (CRM). The following figure depicts the evolution of \emph{portfolio} analysis through time.
+\emph{Portfolio} management methods have been applied to an increasing number of areas over time. This term is originally used in finance by \citet{MARKOWITZ} with a view of managing equities. He develops a mathematical framework for assembling a portfolio of assets such that the expected return is maximized for a given level of risk. Markovitz's model is based on diversification which is the idea that owning different kinds of financial assets is less risky than owning only one type. His theory uses the variance of asset prices as a proxy for risk. Later in the 1970-80's, \emph{portfolio} models are incorporated into corporate \citep{WIND} and marketing \citep{DAY} strategies for profit-maximization via optimal resource allocation. Then, \citet{CAPON} provide insights on efficient management for \emph{portfolios} of technologies and study the complementarity between technological means mobilized by a firm. More recently, in the interest of improving relationships between the firm and its clients, the \emph{portfolio} modelling approach have focused on effective customer relationship management (CRM). The following figure depicts the evolution of \emph{portfolio} analysis through time.
 
 \begin{figure}
 
@@ -223,39 +223,39 @@ Now the concepts of \emph{portfolio}, \emph{attrition} and \emph{value} have bee
 \end{figure}
 
 In their article \citet{CPM_CRM} examine how a company can define the
-value of customers and segment these customers into portfolios. They explain how segmentation leads to better understanding of the relative importance of each customer to the company's total profit. The authors consider a \emph{portfolio} segmented into four groups of clients: \emph{platinum}, \emph{gold}, \emph{silver} and \emph{bronze} customers. The \emph{portfolio} segmentation is based both on the cost to serve a client as well as the latter's value to the firm, as depicted by figure \ref{fig:cpmmat}.
+value of customers and segment these customers into \emph{portfolios}. They explain how segmentation leads to better understanding of the relative importance of each customer to the company's total profit. The authors consider a \emph{portfolio} segmented into four groups of clients: \emph{platinum}, \emph{gold}, \emph{silver} and \emph{bronze} customers. The \emph{portfolio} segmentation is based both on the cost to serve a client as well as the latter's \emph{value} to the firm, as depicted by figure \ref{fig:cpmmat}.
 
 \begin{figure}
 
-{\centering \includegraphics[width=250pt,height=250pt]{./imgs/cpm_matrix} 
+{\centering \includegraphics[width=300pt,height=300pt]{./imgs/cpm_matrix} 
 
 }
 
-\caption{CPM Matrix}\label{fig:cpmmat}
+\caption{Csutomer Portfolio Management (CPM) Matrix}\label{fig:cpmmat}
 \end{figure}
 
-According to this repartition into four main groups, Thakur and Workman highlight three strategies the firm can launch in order to efficiently manage its \emph{portfolio}. \textbf{Retention} aims to induce \emph{platinum} customers into repeating their purchases as they have a large contribution to the firm's revenue. \textbf{Customer relationship development} can be used to encourage customers to advance and upgrade to a higher segment. Such a strategy can be efficient for customers with high preference for a certain product or those with potential to shift to higher margin products. Conversely, \textbf{customer elimination or filtering} strategies are set up by the firm to encourage bottom customers who cost more than they are worth to leave the \textbf{portfolio}.
+According to this repartition into four main groups, Thakur and Workman highlight three strategies the firm can launch in order to efficiently manage its \emph{portfolio}. \textbf{Retention} aims to induce \emph{platinum} customers into repeating their purchases as they have a large contribution to the firm's revenue. \textbf{Customer relationship development} can be used to encourage customers to advance and upgrade to a higher segment. Such a strategy can be efficient for customers with high preference for a certain product or those with potential to shift to higher margin products. Conversely, \textbf{customer elimination or filtering} strategies are set up by the firm to encourage bottom customers who cost more than they are worth to leave the \emph{portfolio}.
 
-As said in the introduction, an interesting improvement of portfolio analysis may be to add a temporal dimension to the models. \citet{MANAGING_DYNAMICS_CUSTOMER_PORTFOLIO} show that the dynamic approach minimizes the current bias of underestimating low-value clients and overestimating high-value ones.
+As said in the introduction, an interesting improvement of \emph{portfolio} analysis may be to add a temporal dimension to the models. \citet{MANAGING_DYNAMICS_CUSTOMER_PORTFOLIO} show that the dynamic approach minimizes the current bias of underestimating low-value clients and overestimating high-value ones.
 
 \hypertarget{attrition}{%
 \section{On attrition}\label{attrition}}
 
 \emph{Attrition} or churn has become a buzzword these last years. Churn analysis can be seen as an economic problem for three main reasons. Firstly, customers are in some way the firm's more precious asset. Secondly, the firm's resources in terms of customer relationship management are limited, so an efficient allocation needs to be deployed. Thirdly churn being a risk the firm has to cope with, it leads to asymmetric information from the firm's side. With the development of advanced Econometrics and Data Science, several methods can be implemented in order to estimate churn.
 
-On the one hand, survival models are helpful in measuring customers' lifetime. In her thesis, \citet{SURV_METHODS_INSURANCE} applies duration analysis to model the behavior of customers from an insurance company with a threefold purpose:
+On the one hand, survival models are helpful in measuring customer lifetime. In her thesis, \citet{SURV_METHODS_INSURANCE} applies duration analysis to model the behavior of customers from an insurance company with a threefold purpose:
 
 \begin{itemize}
 \tightlist
 \item
   Identify factors influencing customer loyalty.
 \item
-  Estimate the remaining lifetime of a client who has purchased multiple policies and cancelled one of them.
+  Estimate the remaining lifetime of a client who has subscribed to multiple policies and cancelled one of them.
 \item
   Study the influence of covariates changing over time.
 \end{itemize}
 
-Her study is motivated by the importance of the insurer/policyholder relationship in a digitalized environment where the costs of searching for information are increasingly lower and the risk of \emph{attrition} consequently higher. The author develops a two-part methodology to address the study's problematic. She begins by solely selecting insureds with at least two policies. Then, she fits a logit model to predict whether a policyholder will cancel their policies at the same time (type 1) or sequentially (type 2). She finally applies duration models on type 2 clients to determine the remaining time until all their policies are cancelled.
+Her study is motivated by the importance of the insurer/policyholder relationship in a digitalized environment where the costs of searching for information are loawer and lower and the risk of \emph{attrition} consequently higher. The author develops a two-part methodology to address the study's problematic. She begins by solely selecting insureds with at least two policies. Then, she fits a logit model to predict whether a policyholder will cancel their policies at the same time (type 1) or sequentially (type 2). She finally applies duration models on type 2 clients to determine the remaining time until all their policies are cancelled.
 
 On the other hand, machine learning classification algorithms can be used for churn detection as illustrated by the work of \citet{CHURN_INSURANCE}. Her objective is to develop a predictive model to detect customer churn in an insurance company while highlighting the key drivers of \emph{attrition}. The underlying goals of her research paper are both minimizing revenue loss caused by churn and boosting the firm's competitiveness. Using data on vehicle insurance policies, Bellani incorporates features on the policyholders, the vehicles, the insurance policies as well as marketing data to predict the churn indicator variable. After missing data imputation and dimensionality reduction, the author falls back on under-sampling to overcome the issue of unbalanced classes. There are indeed much more active than cancelled policies in the dataset. Her methodology works as follows:
 
@@ -264,46 +264,46 @@ On the other hand, machine learning classification algorithms can be used for ch
 \item
   The set of active policies is divided into 7 groups equal in size to the number of cancelled policies.
 \item
-  For each group of active policies, classification models (logistic regression, random forest and neural network) are trained on a subset including all the cancelled policies as well as the concerned group of active ones.
+  For each group of active policies, classification models (logistic regression, random forest and neural network) are trained on a subset of the original dataset including all the cancelled policies as well as the concerned group of active ones.
 \item
   For each model, the predictions are aggregated across the 7 subsets for the final prediction.
 \item
   Model selection is made by the means of the Kappa performance metric.
 \end{itemize}
 
-Ultimately when a customer leaves the firm's portfolio, it may worth it to consider all possible outcomes for the reason he churned. For instance, a client might leave their telecom company because of a bad service quality, or because of too high a price. In this context, competing risk analysis can be introduced since its main interest is to determine the reason why the client churned. In their recent article, \citet{COMPETING_RISKS} try to predict both the likelihood of customer churn and the reasons for churn using customer service data from a Dutch TSP. They estimate duration and competing risk models. In the competing risk model, three possible output states are considered: Controllable risk, Uncontrollable risk and Unknown risk. Each type of risk is assumed independent from another which means a client cannot be at high risk for two risks simultaneously. Besides, the authors implement a Latent Dirichlet Allocation model (see \citet{LDA} for more details) to identify the main topics in a set of emails sent by customers to the service center. Six topics are discovered by the algorithm and each of them is then incorporated as explanatory variable into the models. These topic variables increase the performance of both competing risk models for Controllable and Unknown risks and standard duration models. According to Slof, Frasincar, and Matsiiako, \emph{``customers who churn due to the Controllable risk or due to the Unknown risk tend to call the customer service center with a specific problem, while customers who churn due to the Uncontrollable risk do not call the customer service center with a specific problem''}.
+Ultimately when a customer leaves the firm's portfolio, it may worth it to consider all possible outcomes for the reason he churned. For instance, a client might leave their telecom company because of a bad service quality, or because of too high a price. In this context, competing risk analysis can be introduced since its main interest is to determine the reason why the client churned. In their recent article, \citet{COMPETING_RISKS} try to predict both the likelihood of customer churn and the reasons for \emph{attrition} using customer service data from a Dutch TSP. They estimate duration and competing risk models. In the competing risk model, three possible output states are considered: Controllable risk, Uncontrollable risk and Unknown risk. Each type of risk is assumed independent from another which means a client cannot be at high risk for two risks simultaneously. Besides, the authors implement a Latent Dirichlet Allocation model (see \citet{LDA} for more details) to identify the main topics in a set of emails sent by customers to the service center. Six topics are discovered by the algorithm and each of them is then incorporated as explanatory variable into the models. These topic variables increase the performance of both standard duration models and competing risk models for Controllable and Unknown risks. According to Slof, Frasincar, and Matsiiako, \emph{``customers who churn due to the Controllable risk or due to the Unknown risk tend to call the customer service center with a specific problem, while customers who churn due to the Uncontrollable risk do not call the customer service center with a specific problem''}.
 
 \hypertarget{value}{%
 \section{On customer value}\label{value}}
 
 In recent years, customer \emph{portfolio} management (CPM) has focused on optimizing clients' \emph{value} to the firm. The company's interest lies in knowing how much net benefit it can expect from a customer today. These expectations are then used to implement efficient marketing strategies to get the highest return on investment. To that end, two key metrics are estimated by firms: customer lifetime value (CLV) and customer equity (CE) (see part \ref{valuedef} in the introduction for definitions).
 
-According to \citet{CLV_DEF}, CLV is atemporal variable defined as the revenue derived from a customer minus the cost to the firm for maintaining the relationship with this very customer. As shown by \citet{CLV_CONTEXT}, CLV modelling depends on the type of relationship a firm has with its clients. In a contractual relationship, customer defections are observed which means that longer lifetime means higher customer value. Conversely, when the relationship is non-contractual, uncertainty arises between the customer's purchase behavior and lifetime.
+According to \citet{CLV_DEF}, CLV is a temporal variable defined as the revenue derived from a customer minus the cost to the firm for maintaining the relationship with this very customer. As shown by \citet{CLV_CONTEXT}, CLV modelling depends on the type of relationship a firm has with its clients. In a contractual relationship, customer defections are observed which means that longer lifetime means higher customer value. Conversely, when the relationship is non-contractual, uncertainty arises between the customer's purchase behavior and lifetime.
 
 With the development of data collection tools, companies have lots of customer-level data (or customer transaction data) at their disposal to measure CLV \citep{CLV_NBD}. Consequently, different modelling approaches can be adopted in order to estimate customer \emph{value.}
 
-Recency Frequency Monetary (RFM) models are considered the simplest strategy to measure CLV and customer loyalty \citep{CLV}. It aims at targeting specific marketing campaigns at specific groups of customers to improve response rates. RFM models consists in creating clusters of clients based on three variables:
+Recency Frequency Monetary (RFM) models are considered the simplest strategy to measure CLV and customer loyalty \citep{CLV}. They aim at targeting specific marketing campaigns at specific groups of customers to improve response rates. RFM models consist in creating clusters of clients based on three variables:
 
 \begin{itemize}
 \tightlist
 \item
-  \emph{Recency} which is the time that has elapsed since a customer's last activity with the firm.
+  \emph{Recency} which is the time that has elapsed since customers' last activity with the firm.
 \item
-  \emph{Frequency} that is the number of times a customer transacted with the brand in a particular period of time.
+  \emph{Frequency} that is the number of times customers transacted with the brand in a particular period of time.
 \item
-  \emph{Monetary} that is to say the value of customer's prior purchases.
+  \emph{Monetary} that is to say the value of customers' prior purchases.
 \end{itemize}
 
 However, RFM models have a limited predictive power since they only predict clients' behavior for the next period.
 
 In their article on CLV management, \citet{CLV_MEASUREMENT} draw the review of more advanced modelling techniques that can be implemented to estimate customers' \emph{value.} A popular method to estimate customer lifetime value is the negative binomial distribution (NBD) - Pareto \citep{CLV_NBD} which helps solving the lifetime uncertainty issue. The model takes past customer purchase behavior as input such as the number of purchases in a specific time window and the date of last transaction. Then the model outputs a repurchase probability as well as a transaction forecast for each individual. In Borle and Singh's research paper, a hierarchical bayesian model is implemented with a view to jointly predict customer's churn risk and spending pattern. Here, the main advantage of using a bayesian approach is to give priors on CLV's drivers. The study is based on data coming from a membership-based direct marketing company where firm/client relationships are non-contractual. In other words, the times of each customer joining the membership and terminating it are known once these events happen. Thus the implementation of a sophisticated estimation strategy is justified.
 
-In our study, emphasize is placed on estimating the overall value of a customer portfolio. The methodology we will develop is based on a research paper written by our Econometrics teacher Alain Bousquet, whose goal is to provide tools for an efficient management of patent \emph{portfolios} \citep{BREVETS}. The main idea is to consider each patent as an asset with a related value which can generate income if this very patent is exploited. The author emphasizes the importance to focus on the \emph{portfolio}'s \textbf{variance} on top of its expected value. Specifically, he explains that the variability in the probability of success in the exploitation of patents leads to a decrease in the overall risk to which the \emph{portfolio} is exposed. This modelling approach can be transposed to customer \emph{portfolio} analysis with the customer's \emph{value} corresponding to the CLV and the probability of exploitation being the opposite of the risk of \emph{attrition}. In this context, CLV can be estimated either with techniques mentioned above or regression methods. The customer's risk of churn can be modelled with duration models or machine learning techniques as evoked in \ref{attrition}. With this econometric framework, it is expected that customer heterogeneity be a key factor in the total variance of the portfolio's \emph{value}.
+In our study, emphasize is placed on estimating the overall value of a customer \emph{portfolio}. The methodology we develop is based on a research paper written by our Econometrics teacher Alain Bousquet, whose goal is to provide tools for an efficient management of patent \emph{portfolios} \citep{BREVETS}. The main idea is to consider each patent as an asset with a related value which can generate income if this very patent is exploited. The author emphasizes the importance to focus on the \emph{portfolio}'s \textbf{variance} on top of its expected value. Specifically, he explains that the variability in the probability of success in the exploitation of patents leads to a decrease in the overall risk to which the \emph{portfolio} is exposed. This modelling approach can be transposed to customer \emph{portfolio} analysis with the customer's \emph{value} corresponding to the CLV and the probability of exploitation being the opposite of the risk of \emph{attrition}. In this context, CLV can be estimated either with techniques mentioned above or regression methods. The customer's risk of churn can be modelled with duration models or machine learning techniques as evoked in \ref{attrition}. With this econometric framework, it is expected that customer heterogeneity be a key factor in the total variance of the portfolio's \emph{value}.
 
 \hypertarget{duration}{%
 \chapter{Duration models}\label{duration}}
 
-This chapter presents theoretical basis of the models that are used to model customer \emph{portfolios.} As a customer's lifetime in a \emph{portfolio} is usually represented by the time to churn, duration models are adapted to the data we have at our disposal. Thus, this part focuses on introducing standard survival techniques.
+This chapter presents theoretical basis of the models that are used to model customer \emph{portfolios.} As customer lifetime in a \emph{portfolio} is usually represented by the time to churn, duration models are adapted to the data we have at our disposal. Thus, this part focuses on introducing standard survival techniques.
 
 \hypertarget{definition}{%
 \section{Definition}\label{definition}}
@@ -343,9 +343,9 @@ When dealing with survival data, some observations are usually \textbf{censored}
 \hypertarget{censoring-mechanisms}{%
 \subsection{Censoring mechanisms}\label{censoring-mechanisms}}
 
-\textbf{Left-censoring} occurs when the event of interest occurs before the beginning of the observation period. For example, an individual is included in a study of duration of unemployment at \(t_0\). At that time he has already been unemployed for a period but he cannot recall exactly the duration of this period. If we observe that he finds a job again at \(t_1\), we can only deduce that the duration of unemployment is bigger than \(t_1-t_0\), this individual is left-censored. Observation 2 on figure \ref{fig:censoring} is associated with a left-censored spell \citep{LIU_SCOR}.
+\textbf{Left-censoring} occurs when the event of interest occurs before the beginning of the observation period. For example, an individual is included in a study of unemployment duration at \(t_0\). At that time he has already been unemployed for a period but he cannot recall exactly the duration of this period. If we observe that he finds a job again at \(t_1\), we can only deduce that the duration of unemployment is bigger than \(t_1-t_0\), this individual is consequently left-censored. Observation 2 on figure \ref{fig:censoring} is associated with a left-censored spell \citep{LIU_SCOR}.
 
-A spell is considered \textbf{right-censored} when it is observed from time \(t_0\) until a censoring time \(t_c\) as illustrated by observation 1 on figure \ref{fig:censoring}. For instance, the lifetime related to a customer who has not churned at the end of the observation period is right-censored. Let us note \(X_i\) the duration of a complete spell and \(C_i\) the duration of a right-censored spell. We also note \(T_i\) the duration actually observed and \(\delta_i\) the censoring indicator such that \(\delta_i = 1\) if the spell is censored. Then \((t_1, \delta_1),\dots,(t_N, \delta_N)\) are the realizations of the following random variables:
+A spell is considered \textbf{right-censored} when it is observed from time \(t_0\) until a censoring time \(t_c\) as illustrated by observation 4 on figure \ref{fig:censoring}. For instance, the lifetime related to a customer who has not churned at the end of the observation period is right-censored. Let us note \(X_i\) the duration of a complete spell and \(C_i\) the duration of a right-censored spell. We also note \(T_i\) the duration actually observed and \(\delta_i\) the censoring indicator such that \(\delta_i = 1\) if the spell is censored. Then \((t_1, \delta_1),\dots,(t_N, \delta_N)\) are the realizations of the following random variables:
 
 \begin{equation}
   \begin{aligned}
@@ -430,12 +430,12 @@ Thus, \textbf{the hazard, survival and cumulative hazard functions} are three ma
 \hypertarget{nonparam}{%
 \section{Nonparametric models}\label{nonparam}}
 
-When dealing with duration data, these methods are helpful to have a general overview of the raw (unconditional) hazard. Nonparametric models are rather used for data description rather than prediction. No explanatory variable is included in these models except for treatment variables such as the type of contract a customer has subscribed.
+When dealing with duration data, these methods are helpful to have a general overview of the raw (or unconditional) hazard. Nonparametric models are rather used for data description than prediction. No explanatory variable is included in these models except for treatment variables such as the type of contract a customer has subscribed.
 
 \hypertarget{notations}{%
 \subsection{Notations}\label{notations}}
 
-Let us consider a sample with \(N\) observations with \(k\) discrete failure times (e.g.~a failure can be a churn event), such that \(\forall j \in [\![1; k]\!]\) :
+Let us consider a sample with \(N\) observations with \(k\) ordered discrete failure times (e.g.~a failure can be a churn event), such that \(\forall j \in [\![1; k]\!]\) :
 
 \begin{itemize}
 \tightlist
@@ -473,17 +473,17 @@ Once the hazard function estimator computed, the discrete-time survivor function
   \label{eq:kaplanmeier}
 \end{equation}
 
-When plotting the survival curve after having performed the Kaplan-Meier estimation, confidence bands are also added to the plot in order to reflect sampling variability \citep{CAMERON_TRIVEDI}. The confidence interval of the survival function \(S(t)\) is derived from the estimate of the variance of \(S(t)\) which is obtained by the Grenwood estimate as in equation \eqref{eq:greenwood}.
+When plotting the survival curve after having performed the Kaplan-Meier estimation, confidence bands are also added to the plot in order to reflect sampling variability \citep{CAMERON_TRIVEDI}. The confidence interval of the survival function \(\hat{S}(t)\) is derived from the estimate of the variance of \(S(t)\) which is obtained by the Grenwood estimate as in equation \eqref{eq:greenwood}.
 
 \begin{equation}
-  \hat{\mathrm{V}}[\hat{S}(t)] = \hat{S}(t)^2 \sum_{j|t_j \leq t} \frac{d_j}{r_j(r_j-d_j)}
+  \widehat{\mathrm{V}}[\hat{S}(t)] = \hat{S}(t)^2 \sum_{j|t_j \leq t} \frac{d_j}{r_j(r_j-d_j)}
   \label{eq:greenwood}
 \end{equation}
 
 \hypertarget{nelson-aalen-estimator}{%
 \subsection{Nelson-Aalen estimator}\label{nelson-aalen-estimator}}
 
-The cumulative hazard function estimate is given by the Nelson-Aalen estimator which consists in summing up the hazard estimates for each failure time.
+The cumulative hazard function estimate is given by the Nelson-Aalen estimator which consists in summing up the hazard estimates for each discrete failure time.
 
 \begin{equation}
   \hat{\Lambda}(t) = \sum_{j | t_j \leq t} \hat{\lambda}_{j} = \sum_{j | t_j \leq t} \frac{d_j}{r_j}
@@ -502,11 +502,11 @@ Exponentiating \(\hat{\Lambda}(t)\), one can obtain a second estimate of the sur
 
 The nonparametric estimation is undoubtedly useful when it comes to have a general overview on the survival data. However, one may want to model the hazard and survivor functions with a functional form in which unknown parameters need to be optimized.
 
+Parametric estimation has a twofold purpose that is to implement a robust model to estimate the risk that a specific event occurs while identifying the variables (or covariates) which best explain this risk.
+
 When implementing parametric models, \(\lambda\), \(S\) and \(\Lambda\) are expressed based on the chosen parametric form. The instantaneous hazard function can either be constant or monotone.
 
 In our study we assume that the explanatory variables are time-constant as we do not have dynamic data at our disposal. Thus, solely time-invariant duration models are presented.
-
-Parametric estimation has a twofold purpose that is to implement a robust model to estimate the risk that a specific event occurs while identifying the variables (or covariates) which best explain this risk.
 
 \hypertarget{constant-hazard-exponential-model}{%
 \subsection{Constant hazard (exponential model)}\label{constant-hazard-exponential-model}}
@@ -552,7 +552,7 @@ The Weibull distribution is a less restrictive generalization of the exponential
 
 The instantaneous hazard function \(\lambda_{\nu,\theta}\) is monotonic \textbf{decreasing} if \(\nu \in [0, 1]\). For instance, the \emph{attrition} risk may decrease as the customer's duration in the \emph{portfolio} increases. In this context, the client gets more and more loyal to the firm. If \(\nu=1\), the hazard rate is constant and \(T \sim \mathcal{E}(\theta)\). Converlsely, the hazard function is monotonic \textbf{increasing} if \(\nu > 1\). This can be the case when customers tend to continuously search for information on the firm's competitors, thus becoming more likely to churn as time goes by.
 
-Figure \ref{fig:weibullplots} illustrates the hazard and survivor functions associated to a Weibull-distributed variable \(T\). The two curves' shape depend both on the shape (\(\nu\)) and scale (\(\theta\)) parameters. Some remarks can be made looking at the two plots. When \(\nu < 1\) the hazard function is decreasing meaning that the risk of the event occurring decreases as time goes by. When \(\nu > 1\) the hazard function is convex which indicates that a marginal increase in time leads to an increase (decrease) of over one unit in the the hazard (survivor) function. The higher the shape parameter, the more increasing the hazard function. When \(\nu = \theta = 1\), it can be noted that the Weibull distribution corresponds to the exponential distribution (see figures \ref{fig:survfunplot} and \ref{fig:cumhazplot}).
+Figure \ref{fig:weibullplots} illustrates the hazard and survivor functions associated to a Weibull-distributed variable \(T\). The two curves' shape depend both on the shape (\(\nu\)) and scale (\(\theta\)) parameters. Some remarks can be made looking at the two plots. When \(\nu < 1\) the hazard function is decreasing meaning that the risk of the event occurring decreases as time goes by. When \(\nu > 1\) the hazard function is convex increasing which indicates that a marginal increase in time leads to an increase of over one unit in the the hazard function. The higher the shape parameter, the more increasing the hazard function. When \(\nu = \theta = 1\), it can be noted that the Weibull distribution corresponds to the exponential distribution (see figures \ref{fig:survfunplot} and \ref{fig:cumhazplot}).
 
 \begin{figure}
 
@@ -567,7 +567,7 @@ Figure \ref{fig:weibullplots} illustrates the hazard and survivor functions asso
 \subsubsection*{Other models}\label{other-models}}
 \addcontentsline{toc}{subsubsection}{Other models}
 
-Different probabilistic distributions can be chosen to model the hazard and survival functions related to a time-to-event variable. The Gompertz model is usually used for mortality data in biostatistics. The gamma model depends both on the gamma and inverse-gamma distributions and is also based on shape and scale parameters.
+Different probabilistic distributions can be chosen to model the hazard and survival functions related to a time-to-event variable with monotone hazard. The Gompertz model is usually used for mortality data in biostatistics. As for the gamma model, it depends both on the gamma and inverse-gamma distributions and is also based on shape and scale parameters.
 
 \hypertarget{concave-and-convex-hazard}{%
 \subsection{Concave and convex hazard}\label{concave-and-convex-hazard}}
@@ -578,7 +578,7 @@ When the hazard function does not evolve in a monotonic fashion, the distributio
 \section{Semi-parametric estimation}\label{semi-parametric-estimation}}
 
 \hypertarget{proportional-hazards-models}{%
-\subsection{Proportional Hazards models}\label{proportional-hazards-models}}
+\subsection{\texorpdfstring{\emph{Proportional Hazards} models}{Proportional Hazards models}}\label{proportional-hazards-models}}
 
 Parametric models assume that the baseline (or raw) hazard follows a specific distribution. This assumption can be sometimes too restrictive and semi-parametric models can be more adapted to describe the duration data.
 
@@ -602,7 +602,7 @@ PH models are said to be proportional as the relative hazard ratio between two i
   \label{eq:prophazratio}
 \end{equation}
 
-The formulation stated in equation \eqref{eq:prophazratio} needs to be verified when one wants to fit a PH model to real-life data.
+The formulation stated in equation \eqref{eq:prophazratio} needs to be verified when one wants to fit a PH model to real-life data and is only valid in the case of time-constant covariates.
 
 \hypertarget{marginal-effects}{%
 \subsubsection*{Marginal effects}\label{marginal-effects}}
@@ -614,6 +614,8 @@ In \emph{proportional hazards} models, the marginal effect of covariate \(x_p\) 
     \frac{\partial \lambda(t|\pmb{\mathrm{x}}, \beta)}{\partial x_p} = \lambda(t|\pmb{\mathrm{x}}, \beta) \frac{\partial \phi(\pmb{\mathrm{x}}, \beta) / \partial x_p}{\phi(\pmb{\mathrm{x}}, \beta) }
     \label{eq:meph}
 \end{equation}
+
+Thus the new hazard after variation of the \(p^{\text{th}}\) covariate is the original hazard times the effect of \(x_p\) on the model's regression part.
 
 \hypertarget{partial-likelihood-estimation}{%
 \subsubsection*{Partial likelihood estimation}\label{partial-likelihood-estimation}}
@@ -630,7 +632,7 @@ In order to derive the partial likelihood function, let us note \(t_j\) the \(j^
 \item
   \(D(t_j) = \{l: t_l = t_j\}\) is the set of spells completed at \(t_j\) with \(\#D(t_j) = d_j\),
 \item
-  \(R(t_j) = \{l: t_l \geq t_i\}\) is the set of spells at risk at \(t_j\).
+  \(R(t_j) = \{l: t_l \geq t_j\}\) is the set of spells at risk at \(t_j\).
 \end{itemize}
 
 The contribution of a spell in \(D(t_j)\) to the likelihood function equals the conditional probability that the spell ends at \(t_j\) given it is exposed at that specific time and can be written as (see \citet{CAMERON_TRIVEDI} and proof \eqref{eq:contribpartiallikproof} for more details):
@@ -647,7 +649,7 @@ Given \(k\) discrete failure times are considered and that for each of those the
   \label{eq:partlik}
 \end{equation}
 
-The latter formulation of the partial likelihood function is explained in more details in equations \eqref{eq:partlikproof} and \eqref{eq:partlikproofbis} in the appendix.
+The latter formulation of the partial likelihood function is explained in more details in proofs \eqref{eq:partlikproof} and \eqref{eq:partlikproofbis} in the appendix.
 
 \hypertarget{cox-ph-model}{%
 \subsection{Cox PH model}\label{cox-ph-model}}
@@ -682,13 +684,17 @@ Traditional decision trees, also called CART (Classification And Regression Tree
 \caption{Clasification decision tree}\label{fig:tree}
 \end{figure}
 
-Survival tree \citep{SURV_TREE} is the adapted version of CART for duration data. The objective is to use tree based binary splitting algorithm in order to predict hazard rates. To that end, survival time and censoring status are introduced as response variables. The splitting criteria used for survival trees have the same purpose than the criteria used for CART that is to say maximizing between-node heterogeneity or minimizing within-node homogeneity. Nonetheless, node purity is different in the case of survival trees as a node is considered pure if all spells in that node have similar survival duration. The most common criterion is to use the \textbf{logrank test} statistic to compare the two groups formed by the children nodes. For each node, every possible split on each feature is being examined. The best split is the one maximizing the survival difference
-between two children nodes. The test statistic is \(\chi^2\) distributed which means the higher its value, the higher between-node variability so the better the split.
+Survival tree \citep{SURV_TREE} is the adapted version of CART for duration data. The objective is to use tree based binary splitting algorithm in order to predict hazard rates. To that end, survival time and censoring status are introduced as response variables. The splitting criteria used for survival trees have the same purpose than the criteria used for CART that is to say maximizing between-node heterogeneity or minimizing within-node homogeneity. Nonetheless, node purity is different in the case of survival trees as a node is considered pure if all spells in that node have similar survival duration. The most common criterion is the \textbf{logrank test} statistic to compare the two groups formed by the children nodes. For each node, every possible split on each feature is being examined. The best split is the one maximizing the survival difference between two children nodes. The test statistic is \(\chi^2\) distributed which means the higher its value, the higher between-node variability so the better the split. Let \(t_1, \dots, t_k\) be the \(k\) ordered failure times. At the \(j^{\text{th}}\) failure time, the logrank statistic is expressed as \citep{SEGAL}:
+
+\begin{equation}
+  \chi^2_{\text{logrank}} = \frac{\big[\sum_{j=1}^k \ (d_{0j} - r_{0j} \times d_j/r_j) \big]^2}{\sum_{j=1}^k \ \frac{r_{1j}r_{0j}d_j(r_j - d_j)}{r_j^2(r_j -1)}}
+  \label{eq:logrank}
+\end{equation}
 
 \hypertarget{random-survival-forests-rsf}{%
 \subsection{Random Survival Forests (RSF)}\label{random-survival-forests-rsf}}
 
-This algorithm is proposed by \citet{RSF} and is an ensemble of decision trees for the analysis of right-censored survival data. As random forests used for regression and classification, RSF are based on \textbf{bagging} which implies that \(B\) bootstrap samples are drawn from the original data with 63\(\%\) of them are in the bag data and the remaining part is in the out-of-bag (OOB) data. For each bootstrap sample, a survival tree is grown based on \(p\) randomly selected features. Then, the parent node is split using the feature among the selected ones that maximizes survival difference between children nodes. Each tree is grown to full size and each terminal node needs to have no less than \(d_0\) unique events. The cumulative hazard function (CHF) is computed for each tree using the Nelson-Aalen estimator such as:
+This algorithm is proposed by \citet{RSF} and is an ensemble of decision trees for the analysis of right-censored survival data. As random forests used for regression and classification, RSF are based on \textbf{bagging} which implies that \(B\) bootstrap samples are drawn from the original data with 63\(\%\) of them in the bag data and the remaining part in the out-of-bag (OOB) data. For each bootstrap sample, a survival tree is grown based on \(p\) randomly selected features. Then, the parent node is split using the feature among the selected ones that maximizes survival difference between children nodes. Each tree is grown to full size and each terminal node needs to have no less than \(d_0\) unique events. The cumulative hazard function (CHF) is computed for each tree using the Nelson-Aalen estimator such as:
 
 \begin{equation}
   \widehat{H_l}(t) = \sum_{t_{j, l} < t} \frac{d_{j,l}}{r_{j,l}}
@@ -792,7 +798,7 @@ GAM is a statistical model in which the response variable \(\mathrm{y}\) depends
 \subsubsection*{Other models}\label{other-models-1}}
 \addcontentsline{toc}{subsubsection}{Other models}
 
-State-of-the-art algorithms can also be employed to describe the relationship between the continuous variable and the feature vector. Among them, one can find random forest of regression trees, gradient boosting as well as multi-layer perceptron(MLP) regressor.
+State-of-the-art algorithms can also be employed to describe the relationship between the continuous variable and the feature vector. Among them, one can find random forest of regression trees, gradient boosting as well as multi-layer perceptron (MLP) regressor.
 
 \hypertarget{performance-metrics}{%
 \section{Performance Metrics}\label{performance-metrics}}
@@ -862,7 +868,7 @@ Equation \eqref{eq:cindex} can then be rewritten as follows:
 
 \begin{equation}
 \begin{aligned}
-c & = \frac{\# \text{concordant pairs}}{\# \text{concordant pairs} + \ \text{discordant pairs}} \\\\
+c & = \frac{\# \text{concordant pairs}}{\# \text{concordant pairs} + \# \text{discordant pairs}} \\\\
 c & = \frac{\sum_{i \neq j} \pmb{1}_{\eta_i < \eta_j} \pmb{1}_{T_i > T_j}d_j}{\sum_{i \neq j} \pmb{1}_{T_i > T_j}d_j}
 \end{aligned}
 \label{eq:cindex2}
