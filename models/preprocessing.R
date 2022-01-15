@@ -2,7 +2,7 @@
 
 # NOT RUN {
 
-  dir <- "C:/Users/pemma/Dropbox/M2 EE 2021 2022/COURS/3R/TEAM 2 AB PORTEFEUILLE/04 - MODELISATION"
+  dir <- "./models/"
   setwd(dir)
   
   # ----- packages -----
@@ -13,7 +13,7 @@
   # ----- dataset -----
   
   # load
-  data_path <- "C:/Users/pemma/Dropbox/M2 EE 2021 2022/COURS/3R/TEAM 2 AB PORTEFEUILLE/03 - DATA ANALYSIS/datasets"
+  data_path <- "C:/Users/pemma/OneDrive - Université de Tours/Mécen/M2/S2/04 - 3R/portfolio_churn_value/data/"
   data <- read_excel(path = paste(data_path, "Telco_Customer_Churn.xlsx", sep = "/")) %>%
     as.data.frame()
   
@@ -36,11 +36,6 @@
   # character to numeric
   data$`Total Charges` <- as.numeric(data$`Total Charges`)
   
-  # character to factor
-  data <- data %>%
-    mutate_if(is.character, as.factor) %>%
-    mutate( `Zip Code` = as.factor(`Zip Code`) )
-  
   # NAs
   na_obs <- which( !( complete.cases(data) ) )
   data[na_obs, ] %>% View()
@@ -59,11 +54,27 @@
   cleaned_data <- data %>%
     filter(!is.na(`Total Charges`))
   
-  # remove "(automatic)" from categories of "Payment Method"
-  levels(cleaned_data$`Payment Method`)[1:2] <- c("Bank transfer", "Credit card")
-  
   # format column names 
   names(cleaned_data) <- gsub(" ", "_", names(cleaned_data))
+  
+  # change 'No internet service' to 'No'
+  cleaned_data <- cleaned_data %>%
+    mutate(across(
+      Online_Security:Streaming_Movies, 
+      ~ifelse(.x == "No internet service", "No", .x)
+    ))
+  
+  # change 'No phone service' to 'No'
+  cleaned_data <- cleaned_data %>%
+    mutate(Multiple_Lines = ifelse(Multiple_Lines == "No phone service", "No", "Yes"))
+  
+  # character to factor
+  cleaned_data <- cleaned_data %>%
+    mutate_if(is.character, as.factor) %>%
+    mutate(Zip_Code = as.factor(Zip_Code))
+  
+  # remove "(automatic)" from categories of "Payment Method"
+  levels(cleaned_data$Payment_Method)[1:2] <- c("Bank transfer", "Credit card")
   
   # save cleaned data
   save(
