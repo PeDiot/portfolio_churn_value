@@ -15,7 +15,6 @@ backup_path <- "C:/Users/pemma/OneDrive - Université de Tours/Mécen/M2/S2/04 -
 library(tidyverse)
 library(survival)
 library(survminer)    # for ggsurvplot
-library(RegParallel)  # for parallel processing
 library(ggpubr)
 library(stringr)      # for text mining
 
@@ -54,7 +53,7 @@ C["concordance"]
 
 # with every variables
 data_train_multivar <- data_train %>%
-  select(-c(
+  dplyr::select(-c(
     CustomerID, City, Gender, Zip_Code,  
     Phone_Service, Multiple_Lines, 
     Churn_Label, Churn_Score, CLTV, Churn_Reason
@@ -72,18 +71,15 @@ save(cox_multivar, file = paste(backup_path, "cox_multivar.Rdata", sep = ""))
 summary(cox_multivar)
 stargazer::stargazer(
   cox_multivar,
-  type = "text", 
-  apply.coef = exp
+  type = "text"
 )
-C <- cox_multivar$concordance          # C-index ~ 92.7%
+C <- cox_multivar$concordance          # C-index ~ 92.9%
 C["concordance"]
 
 cox_haz_plt <- ggforest(cox_multivar, main = "", fontsize = 1)
-cox_haz_plt   # lots of variables with no significant impact on the risk of churn 
+cox_haz_plt     
 
-# }
-
-# with significant variables
+# remove variables with no significant influence on the churn hazard 
 
 cox_signif_var <- update(
   cox_multivar,
@@ -91,24 +87,129 @@ cox_signif_var <- update(
     Device_Protection - Streaming_TV - Streaming_Movies - Paperless_Billing
 ) 
 
+save(cox_signif_var, file = paste(backup_path, "cox_signif_var.Rdata", sep = ""))
+
 summary(cox_signif_var)
-C <- cox_signif_var$concordance          # C-index ~ 93.1%
+C <- cox_signif_var$concordance          # C-index ~ 92.9%
 C["concordance"]
 
-# model without variables with "No internet service as levels"
+ggforest(cox_signif_var, main = "", fontsize = 1)
 
-cox_signif_var_2 <- update(
-  cox_signif_var, 
-  . ~ . - Online_Security - Online_Backup - Tech_Support
-)
 
-summary(cox_signif_var_2)
+# ---------- ESTIMATION ---------- 
 
-cox_haz_pred <- predict(cox_signif_var_2, type = "risk")
+# --- functions ---
+
+get_conditional_survival <- function(survfit_obj, id){
+  # Return number of months, conditional survival and confidence interval for a given individual
+  
+  surv <- survfit_obj$surv %>%
+    as.data.frame() %>%
+    dplyr::select(id) 
+  num_months <- as.numeric(rownames(surv))
+  surv_lower <- survfit_obj$lower %>%
+    as.data.frame() %>%
+    pull(id) 
+  surv_upper <- survfit_obj$upper %>%
+    as.data.frame() %>%
+    pull(id) 
+  surv <- surv %>%
+    pull(id) 
+  
+  data.frame(
+    num_months = num_months, 
+    surv_lower = surv_lower, 
+    surv = surv, 
+    surv_upper = surv_upper
+  )
+}
+
+plot_conditional_survival <- function(
+  surv_data, 
+  id, 
+  is_train = TRUE
+){
+  # Return a plot of conditional survival with confidence interval for a given individual
+  
+  color <- ifelse(
+    test = isTRUE(is_train), 
+    yes = "#2E9FDF", 
+    no = "#BE7970"
+  )
+  
+  surv_data %>%
+    ggplot(aes_string(
+      x = "num_months", 
+      y = "surv"
+    )) +
+    geom_line(color = color, size = 1) +
+    geom_ribbon(
+      aes_string(ymin = "surv_lower", ymax = "surv_upper"), 
+      alpha = .2
+    ) +
+    labs(
+      title = paste("Estimated conditional survival for individual", id), 
+      x = "Number of months", 
+      y = "Survival"
+    )
+}
+
+# --- train samples ---
 
 ggsurvplot(
-  fit = survfit(cox_signif_var_2),
+  fit = survfit(cox_signif_var),
   data = data_train_multivar, 
-  color = "#2E9FDF",
+  palette = "#2E9FDF",
   ggtheme = theme_minimal()
 ) 
+
+cox_signif_var_survfit_tr <- survfit(
+  cox_signif_var, 
+  newdata = data_train
+)
+
+train_ids <- rownames(data_train)
+
+plot_list <- lapply(
+  
+  train_ids[1:4], 
+  
+  function(id){
+    surv_data <- get_conditional_survival(
+      survfit_obj = cox_signif_var_survfit_tr, 
+      id = id
+    )
+    plot_conditional_survival(surv_data, id)
+  }
+) 
+
+ggpubr::ggarrange(plotlist = plot_list, nrow = 2, ncol = 2)
+
+# --- test samples ---
+
+cox_signif_var_survfit_te <- survfit(
+  cox_signif_var, 
+  newdata = data_test
+)
+
+test_ids <- rownames(data_test)
+
+plot_list <- lapply(
+  
+  test_ids[1:4], 
+  
+  function(id){
+    surv_data <- get_conditional_survival(
+      survfit_obj = cox_signif_var_survfit_te, 
+      id = id
+    )
+    plot_conditional_survival(surv_data, id, is_train = FALSE)
+  }
+) 
+
+ggpubr::ggarrange(plotlist = plot_list, nrow = 2, ncol = 2)
+
+
+
+
+
