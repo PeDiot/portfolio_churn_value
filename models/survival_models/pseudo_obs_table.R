@@ -6,10 +6,9 @@
   # each individual is observed along j(i) follow-up intervals
 
 # ----- paths -----
-dir <- "C:/Users/pemma/Dropbox/M2 EE 2021 2022/COURS/3R/TEAM 2 AB PORTEFEUILLE/04 - MODELISATION"
+dir <- "./models/"
 setwd(dir)
-data_path <- "C:/Users/pemma/Dropbox/M2 EE 2021 2022/COURS/3R/TEAM 2 AB PORTEFEUILLE/03 - DATA ANALYSIS/datasets"
-figs_path <- paste(dir, "figs", sep = "/")
+data_path <- "C:/Users/pemma/OneDrive - Université de Tours/Mécen/M2/S2/04 - 3R/portfolio_churn_value/data"
 
 # ----- packages -----
 library(tidyverse)
