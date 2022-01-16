@@ -42,6 +42,7 @@
   
   # change "NA" to "No churn" for "Churn Reason"
   data <- data %>%
+    mutate( `Churn Reason` = as.factor(`Churn Reason` ) ) %>%
     mutate( `Churn Reason` = factor(
       `Churn Reason`, 
       levels = levels(addNA(`Churn Reason`)), 
