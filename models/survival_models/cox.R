@@ -16,7 +16,6 @@ library(tidyverse)
 library(survival)
 library(survminer)    # for ggsurvplot
 library(ggplot2)
-library(stringr)      # for text mining
 
 theme_set(theme_minimal())
 
@@ -30,7 +29,7 @@ load(file = paste(data_path, "train_test_data.RData", sep = ""))
 
 # --- univariate models ---
 
-# with "Monthly Charges"
+# with Monthly_Charges
 cox_monthly_charges <- coxph(
   formula = Surv(Tenure_Months, Churn_Value) ~ Monthly_Charges, 
   data = data_train
@@ -43,7 +42,7 @@ cox_monthly_charges$concordance
 C <- cox_monthly_charges$concordance   # C-index ~ 50.2% (non-informative model : random predictions)
 C["concordance"]
 
-# with "Total Charges"
+# with Total_Charges
 cox_total_charges <- coxph(
   formula = Surv(Tenure_Months, Churn_Value) ~ Total_Charges, 
   data = data_train
