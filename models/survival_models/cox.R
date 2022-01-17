@@ -15,7 +15,7 @@ backup_path <- "C:/Users/pemma/OneDrive - Université de Tours/Mécen/M2/S2/04 -
 library(tidyverse)
 library(survival)
 library(survminer)    # for ggsurvplot
-library(ggpubr)
+library(ggplot2)
 library(stringr)      # for text mining
 
 theme_set(theme_minimal())
@@ -23,7 +23,10 @@ theme_set(theme_minimal())
 # ----- data -----
 load(file = paste(data_path, "train_test_data.RData", sep = ""))
 
+
 # ---------- MODELS ---------- 
+
+# NOT RUN {
 
 # --- univariate models ---
 
@@ -49,15 +52,22 @@ summary(cox_total_charges)
 C <- cox_total_charges$concordance    # C-index ~ 87.1%
 C["concordance"]
 
+# }
+
 # --- multivariate models ---
 
-# with every variables
 data_train_multivar <- data_train %>%
   dplyr::select(-c(
-    CustomerID, City, Gender, Zip_Code,  
-    Phone_Service, Multiple_Lines, 
+    CustomerID, City, Gender, Zip_Code, Multiple_Lines, 
     Churn_Label, Churn_Score, CLTV, Churn_Reason
   ))
+
+# remove Multiple_Lines due to collinearity with Phone_Service
+
+
+# NOT RUN {
+
+# with every variables
 
 system.time(
   cox_multivar <- coxph(
@@ -68,18 +78,24 @@ system.time(
 
 save(cox_multivar, file = paste(backup_path, "cox_multivar.Rdata", sep = ""))
 
+# }
+
+load(paste(backup_path, "cox_multivar.Rdata", sep = ""))
+
 summary(cox_multivar)
 stargazer::stargazer(
   cox_multivar,
   type = "text"
 )
-C <- cox_multivar$concordance          # C-index ~ 92.9%
+C <- cox_multivar$concordance          # C-index ~ 93.16%
 C["concordance"]
 
 cox_haz_plt <- ggforest(cox_multivar, main = "", fontsize = 1)
 cox_haz_plt     
 
 # remove variables with no significant influence on the churn hazard 
+
+# NOT RUN {
 
 cox_signif_var <- update(
   cox_multivar,
@@ -89,8 +105,12 @@ cox_signif_var <- update(
 
 save(cox_signif_var, file = paste(backup_path, "cox_signif_var.Rdata", sep = ""))
 
+# }
+
+load(paste(backup_path, "cox_signif_var.Rdata", sep = ""))
+
 summary(cox_signif_var)
-C <- cox_signif_var$concordance          # C-index ~ 92.9%
+C <- cox_signif_var$concordance          # C-index ~ 93.15%
 C["concordance"]
 
 ggforest(cox_signif_var, main = "", fontsize = 1)
@@ -118,9 +138,9 @@ get_conditional_survival <- function(survfit_obj, id){
   
   data.frame(
     num_months = num_months, 
-    surv_lower = surv_lower, 
+    surv_lower = ifelse(is.na(surv_lower), 0, surv_lower), 
     surv = surv, 
-    surv_upper = surv_upper
+    surv_upper = ifelse(is.na(surv_upper), 0, surv_upper)
   )
 }
 
@@ -157,7 +177,7 @@ plot_conditional_survival <- function(
 # --- train samples ---
 
 ggsurvplot(
-  fit = survfit(cox_signif_var),
+  fit = survfit(cox_multivar),
   data = data_train_multivar, 
   palette = "#2E9FDF",
   ggtheme = theme_minimal()
@@ -208,6 +228,12 @@ plot_list <- lapply(
 ) 
 
 ggpubr::ggarrange(plotlist = plot_list, nrow = 2, ncol = 2)
+
+get_conditional_survival(
+  survfit_obj = cox_signif_var_survfit_te, 
+  id = test_ids[100]
+) %>% View()
+
 
 
 
