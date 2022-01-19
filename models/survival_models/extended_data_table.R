@@ -1,4 +1,4 @@
-# ------------------- Build the pseudo-observation data table -------------------  
+# ------------------- Build the extended survival data table -------------------  
 
 # Data format: 
   # multiple rows or observations
@@ -19,16 +19,16 @@ load(file = paste(data_path, "train_test_data.RData", sep = "/"))
 
 # ---- function to make the table -----
 
-make_pseudo_obs_table <- function(surv_data, Time, Event){
+augment_data_table <- function(surv_data, Time, Event){
   
-  prog_bar <- txtProgressBar(min = 0, max = 1, style=3)
+  prog_bar <- txtProgressBar(min = 0, max = 1, style = 3)
   result <- NULL
   N <- floor(max(surv_data[, Time]))
   
-  for (t in seq(0, N, 1)){
-    surv_data_t <- surv_data[surv_data[, Time]>t,]
+  for (t in seq(0, N-1, 1)){
+    surv_data_t <- surv_data[surv_data[, Time]>t, ]
     surv_data_t$t <- t
-    surv_data_t$ER_t <- surv_data_t[, Time]-t
+    surv_data_t$ER_t <- surv_data_t[, Time] - t
     surv_data_t$ER_t[surv_data_t$ER_t>1] <- 1
     surv_data_t$D <- (surv_data_t[, Time]<=t+1)*(surv_data_t[, Event])
     result <- rbind(result, surv_data_t)
@@ -36,21 +36,24 @@ make_pseudo_obs_table <- function(surv_data, Time, Event){
     setTxtProgressBar(prog_bar, t/N)
   }
   
-  rm(surv_data, surv_data_t, t,N) #tidy up
-  close(prog_bar) #tidy up
-  result <- result %>%
-    arrange(CustomerID)
+  rm(surv_data, surv_data_t, t, N) 
+  close(prog_bar) 
   
-  return(result)
+  result %>%
+    arrange(CustomerID)
   
 }
 
 # ----- apply function -----
 
 data_train <- data_train %>%
-  select(-Churn_Label)
+  select(-c(
+    Churn_Label, 
+    Churn_Reason, 
+    Churn_Score
+  ))
 
-make_pseudo_obs_table(
+extended_data_train <- augment_data_table(
   surv_data = data_train, 
   Time = "Tenure_Months", 
   Event = "Churn_Value"
