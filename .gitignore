@@ -6,3 +6,5 @@
 _bookdown_files
 
 portfolio_churn_value.log
+
+./models/ml/__pycache__
