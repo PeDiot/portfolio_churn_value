@@ -3,11 +3,12 @@
 Automate training process using pipelines, grid search and cross-validation.
 """
 
-from multiprocessing import Value
+from multiprocessing import Pipe, Value
 import numpy as np 
 import pandas as pd
 from pickle import dump 
 import os
+from os.path import isdir
 from random import shuffle
 
 from rich.table import Table 
@@ -24,9 +25,11 @@ from joblib import Parallel, delayed
 
 from sklearn.decomposition import PCA
 
-from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
 
 from sklearn.pipeline import Pipeline
+
+from sklearn.compose import ColumnTransformer
 
 from sklearn.model_selection import (
     ParameterGrid, 
@@ -34,29 +37,103 @@ from sklearn.model_selection import (
 )
 
 from .config import Config
-from .preprocessing import BACKUP_PATH
+from .preprocessing import (
+    BACKUP_PATH, 
+    CleanedData, 
+    DataFrame
+)
 
 CPU_COUNT = os.cpu_count()
          
 class ModelTraining: 
-    """Fit model using pipeline and cross-validation after PCA."""
+    """Fit model using pipeline and cross-validation after PCA.
+    
+    Example: 
+    
+    In [1]: from ml import (
+   ...: DATA_PATH,
+   ...: load_pickle,
+   ...: ModelTraining
+   ...: )
+
+    In [2]: file_path = DATA_PATH + "train.pkl"
+
+    In [3]: train = load_pickle(file_path)
+
+    In [4]: from sklearn.linear_model import LinearRegression
+
+    In [5]: est = LinearRegression()
+
+    In [6]: params = {"fit_intercept": True}
+
+    In [7]: training = ModelTraining(
+    ...: train=train,
+    ...: estimator=est,
+    ...: params=params
+    ...: )
+
+    In [8]: p = training.init_pipeline()
+
+    In [9]: p
+    Out[9]: 
+    Pipeline(steps=[('preprocessor',
+                    ColumnTransformer(transformers=[('num', StandardScaler(),
+                                                    ['Latitude', 'Longitude',
+                                                    'Monthly_Charges',
+                                                    'Total_Charges']),
+                                                    ('cat',
+                                                    OneHotEncoder(drop='first',
+                                                                    handle_unknown='ignore'),
+                                                    ['Gender', 'Senior_Citizen',
+                                                    'Partner', 'Dependents',
+                                                    'Phone_Service',
+                                                    'Multiple_Lines',
+                                                    'Internet_Service',
+                                                    'Online_Security',
+                                                    'Online_Backup',
+                                                    'Device_Protection',
+                                                    'Tech_Support',
+                                                    'Streaming_TV',
+                                                    'Streaming_Movies',
+                                                    'Contract',
+                                                    'Paperless_Billing',
+                                                    'Payment_Method'])])),
+                    ('model', LinearRegression())])
+
+    In [10]: cv_res = training.cross_val_fit(p=p, cv=5)
+    [Parallel(n_jobs=5)]: Using backend LokyBackend with 5 concurrent workers.
+    [CV] END ..................., score=(train=0.147, test=0.164) total time=   0.0s
+    [CV] END ..................., score=(train=0.152, test=0.140) total time=   0.1s
+    [CV] END ..................., score=(train=0.162, test=0.096) total time=   0.1s
+    [Parallel(n_jobs=5)]: Done   2 out of   5 | elapsed:    3.4s remaining:    5.2s
+    [CV] END ..................., score=(train=0.147, test=0.158) total time=   0.1s
+    [CV] END ..................., score=(train=0.152, test=0.119) total time=   0.1s
+    [Parallel(n_jobs=5)]: Done   5 out of   5 | elapsed:    3.4s finished
+
+    In [11]: cv_res
+    Out[11]: 
+    {'fit_time': array([0.11214757, 0.12530136, 0.12597275, 0.12541962, 0.1262989 ]),
+    'score_time': array([0.02525163, 0.02701044, 0.03919625, 0.03423405, 0.03022146]),
+    'estimator': ..., 
+    'test_score': array([0.16396312, 0.13968953, 0.11936518, 0.15795364, 0.0958488 ]),
+    'train_score': array([0.14717183, 0.15244502, 0.15243035, 0.14687251, 0.16204635])}
+    """
 
     def __init__(
         self, 
-        X: np.ndarray, 
-        y: np.ndarray, 
+        train: CleanedData,
         estimator, 
         params: Dict,
         n_comp: Optional[int] = None
     ):
-        self.X, self.y = X, y 
+        self.X, self.y = train.X, train.y
+        self._numeric_features = train.numeric_features
+        self._categorical_features = train.categorical_features
         self.estimator = estimator
         self.params = params 
         self.n_comp = n_comp
 
-        if type(self.X) != np.ndarray or type(self.y) != np.ndarray:
-            raise ValueError("X and y must be numpy arrays.")
-        
+
         if type(self.params) != dict:
             raise ValueError("'params' must be a dictionnary.")
 
@@ -65,7 +142,7 @@ class ModelTraining:
                 raise ValueError("The number of principal components must be a striclty positive integer.")
 
         self._estimator_name = self.estimator.__class__.__name__
-        self._BACKUP_PATH_dir = BACKUP_PATH + str(self._estimator_name) + "/"
+        self._BACKUP_PATH_dir = self._create_dir()
         self._key = self._get_hash_key() 
 
     def __repr__(self) -> str:
@@ -79,29 +156,41 @@ class ModelTraining:
             )
         )
 
+    def _create_dir(self): 
+        """Create a new directory."""
+        dir_path = BACKUP_PATH + str(self._estimator_name) + "/"
+        if not isdir(dir_path): 
+            os.mkdir(dir_path)
+        return dir_path
+
     def _init_model(self): 
         """Initialize model from estimator and params grid."""
         return self.estimator.set_params(**self.params)
 
+    def _init_preprocessor(self) -> ColumnTransformer:
+        """Return transformer for """
+        numeric_transformer = StandardScaler()
+        categorical_transformer = OneHotEncoder(handle_unknown="ignore", drop="first")
+        return ColumnTransformer(
+            transformers=[
+                ("num", numeric_transformer, self._numeric_features),
+                ("cat", categorical_transformer, self._categorical_features),
+            ]
+        )
+
     def init_pipeline(self) -> Pipeline: 
         """Return a pipeline with PCA as first step."""
+        preprocessor = self._init_preprocessor()
         if self.n_comp is not None:
             steps = [
-                (
-                    "pca",
-                    PCA(n_components=self.n_comp)
-                ),
-                (
-                    "model",
-                    self._init_model()
-                ),
+                ( "preprocessor", preprocessor ), 
+                ( "pca", PCA(n_components=self.n_comp) ),
+                ( "model", self._init_model() ),
             ]
         else:
             steps = [
-                (
-                    "model", 
-                    self._init_model()
-                ),
+                ( "preprocessor", preprocessor ), 
+                ( "model", self._init_model() ),
             ]
         return Pipeline(steps=steps)
 
@@ -147,8 +236,7 @@ class ModelTraining:
             dump(obj=cv_results, file=file)
 
 def train_models(
-    X_tr: np.ndarray, 
-    y_tr: np.ndarray,
+    train: CleanedData, 
     config: Config, 
     cv: float = 5,  
     comp_grid: Optional[list[int]] = None 
@@ -160,8 +248,7 @@ def train_models(
         if comp_grid is not None: 
             for n_comp in comp_grid:
                 training = ModelTraining(
-                    X=X_tr, 
-                    y=y_tr, 
+                    train=train, 
                     estimator=est,
                     params=params, 
                     n_comp=n_comp
@@ -176,8 +263,7 @@ def train_models(
                     print("Model already trained.")
         else:
             training = ModelTraining(
-                    X=X_tr, 
-                    y=y_tr, 
+                    train=train,  
                     estimator=est,
                     params=params
                 )

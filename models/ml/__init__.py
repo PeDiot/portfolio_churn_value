@@ -8,6 +8,7 @@ from .preprocessing import (
     BACKUP_PATH, 
     DATA_PATH, 
     load_rdata, 
+    load_pickle, 
     CleanedData, 
     Preprocessing,
 )

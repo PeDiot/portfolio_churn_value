@@ -68,15 +68,14 @@ from typing import Dict, List
 
 import numpy as np 
 import pandas as pd 
-from os import listdir, mkdir
-from os.path import isdir
+from os import listdir
 from pickle import load, dump
 
 from joblib import Parallel, delayed
 
 from sklearn.pipeline import Pipeline
 
-from .preprocessing import BACKUP_PATH
+from .preprocessing import BACKUP_PATH, load_pickle
 from .training import CPU_COUNT
 
 
@@ -89,17 +88,11 @@ class ModelDir(Enum):
     GB = "GradientBoostingRegressor/"
     MLP = "MLPRegressor/"
 
-def _create_dir(dir_path: str): 
-    """Create a new directory."""
-    if not isdir(dir_path): 
-        mkdir(dir_path)
-
 def get_files_paths() -> List: 
     """Retrieve cross-validation results for each fitted pipeline."""
     files_paths = list() 
     for model_dir in ModelDir:
         dir_path = BACKUP_PATH + model_dir.value 
-        _create_dir(dir_path)
         model_results = list()
         for file_name in listdir(dir_path): 
             if file_name[-3:] != "pkl":
@@ -107,11 +100,6 @@ def get_files_paths() -> List:
             else:
                 files_paths.append(dir_path + file_name) 
     return files_paths
-
-def load_pickle(file_path: str): 
-    """Load pickle object."""
-    with open(file_path, "rb") as file: 
-        return load(file) 
 
 def get_cv_results(files_paths: List[str]) -> pd.DataFrame:
     """Return a data frame with all cross-validation results."""
