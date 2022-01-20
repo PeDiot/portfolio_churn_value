@@ -9,19 +9,19 @@
 dir <- "./models/survival_models/"
 setwd(dir)
 data_path <- "C:/Users/pemma/OneDrive - Université de Tours/Mécen/M2/S2/04 - 3R/portfolio_churn_value/data/"
-backup_path <- "C:/Users/pemma/OneDrive - Université de Tours/Mécen/M2/S2/04 - 3R/portfolio_churn_value/models/backup/survival/"
+backup_path <- "C:/Users/pemma/OneDrive - Université de Tours/Mécen/M2/S2/04 - 3R/portfolio_churn_value/backup/survival/"
 
 # ----- packages -----
 library(tidyverse)
 library(survival)
 library(survminer)    # for ggsurvplot
+library(survcomp)
 library(ggplot2)
 
 theme_set(theme_minimal())
 
 # ----- data -----
 load(file = paste(data_path, "train_test_data.RData", sep = ""))
-
 
 # ---------- MODELS ---------- 
 
@@ -51,7 +51,20 @@ summary(cox_total_charges)
 C <- cox_total_charges$concordance    # C-index ~ 87.1%
 C["concordance"]
 
+cox_total_charges_pred <- predict(
+  cox_total_charges, 
+  newdata = data_test, 
+  type = "risk"
+)
+C_test <- concordance.index(
+  x = cox_total_charges_pred,
+  surv.time = data_test$Tenure_Months,
+  surv.event = data_test$Churn_Value
+)
+C_test$c.index
+
 # }
+
 
 # --- multivariate models ---
 
@@ -114,6 +127,46 @@ C["concordance"]
 
 ggforest(cox_signif_var, main = "", fontsize = 1)
 
+# models without 'Total_Charges' 
+
+# NOT RUN {
+
+cox_signif_var_2 <- update(
+  cox_signif_var, 
+  . ~ . - Total_Charges
+)
+
+save(cox_signif_var_2, file = paste(backup_path, "cox_signif_var_2.Rdata", sep = ""))
+
+#}
+
+load(paste(backup_path, "cox_signif_var_2.Rdata", sep = ""))
+
+ggforest(cox_signif_var_2, main = "", fontsize = 1)
+
+summary(cox_signif_var_2)
+C <- cox_signif_var_2$concordance          # C-index ~ 86.33%
+C["concordance"]
+
+cox_signif_var_2_pred_tr <- predict(
+  cox_signif_var_2, 
+  type = "risk"
+)
+
+cox_signif_var_2_pred_te <- predict(
+  cox_signif_var_2, 
+  newdata = data_test, 
+  type = "risk"
+)
+
+data_clust_tr <- cbind(data_train, Churn_Risk = cox_signif_var_2_pred_tr)
+data_clust_te <- cbind(data_test, Churn_Risk = cox_signif_var_2_pred_te)
+
+save(
+  data_clust_tr, data_clust_te,
+  file = paste(data_path, "train_test_data_clust.RData", sep = "")
+)
+
 
 # ---------- ESTIMATION ---------- 
 
@@ -124,7 +177,7 @@ get_conditional_survival <- function(survfit_obj, id){
   
   surv <- survfit_obj$surv %>%
     as.data.frame() %>%
-    dplyr::select(id) 
+    dplyr::select(all_of(id))  
   num_months <- as.numeric(rownames(surv))
   surv_lower <- survfit_obj$lower %>%
     as.data.frame() %>%
@@ -176,14 +229,14 @@ plot_conditional_survival <- function(
 # --- train samples ---
 
 ggsurvplot(
-  fit = survfit(cox_multivar),
+  fit = survfit(cox_signif_var),
   data = data_train_multivar, 
   palette = "#2E9FDF",
   ggtheme = theme_minimal()
 ) 
 
 cox_signif_var_survfit_tr <- survfit(
-  cox_signif_var, 
+  cox_signif_var_2, 
   newdata = data_train
 )
 
@@ -232,9 +285,3 @@ get_conditional_survival(
   survfit_obj = cox_signif_var_survfit_te, 
   id = test_ids[100]
 ) %>% View()
-
-
-
-
-
-

@@ -3,6 +3,7 @@
 # Doc: 
   # https://www.ms.uky.edu/~mai/Rsurv.pdf
   # https://www.rdocumentation.org/packages/survival/versions/3.2-7/topics/predict.survreg
+  # https://www.r-bloggers.com/2019/06/parametric-survival-modeling/
 
 
 # Exponential model
@@ -18,12 +19,17 @@ backup_path <- "C:/Users/pemma/OneDrive - Université de Tours/Mécen/M2/S2/04 -
 
 # ----- packages -----
 library(tidyverse)
+library(data.table)
+library(ggplot2)
+
 library(survival)
 library(flexsurv)   # for parametric survival models 
 library(survminer)  
 library(survcomp)   # for concordance index
+library(muhaz)      # for kernel density estimator
 library(lmtest)     # for LR test 
-library(ggplot2)
+
+
 
 theme_set(theme_minimal())
 
@@ -31,7 +37,66 @@ theme_set(theme_minimal())
 load(file = paste(data_path, "train_test_data.RData", sep = ""))
 
 
-# ---------- MODELS ----------
+# ---------- INTERCEPT ONLY MODELS ----------
+
+survdata <- data.table(data_train)
+head(survdata)
+
+
+# kernel density estimator not working
+kernel_haz_est <- muhaz(
+  times=survdata$Tenure_Months,
+  delta=survdata$Churn_Value
+)
+kernel_haz <- data.table(time = kernel_haz_est$est.grid,
+                         est = kernel_haz_est$haz.est,
+                         method = "Kernel density")
+
+# Kaplan-Meier 
+km_fit <- survfit(Surv(Tenure_Months, Churn_Value) ~ 1, data = survdata)
+
+
+# parametric estimation
+dists <- c("exp", "weibull", "gompertz", "gamma", 
+           "lognormal", "llogis", "gengamma")
+dists_long <- c("Exponential", "Weibull (AFT)",
+                "Gompertz", "Gamma", "Lognormal", "Log-logistic",
+                "Generalized gamma")
+parametric_haz <- vector(mode = "list", length = length(dists))
+for (i in 1:length(dists)){
+  fit <- flexsurvreg(
+    formula = Surv(Tenure_Months, Churn_Value) ~ 1, 
+    data = survdata, 
+    dist = dists[i]
+  ) 
+  parametric_haz[[i]] <- summary(fit, type = "hazard", 
+                                 ci = FALSE, tidy = TRUE)
+  parametric_haz[[i]]$method <- dists_long[i]
+}
+
+parametric_haz <- rbindlist(parametric_haz)
+
+# haz <- rbind(kernel_haz, parametric_haz)
+parametric_haz[, method := factor(method,
+                       levels = c("Kernel density",
+                                  dists_long))]
+n_dists <- length(dists) 
+ggplot(
+  data = parametric_haz,
+  aes(x = time, 
+      y = est, 
+      col = method, 
+      linetype = method)
+  ) +
+  geom_line() +
+  xlab("Days") + ylab("Hazard") + 
+  scale_colour_manual(name = "", 
+                      values = c("black", rainbow(n_dists))) +
+  scale_linetype_manual(name = "",
+                        values = c(1, rep_len(2:6, n_dists)))
+
+
+# ---------- MODELS WITH COVARIATES ----------
 
 # ----- Exponential -----
 
@@ -197,6 +262,7 @@ exp.reg_multivar <- survreg(
 )
 
 summary(exp.reg_multivar)
+
 
 
 
