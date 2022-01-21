@@ -1,6 +1,37 @@
 """Description.
 
 Automate training process using pipelines, grid search and cross-validation.
+
+Example: 
+
+In [1]: from ml import (
+   ...: load_pickle,
+   ...: load_config,
+   ...: train_models
+   ...: )
+
+In [2]: config = load_config(file_name="config_init.yaml")
+
+In [3]: from ml import DATA_PATH
+
+In [4]: file_path = DATA_PATH + "train.pkl"
+
+In [5]: train = load_pickle(file_path)
+
+In [7]: train_models(
+   ...: train=train,
+   ...: config=config,
+   ...: comp_grid=[10, 15, 20, None]
+   ...: )
+Training(estimator=DummyRegressor(), params={'strategy': 'mean'}, n_comp=10)
+[Parallel(n_jobs=5)]: Using backend ThreadingBackend with 5 concurrent workers.
+[CV] END .................., score=(train=0.000, test=-0.000) total time=   0.7s
+[CV] END .................., score=(train=0.000, test=-0.000) total time=   0.8s
+[Parallel(n_jobs=5)]: Done   2 out of   5 | elapsed:    1.1s remaining:    1.7s
+[CV] END .................., score=(train=0.000, test=-0.023) total time=   0.8s
+[CV] END .................., score=(train=0.000, test=-0.002) total time=   0.8s
+[CV] END .................., score=(train=0.000, test=-0.006) total time=   0.8s
+[Parallel(n_jobs=5)]: Done   5 out of   5 | elapsed:    1.1s finished...
 """
 
 from multiprocessing import Pipe, Value
