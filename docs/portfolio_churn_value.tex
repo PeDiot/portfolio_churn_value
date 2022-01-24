@@ -6,7 +6,7 @@
 ]{book}
 \title{Portfolio, Churn \& Customer Value}
 \author{Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer}
-\date{2022-01-17}
+\date{2022-01-24}
 
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
@@ -1192,7 +1192,7 @@ On figure \ref{fig:corrplot}, non-significant correlations are crossed-out. It c
 
 The final step in the data exploration consists in analyzing the relationship between the three target variables: \texttt{CLTV}, \texttt{Churn\_Label} and \texttt{Tenure\_Months}.
 
-Looking at figure \ref{fig:cltvchurn}, customer lifetime value seems to have higher values for retained customers than for churners as the density is more right-oriented. This result makes sense as retained customers may have longer lifetime leading to higgher CLV.
+Looking at figure \ref{fig:cltvchurn}, customer lifetime value seems to have higher values for retained customers than for churners as the density is more right-oriented. This result makes sense as retained customers may have longer lifetime leading to higher CLV.
 
 \begin{figure}
 
@@ -1203,18 +1203,7 @@ Looking at figure \ref{fig:cltvchurn}, customer lifetime value seems to have hig
 \caption{Customer lifetime value depending on churn status}\label{fig:cltvchurn}
 \end{figure}
 
-The following histograms are interesting to the extent that the distribution of \texttt{Tenure\_Months} depends on the churn status. From figure \ref{fig:churndur}, one can note an inflation of low and high values for retained customers. The distribution appears to be more homogeneous for retained clients than for churners. These last's tenure months distribution is decreasing and looks like a Poisson distribution with an inflation of low values.
-
-\begin{figure}
-
-{\centering \includegraphics[width=500pt,height=300pt]{./imgs/duration_churn_plot} 
-
-}
-
-\caption{Tenure months depending on churn status}\label{fig:churndur}
-\end{figure}
-
-Eventually, the low \emph{p value} related to the Anova test between \texttt{CLTV} and \texttt{Churn\_Label} indicates that customer lifetime value is statistically different between churner and retained clients.
+Besides, the low \emph{p value} related to the Anova test between \texttt{CLTV} and \texttt{Churn\_Label} indicates that customer lifetime value is statistically different between churner and retained clients.
 
 \begin{table}[H]
 
@@ -1228,6 +1217,26 @@ Eventually, the low \emph{p value} related to the Anova test between \texttt{CLT
 \bottomrule
 \end{tabular}
 \end{table}
+
+The following histograms are interesting to the extent that the distribution of \texttt{Tenure\_Months} depends on the churn status. From figure \ref{fig:churndur}, one can note an inflation of low and high values for retained customers. The distribution appears to be more homogeneous for retained clients than for churners. These lasts' tenure months distribution is decreasing and looks like a Poisson distribution with an inflation of low values.
+
+\begin{figure}
+
+{\centering \includegraphics[width=500pt,height=300pt]{./imgs/duration_churn_plot} 
+
+}
+
+\caption{Tenure months depending on churn status}\label{fig:churndur}
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics[width=500pt,height=300pt]{./imgs/avg_cltv_plot} 
+
+}
+
+\caption{Average CLTV depending on number of months in the portfolio}\label{fig:cltvdur}
+\end{figure}
 
 \hypertarget{appendix}{%
 \chapter*{Appendix}\label{appendix}}

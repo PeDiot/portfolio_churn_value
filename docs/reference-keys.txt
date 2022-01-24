@@ -55,8 +55,9 @@ fig:cltvaccountinfo
 eq:pearson
 fig:corrplot
 fig:cltvchurn
-fig:churndur
 tab:aovcltvchurn
+fig:churndur
+fig:cltvdur
 eq:hazfunproof
 eq:linksurvcumhaz
 eq:contribpartiallikproof
