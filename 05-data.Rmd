@@ -410,7 +410,7 @@ knitr::include_graphics(path = "./imgs/corr_plot.jpg")
 
 The final step in the data exploration consists in analyzing the relationship between the three target variables: `CLTV`, `Churn_Label` and `Tenure_Months`. 
 
-Looking at figure \@ref(fig:cltvchurn), customer lifetime value seems to have higher values for retained customers than for churners as the density is more right-oriented. This result makes sense as retained customers may have longer lifetime leading to higgher CLV.
+Looking at figure \@ref(fig:cltvchurn), customer lifetime value seems to have higher values for retained customers than for churners as the density is more right-oriented. This result makes sense as retained customers may have longer lifetime leading to higher CLV.
 
 ```{r}
 cltv_churn_plot <- hist_dens_plot(
@@ -429,9 +429,24 @@ ggsave(
 ```
 
 
-```{r cltvchurn, fig.cap="Customer lifetime value depending on churn status", out.height="300pt", out.width="450pt"}
+```{r cltvchurn, fig.cap="Customer lifetime value depending on churn status", out.height="300pt", out.width="400pt"}
 knitr::include_graphics(path = "./imgs/cltv_churn_plot.jpg")
 ```
+
+Besides, the low *p value* related to the Anova test between `CLTV` and `Churn_Label` indicates that customer lifetime value is statistically different between churner and retained clients.
+
+```{r aovcltvchurn}
+aov_test_tab(
+  data = cleaned_data, 
+  treatment = "Churn_Label"
+) %>%
+  mykable(title = "Anova test between CLTV and churn status")
+```
+
+```{r eval=FALSE}
+cor(cleaned_data$CLTV, cleaned_data$Tenure_Months)
+```
+
 
 ```{r}
 n_bins <- unique(cleaned_data$Tenure_Months) %>% 
@@ -450,36 +465,53 @@ duration_churn_plot <- cleaned_data %>%
   guides(fill=guide_legend(title="Churn"),
          color=guide_legend(title="Churn")) +
   theme(legend.position = "none", 
-        axis.title = element_text(size = 10), 
-        axis.text = element_text(size = 9))
+        axis.title = element_text(size = 11), 
+        axis.text = element_text(size = 10))
 
 ggsave(
   filename = "./imgs/duration_churn_plot.jpg", 
   plot = duration_churn_plot, 
+  height = 5, width = 7
+)
+```
+
+The following histograms are interesting to the extent that the distribution of `Tenure_Months` depends on the churn status. From figure \@ref(fig:churndur), one can note an inflation of low and high values for retained customers. The distribution appears to be more homogeneous for retained clients than for churners. These lasts' tenure months distribution is decreasing and looks like a Poisson distribution with an inflation of low values. 
+
+```{r churndur, fig.cap="Tenure months depending on churn status", out.height="350pt", out.width="500pt"}
+knitr::include_graphics(path = "./imgs/duration_churn_plot.jpg")
+```
+
+```{r}
+avg_cltv_plot <- cleaned_data %>%
+  group_by(Tenure_Months) %>%
+  summarise(avg_cltv = mean(CLTV)) %>%
+  mutate(mask = case_when(
+    avg_cltv > 5000 ~ 1, 
+    TRUE ~ 0) %>%
+      as.factor()) %>%
+  ggplot(aes(
+    x = Tenure_Months, 
+    y = avg_cltv, 
+    color = mask)) +
+  geom_point() +
+  scale_color_brewer(palette = "Set2") +
+  labs(x = "Number of months", 
+       y = "Average CLTV") +
+  theme(legend.position = "none")
+
+ggsave(
+  filename = "./imgs/avg_cltv_plot.jpg", 
+  plot = avg_cltv_plot, 
   height = 4, width = 6
 )
 ```
 
-The following histograms are interesting to the extent that the distribution of `Tenure_Months` depends on the churn status. From figure \@ref(fig:churndur), one can note an inflation of low and high values for retained customers. The distribution appears to be more homogeneous for retained clients than for churners. These last's tenure months distribution is decreasing and looks like a Poisson distribution with an inflation of low values. 
+Eventually, figure \@ref(fig:cltvdur) depicts the average customer lifetime value per number of months in the portfolio. Two distinct groups can be identified with a threshold at 50 months. On average, the most valuable customers are those who have been in the portfolio for more than 50 months. 
 
-
-```{r churndur, fig.cap="Tenure months depending on churn status", out.height="300pt", out.width="500pt"}
-knitr::include_graphics(path = "./imgs/duration_churn_plot.jpg")
+```{r cltvdur, fig.cap="Average CLTV depending on number of months in the portfolio", out.height="300pt", out.width="450pt"}
+knitr::include_graphics(path = "./imgs/avg_cltv_plot.jpg")
 ```
 
-Eventually, the low *p value* related to the Anova test between `CLTV` and `Churn_Label` indicates that customer lifetime value is statistically different between churner and retained clients.
-
-```{r aovcltvchurn}
-aov_test_tab(
-  data = cleaned_data, 
-  treatment = "Churn_Label"
-) %>%
-  mykable(title = "Anova test between CLTV and churn status")
-```
-
-```{r eval=FALSE}
-cor(cleaned_data$CLTV, cleaned_data$Tenure_Months)
-```
 
 
 
