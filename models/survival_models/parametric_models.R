@@ -29,31 +29,27 @@ library(survcomp)   # for concordance index
 library(muhaz)      # for kernel density estimator
 library(lmtest)     # for LR test 
 
-
-
 theme_set(theme_minimal())
 
 # ----- data -----
 load(file = paste(data_path, "train_test_data.RData", sep = ""))
-
 
 # ---------- INTERCEPT ONLY MODELS ----------
 
 survdata <- data.table(data_train)
 head(survdata)
 
-
 # kernel density estimator not working
 kernel_haz_est <- muhaz(
   times=survdata$Tenure_Months,
-  delta=survdata$Churn_Value
+  delta=survdata$Churn_Value, 
+  min.time = 0, 
+  max.time = 72
 )
 kernel_haz <- data.table(time = kernel_haz_est$est.grid,
                          est = kernel_haz_est$haz.est,
                          method = "Kernel density")
 
-# Kaplan-Meier 
-km_fit <- survfit(Surv(Tenure_Months, Churn_Value) ~ 1, data = survdata)
 
 
 # parametric estimation
@@ -76,13 +72,13 @@ for (i in 1:length(dists)){
 
 parametric_haz <- rbindlist(parametric_haz)
 
-# haz <- rbind(kernel_haz, parametric_haz)
-parametric_haz[, method := factor(method,
+haz <- rbind(kernel_haz, parametric_haz)
+haz[, method := factor(method,
                        levels = c("Kernel density",
                                   dists_long))]
 n_dists <- length(dists) 
 ggplot(
-  data = parametric_haz,
+  data = haz,
   aes(x = time, 
       y = est, 
       col = method, 
@@ -95,6 +91,9 @@ ggplot(
   scale_linetype_manual(name = "",
                         values = c(1, rep_len(2:6, n_dists)))
 
+# it looks like the chosen parametric forms do not fit the data
+# as the natural risk (kernel density) seems to be convex,
+# which is not the case for the chosen models
 
 # ---------- MODELS WITH COVARIATES ----------
 
