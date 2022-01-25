@@ -4,8 +4,8 @@ Methods for model selection.
 
 Example:
 
-In [1]: from vc_ml import (
-   ...: get_files_path,
+In [1]: from ml import (
+   ...: get_files_paths,
    ...: get_cv_results,
    ...: get_best_estimator, 
    ...: save_best_estimator
@@ -14,8 +14,6 @@ In [1]: from vc_ml import (
 In [2]: from random import shuffle
 
 In [3]: paths = get_files_paths()
-
-In [4] shuffle(paths)
 
 In [4]: cv_results = get_cv_results(files_paths=paths[:10])
 
@@ -52,7 +50,7 @@ Out[7]:
  'test_score': -0.9278878299719601,
  'avg_score': 0.023286292988654755}
 
-In [8]: get_best_estimator(cv_results=cv_results, criterion="train_test")
+In [8]: get_best_estimator(cv_results=cv_results, criterion="avg_score")
 Out[8]: 
 {'best_estimator': Pipeline(steps=[('pca', PCA(n_components=80)),
                  ('model',
@@ -75,7 +73,7 @@ from joblib import Parallel, delayed
 
 from sklearn.pipeline import Pipeline
 
-from .preprocessing import BACKUP_PATH, load_pickle
+from .utils import BACKUP_PATH, load_pickle
 from .training import CPU_COUNT
 
 
@@ -129,10 +127,11 @@ def get_cv_results(files_paths: List[str]) -> pd.DataFrame:
             for path in files_paths
         ) 
     
-    return pd.concat(
+    cv_results = pd.concat(
         objs=cv_res_list, 
         axis=0
     ).reset_index(drop=True)
+    return cv_results.dropna()
 
 def get_best_estimator(
     cv_results: pd.DataFrame, 
@@ -172,7 +171,7 @@ def get_best_estimator(
             cv_results["avg_train_score"] == best_train_score, 
             "avg_score"
         ].values.tolist()[0]
-    elif criterion == "train_test": 
+    elif criterion == "avg_score": 
         res["best_estimator"] = cv_results.loc[ 
             cv_results["avg_score"] == best_avg_score, 
             "estimator"

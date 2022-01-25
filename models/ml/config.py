@@ -77,7 +77,7 @@ from .estimators import (
     MLPEstimator,
 )
 
-from .preprocessing import BACKUP_PATH
+from .utils import BACKUP_PATH
 
 @serialize
 @deserialize
