@@ -167,6 +167,21 @@ save(
   file = paste(data_path, "train_test_data_clust.RData", sep = "")
 )
 
+# -- Aalen model ---
+
+# The Aalen model assumes that the cumulative hazard H(t) for a subject can be expressed as a(t) + X B(t), 
+# where a(t) is a time-dependent intercept term, X is the vector of covariates for the subject (possibly time-dependent),
+# and B(t) is a time-dependent matrix of coefficients. 
+
+aa_fit <-aareg(
+  formula = Surv(Tenure_Months, Churn_Value) ~ Dependents + 
+    Phone_Service + Internet_Service + Online_Security + Online_Backup + 
+    Tech_Support + Contract + Payment_Method + Monthly_Charges,  
+  data = data_train_multivar
+)
+aa_fit
+
+autoplot(aa_fit)
 
 # ---------- ESTIMATION ---------- 
 
@@ -229,7 +244,7 @@ plot_conditional_survival <- function(
 # --- train samples ---
 
 ggsurvplot(
-  fit = survfit(cox_signif_var),
+  fit = survfit(cox_signif_var_2),
   data = data_train_multivar, 
   palette = "#2E9FDF",
   ggtheme = theme_minimal()
@@ -260,7 +275,7 @@ ggpubr::ggarrange(plotlist = plot_list, nrow = 2, ncol = 2)
 # --- test samples ---
 
 cox_signif_var_survfit_te <- survfit(
-  cox_signif_var, 
+  cox_signif_var_2, 
   newdata = data_test
 )
 
