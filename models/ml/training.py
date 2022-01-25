@@ -4,6 +4,8 @@ Automate training process using pipelines, grid search and cross-validation.
 
 Example: 
 
+set PYTHONHASHSEED=0
+
 In [1]: from ml import (
    ...: load_pickle,
    ...: load_config,
@@ -21,8 +23,8 @@ In [5]: train = load_pickle(file_path)
 In [7]: train_models(
    ...: train=train,
    ...: config=config,
-   ...: comp_grid=[10, 15, 20, None]
-   ...: )
+   ...: comp_grid=[5, 10, 15, 20, None]
+   ...: ) 
 Training(estimator=DummyRegressor(), params={'strategy': 'mean'}, n_comp=10)
 [Parallel(n_jobs=5)]: Using backend ThreadingBackend with 5 concurrent workers.
 [CV] END .................., score=(train=0.000, test=-0.000) total time=   0.7s
@@ -34,15 +36,15 @@ Training(estimator=DummyRegressor(), params={'strategy': 'mean'}, n_comp=10)
 [Parallel(n_jobs=5)]: Done   5 out of   5 | elapsed:    1.1s finished...
 """
 
-from multiprocessing import Pipe, Value
 import numpy as np 
 import pandas as pd
+
 from pickle import dump 
-import os
-from os.path import isdir
+from os import cpu_count, mkdir
+from os.path import isdir, isfile
+
 from random import shuffle
 
-from rich.table import Table 
 from rich import print
 
 from typing import (
@@ -68,13 +70,10 @@ from sklearn.model_selection import (
 )
 
 from .config import Config
-from .preprocessing import (
-    BACKUP_PATH, 
-    CleanedData, 
-    DataFrame
-)
+from .utils import BACKUP_PATH
+from .preprocessing import CleanedData
 
-CPU_COUNT = os.cpu_count()
+CPU_COUNT = cpu_count()
          
 class ModelTraining: 
     """Fit model using pipeline and cross-validation after PCA.
@@ -191,7 +190,7 @@ class ModelTraining:
         """Create a new directory."""
         dir_path = BACKUP_PATH + str(self._estimator_name) + "/"
         if not isdir(dir_path): 
-            os.mkdir(dir_path)
+            mkdir(dir_path)
         return dir_path
 
     def _init_model(self): 
@@ -245,7 +244,7 @@ class ModelTraining:
 
     def check_backup(self) -> bool:
         """Check whether object has already been tested and backuped."""
-        if os.path.isfile(self._BACKUP_PATH_dir + self._key + ".pkl"): 
+        if isfile(self._BACKUP_PATH_dir + self._key + ".pkl"): 
             return True 
         return False  
 
@@ -318,7 +317,6 @@ def train_models(
         )(
             delayed(_process)(est, params)
             for (est, params) in zip(estimator, grid)
-        ) 
-
+        )
 
         
