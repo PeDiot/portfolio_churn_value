@@ -1,56 +1,40 @@
-dum:
-  strategy:
-  - mean
-gb:
-  criterion:
-  - friedman_mse
-  learning_rate:
-  - 0.1
-  loss:
-  - squared_error
-  max_depth:
-  - 3
-  min_samples_leaf:
-  - 1
-  min_samples_split:
-  - 2
-  n_estimators:
-  - 100
-  tol:
-  - 0.001
-lr:
-  fit_intercept:
-  - true
 rf:
   criterion:
   - squared_error
+  - absolute_error
   max_depth:
+  - 2 
+  - 5 
+  - 10
+  - 20
   - null
   max_features:
   - auto
+  - sqrt
+  - log2
   max_samples:
   - 1.0
+  - .9
+  - .8
+  - .7
+  - .6
   min_samples_leaf:
   - 1
+  - 2
+  - 5
+  - 10
+  - 15
+  - 20
   min_samples_split:
   - 2
+  - 5
+  - 10
+  - 15
+  - 20
   n_estimators:
   - 100
+  - 250 
+  - 500
+  - 1000
   oob_score:
   - true
-ridge:
-  alpha:
-  - 1.0
-  fit_intercept:
-  - true
-tree:
-  ccp_alpha:
-  - 0.0
-  max_depth:
-  - null
-  max_features:
-  - auto
-  min_samples_leaf:
-  - 1
-  min_samples_split:
-  - 2
