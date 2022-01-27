@@ -2,10 +2,6 @@
 
 Helpful methods to use the library.
 """
-
-import sys
-sys.path.append('../')
-
 from pyreadr import read_r
 from pickle import dump, load 
 

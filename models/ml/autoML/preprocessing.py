@@ -21,6 +21,7 @@ In [4]: train_prep = Preprocessing(data=data_train)
 In [5]: cleaned_train_data = CleanedData(
    ...: X=train_prep.X,
    ...: y=train_prep.y,
+   ...: ids=train_prep.ids, 
    ...: numeric_features=train_prep.get_numeric_features(),      
    ...: categorical_features=train_prep.get_categorical_features()
    ...: )
@@ -49,7 +50,7 @@ CleanedData(X=      Gender Senior_Citizen Partner Dependents  Tenure_Months  ...
 4920    Male            Yes      No         No           13.0  ...  Month-to-month               Yes  Electronic check           59.90        788.35
 4921    Male             No      No         No           19.0  ...  Month-to-month               Yes  Electronic check           99.95       1931.75
 
-[4922 rows x 19 columns], y=array([2846., 5463., 5841., ..., 5638., 5254., 3670.]), numeric_features=['Tenure_Months', 'Monthly_Charges', 'Total_Charges'], categorical_features=['Gender', 'Senior_Citizen', 'Partner', 'Dependents', 'Phone_Service', 'Multiple_Lines', 'Internet_Service', 'Online_Security', 'Online_Backup', 'Device_Protection', 'Tech_Support', 'Streaming_TV', 'Streaming_Movies', 'Contract', 'Paperless_Billing', 'Payment_Method'])
+[4922 rows x 19 columns], y=array([2846., 5463., 5841., ..., 5638., 5254., 3670.]), ids=array(['1052', '460', '2504', ..., '1267', '6228', '1520'], dtype=object), numeric_features=['Tenure_Months', 'Monthly_Charges', 'Total_Charges'], categorical_features=['Gender', 'Senior_Citizen', 'Partner', 'Dependents', 'Phone_Service', 'Multiple_Lines', 'Internet_Service', 'Online_Security', 'Online_Backup', 'Device_Protection', 'Tech_Support', 'Streaming_TV', 'Streaming_Movies', 'Contract', 'Paperless_Billing', 'Payment_Method'])
 """
 
 from pandas.core.frame import DataFrame
@@ -69,6 +70,7 @@ from typing import (
 class CleanedData: 
     X: DataFrame
     y: np.ndarray
+    ids: np.ndarray
     numeric_features: List[str]
     categorical_features: List[str] 
 
@@ -81,16 +83,22 @@ class Preprocessing:
     """Automate preprocessing on Telco data."""
 
     def __init__(self, data: DataFrame):
+        self.ids = self._get_customer_ids(data)
         self._data = self._select_variables(data)  
         self.X = self._get_feature_vector(self._data)
         self.y = self._get_target_vector(self._data)
     
     @staticmethod
+    def _get_customer_ids(data: DataFrame) -> np.ndarray:
+        """Return an array of customer IDs."""
+        return data["CustomerID"].values 
+
+    @staticmethod
     def _select_variables(data: DataFrame) -> DataFrame: 
         """Return data with interesting variables."""
         return data.drop(
             labels=[
-                "CustomerID",
+                "CustomerID", 
                 "City", 
                 "Latitude", 
                 "Longitude", 
