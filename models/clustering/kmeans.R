@@ -16,7 +16,7 @@
   # until convergence (minimum total sum of square) or maximum iteration is reached.
 
 
-# ----- Setup 
+# ----- Setup -----
 
 dir <- "./models/clustering/"
 setwd(dir)
@@ -26,12 +26,22 @@ backup_path <- "C:/Users/pemma/OneDrive - Université de Tours/Mécen/M2/S2/04 -
 load(paste(data_path, "train_test_data_clust.RData", sep = "/"))
 
 library(tidyverse)
+library(plyr)
 library(ggplot2)
 library(factoextra)
+library(FactoMineR)
 
 theme_set(theme_minimal()) 
 
-# ----- Visualization
+# scale data
+scaled_data <- data_clust_tr %>%
+  select(c(CLTV, Churn_Risk)) %>%
+  scale() %>%
+  as.data.frame()
+
+set.seed(123)
+
+# ----- Data Viz -----
 
 cor(x = data_clust_tr$Churn_Risk, 
     y = data_clust_tr$CLTV)
@@ -48,23 +58,8 @@ data_clust_tr %>%
   ggplot(aes(x = CLTV)) +
   geom_density()
 
-scaled_data <- data_clust_tr %>%
-  select(c(CLTV, Churn_Risk)) %>%
-  scale() %>%
-  as.data.frame()
 
-cor(x = scaled_data$Churn_Risk, 
-    y = scaled_data$CLTV)
-
-scaled_data %>%
-  ggplot(aes(x = CLTV, y = Churn_Risk)) +
-  geom_point(alpha = .5) +
-  ggtitle("Standardize churn risk and CLTV")
-
-
-# ----- Apply K-means
-
-set.seed(123)
+# ----- kmeans -----
 
 n_centers <- 4
 
@@ -86,7 +81,7 @@ fviz_cluster(
   ggtheme = theme_minimal()
 )
 
-# on raw data 
+# on unscaled data 
 res.km2 <- kmeans(
   data_clust_tr %>%
     select(c(CLTV, Churn_Risk)),
@@ -106,69 +101,73 @@ fviz_cluster(
   ggtheme = theme_minimal()
 )
 
-# ----- Optimal number of clusters 
+# NOT RUN {
 
-# --- Elbow method
-system.time(
-  elbow <- fviz_nbclust(scaled_data, 
-               kmeans, 
-               method = "wss") +
-    labs(subtitle = "Elbow method")
-)
-
-# --- Silhouette method
-system.time(
-  silhouette <- fviz_nbclust(scaled_data, 
-               kmeans, 
-               method = "silhouette") +
-    labs(subtitle = "Silhouette method")
-)
+  # ----- Optimal number of clusters 
   
-# --- Gap statistic
-# nboot = 50 to keep the function speedy. 
-# recommended value: nboot= 500 for your analysis.
-# Use verbose = FALSE to hide computing progression.
-system.time(
-  gap_stat <- fviz_nbclust(scaled_data, 
-               kmeans, 
-               nstart = 25,  
-               method = "gap_stat", 
-               nboot = 50) +
-    labs(subtitle = "Gap statistic method")
-)
+  # --- Elbow method
+  system.time(
+    elbow <- fviz_nbclust(scaled_data, 
+                 kmeans, 
+                 method = "wss") +
+      labs(subtitle = "Elbow method")
+  )
+  
+  # --- Silhouette method
+  system.time(
+    silhouette <- fviz_nbclust(scaled_data, 
+                 kmeans, 
+                 method = "silhouette") +
+      labs(subtitle = "Silhouette method")
+  )
+    
+  # --- Gap statistic
+  # nboot = 50 to keep the function speedy. 
+  # recommended value: nboot= 500 for your analysis.
+  # Use verbose = FALSE to hide computing progression.
+  system.time(
+    gap_stat <- fviz_nbclust(scaled_data, 
+                 kmeans, 
+                 nstart = 25,  
+                 method = "gap_stat", 
+                 nboot = 50) +
+      labs(subtitle = "Gap statistic method")
+  )
+  
+  num_clust_plot <- ggpubr::ggarrange(
+    elbow,
+    silhouette, 
+    gap_stat, 
+    ncol = 2, 
+    nrow = 2
+  )
+  
+  ggsave(filename = paste(backup_path, "num_clust_plot.png", sep = ""),
+         plot = num_clust_plot, 
+         width = 10, 
+         height = 6)
 
-num_clust_plot <- ggpubr::ggarrange(
-  elbow,
-  silhouette, 
-  gap_stat, 
-  ncol = 2, 
-  nrow = 2
-)
+  n_centers <- 3
+  
+  res.km3 <- kmeans(
+    scaled_data,
+    centers = n_centers, 
+    nstart = 25
+  )
+  
+  res.km3$centers
+  
+  fviz_cluster(
+    res.km3, 
+    data = scaled_data,
+    palette = "Set2", 
+    geom = "point",
+    ellipse.type = "convex",
+    main = "Cluster plot on scaled data", 
+    ggtheme = theme_minimal()
+  )
 
-ggsave(filename = paste(backup_path, "num_clust_plot.png", sep = ""),
-       plot = num_clust_plot, 
-       width = 10, 
-       height = 6)
-
-n_centers <- 3
-
-res.km3 <- kmeans(
-  scaled_data,
-  centers = n_centers, 
-  nstart = 25
-)
-
-res.km3$centers
-
-fviz_cluster(
-  res.km3, 
-  data = scaled_data,
-  palette = "Set2", 
-  geom = "point",
-  ellipse.type = "convex",
-  main = "Cluster plot on scaled data", 
-  ggtheme = theme_minimal()
-)
+# }
 
 
 # ----- Predictions on test data 
@@ -200,3 +199,104 @@ scaled_data_te <- data_clust_te %>%
 clust_preds <- predict.kmeans(object = res.km, 
                newdata = scaled_data_te, 
                method = "classes")
+
+
+# ----- Fit k-means to the whole data set 
+
+load(paste(data_path, "final_data.RData", sep = "/"))
+
+scaled_data <- final_data %>%
+  select(c(CLTV, churn_risk)) %>%
+  scale() %>%
+  as.data.frame()
+
+set.seed(123)
+n_centers <- 4
+
+res.km <- kmeans(
+  scaled_data,
+  centers = n_centers, 
+  nstart = 25
+)
+
+p <- fviz_cluster(
+  res.km, 
+  data = scaled_data,
+  palette = "Set2", 
+  geom = "point",
+  ellipse.type = "convex",
+  ggtheme = theme_minimal()
+)
+p
+
+# most representative individuals (parangons)
+  # instance having the smallest euclidean distance from the cluster's centroid
+  # repeat for each cluster
+
+data.matrix <- scaled_data %>%
+  mutate(cluster = res.km$cluster) 
+cluster_col <- which(colnames(data.matrix) == "cluster")
+
+candidates <- dlply(data.matrix, "cluster", function(data) {
+  dists <- colSums(laply(data[, -cluster_col], function(x) (x-mean(x))^2))
+  rownames(data)[dists == min(dists)]
+}) 
+
+parangons <- lapply(
+  names(candidates), 
+  function(c_name) {candidates[[c_name]]}
+) %>% unlist()
+
+para_data <- scaled_data %>%
+  mutate(cluster = res.km$cluster %>%
+           as.factor()) %>%
+  rownames_to_column(var = "CustomerID") %>%
+  filter(CustomerID %in% as.numeric(parangons))
+
+final_data[parangons, ] %>% View()
+
+
+# ----- eclust -----
+
+system.time(
+  e.km <- eclust(x = scaled_data, 
+                 FUNcluster = "kmeans", 
+                 k.max = 5, 
+                 nboot = 50, 
+                 verbose = TRUE) 
+)
+
+e.km$centers
+
+fviz_cluster(
+  e.km, 
+  data = scaled_data,
+  palette = "Set2", 
+  geom = "point",
+  ellipse.type = "convex",
+  main = "Cluster plot on scaled data", 
+  ggtheme = theme_minimal()
+) +
+  geom_point(data = e.km$centers %>% as.data.frame(), 
+             aes(x = CLTV, y = Churn_Risk), 
+             size = 10, 
+             shape = 4)
+
+e.km2 <- eclust(x = scaled_data, 
+                FUNcluster = "kmeans", 
+                k = 4)
+
+fviz_cluster(
+  e.km2, 
+  data = scaled_data,
+  palette = "Set2", 
+  geom = "point",
+  ellipse.type = "convex",
+  main = "Cluster plot on scaled data", 
+  ggtheme = theme_minimal()
+) +
+  geom_point(data = e.km2$centers %>% as.data.frame(), 
+             aes(x = CLTV, y = Churn_Risk), 
+             size = 10, 
+             shape = 4)
+
