@@ -23,11 +23,11 @@ library(data.table)
 library(ggplot2)
 
 library(survival)
-library(flexsurv)   # for parametric survival models 
+library(flexsurv)     # for parametric survival models 
 library(survminer)  
-library(survcomp)   # for concordance index
-library(muhaz)      # for kernel density estimator
-library(lmtest)     # for LR test 
+library(survcomp)     # for concordance index
+library(muhaz)        # for kernel density estimator
+library(lmtest)       # for LR test 
 
 theme_set(theme_minimal())
 
@@ -39,7 +39,6 @@ load(file = paste(data_path, "train_test_data.RData", sep = ""))
 survdata <- data.table(data_train)
 head(survdata)
 
-# kernel density estimator not working
 kernel_haz_est <- muhaz(
   times=survdata$Tenure_Months,
   delta=survdata$Churn_Value, 
@@ -49,7 +48,6 @@ kernel_haz_est <- muhaz(
 kernel_haz <- data.table(time = kernel_haz_est$est.grid,
                          est = kernel_haz_est$haz.est,
                          method = "Kernel density")
-
 
 
 # parametric estimation
