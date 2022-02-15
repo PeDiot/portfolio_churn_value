@@ -74,14 +74,13 @@ pred_te.best <- predict(object = rsf.best,
                         newdata = data_test)
 
 
-
 surv_tr <- pred_tr.best$survival %>%
   t() %>%
   as.data.frame(row.names = 1:72) 
 colnames(surv_tr) <- data_train %>%
   pull(CustomerID)
 
-custID <- "1052"
+custID <- "1"
 duration <- data_train[custID, "Tenure_Months"]
 surv_tr %>%
   select(all_of(custID)) %>%
@@ -96,4 +95,9 @@ surv_tr %>%
        y = "Survival", 
        title = paste("Estimated survival for customer", custID), 
        subtitle = paste("Observed duration =", duration))
+
+save(rsf.best, 
+     file = paste(backup_path, "rsf.Rdata", sep = "/"))
+
+load(file = paste(backup_path, "rsf.Rdata", sep = "/"))
 
