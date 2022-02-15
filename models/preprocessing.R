@@ -77,6 +77,11 @@
   # remove "(automatic)" from categories of "Payment Method"
   levels(cleaned_data$Payment_Method)[1:2] <- c("Bank transfer", "Credit card")
   
+  # change customer IDs
+  regexp <- "[[:digit:]]+"
+  cleaned_data <- cleaned_data %>%
+    mutate(CustomerID = str_extract(CustomerID, regexp))
+  
   # save cleaned data
   save(
     cleaned_data,
@@ -88,7 +93,9 @@
   
   data_split <- initial_split(cleaned_data, prop = .7)
   data_train <- training(data_split)
+  rownames(data_train) <- 1:nrow(data_train) 
   data_test  <- testing(data_split)
+  rownames(data_test) <- 1:nrow(data_test) 
   
   save(
     data_train, data_test, 
