@@ -13,17 +13,41 @@ backup_path <- "C:/Users/pemma/OneDrive - Université de Tours/Mécen/M2/S2/04 -
 
 # ----- packages -----
 library(tidyverse)
+library(data.table)
 library(survival)
 library(survminer)    # for ggsurvplot
 library(survcomp)
+library(muhaz)        # for kernel density estimator
 library(ggplot2)
+library(plotly)
 
 theme_set(theme_minimal())
 
 # ----- data -----
 load(file = paste(data_path, "train_test_data.RData", sep = ""))
 
-# ---------- MODELS ---------- 
+# ---------- TRAINING ---------- 
+
+# --- kernel density estimation ---
+
+survdata <- data.table(data_train)
+kernel_haz_est <- muhaz(
+  times=survdata$Tenure_Months,
+  delta=survdata$Churn_Value, 
+  min.time = 0, 
+  max.time = 72
+)
+kernel_haz <- data.table(time = kernel_haz_est$est.grid,
+                         est = kernel_haz_est$haz.est,
+                         method = "Kernel density")
+haz_plot <- kernel_haz %>%
+  ggplot(aes(x = time, 
+             y = est)) +
+  geom_line(size = .7) +
+  labs(x = "Number of months", 
+       y = "Churn risk", 
+       title = "Observed churn risk", 
+       subtitle = "Kernel density")
 
 # NOT RUN {
 
@@ -112,7 +136,7 @@ cox_haz_plt
 cox_signif_var <- update(
   cox_multivar,
   . ~ . - Latitude - Longitude - Senior_Citizen - Partner - 
-    Device_Protection - Streaming_TV - Streaming_Movies - Paperless_Billing
+    Device_Protection - Streaming_TV - Streaming_Movies - Paperless_Billing - Monthly_Charges
 ) 
 
 save(cox_signif_var, file = paste(backup_path, "cox_signif_var.Rdata", sep = ""))
@@ -127,176 +151,97 @@ C["concordance"]
 
 ggforest(cox_signif_var, main = "", fontsize = 1)
 
-# models without 'Total_Charges' 
 
-# NOT RUN {
+# ---------- PREDICTION ---------- 
 
-cox_signif_var_2 <- update(
+risk_pred_tr <- predict(
   cox_signif_var, 
-  . ~ . - Total_Charges
+  type = "risk", 
+  se.fit = T
 )
 
-save(cox_signif_var_2, file = paste(backup_path, "cox_signif_var_2.Rdata", sep = ""))
-
-#}
-
-load(paste(backup_path, "cox_signif_var_2.Rdata", sep = ""))
-
-ggforest(cox_signif_var_2, main = "", fontsize = 1)
-
-summary(cox_signif_var_2)
-C <- cox_signif_var_2$concordance          # C-index ~ 86.33%
-C["concordance"]
-
-cox_signif_var_2_pred_tr <- predict(
-  cox_signif_var_2, 
-  type = "risk"
-)
-
-cox_signif_var_2_pred_te <- predict(
-  cox_signif_var_2, 
+risk_pred_te <- predict(
+  cox_signif_var, 
   newdata = data_test, 
-  type = "risk"
+  type = "risk", 
+  se.fit = T
 )
 
-data_clust_tr <- cbind(data_train, Churn_Risk = cox_signif_var_2_pred_tr)
-data_clust_te <- cbind(data_test, Churn_Risk = cox_signif_var_2_pred_te)
+# predicted churn risk
+
+p1 <- data.frame(num_months = data_train$Tenure_Months, 
+           risk = risk_pred_tr$fit, 
+           se = risk_pred_tr$se.fit) %>%
+  mutate(lower_bound = risk - 1.96*se, 
+         upper_bound = risk + 1.96*se) %>%
+  group_by(num_months) %>%
+  summarise(across(-se,
+                   mean,
+                   na.rm = T)) %>%
+  ggplot(aes(x = num_months, 
+             y = risk)) +
+  geom_line(size = .7, 
+            color = "#2E9FDF") +
+  geom_ribbon(aes(ymin = lower_bound, 
+                  ymax = upper_bound), 
+              fill = "grey70", 
+              alpha = .3) +
+  labs(x = "Number of months", 
+       y = "Churn risk", 
+       title = "Cox model estimation",
+       subtitle = "Training set")
+
+ggplotly(p1)
+
+p2 <- data.frame(num_months = data_test$Tenure_Months, 
+                 risk = risk_pred_te$fit, 
+                 se = risk_pred_te$se.fit) %>%
+  mutate(lower_bound = risk - 1.96*se, 
+         upper_bound = risk + 1.96*se) %>%
+  group_by(num_months) %>%
+  summarise(across(-se,
+                   mean,
+                   na.rm = T)) %>%
+  ggplot(aes(x = num_months, 
+             y = risk)) +
+  geom_line(size = .7, 
+            color = "#BE7970") +
+  geom_ribbon(aes(ymin = lower_bound, 
+                  ymax = upper_bound), 
+              fill = "grey70", 
+              alpha = .3) +
+  labs(x = "Number of months", 
+       y = "Churn risk",
+       title = "Cox model estimation",
+       subtitle = "Testing set")
+
+ggarrange(haz_plot,  
+          p1, p2, 
+          ncol = 3)
+
+# data set for clustering
+
+data_clust_tr <- cbind(data_train, 
+                       Churn_Risk = risk_pred_tr)
+data_clust_te <- cbind(data_test, 
+                       Churn_Risk = risk_pred_te)
 
 save(
   data_clust_tr, data_clust_te,
   file = paste(data_path, "train_test_data_clust.RData", sep = "")
 )
 
-# -- Aalen model ---
+# ---------- SAVE COX MODEL ---------- 
 
-# The Aalen model assumes that the cumulative hazard H(t) for a subject can be expressed as a(t) + X B(t), 
-# where a(t) is a time-dependent intercept term, X is the vector of covariates for the subject (possibly time-dependent),
-# and B(t) is a time-dependent matrix of coefficients. 
+load(file = paste(data_path, "telco_cleaned.RData", sep = "/"))
 
-aa_fit <-aareg(
-  formula = Surv(Tenure_Months, Churn_Value) ~ Dependents + 
-    Phone_Service + Internet_Service + Online_Security + Online_Backup + 
-    Tech_Support + Contract + Payment_Method + Monthly_Charges,  
-  data = data_train_multivar
-)
-aa_fit
-
-autoplot(aa_fit)
-
-# ---------- ESTIMATION ---------- 
-
-# --- functions ---
-
-get_conditional_survival <- function(survfit_obj, id){
-  # Return number of months, conditional survival and confidence interval for a given individual
-  
-  surv <- survfit_obj$surv %>%
-    as.data.frame() %>%
-    dplyr::select(all_of(id))  
-  num_months <- as.numeric(rownames(surv))
-  surv_lower <- survfit_obj$lower %>%
-    as.data.frame() %>%
-    pull(id) 
-  surv_upper <- survfit_obj$upper %>%
-    as.data.frame() %>%
-    pull(id) 
-  surv <- surv %>%
-    pull(id) 
-  
-  data.frame(
-    num_months = num_months, 
-    surv_lower = ifelse(is.na(surv_lower), 0, surv_lower), 
-    surv = surv, 
-    surv_upper = ifelse(is.na(surv_upper), 0, surv_upper)
-  )
-}
-
-plot_conditional_survival <- function(
-  surv_data, 
-  id, 
-  is_train = TRUE
-){
-  # Return a plot of conditional survival with confidence interval for a given individual
-  
-  color <- ifelse(
-    test = isTRUE(is_train), 
-    yes = "#2E9FDF", 
-    no = "#BE7970"
-  )
-  
-  surv_data %>%
-    ggplot(aes_string(
-      x = "num_months", 
-      y = "surv"
-    )) +
-    geom_line(color = color, size = 1) +
-    geom_ribbon(
-      aes_string(ymin = "surv_lower", ymax = "surv_upper"), 
-      alpha = .2
-    ) +
-    labs(
-      title = paste("Estimated conditional survival for individual", id), 
-      x = "Number of months", 
-      y = "Survival"
-    )
-}
-
-# --- train samples ---
-
-ggsurvplot(
-  fit = survfit(cox_signif_var_2),
-  data = data_train_multivar, 
-  palette = "#2E9FDF",
-  ggtheme = theme_minimal()
-) 
-
-cox_signif_var_survfit_tr <- survfit(
-  cox_signif_var_2, 
-  newdata = data_train
+formula <- cox_signif_var$formula
+final_cox <- coxph(
+  formula = formula, 
+  data = cleaned_data
 )
 
-train_ids <- rownames(data_train)
+summary(final_cox)
 
-plot_list <- lapply(
-  
-  train_ids[1:4], 
-  
-  function(id){
-    surv_data <- get_conditional_survival(
-      survfit_obj = cox_signif_var_survfit_tr, 
-      id = id
-    )
-    plot_conditional_survival(surv_data, id)
-  }
-) 
-
-ggpubr::ggarrange(plotlist = plot_list, nrow = 2, ncol = 2)
-
-# --- test samples ---
-
-cox_signif_var_survfit_te <- survfit(
-  cox_signif_var_2, 
-  newdata = data_test
-)
-
-test_ids <- rownames(data_test)
-
-plot_list <- lapply(
-  
-  test_ids[1:4], 
-  
-  function(id){
-    surv_data <- get_conditional_survival(
-      survfit_obj = cox_signif_var_survfit_te, 
-      id = id
-    )
-    plot_conditional_survival(surv_data, id, is_train = FALSE)
-  }
-) 
-
-ggpubr::ggarrange(plotlist = plot_list, nrow = 2, ncol = 2)
-
-get_conditional_survival(
-  survfit_obj = cox_signif_var_survfit_te, 
-  id = test_ids[100]
-) %>% View()
+save(final_cox, 
+     file = paste(backup_path, "cox_final.RData", sep = "/")) 
