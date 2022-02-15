@@ -2,17 +2,20 @@
 
 # ----- Setup -----
 
+parent_dir <- "C:/Users/pemma/OneDrive - Université de Tours/Mécen/M2/S2/04 - 3R/portfolio_churn_value/"
 dir <- "./models/survival_models/"
 setwd(dir)
-data_path <- "C:/Users/pemma/OneDrive - Université de Tours/Mécen/M2/S2/04 - 3R/portfolio_churn_value/data/"
-backup_path <- "C:/Users/pemma/OneDrive - Université de Tours/Mécen/M2/S2/04 - 3R/portfolio_churn_value/backup/survival/"
+data_path <- paste0(parent_dir, "data/") 
+backup_path <- paste0(parent_dir, "/backup/survival/") 
+
+source(paste0(parent_dir, "colors.R"))
 
 library(tidyverse)
 library(data.table) 
 library(ggplot2)
 library(survival)
-library(maxLik)       # MLE
-library(mltools)      # one-hot encoding
+library(maxLik)           # MLE
+library(fastDummies)      # one-hot encoding
 
 theme_set(theme_minimal())
 
@@ -49,6 +52,16 @@ init_params <- function(X, vals){
   return(vals)
 }
 
+estimate_risk <- function(X, coefs){
+  theta <- theta_reg(X, beta = coefs)
+  return(theta)
+}
+
+estimate_survival <- function(X, t, coefs){
+  theta <- theta_reg(X, beta = coefs)
+  s <- exp(x = theta * t)
+}
+
 # ----- Inputs -----
 
 N <- nrow(data_train)
@@ -57,9 +70,10 @@ vars <- c("Monthly_Charges", "Contract")
 
 predictors <- data_train %>%
   dplyr::select(all_of(vars)) %>%
-  as.data.table() %>% one_hot()
+  dummy_cols(remove_first_dummy = T,
+             remove_selected_columns = T)
 
-X <- data.frame(Bias = rep(1, N), 
+X <- data.frame(Intercept = rep(1, N), 
                 predictors) %>%
   as.matrix()
 p <- ncol(X)
@@ -68,7 +82,7 @@ t <- data_train$Tenure_Months
 delta <- data_train$Churn_Value
 
 params <- init_params(X = X,
-                      vals = c(.1, .1))
+                      vals = c(.1, .1, .1, .1))
 
 # ----- Maximum Likelihood Estimation by hand -----
 
@@ -81,12 +95,33 @@ summary(res.maxLik)
 
 coefs <- res.maxLik$estimate
 
+# ----- Estimated risk and survival functions -----
+
+risk_tr <- estimate_risk(X, coefs)
+surv_tr <- estimate_survival(X, t, coefs)
+
+data.frame(t = t, 
+           risk = risk_tr, 
+           surv = surv_tr) %>%
+  group_by(t) %>%
+  summarise(risk = mean(risk, na.rm = T), 
+            surv = mean(surv, na.rm = T)) %>%
+  as.data.frame() %>%
+  pivot_longer(cols = risk:surv) %>%
+  ggplot(aes(x = t, 
+             y = value, 
+             color = name)) +
+    geom_line(size = .7) +
+  facet_grid(~name)
+
+
+    
 # ----- Maximum Likelihood Estimation with survival -----
 
 exp.reg <- survreg(
-  formula = Surv(Tenure_Months, Churn_Value) ~ Monthly_Charges, 
+  formula = Surv(Tenure_Months, Churn_Value) ~ Monthly_Charges + Contract, 
   data = data_train, 
   dist = "exponential"
 )
 
-summary(exp.reg)
+  summary(exp.reg)
