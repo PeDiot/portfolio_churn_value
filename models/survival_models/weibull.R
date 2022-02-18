@@ -1,4 +1,4 @@
-# --------------- Weibull model with maxLik ---------------
+# --------------- Weibull Model Estimation ---------------
 
 # ----- Setup -----
 
@@ -53,29 +53,41 @@ gamma_reg <- function(X, beta){
   return(fit)
 }
 
-# initialize parameters ---
-init_alpha <- function(params){
+# format parameters ---
+format_alpha <- function(params){
   params["alpha"]
 }
-init_beta <- function(params){
+format_beta <- function(params){
   params[
     setdiff(names(params),
             "alpha")
-    ] %>%
+  ] %>%
     as.matrix(nrow = p, ncol = 1)
 }
 
 # log-likelihood ---
 log_lik <- function(params){
   
-  alpha <- init_alpha(params)
-  beta <- init_beta(params) 
+  alpha <- format_alpha(params)
+  beta <- format_beta(params) 
   
   gamma <- gamma_reg(X_tr, beta)
   no_cens <- sum( delta_tr * (X_tr%*%beta + log(alpha) + (alpha - 1)*log(time_tr) - gamma*time_tr**alpha) )
   cens <- sum( (1 - delta_tr) * gamma*time_tr**alpha )
   
   return (no_cens - cens)
+}
+
+# hazard function for Weibull model ---
+haz_wei <- function(gamma, alpha, t){
+  h <- gamma*alpha*t**(alpha-1)
+  return(h)
+}
+
+# survivor function for Weibull model ---
+surv_wei <- function(gamma, alpha, t){
+  s <- exp(-gamma*t**alpha)
+  return(s)
 }
 
 # ----- Inputs -----
@@ -89,10 +101,13 @@ p <- ncol(X_tr)
 time_tr <- data_train$Tenure_Months
 delta_tr <- data_train$Churn_Value
 
-# ------ MLE ------
+beta_init <- c(.01, .01)
+names(beta_init) <- colnames(X_tr)
+params_init <- c(beta_init, 
+                 "alpha" = .01)
 
-params_init <- c("beta" = c(.1, .1), 
-                 "alpha" = .1)
+# ------ MLE using maxLik ------
+
 co <- maxControl(tol = 1e-4, 
                  printLevel = 3)
 
@@ -103,7 +118,53 @@ res.maxLik <- maxLik(logLik = log_lik,
                      method = method)
 summary(res.maxLik)
 
-# ----- Analyze results -----
+params.opt <- res.maxLik$estimate
+gamma_opt <- gamma_reg(X = X_tr, 
+                       beta = format_beta(params.opt))
+alpha.opt <- format_alpha(params.opt)
 
-# Estimate regression coeficents using flexsurvreg ---
+# ----- MLE using optimx -----
+
+# NOT RUN {
+
+# res.optimx <- optimx(par = params_init,
+# fn = log_lik,
+# hessian = TRUE,
+# control = list(trace = 0, all.methods = TRUE))
+
+# }
+
+
+# ----- Weibull model using flexsurvreg -----
+
+wei.flexsurvreg <- flexsurvreg(Surv(time = Tenure_Months, event = Churn_Value) ~ Monthly_Charges,
+                               data = data_train,
+                               dist = "weibullph")
+coef(wei.flexsurvreg)
+
+# difference in shape parameters w.r.t maxLike estimates 
+
+# ----- Risk and Survival prediction -----
+
+system.time(
+  haz.flexsurvreg <- predict(wei.flexsurvreg, 
+                             type = "hazard")
+)
+
+system.time(
+  surv.flexsurvreg <- predict(wei.flexsurvreg, 
+                              type = "survival")
+)
+
+system.time(
+  haz.maxLik <- haz_wei(gamma = gamma_opt, 
+                        alpha = alpha.opt,
+                        t = time_tr)
+)
+
+system.time(
+  surv.maxLik <- surv_wei(gamma = gamma_opt, 
+                          alpha = alpha.opt,
+                          t = time_tr)
+)
 
