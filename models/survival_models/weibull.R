@@ -10,68 +10,100 @@ backup_path <- "C:/Users/pemma/OneDrive - Université de Tours/Mécen/M2/S2/04 -
 library(tidyverse)
 library(ggplot2)
 library(survival)
-library(muhaz)      # for kernel density estimator
+library(flexsurv)     # parametric models 
 library(maxLik)
-
+library(fastDummies)  # one-hot encoding
 
 theme_set(theme_minimal())
 
 load(file = paste(data_path, "train_test_data.RData", sep = ""))
 
-# ----- MLE -----
+# ----- Functions -----
 
-# fixed parameters
-N <- nrow(data_train)
-
-X <- data.frame(
-  Bias = rep(1, N), 
-  data_train %>%
-    dplyr::select(Monthly_Charges)
-) %>%
-  as.matrix()
-p <- ncol(X)
-
-t <- data_train$Tenure_Months
-delta <- data_train$Churn_Value
-
-# survival function 
-surv_wei <- function(t, gamma, alpha = 1){
-  1 - pweibull(
-    q = t, 
-    shape = gamma, 
-    scale = alpha)
+# build feature vector ---
+build_feature_vector <- function(data, vars){
+  
+  N <- nrow(data)
+  
+  if (length(vars) == 1){
+    predictors <- data_train %>%
+      dplyr::select(all_of(vars))
+    X_tr <- data.frame(Intercept = rep(1, N), 
+                       predictors) %>%
+      as.matrix()
+  }
+  else {
+    predictors <- data_train %>%
+      dplyr::select(all_of(vars)) %>%
+      dummy_cols(remove_first_dummy = T,
+                 remove_selected_columns = T)
+    
+    X_tr <- data.frame(Intercept = rep(1, N), 
+                       predictors) %>%
+      as.matrix()
+  }
+  
+  return(X_tr)
+  
 }
 
-# model gamma
+# regression on gamma parameter ---
 gamma_reg <- function(X, beta){
   fit <- exp(X%*%beta)
   return(fit)
 }
 
-# log-likelihood
-log_lik <- function(params){
-  n_params <- length(params)
-  beta <- params[-n_params] %>%
-    matrix(nrow = p, 
-           ncol = 1)
-  alpha <- params[n_params] %>%
-    matrix(nrow = 1, 
-           ncol = 1)
-  
-  gamma <- gamma_reg(X, beta)
-  no_cens <- sum( delta * dweibull(x = t, 
-                                   shape = gamma, 
-                                   scale = alpha) )
-  cens <- sum( (1 - delta) * surv_wei(t = t, 
-                                      shape = gamma, 
-                                      scale = alpha) )
-  
-  return (no_cens + cens)
+# initialize parameters ---
+init_alpha <- function(params){
+  params["alpha"]
+}
+init_beta <- function(params){
+  params[
+    setdiff(names(params),
+            "alpha")
+    ] %>%
+    as.matrix(nrow = p, ncol = 1)
 }
 
-# initialization
+# log-likelihood ---
+log_lik <- function(params){
+  
+  alpha <- init_alpha(params)
+  beta <- init_beta(params) 
+  
+  gamma <- gamma_reg(X_tr, beta)
+  no_cens <- sum( delta_tr * (X_tr%*%beta + log(alpha) + (alpha - 1)*log(time_tr) - gamma*time_tr**alpha) )
+  cens <- sum( (1 - delta_tr) * gamma*time_tr**alpha )
+  
+  return (no_cens - cens)
+}
+
+# ----- Inputs -----
+
+vars <- "Monthly_Charges"
+
+X_tr <- build_feature_vector(data = data_train, 
+                             vars = vars)
+p <- ncol(X_tr)
+
+time_tr <- data_train$Tenure_Months
+delta_tr <- data_train$Churn_Value
+
+# ------ MLE ------
+
 params_init <- c("beta" = c(.1, .1), 
                  "alpha" = .1)
+co <- maxControl(tol = 1e-4, 
+                 printLevel = 3)
 
-log_lik(params_init)
+method <- "NR"
+res.maxLik <- maxLik(logLik = log_lik, 
+                     start = params_init, 
+                     control = co, 
+                     method = method)
+summary(res.maxLik)
+
+# ----- Analyze results -----
+
+# Estimate regression coeficents using flexsurvreg ---
 
