@@ -78,9 +78,8 @@
   levels(cleaned_data$Payment_Method)[1:2] <- c("Bank transfer", "Credit card")
   
   # change customer IDs
-  regexp <- "[[:digit:]]+"
   cleaned_data <- cleaned_data %>%
-    mutate(CustomerID = str_extract(CustomerID, regexp))
+    mutate(CustomerID = 1:nrow(.))
   
   # save cleaned data
   save(
