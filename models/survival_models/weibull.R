@@ -2,6 +2,7 @@
 
 # ----- Setup -----
 
+source("colors.R")
 dir <- "./models/survival_models/"
 setwd(dir)
 data_path <- "C:/Users/pemma/OneDrive - Université de Tours/Mécen/M2/S2/04 - 3R/portfolio_churn_value/data/"
@@ -137,24 +138,31 @@ alpha.opt <- format_alpha(params.opt)
 
 # ----- Weibull model using flexsurvreg -----
 
-wei.flexsurvreg <- flexsurvreg(Surv(time = Tenure_Months, event = Churn_Value) ~ Monthly_Charges,
-                               data = data_train,
-                               dist = "weibullph")
-coef(wei.flexsurvreg)
+wei.survreg <- flexsurvreg(
+  formula = Surv(time = Tenure_Months, event = Churn_Value) ~ Monthly_Charges, 
+  data = data_train,
+  dist = "weibullph")
 
-# difference in shape parameters w.r.t maxLike estimates 
+survreg_coefs <- wei.survreg$coefficients
+
+paste("Scale parameter estimated with maxLik:", 
+      log(params.opt["alpha"]) %>%
+        round(3))
+
+paste("Scale parameter estimated with flexsurvreg:", 
+      survreg_coefs["shape"] %>%
+        round(3))
+
 
 # ----- Risk and Survival prediction -----
 
 system.time(
-  haz.flexsurvreg <- predict(wei.flexsurvreg, 
-                             type = "hazard")
+  haz.survreg <- predict(wei.flexsurvreg, 
+                         type = "hazard", 
+                         times = 1:72, 
+                         se.fit = T)
 )
 
-system.time(
-  surv.flexsurvreg <- predict(wei.flexsurvreg, 
-                              type = "survival")
-)
 
 system.time(
   haz.maxLik <- haz_wei(gamma = gamma_opt, 
@@ -162,9 +170,16 @@ system.time(
                         t = time_tr)
 )
 
-system.time(
-  surv.maxLik <- surv_wei(gamma = gamma_opt, 
-                          alpha = alpha.opt,
-                          t = time_tr)
-)
-
+risk_plot <- cbind(data_train,
+                   haz.maxLik,
+                   haz.survreg) %>%
+  group_by(Tenure_Months) %>%
+  summarise(haz.maxLik = mean(haz.maxLik),
+            haz.survreg = haz.survreg) %>%
+  ggplot(aes(x = Tenure_Months, 
+             y = churn_risk)) +
+  geom_line(size = .7, 
+            color = risk_col) +
+  labs(x = "Number of months", 
+       y = "Churn risk", 
+       title = "Weibull model") ; risk_plot
