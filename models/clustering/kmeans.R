@@ -24,6 +24,7 @@ data_path <- "C:/Users/pemma/OneDrive - Université de Tours/Mécen/M2/S2/04 - 3
 backup_path <- "C:/Users/pemma/OneDrive - Université de Tours/Mécen/M2/S2/04 - 3R/portfolio_churn_value/backup/clustering/"
 
 load(paste(data_path, "train_test_data_clust.RData", sep = "/"))
+load(paste(data_path, "clust_data.RData", sep = "/"))
 
 library(tidyverse)
 library(plyr)
@@ -33,7 +34,30 @@ library(FactoMineR)
 
 theme_set(theme_minimal()) 
 
-# scale data
+# predictions on unseen data
+predict.kmeans <- function(object,
+                           newdata,
+                           method = c("centers", "classes")) {
+  method <- match.arg(method)
+  
+  centers <- object$centers
+  ss_by_center <- apply(centers, 1, function(x) {
+    colSums((t(newdata) - x) ^ 2)
+  })
+  best_clusters <- apply(ss_by_center, 1, which.min)
+  
+  if (method == "centers") {
+    centers[best_clusters, ]
+  } else {
+    best_clusters
+  }
+  
+}
+
+
+# ----- k-means on churn risk and customer value -----
+
+# Scale data -----
 scaled_data <- data_clust_tr %>%
   select(c(CLTV, Churn_Risk)) %>%
   scale() %>%
@@ -41,7 +65,7 @@ scaled_data <- data_clust_tr %>%
 
 set.seed(123)
 
-# ----- Data Viz -----
+# Data Viz -----
 
 cor(x = data_clust_tr$Churn_Risk, 
     y = data_clust_tr$CLTV)
@@ -59,7 +83,7 @@ data_clust_tr %>%
   geom_density()
 
 
-# ----- kmeans -----
+# k-means -----
 
 n_centers <- 4
 
@@ -170,26 +194,7 @@ fviz_cluster(
 # }
 
 
-# ----- Predictions on test data 
-
-predict.kmeans <- function(object,
-                           newdata,
-                           method = c("centers", "classes")) {
-  method <- match.arg(method)
-  
-  centers <- object$centers
-  ss_by_center <- apply(centers, 1, function(x) {
-    colSums((t(newdata) - x) ^ 2)
-  })
-  best_clusters <- apply(ss_by_center, 1, which.min)
-  
-  if (method == "centers") {
-    centers[best_clusters, ]
-  } else {
-    best_clusters
-  }
-
-}
+# Predictions on test data -----
 
 scaled_data_te <- data_clust_te %>%
   select(c(CLTV, Churn_Risk)) %>%
@@ -201,7 +206,7 @@ clust_preds <- predict.kmeans(object = res.km,
                method = "classes")
 
 
-# ----- Fit k-means to the whole data set 
+# Fit k-means to the whole data set -----
 
 load(paste(data_path, "final_data.RData", sep = "/"))
 
@@ -256,7 +261,7 @@ para_data <- scaled_data %>%
 final_data[parangons, ] %>% View()
 
 
-# ----- eclust -----
+# eclust -----
 
 system.time(
   e.km <- eclust(x = scaled_data, 
@@ -300,3 +305,81 @@ fviz_cluster(
              size = 10, 
              shape = 4)
 
+
+
+# ----- k-means on the whole data set after MCA -----
+
+# Data Viz -----
+
+colnames(clust_dat) <- colnames(clust_dat) %>% 
+  str_remove(pattern = " ")
+
+visualize_axes <- function(ax1 = "Dim1", ax2 = "Dim2"){
+  
+  clust_dat %>%
+    select(c(ax1, ax2)) %>%
+    ggplot(aes_string(x = ax1, 
+                      y = ax2)) +
+    geom_point(alpha = .5)
+  
+}
+
+ggpubr::ggarrange(
+  visualize_axes(), 
+  visualize_axes(ax1 = "Dim3", ax2 = "Dim4"), 
+  visualize_axes(ax1 = "Dim5", ax2 = "Dim6"), 
+  visualize_axes(ax1 = "Dim7", ax2 = "Dim8"), 
+  visualize_axes(ax1 = "Dim9", ax2 = "Dim10"),
+  ncol = 3, nrow = 2
+)
+
+# Scale data  -----
+
+scaled_dat <- clust_dat %>%
+  select(-Customer_ID) %>%
+  mutate(Monthly_Charges = scale(Monthly_Charges))
+
+# Optimal number of clusters -----
+
+# --- Elbow method
+system.time(
+  elbow <- fviz_nbclust(scaled_dat, 
+                        kmeans, 
+                        method = "wss") +
+    labs(subtitle = "Elbow method")
+)
+
+# --- Silhouette method
+system.time(
+  silhouette <- fviz_nbclust(scaled_dat, 
+                             kmeans, 
+                             method = "silhouette") +
+    labs(subtitle = "Silhouette method")
+)
+
+num_clust_plot <- ggpubr::ggarrange(
+  elbow,
+  silhouette, 
+  ncol = 2
+); num_clust_plot
+
+# Apply k-means ----- 
+
+n_centers <- 2
+
+res.km <- kmeans(
+  scaled_dat,
+  centers = n_centers, 
+  nstart = 25
+)
+
+choose.vars <- c("Dim1", "Monthly_Charges")
+fviz_cluster(
+  res.km, 
+  choose.vars = choose.vars,
+  data = scaled_dat,
+  palette = "Set2", 
+  geom = "point",
+  ellipse.type = "convex",
+  ggtheme = theme_minimal()
+)
