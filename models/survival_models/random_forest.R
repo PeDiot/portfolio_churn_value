@@ -1,5 +1,7 @@
 # ------------------- Random Survival Forest ------------------- 
 
+# Tutorial: https://luminwin.github.io/randomForestSRC/articles/getstarted.html
+
 # ---------- SET UP ----------
 
 # ----- paths -----
@@ -29,17 +31,67 @@ testIDs <- data_test %>%
 
 # ---------- MODEL ----------
 
-formula <- cox_final$formula
+# ----- Fit the model -----
 
-system.time(
-  rsf <- rfsrc(
-    formula = formula, 
-    data = data_train
+# NOT RUN {
+
+  formula <- cox_final$formula
+  
+  system.time(
+    rsf <- rfsrc(
+      formula = formula, 
+      data = data_train
+    )
   )
-)
+  
+  system.time(
+    tune.rsf <- tune(
+      formula = formula, 
+      data = data_train,
+      doBest = TRUE
+    )
+  )
+  
+  rsf.best <- rfsrc(
+    formula = formula, 
+    data = data_train,
+    nodesize = tune.rsf$optimal["nodesize"],
+    mtry = tune.rsf$optimal["mtry"]
+  )
+  
+  save(rsf.best, 
+       file = paste(backup_path, "rsf.Rdata", sep = "/"))
+  
+# }
+  
+load(file = paste(backup_path, "rsf.Rdata", sep = "/"))
 
-pred_tr <- predict(object = rsf)
-pred_te <- predict(object = rsf, 
+# ----- Importance of variables -----
+
+imp <- vimp(object = rsf.best)
+data.frame(imp = imp$importance) %>%
+  arrange(desc(imp)) 
+
+vars <- rsf.best$xvar.names
+plot.variable(x = rsf.best, 
+              xvar.names = vars, 
+              partial = T)
+
+# ----- Quality of estimation -----
+
+get.cindex(time = data_train$Tenure_Months,
+           censoring = data_train$Churn_Value, 
+           predicted = rsf.best$predicted.oob)
+
+get.cindex(time = data_train$Tenure_Months,
+           censoring = data_train$Churn_Value, 
+           predicted = rsf.best$predicted)
+
+
+# ----- Risk and survival prediction -----
+  
+pred_tr <- predict(object = rsf.best)
+pred_te <- predict(object = rsf.best, 
                        newdata = data_test)
 
 custID <- 10
@@ -51,30 +103,7 @@ data.frame(t = 1:72,
              y = surv)) +
   geom_line()
 
-imp <- vimp(object = rsf)
-data.frame(imp = imp$importance) %>%
-  arrange(desc(imp))
-
-system.time(
-  tune.rsf <- tune(
-    formula = formula, 
-    data = data_train,
-    doBest = TRUE
-  )
-)
-
-rsf.best <- rfsrc(
-  formula = formula, 
-  data = data_train,
-  nodesize = tune.rsf$optimal["nodesize"],
-  mtry = tune.rsf$optimal["mtry"]
-)
-pred_tr.best <- predict(object = rsf.best)
-pred_te.best <- predict(object = rsf.best, 
-                        newdata = data_test)
-
-
-surv_tr <- pred_tr.best$survival %>%
+surv_tr <- pred_tr$survival %>%
   t() %>%
   as.data.frame(row.names = 1:72) 
 colnames(surv_tr) <- data_train %>%
@@ -96,8 +125,5 @@ surv_tr %>%
        title = paste("Estimated survival for customer", custID), 
        subtitle = paste("Observed duration =", duration))
 
-save(rsf.best, 
-     file = paste(backup_path, "rsf.Rdata", sep = "/"))
 
-load(file = paste(backup_path, "rsf.Rdata", sep = "/"))
 
