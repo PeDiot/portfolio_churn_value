@@ -64,7 +64,7 @@ plot_km <- function(
     conf.int = T, 
     risk.table = risk_table, 
     ggtheme = theme_minimal(base_size = font_size), 
-    palette = "Set2", 
+    palette = "jco", 
     legend.labs = surv_data %>% 
       pull(treatment) %>%
       levels(), 
@@ -86,20 +86,19 @@ hist_dens_plot <- function(
     ggplot(aes_string(x = target)) +
     geom_histogram(
       aes_string(
-        color = treatment, 
         fill = treatment, 
         y = "..density.."
       ), 
-      bins = 100, 
-      alpha = .2, 
+      bins = 30, 
+      alpha = .3, 
       position = "identity"
     ) +
     geom_density(
       aes_string(color = treatment), 
       size = .8
     ) +
-    scale_color_brewer(palette = "Set2") +
-    scale_fill_brewer(palette = "Set2") +
+    scale_color_jco() +
+    scale_fill_jco() +
     scale_x_continuous(labels = scales::comma) +
     ylab("Density") +
     theme_minimal(base_size = base_size) +
@@ -118,12 +117,11 @@ dens_plot <- function(
     ggplot() +
     geom_density(
       aes_string(x = target,
-          fill = treatment,
-          color = treatment), 
-      alpha = .5
+          fill = treatment), 
+      alpha = .3
     ) +
-    scale_color_brewer(palette = "Set2") +
-    scale_fill_brewer(palette = "Set2") +
+    scale_color_jco() +
+    scale_fill_jco() +
     ylab("Density") +
     theme_minimal(base_size = base_size) +
     theme(legend.position = "top") 
