@@ -10,7 +10,6 @@ backup_path <- "C:/Users/pemma/OneDrive - Université de Tours/Mécen/M2/S2/04 -
 load(file = paste0(backup_path, "res.mca.RData"))
 load(paste(data_path, "telco_cleaned.RData", sep = "/"))
 
-
 library(tidyverse)
 library(ggplot2)
 library(FactoMineR)
@@ -31,16 +30,30 @@ library(factoextra)
 
 # }
 
-res.hcpc$data.clust
+  
+load(file = paste0(backup_path, "res.hcpc.RData"))
 
-axes <- c(1, 2)
-fviz_cluster(res.hcpc,
-             repel = TRUE,  
-             axes = axes, 
-             geom = "point", 
-             show.clust.cent = TRUE, 
-             palette = "jco",         
-             ggtheme = theme_minimal())
+# Cluster visualization -----
+cluster_viz <- function(axes){
+  fviz_cluster(res.hcpc,
+               repel = TRUE,  
+               axes = axes, 
+               geom = "point", 
+               show.clust.cent = TRUE, 
+               palette = "jco",         
+               ggtheme = theme_minimal())
+}
+
+axes <- list(c(1, 2), 
+             c(3, 4), 
+             c(5, 6), 
+             c(7, 8), 
+             c(9, 10))
+ggpubr::ggarrange(plotlist = lapply(axes, 
+                                    cluster_viz), 
+                  ncol = 3, nrow = 2, 
+                  common.legend = T)
+
 
 # Cluster description -----
 
