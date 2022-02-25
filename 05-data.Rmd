@@ -16,13 +16,15 @@ knitr::opts_chunk$set(
 ```
 
 ```{r functions}
-source("functions.R")
+source("functions.R", 
+       encoding = "UTF-8")
 ```
 
 
 ```{r}
 library(tidyverse)    # data wrangling
 library(ggplot2)      # fancy plots 
+library(ggsci)        # fancy palettes
 library(ggpubr)       # arrange plots
 library(ggcorrplot)   # fancy correlation plot
 
@@ -454,24 +456,22 @@ n_bins <- unique(cleaned_data$Tenure_Months) %>%
 duration_churn_plot <- cleaned_data %>%
   ggplot(aes(
     x = Tenure_Months,
-    color = Churn_Label,
     fill = Churn_Label
   )) +
   geom_histogram(bins = n_bins, alpha = .4) +
   labs(x = "Tenure months", y = "Count") +
-  scale_color_brewer(palette = "Set2") +
-  scale_fill_brewer(palette = "Set2") +
-  facet_grid(~ Churn_Label) +
+  scale_color_jco() +
+  scale_fill_jco() +
   guides(fill=guide_legend(title="Churn"),
          color=guide_legend(title="Churn")) +
-  theme(legend.position = "none", 
+  theme(legend.position = "top", 
         axis.title = element_text(size = 11), 
         axis.text = element_text(size = 10))
 
 ggsave(
   filename = "./imgs/duration_churn_plot.jpg", 
   plot = duration_churn_plot, 
-  height = 5, width = 7
+  height = 4, width = 6
 )
 ```
 
@@ -494,7 +494,7 @@ avg_cltv_plot <- cleaned_data %>%
     y = avg_cltv, 
     color = mask)) +
   geom_point() +
-  scale_color_brewer(palette = "Set2") +
+  scale_color_jco() +
   labs(x = "Number of months", 
        y = "Average CLTV") +
   theme(legend.position = "none")
