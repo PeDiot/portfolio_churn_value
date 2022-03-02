@@ -1,6 +1,16 @@
 book_filename: "portfolio_churn_value"
 delete_merged_file: true
 output_dir: "docs"
+rmd_files: [
+  "index.Rmd", 
+  "01-intro.Rmd", 
+  "02-literature.Rmd", 
+  "03-duration.Rmd", 
+  "05-data.Rmd", 
+  "06-estimationtechniques.Rmd", 
+  "07-appendix.Rmd", 
+  "08-references.Rmd"
+]
 language:
   ui:
-    chapter_name: "Chapter "
+    chapter_name: "Chapter - "
