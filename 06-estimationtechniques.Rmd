@@ -1,0 +1,51 @@
+---
+output: html_document2
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r echo=FALSE}
+knitr::opts_chunk$set(
+  fig.align = "center", 
+  echo = FALSE, 
+  message = FALSE, 
+  comment = FALSE, 
+  warning = FALSE, 
+  fig.topcaption = TRUE
+)
+```
+
+```{r}
+source("functions.R", 
+       encoding = "UTF-8")
+```
+
+
+```{r}
+library(tidyverse)    # data wrangling
+library(ggplot2)      # fancy plots 
+library(ggsci)        # fancy palettes
+library(ggpubr)       # arrange plots
+
+library(knitr)        # kable
+library(kableExtra)   # fancy tables
+
+library(survival)     # Kaplan-Meier
+library(survminer)    # display survival plots 
+```
+
+```{r}
+theme_set(theme_minimal())
+```
+
+
+# Estimation techniques 
+
+
+## Portfolio segmentation 
+
+
+## Churn prediction 
+
+
+## Estimation of portfolio value 
