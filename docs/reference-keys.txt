@@ -80,7 +80,7 @@ concave-and-convex-hazard
 semi-parametric-estimation
 proportional-hazards-models
 cox-ph-model
-metrics-for-survival-models
+performance-metrics
 concordance-index-c-index
 brier-score
 data
