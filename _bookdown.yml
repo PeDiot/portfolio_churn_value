@@ -1,6 +1,7 @@
 book_filename: "portfolio_churn_value"
 delete_merged_file: true
 output_dir: "docs"
+rmd_subdir: yes
 rmd_files: [
   "index.Rmd", 
   "01-intro.Rmd", 

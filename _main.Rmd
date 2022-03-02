@@ -1,0 +1,183 @@
+---
+title: "Portfolio, Churn & Customer Value"
+author: "Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography:
+- biblio.bib
+- packages.bib
+biblio-style: apalike
+link-citations: true
+description: This research paper aims at modelling customer portfolio, churn and customer value.
+---
+
+```{r eval=FALSE, include=FALSE}
+# setwd("C:/Users/pemma/Dropbox/M2 EE 2021 2022/COURS/3R/TEAM 2 AB PORTEFEUILLE/04 - RAPPORT/bookdown")
+```
+
+
+# Abstract{-#abstract}
+
+This paper is being realized as part of our last year in master's degree in economics. It aims at studying the firm's most valuable asset: its customers. To that end, we adopt a quantitative approach based on a mix of Econometrics and Data Science techniques with a threefold purpose:
+
+- Model customer *portfolio* as a set of customer segments; 
+- Predict and analyze customer *attrition*; 
+- Estimate customer portfolio's overall *value*.
+
+After having defined the subject's key concepts, we apply duration models and machine learning algorithms to a [kaggle](https://www.kaggle.com/yeanzc/telco-customer-churn-ibm-dataset) dataset related to customers of a fictional telecommunications service provider (TSP).
+
+***Keywords***: *customer portfolio management (CPM), churn, customer value, duration models, machine learning, telecom.* 
+
+```{r include=FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+```
+
+
+
+<!--chapter:end:index.Rmd-->
+
+
+# Introduction {#intro}
+
+Placeholder
+
+
+## How to define a customer portfolio? {#portfoliodef}
+## What is attrition? {#attritiondef}
+## What does customer "value" mean? {#valuedef}
+
+<!--chapter:end:01-intro.Rmd-->
+
+
+# Literature Review {#literature}
+
+Placeholder
+
+
+## On customer portfolio {#portfolio}
+## On attrition {#attrition}
+## On customer value {#value}
+
+<!--chapter:end:02-literature.Rmd-->
+
+
+# Duration models {#duration}
+
+Placeholder
+
+
+## Definition
+## Censoring and Truncation
+### Censoring mechanisms
+### Selection bias
+## Probabilistic concepts 
+### Survival function
+### Hazard and Cumulative Hazard functions 
+## Nonparametric models {#nonparam}
+### Notations
+### Hazard function estimator
+### Kaplan-Meier estimator
+### Nelson-Aalen estimator
+## Parametric models
+### Constant hazard (exponential model)
+### Monotone hazard
+#### Weibull model {-}
+#### Other models {-}
+### Concave and convex hazard
+## Semi-parametric estimation 
+### *Proportional Hazards* models
+#### What does *proportional hazards* mean? {-}
+#### Marginal effects {-}
+#### Partial likelihood estimation {-}
+### Cox PH model
+## Performance metrics
+### Concordance index (C-index)
+### Brier score
+
+<!--chapter:end:03-duration.Rmd-->
+
+
+# Machine Learning {#ml}
+
+Placeholder
+
+
+## Machine Learning for Survival Data
+### Survival Trees
+### Random Survival Forests (RSF)
+### Cox Boosting
+## Regression methods
+### Linear models
+#### Model formulation {-}
+#### Ordinary Least Squares {-}
+#### Regularization {-}
+#### Gradient Descent {-}
+### More advanced regression models 
+#### Generalized Additive Model (GAM) {-}
+#### Other models {-}
+## Performance Metrics
+### Metrics for Regression models
+#### Notations {-}
+#### Coefficient of determination {-}
+#### Mean Squared Error (MSE) {-}
+### Metrics for Survival models
+#### Concordance index (C-index) {-}
+#### Brier score {-}
+
+<!--chapter:end:04-ml.Rmd-->
+
+
+# Data {#data}
+
+Placeholder
+
+
+## General Overview
+## `Churn_Value` and `Tenure_Months` 
+### Demographic data {-}
+### Data on services subscribed {-}
+### Customer account data {-}
+## `CLTV`: Customer Lifetime Value
+### Demographic data {-}
+### Data on services subscribed {-}
+### Customer account data {-}
+### Correlation between `CLTV` and explanatory quantitative variables {-}
+## Churn, duration and customer *value* 
+
+<!--chapter:end:05-data.Rmd-->
+
+
+# Estimation techniques 
+
+Placeholder
+
+
+## Portfolio segmentation 
+## Churn prediction 
+## Estimation of portfolio value 
+
+<!--chapter:end:06-estimationtechniques.Rmd-->
+
+
+# Appendix {-#appendix}
+
+Placeholder
+
+
+## Hazard function {-}
+## Link between cumulative hazard and survivor functions {-}
+## Contribution to the partial likelihood function in PH models {-}
+## Partial likelihood function in PH models {-}
+
+<!--chapter:end:07-appendix.Rmd-->
+
+`r if (knitr::is_html_output()) '
+# References {-}
+'`
+
+<!--chapter:end:08-references.Rmd-->
+
