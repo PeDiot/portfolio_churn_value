@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>1.3 What does customer “value” mean? | Portfolio, Churn &amp; Customer Value</title>
+  <title>4.3 CLTV: Customer Lifetime Value | Portfolio, Churn &amp; Customer Value</title>
   <meta name="description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="1.3 What does customer “value” mean? | Portfolio, Churn &amp; Customer Value" />
+  <meta property="og:title" content="4.3 CLTV: Customer Lifetime Value | Portfolio, Churn &amp; Customer Value" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="1.3 What does customer “value” mean? | Portfolio, Churn &amp; Customer Value" />
+  <meta name="twitter:title" content="4.3 CLTV: Customer Lifetime Value | Portfolio, Churn &amp; Customer Value" />
   
   <meta name="twitter:description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="1.2-attritiondef.html"/>
-<link rel="next" href="2-literature.html"/>
+<link rel="prev" href="4.2-churn_value-and-tenure_months.html"/>
+<link rel="next" href="4.4-churn-duration-and-customer-value.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -199,39 +199,404 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="valuedef" class="section level2" number="1.3">
-<h2><span class="header-section-number">1.3</span> What does customer “value” mean?</h2>
-<p>In customer <em>portfolio</em> management, one client’s <em>value</em> is represented by the <strong>customer lifetime value</strong> (CLV). CLV is the present <em>value</em> of all future purchases made by a customer over their lifetime in the firm’s portfolio, taking into account the <em>attrition</em> risk. CLV depends both on the purchase recency as well as on the purchasing rate and aims at identifying the most valuable customer groups. Formally, <span class="citation"><a href="#ref-CUSTOMERS_ASSETS" role="doc-biblioref">Gupta and Lehmann</a> (<a href="#ref-CUSTOMERS_ASSETS" role="doc-biblioref">2003</a>)</span> define CLV for customer <span class="math inline">\(i\)</span> as follows:</p>
-<p><span class="math display" id="eq:clv">\[\begin{equation}
-  CLV_i = \sum_{t=0}^{T} \frac{(p_t - c_t)r_{i,t}}{(1+a)^t} - AC_i
-  \tag{1.1}
-\end{equation}\]</span></p>
-<p>with,</p>
-<ul>
-<li><span class="math inline">\(p_t\)</span> the price paid by customer <span class="math inline">\(i\)</span> at time <span class="math inline">\(t\)</span></li>
-<li><span class="math inline">\(c_t\)</span> the marginal cost at time <span class="math inline">\(t\)</span></li>
-<li><span class="math inline">\(r_{i,t}\)</span> the <strong>probability that customer <span class="math inline">\(i\)</span> be active</strong> at time <span class="math inline">\(t\)</span></li>
-<li><span class="math inline">\(a\)</span> the discount rate</li>
-<li><span class="math inline">\(AC_i\)</span> the acquisition cost of customer <span class="math inline">\(i\)</span></li>
-<li><span class="math inline">\(T\)</span> the duration of observation</li>
-</ul>
-<p>An estimation of the portfolio’s overall value can be calculated through <strong>customer equity</strong> (CE) which amounts to the sum of all the CLVs. Since CE appears to be a good proxy of the firm’s value, the firm’s profit-maximization program can be written as:</p>
-<p><span class="math display" id="eq:maxprofit">\[\begin{equation}
-\begin{aligned}
-\max_{\mathrm{p}} \quad &amp; \textrm{CE} = \sum_{i=1}^{N} \sum_{t=0}^{T} \frac{(p_t - c_t)r_{i,t}}{(1+a)^t} - AC_i\\
-\textrm{s.t.} \quad &amp; r_{i,t} \in [0, 1]\\
-  &amp;p_t &gt; c_t    \\
-\end{aligned}
-\tag{1.2}
-\end{equation}\]</span></p>
-<p>where <span class="math inline">\(\mathrm{p}\)</span> is the vector of prices over all periods that the firm needs to optimize.</p>
-
+<div id="cltv-customer-lifetime-value" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> <code>CLTV</code>: Customer Lifetime Value</h2>
+<p>In the dataset, the <em>value</em> of the fictional TSP’s customers is measured by the discrete quantitative variable called <code>CLTV</code>. In this context, it is decided to draw histogram and density plots related to <code>CLTV</code> depending on the three types of explanatory variables. Anova tests are also implemented to verify whether <code>CLTV</code> has different values in the treatment variables’ categories. Anova is a generalization of the Student’s t test allowing to compare more than two groups. The test’s statistic computes the ratio between variance between sample and variance within samples and is Fisher distributed. A low ratio indicates that there is no significant difference between the means of the samples being compared.</p>
+<div id="demographic-data-1" class="section level3 unnumbered">
+<h3>Demographic data</h3>
+<p>Based on the Anova tests’ results, <code>Partner</code> and <code>Dependents</code> seem to be statistically discriminant in terms of customer lifetime value which is not the case for <code>Gender</code> and <code>Senior_Citizen</code>.</p>
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:aovdemographics">Table 4.5: </span>Anova test between CLTV and demographic variables
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+F statistic
+</th>
+<th style="text-align:right;">
+Df1
+</th>
+<th style="text-align:right;">
+Df2
+</th>
+<th style="text-align:left;">
+p-value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Partner
+</td>
+<td style="text-align:right;">
+139.76
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7030
+</td>
+<td style="text-align:left;">
+6e-32
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Dependents
+</td>
+<td style="text-align:right;">
+24.89
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7030
+</td>
+<td style="text-align:left;">
+6.2e-07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Gender
+</td>
+<td style="text-align:right;">
+0.39
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7030
+</td>
+<td style="text-align:left;">
+5.3e-01
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Senior_Citizen
+</td>
+<td style="text-align:right;">
+0.09
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7030
+</td>
+<td style="text-align:left;">
+7.6e-01
+</td>
+</tr>
+</tbody>
+</table>
+<p>The figure below illustrates how different CLV is between customers with a partner and those without, as well as between those with children or other dependents and those without. To put it another way, having a partner in life of dependents tends to increase customer lifetime value as shown by the last two plots.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:cltvdemographics"></span>
+<p class="caption">
+Figure 4.4: Histogram and density plots of customer lifetime value depending on demographic information
+</p>
+<img src="imgs/cltv_demographics_plots.jpg" alt="Histogram and density plots of customer lifetime value depending on demographic information" width="1800" />
 </div>
-<!-- </div> -->
-<h3>References</h3>
-<div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-CUSTOMERS_ASSETS" class="csl-entry">
-Gupta, and Donald R. Lehmann. 2003. <span>“Customers as Assets.”</span> <em>Journal of Interactive Marketing</em> 17(1): 9–24.
+</div>
+<div id="data-on-services-subscribed-1" class="section level3 unnumbered">
+<h3>Data on services subscribed</h3>
+<p>When one wants to identify factors influencing customer lifetime value, it is relevant to consider variables related to services subscribed by customers. The Anova tests’ results indicate that <code>CLTV</code> has significant different values in each group of all services related variables, except for <code>Internet_Service</code>. The most important difference can be noted for <code>Online_Backup</code> and <code>Online_Security</code> variables, whereas there is more homogeneity in the <code>Phone_Service</code> groups.</p>
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:aovservices">Table 4.6: </span>Anova test between CLTV and services information variables
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+F statistic
+</th>
+<th style="text-align:right;">
+Df1
+</th>
+<th style="text-align:right;">
+Df2
+</th>
+<th style="text-align:left;">
+p-value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Online_Backup
+</td>
+<td style="text-align:right;">
+138.57
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7030
+</td>
+<td style="text-align:left;">
+1.1e-31
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Online_Security
+</td>
+<td style="text-align:right;">
+138.21
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7030
+</td>
+<td style="text-align:left;">
+1.3e-31
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Device_Protection
+</td>
+<td style="text-align:right;">
+105.23
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7030
+</td>
+<td style="text-align:left;">
+1.6e-24
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tech_Support
+</td>
+<td style="text-align:right;">
+101.85
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7030
+</td>
+<td style="text-align:left;">
+8.7e-24
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Streaming_Movies
+</td>
+<td style="text-align:right;">
+90.96
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7030
+</td>
+<td style="text-align:left;">
+2e-21
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Streaming_TV
+</td>
+<td style="text-align:right;">
+79.58
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7030
+</td>
+<td style="text-align:left;">
+5.8e-19
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Phone_Service
+</td>
+<td style="text-align:right;">
+3.65
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7030
+</td>
+<td style="text-align:left;">
+5.6e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Multiple_Lines
+</td>
+<td style="text-align:right;">
+3.65
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7030
+</td>
+<td style="text-align:left;">
+5.6e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Internet_Service
+</td>
+<td style="text-align:right;">
+0.56
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+7029
+</td>
+<td style="text-align:left;">
+5.7e-01
+</td>
+</tr>
+</tbody>
+</table>
+<p>From figure <a href="4.3-cltv-customer-lifetime-value.html#fig:cltvservices">4.5</a> one can note that subscribing to additional services like having multiple lines, online security and backup, device protection or using the streaming movie service significantly enhance customer lifetime value. These variables may be interesting predictors of <code>CLTV</code> in regression models.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:cltvservices"></span>
+<p class="caption">
+Figure 4.5: Histogram and density plots of customer lifetime value depending on services subscribed
+</p>
+<img src="imgs/cltv_services_plots.jpg" alt="Histogram and density plots of customer lifetime value depending on services subscribed" width="2700" />
+</div>
+</div>
+<div id="customer-account-data-1" class="section level3 unnumbered">
+<h3>Customer account data</h3>
+<p>Table <a href="4.3-cltv-customer-lifetime-value.html#tab:aovaccountinfo">4.7</a> depicts that <code>CLTV</code> is statistically different according to the type of contract and the payment method. However, paperless billing does not seem to influence customer lifetime value.</p>
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:aovaccountinfo">Table 4.7: </span>Anova test between CLTV and customer account data
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+F statistic
+</th>
+<th style="text-align:right;">
+Df1
+</th>
+<th style="text-align:right;">
+Df2
+</th>
+<th style="text-align:left;">
+p-value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Contract
+</td>
+<td style="text-align:right;">
+274.28
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+7029
+</td>
+<td style="text-align:left;">
+2e-115
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Payment_Method
+</td>
+<td style="text-align:right;">
+52.66
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+7028
+</td>
+<td style="text-align:left;">
+1.2e-33
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Paperless_Billing
+</td>
+<td style="text-align:right;">
+0.77
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7030
+</td>
+<td style="text-align:left;">
+3.8e-01
+</td>
+</tr>
+</tbody>
+</table>
+<p>The three plots below provide details to previous results as it can be noticed that customers paying by credit card of bank transfer have higher CLV than those paying by e-check of mailed check. Besides, clients enrolled in one-year or two-year contracts have greater <em>value</em> to the firm than those who pay on a monthly basis.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:cltvaccountinfo"></span>
+<p class="caption">
+Figure 4.6: Histogram and density plots of customer lifetime value depending on customer account data
+</p>
+<img src="imgs/cltv_account_info_plots.jpg" alt="Histogram and density plots of customer lifetime value depending on customer account data" width="1800" />
+</div>
+</div>
+<div id="correlation-between-cltv-and-explanatory-quantitative-variables" class="section level3 unnumbered">
+<h3>Correlation between <code>CLTV</code> and explanatory quantitative variables</h3>
+<p>Plotting the correlation matrix allows to have an overview on the links between the dataset’s quantitative variables. The method used is the Pearson correlation coefficient which is defined as follows:</p>
+<p><span class="math display" id="eq:pearson">\[\begin{equation}
+  \rho_{XY} = \frac{\text{cov}(X, Y)}{\sigma_X \sigma_Y}
+  \tag{4.1}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are two quantitative random variables, <span class="math inline">\(\text{cov}\)</span> the covariance function and <span class="math inline">\(\sigma\)</span> the standard deviation.</p>
+<p>On figure <a href="4.3-cltv-customer-lifetime-value.html#fig:corrplot">4.7</a>, non-significant correlations are crossed-out. It can be noticed that <code>CLTV</code> has the strongest correlation with <code>Tenure_Months</code> (<span class="math inline">\(40\%\)</span>), followed by <code>Total_Charges</code> (<span class="math inline">\(34\%\)</span>) then <code>Monthly_Charges</code> (<span class="math inline">\(10\%\)</span>).</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:corrplot"></span>
+<p class="caption">
+Figure 4.7: Correlation plot
+</p>
+<img src="imgs/corr_plot.jpg" alt="Correlation plot" width="900" />
+</div>
 </div>
 </div>
             </section>
@@ -239,8 +604,8 @@ Gupta, and Donald R. Lehmann. 2003. <span>“Customers as Assets.”</span> <em>
           </div>
         </div>
       </div>
-<a href="1.2-attritiondef.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="2-literature.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="4.2-churn_value-and-tenure_months.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="4.4-churn-duration-and-customer-value.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

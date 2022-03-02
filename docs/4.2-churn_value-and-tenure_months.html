@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>1.3 What does customer “value” mean? | Portfolio, Churn &amp; Customer Value</title>
+  <title>4.2 Churn_Value and Tenure_Months | Portfolio, Churn &amp; Customer Value</title>
   <meta name="description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="1.3 What does customer “value” mean? | Portfolio, Churn &amp; Customer Value" />
+  <meta property="og:title" content="4.2 Churn_Value and Tenure_Months | Portfolio, Churn &amp; Customer Value" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="1.3 What does customer “value” mean? | Portfolio, Churn &amp; Customer Value" />
+  <meta name="twitter:title" content="4.2 Churn_Value and Tenure_Months | Portfolio, Churn &amp; Customer Value" />
   
   <meta name="twitter:description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="1.2-attritiondef.html"/>
-<link rel="next" href="2-literature.html"/>
+<link rel="prev" href="4.1-general-overview.html"/>
+<link rel="next" href="4.3-cltv-customer-lifetime-value.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -199,39 +199,395 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="valuedef" class="section level2" number="1.3">
-<h2><span class="header-section-number">1.3</span> What does customer “value” mean?</h2>
-<p>In customer <em>portfolio</em> management, one client’s <em>value</em> is represented by the <strong>customer lifetime value</strong> (CLV). CLV is the present <em>value</em> of all future purchases made by a customer over their lifetime in the firm’s portfolio, taking into account the <em>attrition</em> risk. CLV depends both on the purchase recency as well as on the purchasing rate and aims at identifying the most valuable customer groups. Formally, <span class="citation"><a href="#ref-CUSTOMERS_ASSETS" role="doc-biblioref">Gupta and Lehmann</a> (<a href="#ref-CUSTOMERS_ASSETS" role="doc-biblioref">2003</a>)</span> define CLV for customer <span class="math inline">\(i\)</span> as follows:</p>
-<p><span class="math display" id="eq:clv">\[\begin{equation}
-  CLV_i = \sum_{t=0}^{T} \frac{(p_t - c_t)r_{i,t}}{(1+a)^t} - AC_i
-  \tag{1.1}
-\end{equation}\]</span></p>
-<p>with,</p>
+<div id="churn_value-and-tenure_months" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> <code>Churn_Value</code> and <code>Tenure_Months</code></h2>
+<p>As the combination of these two features form the response variable in the duration models, a relevant approach to have an overall description of the risk of <em>attrition</em> may be to draw the raw survival curves depending on treatment variables. Pearson’s <span class="math inline">\(\chi^2\)</span> tests are also performed so as to test the statistical relationships between the churn indicator variable and explanatory features. Pearson’s <span class="math inline">\(\chi^2\)</span> test determines whether there is a statistically significant difference between the expected frequencies and the observed frequencies in one or more categories of a contingency table. It is thus adapted to test whether two categorical variables are statistically independent. In this context, it appears interesting to use explanatory features related demographic, customer account and services subscribed as treatment variables when fitting the Kaplan-Meier estimator and implementing the tests.</p>
+<div id="demographic-data" class="section level3 unnumbered">
+<h3>Demographic data</h3>
+<p>Table <a href="4.2-churn_value-and-tenure_months.html#tab:chi2demographics">4.2</a> depicts the <span class="math inline">\(\chi^2\)</span> tests’ results performed on demographic variables. Given the <em>p-values</em> are ranked in ascending order and given the lower the <em>p value</em> the stronger link between two categorical variables, <code>Dependents</code> appears to be the most correlated feature with <code>Churn_Label</code>. When comparing this result with the corresponding survival plot in figure <a href="4.2-churn_value-and-tenure_months.html#fig:kmdemographics">4.1</a>, it can be noted that customers with dependants have a longer lifetime in the <em>portfolio</em>. Conversely, <code>Gender</code> and <code>Churn_Label</code> are statistically independent as stated by the high test’s <em>p value</em> (<span class="math inline">\(\approx .49\)</span>).</p>
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:chi2demographics">Table 4.2: </span>Independence <span class="math inline">\(\chi^2\)</span> test between churn and demographic variables
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Statistic
+</th>
+<th style="text-align:right;">
+Df
+</th>
+<th style="text-align:right;">
+Critical Value
+</th>
+<th style="text-align:left;">
+p-value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Dependents
+</td>
+<td style="text-align:right;">
+431.65
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.84
+</td>
+<td style="text-align:left;">
+7.1e-96
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Senior_Citizen
+</td>
+<td style="text-align:right;">
+158.44
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.84
+</td>
+<td style="text-align:left;">
+2.5e-36
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Partner
+</td>
+<td style="text-align:right;">
+157.50
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.84
+</td>
+<td style="text-align:left;">
+4e-36
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Gender
+</td>
+<td style="text-align:right;">
+0.48
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.84
+</td>
+<td style="text-align:left;">
+4.9e-01
+</td>
+</tr>
+</tbody>
+</table>
+<p>In section <a href="3.4-nonparam.html#nonparam">3.4</a>, nonparametric estimation has been introduced focusing on two major estimators: Kaplan-Meier for survival function estimation and Nelson-Aalen for estimating the cumulative hazard function. In this part, it is decided to draw survival curves related to customer lifetime in the portfolio depending on different types of treatment variables. In the figure below, four main results can be highlighted <em>ceteris paribus</em>:</p>
 <ul>
-<li><span class="math inline">\(p_t\)</span> the price paid by customer <span class="math inline">\(i\)</span> at time <span class="math inline">\(t\)</span></li>
-<li><span class="math inline">\(c_t\)</span> the marginal cost at time <span class="math inline">\(t\)</span></li>
-<li><span class="math inline">\(r_{i,t}\)</span> the <strong>probability that customer <span class="math inline">\(i\)</span> be active</strong> at time <span class="math inline">\(t\)</span></li>
-<li><span class="math inline">\(a\)</span> the discount rate</li>
-<li><span class="math inline">\(AC_i\)</span> the acquisition cost of customer <span class="math inline">\(i\)</span></li>
-<li><span class="math inline">\(T\)</span> the duration of observation</li>
+<li>There seems to be no difference in terms of lifetime duration between men and women.</li>
+<li>Customers with a partner appear to stay longer in the TSP’s <em>portfolio</em>.</li>
+<li>Being a senior citizen tends to shorten customer lifetime.</li>
+<li>As said before, customer with children or other dependents seem to be more loyal.</li>
 </ul>
-<p>An estimation of the portfolio’s overall value can be calculated through <strong>customer equity</strong> (CE) which amounts to the sum of all the CLVs. Since CE appears to be a good proxy of the firm’s value, the firm’s profit-maximization program can be written as:</p>
-<p><span class="math display" id="eq:maxprofit">\[\begin{equation}
-\begin{aligned}
-\max_{\mathrm{p}} \quad &amp; \textrm{CE} = \sum_{i=1}^{N} \sum_{t=0}^{T} \frac{(p_t - c_t)r_{i,t}}{(1+a)^t} - AC_i\\
-\textrm{s.t.} \quad &amp; r_{i,t} \in [0, 1]\\
-  &amp;p_t &gt; c_t    \\
-\end{aligned}
-\tag{1.2}
-\end{equation}\]</span></p>
-<p>where <span class="math inline">\(\mathrm{p}\)</span> is the vector of prices over all periods that the firm needs to optimize.</p>
-
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:kmdemographics"></span>
+<p class="caption">
+Figure 4.1: Kaplan-Meier survival function depending on demographic information
+</p>
+<img src="imgs/demographics_plot.jpg" alt="Kaplan-Meier survival function depending on demographic information" width="1800" />
 </div>
-<!-- </div> -->
-<h3>References</h3>
-<div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-CUSTOMERS_ASSETS" class="csl-entry">
-Gupta, and Donald R. Lehmann. 2003. <span>“Customers as Assets.”</span> <em>Journal of Interactive Marketing</em> 17(1): 9–24.
+</div>
+<div id="data-on-services-subscribed" class="section level3 unnumbered">
+<h3>Data on services subscribed</h3>
+<p>When dealing with data on customers of a TSP, features related to services subscribed may be relevant to explain the estimated survival of these customers in the <em>portfolio</em>.</p>
+<p>Table <a href="4.2-churn_value-and-tenure_months.html#tab:chi2services">4.3</a> presents results of <span class="math inline">\(\chi^2\)</span> tests performed between <code>Churn_Label</code> and each services information variable. As in the previous table, <em>p-values</em> are ranked in ascending order. One can note that <code>Online_Security</code> and <code>Tech_Support</code> are the most linked to the churn indicator variable. However, variable carrying information on phone services are less correlated to <code>Churn_Label</code>.</p>
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:chi2services">Table 4.3: </span>Independence <span class="math inline">\(\chi^2\)</span> test between churn and services information variables
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Statistic
+</th>
+<th style="text-align:right;">
+Df
+</th>
+<th style="text-align:right;">
+Critical Value
+</th>
+<th style="text-align:left;">
+p-value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Internet_Service
+</td>
+<td style="text-align:right;">
+728.70
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+5.99
+</td>
+<td style="text-align:left;">
+5.8e-159
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Online_Security
+</td>
+<td style="text-align:right;">
+205.42
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.84
+</td>
+<td style="text-align:left;">
+1.4e-46
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tech_Support
+</td>
+<td style="text-align:right;">
+189.97
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.84
+</td>
+<td style="text-align:left;">
+3.2e-43
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Online_Backup
+</td>
+<td style="text-align:right;">
+47.25
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.84
+</td>
+<td style="text-align:left;">
+6.3e-12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Device_Protection
+</td>
+<td style="text-align:right;">
+30.50
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.84
+</td>
+<td style="text-align:left;">
+3.3e-08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Streaming_TV
+</td>
+<td style="text-align:right;">
+27.84
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.84
+</td>
+<td style="text-align:left;">
+1.3e-07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Streaming_Movies
+</td>
+<td style="text-align:right;">
+25.76
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.84
+</td>
+<td style="text-align:left;">
+3.9e-07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Phone_Service
+</td>
+<td style="text-align:right;">
+0.87
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.84
+</td>
+<td style="text-align:left;">
+3.5e-01
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Multiple_Lines
+</td>
+<td style="text-align:right;">
+0.87
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.84
+</td>
+<td style="text-align:left;">
+3.5e-01
+</td>
+</tr>
+</tbody>
+</table>
+<p>Figure <a href="4.2-churn_value-and-tenure_months.html#fig:kmservices">4.2</a> illustrates the <span class="math inline">\(\chi^2\)</span> tests’ results by representing the Kaplan-Meier estimated survivor function related to customer lifetime according to treatment variables on services subscribed. On the one hand, there seems to be no significant difference in terms of survival whether the customer uses phone service or not. The same remark can be pointed out based on whether the client has multiple lines as <code>Phone_Service</code> and <code>Multiple_Lines</code> might be quite correlated. In contrast, huge survival time difference can be noticed between customers with online security and those without, as well as between those having subscribed to technical support and those who have not. Finally, not using Internet service appears to have a positive influence on customer lifetime.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:kmservices"></span>
+<p class="caption">
+Figure 4.2: Kaplan-Meier survival function depending on services subscribed
+</p>
+<img src="imgs/services_plot.jpg" alt="Kaplan-Meier survival function depending on services subscribed" width="2700" />
+</div>
+</div>
+<div id="customer-account-data" class="section level3 unnumbered">
+<h3>Customer account data</h3>
+<p>Variables on customer account such as the payment method used and the type of contract between the TSP and the client can be rich in information on customer lifetime. Indeed, table <a href="4.2-churn_value-and-tenure_months.html#tab:chi2custaccount">4.4</a> shows that churn status strongly depends on the three variables, <code>Contract</code> being the most linked to <code>Churn_Label</code>.</p>
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:chi2custaccount">Table 4.4: </span>Independence <span class="math inline">\(\chi^2\)</span> test between churn and customer account data
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Statistic
+</th>
+<th style="text-align:right;">
+Df
+</th>
+<th style="text-align:right;">
+Critical Value
+</th>
+<th style="text-align:left;">
+p-value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Contract
+</td>
+<td style="text-align:right;">
+1179.55
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+5.99
+</td>
+<td style="text-align:left;">
+7.3e-257
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Payment_Method
+</td>
+<td style="text-align:right;">
+645.43
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+7.81
+</td>
+<td style="text-align:left;">
+1.4e-139
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Paperless_Billing
+</td>
+<td style="text-align:right;">
+256.87
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.84
+</td>
+<td style="text-align:left;">
+8.2e-58
+</td>
+</tr>
+</tbody>
+</table>
+<p>Figure <a href="4.2-churn_value-and-tenure_months.html#fig:kmcustaccount">4.3</a> enriches the <span class="math inline">\(\chi^2\)</span> tests’ results as it draws survival curves for each treatment variable’s categories. When the firm/client contract is type month-to-month, the estimated survivor function decreases far more than for one-year or two-year contracts. In other words, the churn hazard is higher when the contract is renewed each month. This result makes sense as the customer may decide to leave the <em>portfolio</em> once the month has ended as they are not commited for one or two years. Furthermore, clients with paperless billing contracts are more prone to churn, just like those paying by electronic check. It can be deduce that the <em>attrition</em> risk is higher when the payment method is simplified.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:kmcustaccount"></span>
+<p class="caption">
+Figure 4.3: Kaplan-Meier survival function depending on customer account information
+</p>
+<img src="imgs/account_info_plot.jpg" alt="Kaplan-Meier survival function depending on customer account information" width="1800" />
+</div>
 </div>
 </div>
             </section>
@@ -239,8 +595,8 @@ Gupta, and Donald R. Lehmann. 2003. <span>“Customers as Assets.”</span> <em>
           </div>
         </div>
       </div>
-<a href="1.2-attritiondef.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="2-literature.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="4.1-general-overview.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="4.3-cltv-customer-lifetime-value.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
