@@ -14,4 +14,4 @@ rmd_files: [
 ]
 language:
   ui:
-    chapter_name: "Chapter - "
+    chapter_name: "Chapter "
