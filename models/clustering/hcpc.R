@@ -14,8 +14,9 @@ library(tidyverse)
 library(ggplot2)
 library(FactoMineR)
 library(factoextra)
+library(ggdendro)
 
-# Apply HCP -----
+# Apply HCP with k-means consolidation -----
 
 # NOT RUN {
   system.time(
@@ -24,6 +25,18 @@ library(factoextra)
                      metric = "euclidean", 
                      method = "ward") 
   )
+
+  res.hcpc$call$bw.before.consol
+  res.hcpc$call$bw.after.consol
+  
+  n_clust <- res.hcpc$call$t$nb.clust
+  
+  dend <- fviz_dend(x = res.hcpc, 
+                    k = n_clust, 
+                    show_labels = F, 
+                    palette = "jco", 
+                    color_labels_by_k = T, 
+                    rect = T)
   
   save(res.hcpc, 
        file = paste0(backup_path, "res.hcpc.RData"))
@@ -40,7 +53,9 @@ cluster_viz <- function(axes){
                axes = axes, 
                geom = "point", 
                show.clust.cent = TRUE, 
-               palette = "jco",         
+               palette = "jco",    
+               ellipse = F, 
+               alpha = .4, 
                ggtheme = theme_minimal())
 }
 

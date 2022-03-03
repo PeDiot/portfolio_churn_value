@@ -31,7 +31,8 @@ vars <- c("Senior_Citizen",
           "Streaming_Movies",
           "Contract", 
           "Paperless_Billing",
-          "Payment_Method")
+          "Payment_Method", 
+          "Monthly_Charges")
 
 mca_dat <- cleaned_data %>%
   select(all_of(vars))
@@ -40,7 +41,7 @@ mca_dat <- cleaned_data %>%
 
 # NOT RUN {
 
-  res.mca <- MCA(X = mca_dat)
+  res.mca <- MCA(X = mca_dat, quanti.sup = 13)
   
   fviz_screeplot(res.mca, 
                   addlabels = T, 
@@ -56,7 +57,10 @@ mca_dat <- cleaned_data %>%
     head(1) %>%
     pull(ncp)
   
+  res.mca$quanti.sup
+  
   res.mca2 <- MCA(X = mca_dat, 
+                  quanti.sup = 13, 
                   ncp = ncp, 
                   graph = F)
   
@@ -77,8 +81,12 @@ mca_dat <- cleaned_data %>%
   
 load(file = paste0(backup_path, "res.mca.RData"))
 
+
+# Analysis -----
+
 axes <- c(9, 10)
 
+## biplot -----
 fviz_mca_biplot(res.mca2, 
                 axes = axes,
                 geom.ind = "point", 
@@ -87,14 +95,30 @@ fviz_mca_biplot(res.mca2,
                 alpha = .2, 
                 ggtheme = theme_minimal())
 
-# Analysis -----
+## variables -----
+fviz_mca_var(res.mca2,
+             axes = axes,
+             choice = "mca.cor", 
+             repel = TRUE,
+             ggtheme = theme_minimal())
 
-# quality of representation
+# Dim1: additionnal services + internet service
+# Dim2: type of contract, payment method
+
+
+
+## categories -----
+fviz_mca_var(res.mca2,
+             axes = axes,
+             repel = TRUE,
+             ggtheme = theme_minimal())
+
+## quality of representation -----
 ggpubr::ggarrange(
   fviz_cos2(res.mca2, 
             choice = "var", 
-            fill = "aquamarine",
-            color = "aquamarine",
+            fill = "purple",
+            color = "purple",
             axes = 1), 
   fviz_cos2(res.mca2, 
             choice = "var", 
@@ -102,12 +126,12 @@ ggpubr::ggarrange(
   nrow = 2
 )
 
-# contribution
+## contribution -----
 ggpubr::ggarrange(
   fviz_contrib(res.mca2, 
             choice = "var", 
-            fill = "aquamarine",
-            color = "aquamarine",
+            fill = "purple",
+            color = "purple",
             axes = 1), 
   fviz_contrib(res.mca2, 
             choice = "var", 
