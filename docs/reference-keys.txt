@@ -48,7 +48,9 @@ tab:aovcltvchurn
 fig:churndur
 fig:cltvdur
 tab:selectedfeatures
-tab:target
+tab:survtarget
+tab:lrtest
+tab:lograsnktest
 eq:hazfunproof
 eq:linksurvcumhaz
 eq:contribpartiallikproof
@@ -81,7 +83,7 @@ monotone-hazard
 concave-and-convex-hazard
 semi-parametric-estimation
 proportional-hazards-models
-cox-ph-model
+coxph
 performance-metrics
 concordance-index-c-index
 brier-score
@@ -91,7 +93,7 @@ churndescstats
 cltv-customer-lifetime-value
 churn-duration-and-customer-value
 estimation-techniques
-feature-selection
+featureselection
 portfolio-segmentation
 transforming-qualitative-variables-into-principal-axes
 hierarchical-clustering-on-principal-components-hcpc
