@@ -69,6 +69,8 @@ ggpubr::ggarrange(plotlist = lapply(axes,
                   ncol = 3, nrow = 2, 
                   common.legend = T)
 
+cluster_viz
+
 
 # Cluster description -----
 

@@ -6,8 +6,8 @@
 # ---------- SET UP ----------
 
 # ----- paths -----
-dir <- "./models/survival_models/"
-setwd(dir)
+dir <- "C:/Users/pemma/OneDrive - Université de Tours/Mécen/M2/S2/04 - 3R/portfolio_churn_value/"
+setwd(paste0(dir, "models/survival_models/")) 
 data_path <- "C:/Users/pemma/OneDrive - Université de Tours/Mécen/M2/S2/04 - 3R/portfolio_churn_value/data/"
 backup_path <- "C:/Users/pemma/OneDrive - Université de Tours/Mécen/M2/S2/04 - 3R/portfolio_churn_value/backup/survival/"
 
@@ -22,6 +22,7 @@ library(ggplot2)
 library(plotly)
 
 theme_set(theme_minimal())
+source(paste0(dir, "colors.R"))
 
 # ----- data -----
 load(file = paste(data_path, "train_test_data.RData", sep = ""))
@@ -133,24 +134,43 @@ cox_haz_plt
 
 # NOT RUN {
 
-cox_signif_var <- update(
-  cox_multivar,
-  . ~ . - Latitude - Longitude - Senior_Citizen - Partner - 
-    Device_Protection - Streaming_TV - Streaming_Movies - Paperless_Billing - Monthly_Charges
-) 
-
-save(cox_signif_var, file = paste(backup_path, "cox_signif_var.Rdata", sep = ""))
+  cox_signif_var <- update(
+    cox_multivar,
+    . ~ . - Latitude - Longitude - Senior_Citizen - Partner - 
+      Device_Protection - Streaming_TV - Streaming_Movies - Paperless_Billing - Total_Charges
+  ) 
+  
+  save(cox_signif_var, file = paste(backup_path, "cox_signif_var.Rdata", sep = ""))
 
 # }
 
 load(paste(backup_path, "cox_signif_var.Rdata", sep = ""))
 
-summary(cox_signif_var)
+sum <- summary(cox_signif_var) ; sum
 C <- cox_signif_var$concordance          # C-index ~ 93.15%
 C["concordance"]
 
 ggforest(cox_signif_var, main = "", fontsize = 1)
 
+lr_test <- lmtest::lrtest(cox_signif_var)
+
+cox_metrics <- list(
+  data.frame(Model = cox_signif_var$loglik[2],
+             Constrained = cox_signif_var$loglik[1], 
+             pvalue = lr_test$`Pr(>Chisq)`[2]) %>%
+    `rownames<-`(""),
+  data.frame(Statistic = sum$logtest["test"],
+             Df = sum$logtest["df"],
+             pvalue = sum$logtest["pvalue"]) %>%
+    `rownames<-`(""), 
+  data.frame(C_index = cox_signif_var$concordance["concordance"],
+             Std = cox_signif_var$concordance["std"]) %>%
+    `rownames<-`("")
+)
+names(cox_metrics) <- c("lrtest", "logranktest", "concordance")
+                          
+save(cox_metrics, 
+     file = paste0(backup_path, "cox_metrics.Rdata"))
 
 # ---------- PREDICTION ---------- 
 
@@ -166,6 +186,16 @@ risk_pred_te <- predict(
   type = "risk", 
   se.fit = T
 )
+
+c_index_tr <- concordance.index(x = risk_pred_tr$fit, 
+                                surv.time = data_train$Tenure_Months, 
+                                surv.event = data_train$Churn_Value)
+c_index_tr$c.index
+
+c_index_te <- concordance.index(x = risk_pred_te$fit, 
+                  surv.time = data_test$Tenure_Months, 
+                  surv.event = data_test$Churn_Value)
+c_index_te$c.index
 
 # predicted churn risk
 
@@ -235,13 +265,64 @@ save(
 
 load(file = paste(data_path, "telco_cleaned.RData", sep = "/"))
 
-formula <- cox_signif_var$formula
+formula <- Surv(Tenure_Months, Churn_Value) ~ Dependents + Phone_Service + 
+  Internet_Service + Online_Security + Online_Backup + Tech_Support + 
+  Contract + Payment_Method + Monthly_Charges
+
 final_cox <- coxph(
   formula = formula, 
   data = cleaned_data
 )
 
 summary(final_cox)
+
+risk_preds <- predict(final_cox, 
+                      se.fit = T)
+
+data.frame(num_months = cleaned_data$Tenure_Months, 
+           risk = risk_preds$fit, 
+           se = risk_preds$se.fit) %>%
+  mutate(lower_bound = risk - 1.96*se, 
+         upper_bound = risk + 1.96*se) %>%
+  group_by(num_months) %>%
+  summarise(across(-se,
+                   mean,
+                   na.rm = T)) %>%
+  ggplot(aes(x = num_months, 
+             y = risk)) +
+  geom_line(size = .7, 
+            color = "#2E9FDF") +
+  geom_ribbon(aes(ymin = lower_bound, 
+                  ymax = upper_bound), 
+              fill = "grey70", 
+              alpha = .3) +
+  labs(x = "Number of months", 
+       y = "Churn risk", 
+       title = "Cox model estimation")
+
+surv_plt <- ggsurvplot(fit = survfit(final_cox), 
+                       data = cleaned_data, 
+                       palette = surv_col, 
+                       conf.int = T, 
+                       ggtheme = theme_minimal())
+surv_plt$plot +
+  labs(x = "Number of months", 
+       title = "Customer survival given number of months", 
+       subtitle = "with 95% confidence interval") +
+  theme(legend.position = "none")
+
+cumhaz_plt <- ggsurvplot(fit = survfit(final_cox), 
+                         data = cleaned_data, 
+                         fun = "cumhaz", 
+                         palette = risk_col, 
+                         conf.int = T, 
+                         ggtheme = theme_minimal())
+
+cumhaz_plt$plot +
+  labs(x = "Number of months", 
+       title = "Cumulative churn hazard given number of months", 
+       subtitle = "with 95% confidence interval") +
+  theme(legend.position = "none")
 
 save(final_cox, 
      file = paste(backup_path, "cox_final.RData", sep = "/")) 
