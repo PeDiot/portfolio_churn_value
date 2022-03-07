@@ -56,7 +56,7 @@ The data set used in this study contains 29 variables and 7032 customers from a 
 
 
 ```{r}
-data_path <- "./data/Telco_Cleaned.RData"
+data_path <- "./data/telco_cleaned.RData"
 load(data_path)
 ```
 
@@ -78,7 +78,7 @@ As shown by table \@ref(tab:dataoverview), the `Churn_Value` status variable ind
 
 Since the purpose of our study relies in estimating the overall value of this fictional firm's *portfolio*, two groups of target variables can be considered. On the one hand `Churn_Value` and `Tenure_Months` permit to determine whether a customer is active in the *portfolio*. They are used as response variables in the survival models. On the other hand, the `CLTV` variable represents each customer's *value* through measurement of customer lifetime value and is used as target in regression models. 
 
-## `Churn_Value` and `Tenure_Months` 
+## `Churn_Value` and `Tenure_Months` {#churndescstats}
 
 As the combination of these two features form the response variable in the duration models, a relevant approach to have an overall description of the risk of *attrition* may be to draw the raw survival curves depending on treatment variables. Pearson's $\chi^2$ tests are also performed so as to test the statistical relationships between the churn indicator variable and explanatory features. Pearson's $\chi^2$ test determines whether there is a statistically significant difference between the expected frequencies and the observed frequencies in one or more categories of a contingency table. It is thus adapted to test whether two categorical variables are statistically independent. In this context, it appears interesting to use explanatory features related  demographic, customer account and services subscribed as treatment variables when fitting the Kaplan-Meier estimator and implementing the tests. 
 
