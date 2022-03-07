@@ -50,7 +50,7 @@ fig:cltvdur
 tab:selectedfeatures
 tab:survtarget
 tab:lrtest
-tab:lograsnktest
+fig:coxmarginaleffects
 eq:hazfunproof
 eq:linksurvcumhaz
 eq:contribpartiallikproof
