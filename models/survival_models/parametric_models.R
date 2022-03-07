@@ -28,6 +28,9 @@ library(survcomp)     # for concordance index
 library(muhaz)        # for kernel density estimator
 library(lmtest)       # for LR test 
 
+library(parallel)
+library(doParallel)
+
 theme_set(theme_minimal())
 
 ## Cox model -----
@@ -78,8 +81,8 @@ visualize_estimated_hazards <- function(
   "Plot estimated hazard function for different models."
   
   parametric_haz <- vector(mode = "list", 
-                           length = length(dists))
-  for (i in 1:length(dists)){
+                           length = length(dists_long))
+  for (i in 1:length(models)){
     parametric_haz[[i]] <- summary(models[[i]],
                                    type = "hazard", 
                                    ci = conf.int) %>%
@@ -90,14 +93,13 @@ visualize_estimated_hazards <- function(
   parametric_haz <- rbindlist(parametric_haz)
   
   if ( !(is.null(kernel_haz)) ) {
-    haz <- rbind(kernel_haz, parametric_haz)
-    haz[, method := factor(method,
-                           levels = c("Kernel density",
-                                      dists_long))]
+    parametric_haz <- rbind(kernel_haz, parametric_haz)
+    parametric_haz[, method := factor(method,
+                                      levels = c("Kernel density",
+                                                 dists_long))]
   }
-
   p <- ggplot(
-    data = haz,
+    data = parametric_haz,
     aes(x = time, 
         y = est, 
         col = method, 
@@ -110,6 +112,18 @@ visualize_estimated_hazards <- function(
          title = "Estimated hazard function for different parametric models") +
     theme(legend.position = "none")
   
+  if (conf.int == T) {
+    p <- p +
+      geom_ribbon(aes(x = time, 
+                      ymin = lcl, 
+                      ymax = ucl, 
+                      col = method, 
+                      fill = method), 
+                  alpha = .2) +
+      scale_fill_brewer(palette = "Set2") +
+      theme(legend.position = "none")
+  }
+
   plotly::ggplotly(p) 
   
 }
@@ -202,13 +216,9 @@ visualize_estimated_hazards(models = fits,
 
 ## with covariates ----------
 
-fits <- fit_surv_models(survdata = survdata_tr,
-                        dists = dists, 
-                        formula = cox_formula)
-
-visualize_estimated_hazards(models = fits, 
-                            dists_long = dists_long, 
-                            kernel_haz = kernel_haz_tr)
+parametric_fits <- fit_surv_models(survdata = survdata_tr,
+                                   dists = dists, 
+                                   formula = cox_formula) ; parametric_fits
 
 ## Exponential -----
 
@@ -292,6 +302,56 @@ summary(wei,
 ### Predictions -----
 
 # NOT RUN {
+
+  num_cores <- detectCores() - 1
+  cl <- makeCluster(num_cores)
+  registerDoParallel(cl)  
+  clusterExport(cl = cl, 
+                varlist = list("parametric_fits", 
+                               "predict_hazard", 
+                               "data_train", 
+                               "max_num_months"),
+                envir = environment()) 
+  system.time(
+    haz_preds_tr <- c(parLapply(cl,
+                                X = parametric_fits,
+                                fun = predict_hazard, 
+                                new_dat = data_train))
+  )
+  names(haz_preds_tr) <- dists
+  stopCluster(cl)
+  
+  save(haz_preds_tr, 
+       file = paste0(backup_path, "param_haz_pred_tr.RData"))
+  
+#} 
+  
+# NOT RUN {
+  
+  num_cores <- detectCores() - 1
+  cl <- makeCluster(num_cores)
+  registerDoParallel(cl)  
+  clusterExport(cl = cl, 
+                varlist = list("parametric_fits", 
+                               "predict_hazard", 
+                               "data_train", 
+                               "max_num_months"),
+                envir = environment()) 
+  system.time(
+    haz_preds_tr <- c(parLapply(cl,
+                                X = parametric_fits,
+                                fun = predict_hazard, 
+                                new_dat = data_test))
+  )
+  names(haz_preds_tr) <- dists
+  stopCluster(cl)
+  
+  save(haz_preds_te, 
+       file = paste0(backup_path, "param_haz_pred_te.RData"))
+  
+#} 
+
+# NOT RUN {
   system.time(
     wei.haz.predstr <- predict_hazard(mod = wei, 
                                       new_dat = data_train)
@@ -342,6 +402,21 @@ wei.perftr <- compute_c_index(time = data_train$Tenure_Months,
 wei.perfte <- compute_c_index(time = data_test$Tenure_Months, 
                               event = data_test$Churn_Value, 
                               preds = wei.haz.predste) ; wei.perfte$c.index
+
+## Visualize estimated risk -----
+
+visualize_estimated_hazards(models = parametric_fits[c("exp", "weibull")], 
+                            dists_long = c("Exponential", "Weibull"), 
+                            conf.int = T)
+
+visualize_estimated_hazards(models = parametric_fits, 
+                            dists_long = dists_long, 
+                            kernel_haz = kernel_haz_tr)
+
+visualize_estimated_hazards(models = parametric_fits, 
+                            dists_long = dists_long, 
+                            conf.int = T)
+
 
 
 

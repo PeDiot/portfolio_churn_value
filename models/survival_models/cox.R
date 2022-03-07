@@ -1,17 +1,15 @@
-# ------------------- Cox Proportional Hazards Model ------------------- 
-
 # C-index: the probability that, for a pair of randomly chosen comparable samples, 
 # the sample with the higher risk prediction will experience an event (churn) before the other sample
 
-# ---------- SET UP ----------
+# Setup -------------------------------------------------------------------
 
-# ----- paths -----
+## paths ------
 dir <- "C:/Users/pemma/OneDrive - Université de Tours/Mécen/M2/S2/04 - 3R/portfolio_churn_value/"
 setwd(paste0(dir, "models/survival_models/")) 
 data_path <- "C:/Users/pemma/OneDrive - Université de Tours/Mécen/M2/S2/04 - 3R/portfolio_churn_value/data/"
 backup_path <- "C:/Users/pemma/OneDrive - Université de Tours/Mécen/M2/S2/04 - 3R/portfolio_churn_value/backup/survival/"
 
-# ----- packages -----
+## packages ------
 library(tidyverse)
 library(data.table)
 library(survival)
@@ -24,12 +22,12 @@ library(plotly)
 theme_set(theme_minimal())
 source(paste0(dir, "colors.R"))
 
-# ----- data -----
+## data ------
 load(file = paste(data_path, "train_test_data.RData", sep = ""))
 
-# ---------- TRAINING ---------- 
+# Training -------------------------------------------------------------------
 
-# --- kernel density estimation ---
+## kernel density estimation -----
 
 survdata <- data.table(data_train)
 kernel_haz_est <- muhaz(
@@ -48,50 +46,52 @@ haz_plot <- kernel_haz %>%
   labs(x = "Number of months", 
        y = "Churn risk", 
        title = "Observed churn risk", 
-       subtitle = "Kernel density")
+       subtitle = "Kernel density") ; haz_plot
+
+## Univariate Cox models -----
 
 # NOT RUN {
-
-# --- univariate models ---
-
-# with Monthly_Charges
-cox_monthly_charges <- coxph(
-  formula = Surv(Tenure_Months, Churn_Value) ~ Monthly_Charges, 
-  data = data_train
-)
-summary(cox_monthly_charges)
-cox_monthly_charges_risk <- predict(cox_monthly_charges, type = "risk")
-
-cox_monthly_charges$concordance
-
-C <- cox_monthly_charges$concordance   # C-index ~ 50.2% (non-informative model : random predictions)
-C["concordance"]
-
-# with Total_Charges
-cox_total_charges <- coxph(
-  formula = Surv(Tenure_Months, Churn_Value) ~ Total_Charges, 
-  data = data_train
-)
-summary(cox_total_charges)
-C <- cox_total_charges$concordance    # C-index ~ 87.1%
-C["concordance"]
-
-cox_total_charges_pred <- predict(
-  cox_total_charges, 
-  newdata = data_test, 
-  type = "risk"
-)
-C_test <- concordance.index(
-  x = cox_total_charges_pred,
-  surv.time = data_test$Tenure_Months,
-  surv.event = data_test$Churn_Value
-)
-C_test$c.index
+  
+  # with Monthly_Charges
+  cox_monthly_charges <- coxph(
+    formula = Surv(Tenure_Months, Churn_Value) ~ Monthly_Charges, 
+    data = data_train
+  )
+  summary(cox_monthly_charges)
+  cox.zph(cox_monthly_charges)
+  cox_monthly_charges_risk <- predict(cox_monthly_charges, type = "risk")
+  
+  cox_monthly_charges$concordance
+  
+  C <- cox_monthly_charges$concordance   # C-index ~ 50.2% (non-informative model : random predictions)
+  C["concordance"]
+  
+  # with Total_Charges
+  cox_total_charges <- coxph(
+    formula = Surv(Tenure_Months, Churn_Value) ~ Total_Charges, 
+    data = data_train
+  )
+  summary(cox_total_charges)
+  cox.zph(cox_total_charges)
+  C <- cox_total_charges$concordance    # C-index ~ 87.1%
+  C["concordance"]
+  
+  cox_total_charges_pred <- predict(
+    cox_total_charges, 
+    newdata = data_test, 
+    type = "risk"
+  )
+  C_test <- concordance.index(
+    x = cox_total_charges_pred,
+    surv.time = data_test$Tenure_Months,
+    surv.event = data_test$Churn_Value
+  )
+  C_test$c.index
 
 # }
 
 
-# --- multivariate models ---
+## Multivariate models ------
 
 data_train_multivar <- data_train %>%
   dplyr::select(-c(
@@ -101,19 +101,18 @@ data_train_multivar <- data_train %>%
 
 # remove Multiple_Lines due to collinearity with Phone_Service
 
+### With every variables -----
 
 # NOT RUN {
-
-# with every variables
-
-system.time(
-  cox_multivar <- coxph(
-    formula = Surv(Tenure_Months, Churn_Value) ~ ., 
-    data = data_train_multivar
+  
+  system.time(
+    cox_multivar <- coxph(
+      formula = Surv(Tenure_Months, Churn_Value) ~ ., 
+      data = data_train_multivar
+    )
   )
-)
-
-save(cox_multivar, file = paste(backup_path, "cox_multivar.Rdata", sep = ""))
+  
+  save(cox_multivar, file = paste(backup_path, "cox_multivar.Rdata", sep = ""))
 
 # }
 
@@ -132,6 +131,8 @@ cox_haz_plt
 
 # remove variables with no significant influence on the churn hazard 
 
+### With significant variables -----
+
 # NOT RUN {
 
   cox_signif_var <- update(
@@ -146,11 +147,29 @@ cox_haz_plt
 
 load(paste(backup_path, "cox_signif_var.Rdata", sep = ""))
 
+#### Testing proportional Hazards assumption -----
+
+test.ph <- cox.zph(fit = cox_signif_var)
+print(test.ph)
+ggcoxzph(test.ph)                             # non-proportional hazards 
+
+cox_hp_tab <- test.ph$table
+colnames(cox_hp_tab) <- c("Chisq", "Df", "pvalue") 
+save(cox_hp_tab, 
+     file = paste0(backup_path, "cox_hp_table.RData"))
+
+#### Testing influential observations -----
+
+ggcoxdiagnostics(fit = cox_signif_var,
+                 type = , 
+                 linear.predictions = TRUE)
+
+
 sum <- summary(cox_signif_var) ; sum
 C <- cox_signif_var$concordance          # C-index ~ 93.15%
 C["concordance"]
 
-ggforest(cox_signif_var, main = "", fontsize = 1)
+ggforest(cox_signif_var, main = "", fontsize = 1.5)
 
 lr_test <- lmtest::lrtest(cox_signif_var)
 
@@ -172,7 +191,8 @@ names(cox_metrics) <- c("lrtest", "logranktest", "concordance")
 save(cox_metrics, 
      file = paste0(backup_path, "cox_metrics.Rdata"))
 
-# ---------- PREDICTION ---------- 
+# Prediction --------------------------------------------------------------
+
 
 risk_pred_tr <- predict(
   cox_signif_var, 
@@ -261,7 +281,7 @@ save(
   file = paste(data_path, "train_test_data_clust.RData", sep = "")
 )
 
-# ---------- SAVE COX MODEL ---------- 
+# Final Cox model ---------------------------------------------------------
 
 load(file = paste(data_path, "telco_cleaned.RData", sep = "/"))
 
