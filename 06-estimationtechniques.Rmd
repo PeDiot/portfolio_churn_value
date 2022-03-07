@@ -115,11 +115,15 @@ cox_metrics$lrtest %>%
   mykable(title = "Log-likelihood ratio test")
 ```
 
-Another interesting metric is the logrank test statistic.
+Concordance index $c$ is another metric to assess the performance of models which produces risk scores and is defined as the probability to well predict the order of event occurring time for any pair of instances. For the Cox model, the C-index obtained on the training set is $c \approx 0.865 \pm 0.004$, which is more than satisfying.
 
-```{r lograsnktest}
-cox_metrics$logranktest %>%
-  mykable(title = "Logrank test")
+
+#### Marginal effects {-}
+
+In the Cox model, the relative hazard between two observations is assumed to be constant over time. As a consequence, the relative hazard becomes $\exp \hat{\beta}$ for both dummy and continuous variables. For instance regarding figure \@ref(fig:coxmarginaleffects), the relative hazard ratio between customers with a two-year contract and those with a month-to-month contract is 0.046, meaning that the latter group is more than 99.5% likely to churn with respect to the former.
+
+```{r coxmarginaleffects, echo=FALSE, fig.cap="Marginal effects obtained with the Cox PH model"}
+knitr::include_graphics(path = "./imgs/cox_ggforest.png")
 ```
 
 
