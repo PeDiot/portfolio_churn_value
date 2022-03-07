@@ -47,6 +47,8 @@ fig:cltvchurn
 tab:aovcltvchurn
 fig:churndur
 fig:cltvdur
+tab:selectedfeatures
+tab:target
 eq:hazfunproof
 eq:linksurvcumhaz
 eq:contribpartiallikproof
@@ -85,10 +87,16 @@ concordance-index-c-index
 brier-score
 data
 general-overview
-churn_value-and-tenure_months
+churndescstats
 cltv-customer-lifetime-value
 churn-duration-and-customer-value
 estimation-techniques
+feature-selection
 portfolio-segmentation
-churn-prediction
+transforming-qualitative-variables-into-principal-axes
+hierarchical-clustering-on-principal-components-hcpc
+churn-analysis
+the-cox-model
+other-models-1
+model-comparison
 estimation-of-portfolio-value

@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Partial likelihood function in PH models | Portfolio, Churn &amp; Customer Value</title>
+  <title>5.2 Portfolio segmentation | Portfolio, Churn &amp; Customer Value</title>
   <meta name="description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Partial likelihood function in PH models | Portfolio, Churn &amp; Customer Value" />
+  <meta property="og:title" content="5.2 Portfolio segmentation | Portfolio, Churn &amp; Customer Value" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Partial likelihood function in PH models | Portfolio, Churn &amp; Customer Value" />
+  <meta name="twitter:title" content="5.2 Portfolio segmentation | Portfolio, Churn &amp; Customer Value" />
   
   <meta name="twitter:description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="contribution-to-the-partial-likelihood-function-in-ph-models.html"/>
-<link rel="next" href="references.html"/>
+<link rel="prev" href="5.1-feature-selection.html"/>
+<link rel="next" href="5.3-churn-analysis.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -209,37 +209,22 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="partial-likelihood-function-in-ph-models" class="section level2 unnumbered">
-<h2>Partial likelihood function in PH models</h2>
-<p>Based on equation <a href="3.6-semi-parametric-estimation.html#eq:contribpartiallik">(3.18)</a>, one can derive the probability that all spells completed at <span class="math inline">\(t_j\)</span> ends in the <span class="math inline">\(j^{\text{th}}\)</span> failure time, such that:</p>
-<p><span class="math display" id="eq:partlikproof">\[\begin{equation}
-\begin{aligned}
-  \mathcal{L}_{p,\ t_j} &amp; = \mathbb{P}\big[T_1 = t_j, \dots, T_{d_j} = t_j \ | \ R(t_j)\big] \\\\
-  &amp; = \Pi_{m \in D(t_j)} \ \mathbb{P}\big[T_m = t_j | R(t_j) \big] \\\\
-  &amp; = \Pi_{m \in D(t_j)} \ \frac{\phi(\mathrm{x_m}, \beta)}{\sum_{l \in R(t_j)} \phi(\mathrm{x_l}, \beta)} \\\\
-  &amp; = \Pi_{m \in D(t_j)} \ \phi(\mathrm{x_m}, \beta) \times \Pi_{m \in D(t_j)} \ \frac{1}{\sum_{l \in R(t_j)} \phi(\mathrm{x_l}, \beta)} \\\\
-  \mathcal{L}_{p,\ t_j} &amp; = \frac{\Pi_{m \in D(t_j)} \ \phi(\mathrm{x_m}, \beta)}{\Big[\sum_{l \in R(t_j)} \phi(\mathrm{x_l}, \beta)\Big]^{d_j}}
-\end{aligned}
-\tag{5.4}
-\end{equation}\]</span></p>
-<p>The joint probability over the <span class="math inline">\(k\)</span> ordered discrete failure times then becomes:</p>
-<p><span class="math display" id="eq:partlikproofbis">\[\begin{equation}
-\begin{aligned}
-  \mathcal{L}_p &amp; = \Pi_{j=1}^{k} \ \mathcal{L}_{p,\ t_j} \\\\
-  \mathcal{L}_p &amp; = \Pi_{j=1}^{k} \ \frac{\Pi_{m \in D(t_j)} \ \phi(\mathrm{x_m}, \beta)}{\Big[\sum_{l \in R(t_j)} \phi(\mathrm{x_l}, \beta)\Big]^{d_j}}
-\end{aligned}
-\tag{5.5}
-\end{equation}\]</span></p>
-
+<div id="portfolio-segmentation" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> Portfolio segmentation</h2>
+<div id="transforming-qualitative-variables-into-principal-axes" class="section level3" number="5.2.1">
+<h3><span class="header-section-number">5.2.1</span> Transforming qualitative variables into principal axes</h3>
 </div>
-<!-- </div> -->
+<div id="hierarchical-clustering-on-principal-components-hcpc" class="section level3" number="5.2.2">
+<h3><span class="header-section-number">5.2.2</span> Hierarchical clustering on principal components (HCPC)</h3>
+</div>
+</div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="contribution-to-the-partial-likelihood-function-in-ph-models.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="5.1-feature-selection.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="5.3-churn-analysis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

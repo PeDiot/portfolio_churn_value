@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Partial likelihood function in PH models | Portfolio, Churn &amp; Customer Value</title>
+  <title>5.1 Feature selection | Portfolio, Churn &amp; Customer Value</title>
   <meta name="description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Partial likelihood function in PH models | Portfolio, Churn &amp; Customer Value" />
+  <meta property="og:title" content="5.1 Feature selection | Portfolio, Churn &amp; Customer Value" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Partial likelihood function in PH models | Portfolio, Churn &amp; Customer Value" />
+  <meta name="twitter:title" content="5.1 Feature selection | Portfolio, Churn &amp; Customer Value" />
   
   <meta name="twitter:description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="contribution-to-the-partial-likelihood-function-in-ph-models.html"/>
-<link rel="next" href="references.html"/>
+<link rel="prev" href="5-estimation-techniques.html"/>
+<link rel="next" href="5.2-portfolio-segmentation.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -209,37 +209,279 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="partial-likelihood-function-in-ph-models" class="section level2 unnumbered">
-<h2>Partial likelihood function in PH models</h2>
-<p>Based on equation <a href="3.6-semi-parametric-estimation.html#eq:contribpartiallik">(3.18)</a>, one can derive the probability that all spells completed at <span class="math inline">\(t_j\)</span> ends in the <span class="math inline">\(j^{\text{th}}\)</span> failure time, such that:</p>
-<p><span class="math display" id="eq:partlikproof">\[\begin{equation}
-\begin{aligned}
-  \mathcal{L}_{p,\ t_j} &amp; = \mathbb{P}\big[T_1 = t_j, \dots, T_{d_j} = t_j \ | \ R(t_j)\big] \\\\
-  &amp; = \Pi_{m \in D(t_j)} \ \mathbb{P}\big[T_m = t_j | R(t_j) \big] \\\\
-  &amp; = \Pi_{m \in D(t_j)} \ \frac{\phi(\mathrm{x_m}, \beta)}{\sum_{l \in R(t_j)} \phi(\mathrm{x_l}, \beta)} \\\\
-  &amp; = \Pi_{m \in D(t_j)} \ \phi(\mathrm{x_m}, \beta) \times \Pi_{m \in D(t_j)} \ \frac{1}{\sum_{l \in R(t_j)} \phi(\mathrm{x_l}, \beta)} \\\\
-  \mathcal{L}_{p,\ t_j} &amp; = \frac{\Pi_{m \in D(t_j)} \ \phi(\mathrm{x_m}, \beta)}{\Big[\sum_{l \in R(t_j)} \phi(\mathrm{x_l}, \beta)\Big]^{d_j}}
-\end{aligned}
-\tag{5.4}
-\end{equation}\]</span></p>
-<p>The joint probability over the <span class="math inline">\(k\)</span> ordered discrete failure times then becomes:</p>
-<p><span class="math display" id="eq:partlikproofbis">\[\begin{equation}
-\begin{aligned}
-  \mathcal{L}_p &amp; = \Pi_{j=1}^{k} \ \mathcal{L}_{p,\ t_j} \\\\
-  \mathcal{L}_p &amp; = \Pi_{j=1}^{k} \ \frac{\Pi_{m \in D(t_j)} \ \phi(\mathrm{x_m}, \beta)}{\Big[\sum_{l \in R(t_j)} \phi(\mathrm{x_l}, \beta)\Big]^{d_j}}
-\end{aligned}
-\tag{5.5}
-\end{equation}\]</span></p>
-
+<div id="feature-selection" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> Feature selection</h2>
+<p>Before fitting any survival model or clustering algorithm to the data, the initial step consists in selecting variables that are discriminating in terms of churn hazard. Based on Kaplan-Meier analysis depicted in section <a href="4.2-churndescstats.html#churndescstats">4.2</a>, we have a general overview of features which influence the survival probability. In other words, our feature selection method relies on results obtained with descriptive statistics.</p>
+<p>Table <a href="5.1-feature-selection.html#tab:selectedfeatures">5.1</a> shows the selected variables for 5 random observations extracted from the data set. It can be noted that these features are related to account or service information, apart from <code>Dependents</code> which indicates whether the client lives with any dependents (children, parents, etc). Furthermore, 9 out of the 10 selected variables are categorical which implies that the estimation results could be used to compare different groups of client. <code>Monthly_Charges</code> is the only quantitative variable used to fit clustering models and survival regressions.</p>
+<div style="border: 0px;overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:selectedfeatures">Table 5.1: </span>Explanatory variables used in survival models
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Dependents
+</th>
+<th style="text-align:left;">
+Phone_Service
+</th>
+<th style="text-align:left;">
+Internet_Service
+</th>
+<th style="text-align:left;">
+Online_Security
+</th>
+<th style="text-align:left;">
+Online_Backup
+</th>
+<th style="text-align:left;">
+Tech_Support
+</th>
+<th style="text-align:left;">
+Contract
+</th>
+<th style="text-align:left;">
+Payment_Method
+</th>
+<th style="text-align:right;">
+Monthly_Charges
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Fiber optic
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Two year
+</td>
+<td style="text-align:left;">
+Bank transfer
+</td>
+<td style="text-align:right;">
+111.60
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Fiber optic
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Month-to-month
+</td>
+<td style="text-align:left;">
+Electronic check
+</td>
+<td style="text-align:right;">
+95.70
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Fiber optic
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Month-to-month
+</td>
+<td style="text-align:left;">
+Bank transfer
+</td>
+<td style="text-align:right;">
+100.50
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Fiber optic
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Month-to-month
+</td>
+<td style="text-align:left;">
+Bank transfer
+</td>
+<td style="text-align:right;">
+90.90
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Fiber optic
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Month-to-month
+</td>
+<td style="text-align:left;">
+Mailed check
+</td>
+<td style="text-align:right;">
+92.35
+</td>
+</tr>
+</tbody>
+</table>
 </div>
-<!-- </div> -->
+<p>Eventually, it seems important to recall that <code>Tenure_Months</code> and <code>Churn_Value</code> can be seen as a pair of time and event variables which is the target in survival models.</p>
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:target">Table 5.2: </span>Time and event variables for survival models
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+CustomerID
+</th>
+<th style="text-align:right;">
+Tenure_Months
+</th>
+<th style="text-align:right;">
+Churn_Value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+4653
+</td>
+<td style="text-align:right;">
+27
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6679
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6176
+</td>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+61
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4773
+</td>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+</div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="contribution-to-the-partial-likelihood-function-in-ph-models.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="5-estimation-techniques.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="5.2-portfolio-segmentation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
