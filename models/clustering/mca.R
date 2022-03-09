@@ -14,6 +14,7 @@ library(plyr)
 library(ggplot2)
 library(factoextra)
 library(FactoMineR)
+library(Factoshiny)
 
 theme_set(theme_minimal()) 
 
@@ -84,27 +85,100 @@ load(file = paste0(backup_path, "res.mca.RData"))
 
 # Analysis -----
 
-axes <- c(9, 10)
+## screeplot -----
+
+fviz_screeplot(res.mca2, 
+               geom = "line", 
+               linecolor = "steelblue", 
+               addlabels = T, 
+               ylim = c (0, 25), 
+               main = "")
+
+mca_eig_data <- res.mca2$eig %>%
+  as.data.frame() %>%
+  mutate(Dimensions = str_sub(rownames(.), -2, -1) %>%
+           as.numeric()) %>%
+  dplyr::rename(perc_var = `percentage of variance`,
+         cum_perc_var = `cumulative percentage of variance`)
+
+scree_plot <- fviz_eig(res.mca2, ncp = 12,
+                       addlabels = TRUE, hjust = -0.3,
+                       geom = "line") +
+  geom_line(size = 1, color = "steelblue") +
+  geom_line(
+    data = mca_eig_data[1:12, ], 
+    aes(x = Dimensions, y = cum_perc_var/5),
+    size = .8, 
+    color = "purple",
+    linetype = "dashed", 
+    alpha = .7
+  ) +
+  geom_vline(xintercept = 10,
+             color = "black",
+             linetype = "dashed") +
+  geom_label(
+    data = mca_eig_data[10, ], 
+    aes(
+      x = Dimensions - 1.5,
+      y = 17,
+      label = paste(round(cum_perc_var, 1),"% \ncumulated variance", sep = "")
+    ),
+    size = 4,
+    color = "black",
+    alpha = .7
+  ) +
+  scale_y_continuous(
+    name = "% variance explained",
+    sec.axis = sec_axis(~.*5, name = "Cumulative % variance")
+  ) +
+  ggtitle(" ") +
+  theme(axis.text = element_text(size = 14),
+        axis.title.x = element_text(size = 14), 
+        axis.title.y = element_text(color = "steelblue", size = 14),
+        axis.title.y.right = element_text(color = "purple", size = 14), 
+        axis.text.y = element_text(color = "steelblue", size = 14),
+        axis.text.y.right = element_text(color = "purple", size = 14))
+
+
+axes <- c(1, 2)
 
 ## biplot -----
 fviz_mca_biplot(res.mca2, 
                 axes = axes,
                 geom.ind = "point", 
-                geom.var = c("point", "text"), 
+                geom.var = c("point", "text"),
                 repel = TRUE,
                 alpha = .2, 
                 ggtheme = theme_minimal())
 
+ggpubr::ggarrange(
+  plotlist = lapply(list(c(1, 2), 
+                         c(3, 4), 
+                         c(5, 6), 
+                         c(7, 8), 
+                         c(9, 10)), 
+                    function(axes){
+                      fviz_mca_biplot(res.mca2, 
+                                      axes = axes,
+                                      geom.ind = "point", 
+                                      geom.var = c("point", "text"),
+                                      repel = TRUE,
+                                      alpha = .2, 
+                                      ggtheme = theme_minimal())
+                    }), 
+  nrow = 2, 
+  ncol = 3
+)
+
 ## variables -----
 fviz_mca_var(res.mca2,
              axes = axes,
-             choice = "mca.cor", 
+             choice = "mca.cor",
              repel = TRUE,
              ggtheme = theme_minimal())
 
 # Dim1: additionnal services + internet service
 # Dim2: type of contract, payment method
-
 
 
 ## categories -----
@@ -114,27 +188,26 @@ fviz_mca_var(res.mca2,
              ggtheme = theme_minimal())
 
 ## quality of representation -----
+ncp <- res.mca2$call$ncp
+
 ggpubr::ggarrange(
-  fviz_cos2(res.mca2, 
-            choice = "var", 
-            fill = "purple",
-            color = "purple",
-            axes = 1), 
-  fviz_cos2(res.mca2, 
-            choice = "var", 
-            axes = 2), 
-  nrow = 2
+  plotlist = lapply(seq(1, ncp), 
+                    function(ax){
+                      fviz_cos2(res.mca2, 
+                                choice = "var", 
+                                axes = ax) 
+                    }), 
+  nrow = 2, ncol = 5
 )
 
 ## contribution -----
 ggpubr::ggarrange(
-  fviz_contrib(res.mca2, 
-            choice = "var", 
-            fill = "purple",
-            color = "purple",
-            axes = 1), 
-  fviz_contrib(res.mca2, 
-            choice = "var", 
-            axes = 2), 
-  nrow = 2
+  plotlist = lapply(seq(1, ncp), 
+                    function(ax){
+                      fviz_contrib(res.mca2, 
+                                choice = "var", 
+                                axes = ax) 
+                    }), 
+  nrow = 2, ncol = 5
 )
+

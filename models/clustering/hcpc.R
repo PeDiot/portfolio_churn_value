@@ -16,6 +16,8 @@ library(FactoMineR)
 library(factoextra)
 library(ggdendro)
 
+theme_set(theme_minimal())
+
 # Apply HCP with k-means consolidation -----
 
 # NOT RUN {
@@ -46,6 +48,23 @@ library(ggdendro)
   
 load(file = paste0(backup_path, "res.hcpc.RData"))
 
+
+# Inertia -----
+
+data.frame(btw_inertia = res.hcpc$call$t$inert.gain[1:20]) %>% 
+  mutate(cumul_inertia = cumsum(btw_inertia)) %>%
+  ggplot(aes(x = 1:20)) + 
+  geom_bar(aes(y = btw_inertia), 
+           stat = "identity", 
+           fill = "steelblue", 
+           alpha = 0.6) +
+  labs(title = "", 
+       x = "Number of cluster", 
+       y = "Inertia") +
+  theme(plot.title = element_text(size = 14),
+        axis.title = element_text(size = 14),
+        axis.text = element_text(size = 14))
+
 # Cluster visualization -----
 cluster_viz <- function(axes){
   fviz_cluster(res.hcpc,
@@ -54,7 +73,7 @@ cluster_viz <- function(axes){
                geom = "point", 
                show.clust.cent = TRUE, 
                palette = "jco",    
-               ellipse = F, 
+               ellipse = T, 
                alpha = .4, 
                ggtheme = theme_minimal())
 }
@@ -68,8 +87,6 @@ ggpubr::ggarrange(plotlist = lapply(axes,
                                     cluster_viz), 
                   ncol = 3, nrow = 2, 
                   common.legend = T)
-
-cluster_viz
 
 
 # Cluster description -----
