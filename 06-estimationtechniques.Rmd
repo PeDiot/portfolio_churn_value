@@ -70,18 +70,54 @@ cleaned_data %>%
     "Monthly_Charges"
   )) %>%
   sample_n(5) %>%
-  mykable(title = "Explanatory variables used in survival models") %>%
+  mykable(title = "Explanatory variables used in survival models and cluster analysis") %>%
   scroll_box(width = "100%", box_css = "border: 0px;")
 ```
 
 
 ## Portfolio segmentation 
 
+Customer segmentation helps decision makers having a better understanding of their clients. It can then be used to enhance marketing strategies via personalization. In other words, segmentation can lead to target customers with offers and incentives personalized to their wants, needs and preferences. In order to make segmentation more accurate, it is more appropriate to use cluster analysis than predetermined thresholds or rules, even more when we have several variables at our disposal. In this context, this section focuses on applying clustering methods on features displayed in table \@ref(tab:selectedfeatures), apart from `Monthly_Charges`. 
 
 ### Transforming qualitative variables into principal axes
 
+The variables selected to perform cluster analysis being categorical, it is needed to transform them into continuous features. To that end, multiple correspondence analysis (MCA) is performed. MCA is a dimension reducing method which takes multiple categorical variables and seeks to identify associations between levels of those variables. MCA aims at highlighting features that separate classes of individuals, while determining links between variables and categories. To that end, MCA keeps the core information by the means of principal components which are projected axes [@MCA].
 
-### Hierarchical clustering on principal components (HCPC)
+Here, the main objective of applying MCA being to obtain continuous features, it is decided to keep as many axes as it takes to have 80% cumulated variance. In other words, we want the principal components to gather enough customer-related information. After having processed the `MCA` function from the R package `FactoMineR`, 10 principal components are required to keep more than 80% cumulated variance as depicted by figure \@ref(fig:mcascreeplot).
+
+```{r mcascreeplot, fig.cap="Variance explained and cumulated variance after MCA"}
+knitr::include_graphics(path = "./imgs/mca_screeplot.png")
+```
+
+Now that the 10 continuous axes are identified, the next step consists in retrieving the customers' coordinates onto those axes to then perform cluster analysis. 
+
+```{r}
+load(file = paste0(backup_path, "clustering/res.mca.RData"))
+mca_df <- cbind(CustomerID = cleaned_data$CustomerID, 
+      res.mca2$ind$coord) %>%
+  as.data.frame() 
+rownames(mca_df) <- NULL
+mca_df%>%
+  sample_n(5) %>%
+  mykable(title = "The 10 principal axes obtained by MCA") %>%
+  scroll_box(width = "100%", box_css = "border: 0px;")
+```
+
+
+### Hierarchical clustering on principal components
+
+Multiple correspondence analysis has led us to convert the categorical variables related to account and services information into 10 numerical projected axes. The stake here is to use the customers' projections onto the MCA components in order to identify groups of individuals through clustering techniques. As a reminder, clusters are expected to discriminate between individuals based on the services they use and the type of plan they are enrolled into. The method implemented in this part relies on hierarchical clustering on principal components (HCPC).
+
+#### Optimal number of clusters {-}
+
+The key parameter to optimize when applying clustering methods is the number of clusters $k$. When using the `HCPC` function from `FactorMineR`, the `nb.clust` parameter is set to -1 so that the tree is automatically cut at the suggested level. More precisely, the function first builds a hierarchical tree. Then the sum of the between-cluster inertia is calculated for each partition. The suggested partition is the one with the higher relative gain in inertia. Intuitively, the underlying objective is to choose a number of clusters leading to $k$ well distinguished groups. Here, the between-cluster inertia is the metric measuring the amount of variability between clusters.
+
+```{r btwinertia, fig.cap="Relative gains in between-cluster inertia given the partition"}
+knitr::include_graphics(path = "./imgs/btw_inertia.png")
+```
+
+
+#### Cluster description and visualization {-}
 
 
 ## Churn analysis 
@@ -120,7 +156,7 @@ Concordance index $c$ is another metric to assess the performance of models whic
 
 #### Marginal effects {-}
 
-In the Cox model, the relative hazard between two observations is assumed to be constant over time. As a consequence, the relative hazard becomes $\exp \hat{\beta}$ for both dummy and continuous variables. For instance regarding figure \@ref(fig:coxmarginaleffects), the relative hazard ratio between customers with a two-year contract and those with a month-to-month contract is 0.046, meaning that the latter group is more than 99.5% likely to churn with respect to the former.
+In the Cox model, the relative hazard between two observations is assumed to be constant over time. As a consequence, the relative hazard becomes $\exp \hat{\beta}$ for both dummy and continuous variables. For instance regarding figure \@ref(fig:coxmarginaleffects), the relative hazard ratio between customers with a two-year contract and those with a month-to-month contract is 0.046, meaning that the latter group is 22 times more prone to churn than the former. Also, month-to-month clients are about 5 times more likely to churn than customers enrolled in one-year plan.
 
 ```{r coxmarginaleffects, echo=FALSE, fig.cap="Marginal effects obtained with the Cox PH model"}
 knitr::include_graphics(path = "./imgs/cox_ggforest.png")
