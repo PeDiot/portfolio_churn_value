@@ -24,7 +24,7 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2022-03-07" />
+<meta name="date" content="2022-03-09" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -171,7 +171,7 @@ div.csl-indent {
 <li class="chapter" data-level="5.2" data-path="5.2-portfolio-segmentation.html"><a href="5.2-portfolio-segmentation.html"><i class="fa fa-check"></i><b>5.2</b> Portfolio segmentation</a>
 <ul>
 <li class="chapter" data-level="5.2.1" data-path="5.2-portfolio-segmentation.html"><a href="5.2-portfolio-segmentation.html#transforming-qualitative-variables-into-principal-axes"><i class="fa fa-check"></i><b>5.2.1</b> Transforming qualitative variables into principal axes</a></li>
-<li class="chapter" data-level="5.2.2" data-path="5.2-portfolio-segmentation.html"><a href="5.2-portfolio-segmentation.html#hierarchical-clustering-on-principal-components-hcpc"><i class="fa fa-check"></i><b>5.2.2</b> Hierarchical clustering on principal components (HCPC)</a></li>
+<li class="chapter" data-level="5.2.2" data-path="5.2-portfolio-segmentation.html"><a href="5.2-portfolio-segmentation.html#hierarchical-clustering-on-principal-components"><i class="fa fa-check"></i><b>5.2.2</b> Hierarchical clustering on principal components</a></li>
 </ul></li>
 <li class="chapter" data-level="5.3" data-path="5.3-churn-analysis.html"><a href="5.3-churn-analysis.html"><i class="fa fa-check"></i><b>5.3</b> Churn analysis</a>
 <ul>
@@ -215,7 +215,7 @@ div.csl-indent {
 <p>Before presenting the estimation results, it seems important to recall that <code>Tenure_Months</code> and <code>Churn_Value</code> can be seen as a pair of time and event variables used as target in survival models.</p>
 <table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:survtarget">Table 5.2: </span>Time and event variables for survival models
+<span id="tab:survtarget">Table 5.3: </span>Time and event variables for survival models
 </caption>
 <thead>
 <tr>
@@ -233,21 +233,10 @@ Churn_Value
 <tbody>
 <tr>
 <td style="text-align:right;">
-1918
+2634
 </td>
 <td style="text-align:right;">
-31
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3952
-</td>
-<td style="text-align:right;">
-1
+71
 </td>
 <td style="text-align:right;">
 0
@@ -255,20 +244,20 @@ Churn_Value
 </tr>
 <tr>
 <td style="text-align:right;">
-2522
+5406
 </td>
-<td style="text-align:right;">
-51
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
 <td style="text-align:right;">
 10
 </td>
 <td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+878
+</td>
+<td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
@@ -277,13 +266,24 @@ Churn_Value
 </tr>
 <tr>
 <td style="text-align:right;">
-4753
+2615
 </td>
 <td style="text-align:right;">
-11
+23
 </td>
 <td style="text-align:right;">
 0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1635
+</td>
+<td style="text-align:right;">
+47
+</td>
+<td style="text-align:right;">
+1
 </td>
 </tr>
 </tbody>
@@ -293,10 +293,10 @@ Churn_Value
 <p>When it comes to choose an estimation method on survival data, the Cox PH model appears to be an interesting first choice. As explained in chapter <a href="3-duration.html#duration">3</a>, this semi-parametric model makes no assumption regarding the nature of the baseline hazard function <span class="math inline">\(\lambda_0(t)\)</span>. The parametric part only relies in the modelling of the effect of some covariates on the hazard function <span class="math inline">\(\lambda(t)\)</span> (see section <a href="3.6-semi-parametric-estimation.html#coxph">3.6.2</a> for more details).</p>
 <div id="fitting-the-model-on-the-selected-features" class="section level4 unnumbered">
 <h4>Fitting the model on the selected features</h4>
-<p>Using the <code>coxph</code> function from the <code>survival</code> R library, we are able to train a Cox model on the feature vector identified in section <a href="5.1-featureselection.html#featureselection">5.1</a>. Once the model fitted, it seems relevant to evaluate its performance on the train data set. Table <a href="5.3-churn-analysis.html#tab:lrtest">5.3</a> compares the model’s log-likelihood to the constrained model’s. Given the very low p-value, it can be assumed that the Cox model better fits the data than a model with only the intercept.</p>
+<p>Using the <code>coxph</code> function from the <code>survival</code> R library, we are able to train a Cox model on the feature vector identified in section <a href="5.1-featureselection.html#featureselection">5.1</a>. Once the model fitted, it seems relevant to evaluate its performance on the train data set. Table <a href="5.3-churn-analysis.html#tab:lrtest">5.4</a> compares the model’s log-likelihood to the constrained model’s. Given the very low p-value, it can be assumed that the Cox model better fits the data than a model with only the intercept.</p>
 <table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:lrtest">Table 5.3: </span>Log-likelihood ratio test
+<span id="tab:lrtest">Table 5.4: </span>Log-likelihood ratio test
 </caption>
 <thead>
 <tr>
@@ -333,10 +333,10 @@ pvalue
 </div>
 <div id="marginal-effects-1" class="section level4 unnumbered">
 <h4>Marginal effects</h4>
-<p>In the Cox model, the relative hazard between two observations is assumed to be constant over time. As a consequence, the relative hazard becomes <span class="math inline">\(\exp \hat{\beta}\)</span> for both dummy and continuous variables. For instance regarding figure <a href="5.3-churn-analysis.html#fig:coxmarginaleffects">5.1</a>, the relative hazard ratio between customers with a two-year contract and those with a month-to-month contract is 0.046, meaning that the latter group is more than 99.5% likely to churn with respect to the former.</p>
+<p>In the Cox model, the relative hazard between two observations is assumed to be constant over time. As a consequence, the relative hazard becomes <span class="math inline">\(\exp \hat{\beta}\)</span> for both dummy and continuous variables. For instance regarding figure <a href="5.3-churn-analysis.html#fig:coxmarginaleffects">5.3</a>, the relative hazard ratio between customers with a two-year contract and those with a month-to-month contract is 0.046, meaning that the latter group is 22 times more prone to churn than the former. Also, month-to-month clients are about 5 times more likely to churn than customers enrolled in one-year plan.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:coxmarginaleffects"></span>
 <p class="caption">
-Figure 5.1: Marginal effects obtained with the Cox PH model
+Figure 5.3: Marginal effects obtained with the Cox PH model
 </p>
 <img src="imgs/cox_ggforest.png" alt="Marginal effects obtained with the Cox PH model" width="650" />
 </div>

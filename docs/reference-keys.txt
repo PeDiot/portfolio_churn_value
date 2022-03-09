@@ -48,6 +48,9 @@ tab:aovcltvchurn
 fig:churndur
 fig:cltvdur
 tab:selectedfeatures
+fig:mcascreeplot
+tab:unnamed-chunk-27
+fig:btwinertia
 tab:survtarget
 tab:lrtest
 fig:coxmarginaleffects
@@ -96,7 +99,7 @@ estimation-techniques
 featureselection
 portfolio-segmentation
 transforming-qualitative-variables-into-principal-axes
-hierarchical-clustering-on-principal-components-hcpc
+hierarchical-clustering-on-principal-components
 churn-analysis
 the-cox-model
 other-models-1
