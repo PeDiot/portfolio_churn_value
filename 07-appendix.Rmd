@@ -4,9 +4,36 @@ editor_options:
   chunk_output_type: console
 ---
 
+```{r echo=FALSE}
+knitr::opts_chunk$set(
+  fig.align = "center", 
+  echo = FALSE, 
+  message = FALSE, 
+  comment = FALSE, 
+  warning = FALSE, 
+  fig.topcaption = TRUE
+)
+```
+
+```{r}
+source("functions.R", 
+       encoding = "UTF-8")
+```
+
+```{r}
+data_path <- "./data/"
+backup_path <- "./backup/"
+```
+
+```{r}
+library(knitr)
+library(kableExtra)
+```
+
+
 # Appendix {-#appendix}
 
-Some proofs of the mathematical concepts used in the study are derived, specifically related to duration analysis.  
+In this section some proofs of the mathematical concepts used in the study are derived, specifically related to duration analysis. It also consists of additional data visualisation related to the chapter \@ref(estimation).
 
 ## Hazard function {-}
 
@@ -86,6 +113,61 @@ The joint probability over the $k$ ordered discrete failure times then becomes:
 \end{aligned}
 (\#eq:partlikproofbis)
 \end{equation}
-  
+
+## Multiple correspondence analysis {-}
+
+```{r mcacontrib14, fig.cap="MCA -  Categories contribution to axes 1 to 4"}
+knitr::include_graphics(path = "./imgs/mca_contrib_1_4.png")
+```
+
+```{r mcacontrib58, fig.cap="MCA -  Categories contribution to axes 5 to 8"}
+knitr::include_graphics(path = "./imgs/mca_contrib_5_8.png")
+```
+
+```{r mcacontrib910, fig.cap="MCA -  Categories contribution to axes 9 and 10"}
+knitr::include_graphics(path = "./imgs/mca_contrib_9_10.png")
+```
+
+## Hierarchical clustering on principal components {-}
+
+### Cluster visualisation {-}
+
+```{r clusterplots, fig.cap="Cluster visualisation onto MCA axes"}
+knitr::include_graphics(path = "./imgs/cluster_plots.png")
+```
+
+### Parangons {-}
+
+```{r}
+load(file = paste0(backup_path, "clustering/parangons_dat.Rdata"))
+```
+
+<center><b>Data related to cluster 1's parangons</b></center>
+
+```{r para1dat}
+para1_dat %>%
+  mykable(title = "") %>%
+  scroll_box(width = "100%", box_css = "border: 0px;")
+```
+
+<center><b>Data related to cluster 2's parangons</b></center>
+
+```{r para2dat}
+para2_dat %>%
+  mykable(title = "") %>%
+  scroll_box(width = "100%", box_css = "border: 0px;")
+```
+
+<center><b>Data related to cluster 3's parangons</b></center>
+
+```{r para3dat}
+para3_dat %>%
+  mykable(title = "") %>%
+  scroll_box(width = "100%", box_css = "border: 0px;")
+```
+
+
+
+
 
 
