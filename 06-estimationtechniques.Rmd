@@ -102,7 +102,7 @@ mca_df%>%
   mykable(title = "The 10 principal axes obtained by MCA")
 ```
 
-Note that a more in-depth visualisation of those 10 principal components can be found in figures \@ref(fig:mcacontrib14), \@ref(fig:mcacontrib58) and \@ref(fig:mcacontrib910) in the appendix. This charts depict the percent contribution of each variable's categories to the principal axes, which is helpful to have a better undertsanding of MCA results.
+Note that a more in-depth visualisation of those 10 principal components can be found in section \@ref(mcaappendix) in the appendix. This charts depict the percent contribution of each variable's categories to the principal axes, which is helpful to have a better understanding of MCA results.
 
 
 ### Hierarchical clustering on principal components
@@ -184,12 +184,26 @@ In the Cox model, the relative hazard between two observations is assumed to be 
 knitr::include_graphics(path = "./imgs/cox_ggforest.png")
 ```
 
+#### Estimating churn hazard {-}
+
+```{r coxdataviz, fig.cap="Aggregated churn hazard, survival and cumulative hazard function estimated with Cox model"}
+knitr::include_graphics(path = "./imgs/cox_data_viz.png")
+```
+
+
 ### Other models 
 
 
 ### Model comparison
 
+## Portfolio value estimation
 
-## Estimation of portfolio value 
+### Mathematical formulation 
 
+### Customer lifetime raw value
 
+```{r custrawvaldens, fig.cap="Customer lifetime raw value - Density and evolution by number of months"}
+knitr::include_graphics(path = "./imgs/cust_lifetime_raw_value.png")
+```
+
+### Cluster contribution to the portfolio value
