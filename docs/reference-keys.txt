@@ -49,8 +49,12 @@ fig:churndur
 fig:cltvdur
 tab:selectedfeatures
 fig:mcascreeplot
-tab:unnamed-chunk-27
+tab:unnamed-chunk-26
 fig:btwinertia
+tab:unnamed-chunk-27
+fig:clusterplot
+fig:monthlychargesclust
+fig:catvarsclust
 tab:survtarget
 tab:lrtest
 fig:coxmarginaleffects
@@ -59,6 +63,13 @@ eq:linksurvcumhaz
 eq:contribpartiallikproof
 eq:partlikproof
 eq:partlikproofbis
+fig:mcacontrib14
+fig:mcacontrib58
+fig:mcacontrib910
+fig:clusterplots
+tab:para1dat
+tab:para2dat
+tab:para3dat
 intro
 portfoliodef
 attritiondef
@@ -95,7 +106,7 @@ general-overview
 churndescstats
 cltv-customer-lifetime-value
 churn-duration-and-customer-value
-estimation-techniques
+estimation
 featureselection
 portfolio-segmentation
 transforming-qualitative-variables-into-principal-axes

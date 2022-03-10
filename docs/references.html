@@ -24,14 +24,14 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2022-03-09" />
+<meta name="date" content="2022-03-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="partial-likelihood-function-in-ph-models.html"/>
+<link rel="prev" href="hierarchical-clustering-on-principal-components-1.html"/>
 
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -165,7 +165,7 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="4.4" data-path="4.4-churn-duration-and-customer-value.html"><a href="4.4-churn-duration-and-customer-value.html"><i class="fa fa-check"></i><b>4.4</b> Churn, duration and customer <em>value</em></a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="5-estimation-techniques.html"><a href="5-estimation-techniques.html"><i class="fa fa-check"></i><b>5</b> Estimation techniques</a>
+<li class="chapter" data-level="5" data-path="5-estimation.html"><a href="5-estimation.html"><i class="fa fa-check"></i><b>5</b> Estimation techniques</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="5.1-featureselection.html"><a href="5.1-featureselection.html"><i class="fa fa-check"></i><b>5.1</b> Feature selection</a></li>
 <li class="chapter" data-level="5.2" data-path="5.2-portfolio-segmentation.html"><a href="5.2-portfolio-segmentation.html"><i class="fa fa-check"></i><b>5.2</b> Portfolio segmentation</a>
@@ -187,6 +187,12 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="link-between-cumulative-hazard-and-survivor-functions.html"><a href="link-between-cumulative-hazard-and-survivor-functions.html"><i class="fa fa-check"></i>Link between cumulative hazard and survivor functions</a></li>
 <li class="chapter" data-level="" data-path="contribution-to-the-partial-likelihood-function-in-ph-models.html"><a href="contribution-to-the-partial-likelihood-function-in-ph-models.html"><i class="fa fa-check"></i>Contribution to the partial likelihood function in PH models</a></li>
 <li class="chapter" data-level="" data-path="partial-likelihood-function-in-ph-models.html"><a href="partial-likelihood-function-in-ph-models.html"><i class="fa fa-check"></i>Partial likelihood function in PH models</a></li>
+<li class="chapter" data-level="" data-path="multiple-correspondence-analysis.html"><a href="multiple-correspondence-analysis.html"><i class="fa fa-check"></i>Multiple correspondence analysis</a></li>
+<li class="chapter" data-level="" data-path="hierarchical-clustering-on-principal-components-1.html"><a href="hierarchical-clustering-on-principal-components-1.html"><i class="fa fa-check"></i>Hierarchical clustering on principal components</a>
+<ul>
+<li class="chapter" data-level="" data-path="hierarchical-clustering-on-principal-components-1.html"><a href="hierarchical-clustering-on-principal-components-1.html#cluster-visualisation-1"><i class="fa fa-check"></i>Cluster visualisation</a></li>
+<li class="chapter" data-level="" data-path="hierarchical-clustering-on-principal-components-1.html"><a href="hierarchical-clustering-on-principal-components-1.html#parangons"><i class="fa fa-check"></i>Parangons</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -253,6 +259,9 @@ Harrell, Frank. 1984. <em>Regression Modeling Strategies : With Applications to 
 Homburg, Christian, Viviana V. Steiner, and Dirk Totzek. 2009. <span>“Managing Dynamics in a Customer Portfolio.”</span> <em>Journal of Marketing</em> 73(5): 70–89. <a href="https://doi.org/ 10.1509/jmkg.73.5.70">https://doi.org/ 10.1509/jmkg.73.5.70</a>.
 </div>
 <div class="csl-entry">
+Lê, Sébastien, Julie Josse, and François Husson. 2008. <span>“<span>FactoMineR</span>: A Package for Multivariate Analysis.”</span> <em>Journal of Statistical Software</em> 25 (1): 1–18. <a href="https://doi.org/10.18637/jss.v025.i01">https://doi.org/10.18637/jss.v025.i01</a>.
+</div>
+<div class="csl-entry">
 Liu, Weinan. 2019. <span>“Inclusive Underwriting: The Case of Cardiovascular Risk Calculator.”</span> PhD thesis, ENSAE ParisTech.
 </div>
 <div class="csl-entry">
@@ -271,6 +280,9 @@ Scholler, Julie. 2021. <em>M1 Analyse de Données Exploratoire - ACM</em>. Unive
 Slof, Frasincar, and Matsiiako. 2021. <span>“A Competing Risks Model Based on Latent Dirichlet Allocation for Predicting Churn Reasons.”</span> <em>Decision Support Systems</em> 146.
 </div>
 <div class="csl-entry">
+Terry M. Therneau, and Patricia M. Grambsch. 2000. <em>Modeling Survival Data: Extending the <span>C</span>ox Model</em>. New York: Springer.
+</div>
+<div class="csl-entry">
 Thakur, Ramendra, and Letty Workman. 2016. <span>“Customer Portfolio Management (CPM) for Improved Customer Relationship Management (CRM): Are Your Customers Platinum, Gold, Silver, or Bronze?”</span> <em>Journal of Business Research</em> 69: 4095–4102.
 </div>
 <div class="csl-entry">
@@ -283,7 +295,7 @@ Wind, Y., and V. Mahajan. 1981. <span>“Designing Product and Business Portfoli
           </div>
         </div>
       </div>
-<a href="partial-likelihood-function-in-ph-models.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="hierarchical-clustering-on-principal-components-1.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
     </div>
   </div>

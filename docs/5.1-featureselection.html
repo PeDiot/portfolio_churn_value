@@ -24,14 +24,14 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2022-03-09" />
+<meta name="date" content="2022-03-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="5-estimation-techniques.html"/>
+<link rel="prev" href="5-estimation.html"/>
 <link rel="next" href="5.2-portfolio-segmentation.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -165,7 +165,7 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="4.4" data-path="4.4-churn-duration-and-customer-value.html"><a href="4.4-churn-duration-and-customer-value.html"><i class="fa fa-check"></i><b>4.4</b> Churn, duration and customer <em>value</em></a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="5-estimation-techniques.html"><a href="5-estimation-techniques.html"><i class="fa fa-check"></i><b>5</b> Estimation techniques</a>
+<li class="chapter" data-level="5" data-path="5-estimation.html"><a href="5-estimation.html"><i class="fa fa-check"></i><b>5</b> Estimation techniques</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="5.1-featureselection.html"><a href="5.1-featureselection.html"><i class="fa fa-check"></i><b>5.1</b> Feature selection</a></li>
 <li class="chapter" data-level="5.2" data-path="5.2-portfolio-segmentation.html"><a href="5.2-portfolio-segmentation.html"><i class="fa fa-check"></i><b>5.2</b> Portfolio segmentation</a>
@@ -187,6 +187,12 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="link-between-cumulative-hazard-and-survivor-functions.html"><a href="link-between-cumulative-hazard-and-survivor-functions.html"><i class="fa fa-check"></i>Link between cumulative hazard and survivor functions</a></li>
 <li class="chapter" data-level="" data-path="contribution-to-the-partial-likelihood-function-in-ph-models.html"><a href="contribution-to-the-partial-likelihood-function-in-ph-models.html"><i class="fa fa-check"></i>Contribution to the partial likelihood function in PH models</a></li>
 <li class="chapter" data-level="" data-path="partial-likelihood-function-in-ph-models.html"><a href="partial-likelihood-function-in-ph-models.html"><i class="fa fa-check"></i>Partial likelihood function in PH models</a></li>
+<li class="chapter" data-level="" data-path="multiple-correspondence-analysis.html"><a href="multiple-correspondence-analysis.html"><i class="fa fa-check"></i>Multiple correspondence analysis</a></li>
+<li class="chapter" data-level="" data-path="hierarchical-clustering-on-principal-components-1.html"><a href="hierarchical-clustering-on-principal-components-1.html"><i class="fa fa-check"></i>Hierarchical clustering on principal components</a>
+<ul>
+<li class="chapter" data-level="" data-path="hierarchical-clustering-on-principal-components-1.html"><a href="hierarchical-clustering-on-principal-components-1.html#cluster-visualisation-1"><i class="fa fa-check"></i>Cluster visualisation</a></li>
+<li class="chapter" data-level="" data-path="hierarchical-clustering-on-principal-components-1.html"><a href="hierarchical-clustering-on-principal-components-1.html#parangons"><i class="fa fa-check"></i>Parangons</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -212,7 +218,7 @@ div.csl-indent {
 <div id="featureselection" class="section level2" number="5.1">
 <h2><span class="header-section-number">5.1</span> Feature selection</h2>
 <p>Before fitting any survival model or clustering algorithm to the data, the initial step consists in selecting variables that are discriminating in terms of churn hazard. Based on Kaplan-Meier analysis depicted in section <a href="4.2-churndescstats.html#churndescstats">4.2</a>, we have a general overview of features which influence the survival probability. In other words, our feature selection method relies on results obtained with descriptive statistics.</p>
-<p>Table <a href="5.1-featureselection.html#tab:selectedfeatures">5.1</a> shows the selected variables for 5 random observations extracted from the data set. It can be noted that these features are related to account or service information, apart from <code>Dependents</code> which indicates whether the client lives with any dependents (children, parents, etc). Furthermore, 9 out of the 10 selected variables are categorical which implies that the estimation results could be used to compare different groups of client. <code>Monthly_Charges</code> is the only quantitative variable used to fit clustering models and survival regressions.</p>
+<p>Table <a href="5.1-featureselection.html#tab:selectedfeatures">5.1</a> shows the selected variables for 5 random observations extracted from the data set. It can be noted that these features are related to account or service information, apart from <code>Dependents</code> which indicates whether the client lives with any dependents (children, parents, etc) and <code>Senior_Citizen</code>. Furthermore, 9 out of the 10 selected variables are categorical which implies that the estimation results could be used to compare different groups of client. <code>Monthly_Charges</code> is the only quantitative variable used to fit clustering models and survival regressions.</p>
 <div style="border: 0px;overflow-x: scroll; width:100%; ">
 <table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
@@ -220,6 +226,9 @@ div.csl-indent {
 </caption>
 <thead>
 <tr>
+<th style="text-align:left;">
+Senior_Citizen
+</th>
 <th style="text-align:left;">
 Dependents
 </th>
@@ -255,6 +264,9 @@ Monthly_Charges
 No
 </td>
 <td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
 Yes
 </td>
 <td style="text-align:left;">
@@ -280,6 +292,9 @@ Electronic check
 </td>
 </tr>
 <tr>
+<td style="text-align:left;">
+No
+</td>
 <td style="text-align:left;">
 Yes
 </td>
@@ -309,6 +324,9 @@ Credit card
 </td>
 </tr>
 <tr>
+<td style="text-align:left;">
+Yes
+</td>
 <td style="text-align:left;">
 No
 </td>
@@ -345,6 +363,9 @@ No
 No
 </td>
 <td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
 DSL
 </td>
 <td style="text-align:left;">
@@ -367,6 +388,9 @@ Electronic check
 </td>
 </tr>
 <tr>
+<td style="text-align:left;">
+No
+</td>
 <td style="text-align:left;">
 No
 </td>
@@ -404,7 +428,7 @@ Bank transfer
           </div>
         </div>
       </div>
-<a href="5-estimation-techniques.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="5-estimation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="5.2-portfolio-segmentation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>

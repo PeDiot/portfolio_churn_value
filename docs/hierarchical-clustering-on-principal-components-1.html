@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>3.3 Probabilistic concepts | Portfolio, Churn &amp; Customer Value</title>
+  <title>Hierarchical clustering on principal components | Portfolio, Churn &amp; Customer Value</title>
   <meta name="description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="3.3 Probabilistic concepts | Portfolio, Churn &amp; Customer Value" />
+  <meta property="og:title" content="Hierarchical clustering on principal components | Portfolio, Churn &amp; Customer Value" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="3.3 Probabilistic concepts | Portfolio, Churn &amp; Customer Value" />
+  <meta name="twitter:title" content="Hierarchical clustering on principal components | Portfolio, Churn &amp; Customer Value" />
   
   <meta name="twitter:description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="3.2-censoring-and-truncation.html"/>
-<link rel="next" href="3.4-nonparam.html"/>
+<link rel="prev" href="multiple-correspondence-analysis.html"/>
+<link rel="next" href="references.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -215,63 +215,1023 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="probabilistic-concepts" class="section level2" number="3.3">
-<h2><span class="header-section-number">3.3</span> Probabilistic concepts</h2>
-<p>In survival analysis, the response variable denoted <span class="math inline">\(T\)</span> is a time-to-event variable. Instead of estimating the expected failure time, survival models estimate the <strong>survival</strong> and <strong>hazard rate</strong> functions which depend on the realization of <span class="math inline">\(T\)</span>.</p>
-<div id="survival-function" class="section level3" number="3.3.1">
-<h3><span class="header-section-number">3.3.1</span> Survival function</h3>
-<p>The survival function <span class="math inline">\(S(t)\)</span> represents the probability that the considered event occurs after time <span class="math inline">\(t\)</span>. For instance, <span class="math inline">\(S(t)\)</span> can measure the probability that a given customer survives in the <em>portfolio</em> at least until time <span class="math inline">\(t\)</span>. Mathematically, the survival function is defined as:
-<span class="math display" id="eq:survfun">\[\begin{equation}
-  S(t) = P(T &gt; t) = 1 - F(t)
-  \tag{3.2}
-\end{equation}\]</span></p>
-<p>where <span class="math inline">\(F(t)\)</span> is the cumulative distribution function.</p>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:survfunplot"></span>
+<div id="hierarchical-clustering-on-principal-components-1" class="section level2 unnumbered">
+<h2>Hierarchical clustering on principal components</h2>
+<div id="cluster-visualisation-1" class="section level3 unnumbered">
+<h3>Cluster visualisation</h3>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:clusterplots"></span>
 <p class="caption">
-Figure 3.2: Survival function <span class="math inline">\(S_T(t)\)</span> with <span class="math inline">\(T \sim \mathcal{E} (1)\)</span>
+Figure 5.10: Cluster visualisation onto MCA axes
 </p>
-<img src="imgs/surv_fun_plot.png" alt="Survival function $S_T(t)$ with $T \sim \mathcal{E} (1)$" width="400pt" height="300pt" />
+<img src="imgs/cluster_plots.png" alt="Cluster visualisation onto MCA axes" width="550" />
 </div>
 </div>
-<div id="hazard-and-cumulative-hazard-functions" class="section level3" number="3.3.2">
-<h3><span class="header-section-number">3.3.2</span> Hazard and Cumulative Hazard functions</h3>
-<p>Another key concept in duration analysis is the hazard function <span class="math inline">\(\lambda(t)\)</span> which approximates the probability that the event occurs at time <span class="math inline">\(t\)</span>. For instance, <span class="math inline">\(\lambda(t)\)</span> can measure the probability that a given individual leaves the firm <em>portfolio</em> at time <span class="math inline">\(t\)</span>. Formally, it is expressed as follows:
-<span class="math display" id="eq:hazfun">\[\begin{equation}
-  \lambda(t) = \lim_{\Delta t \to 0} \frac{P\big[t \leq T &lt; t + \Delta t | T \geq t \big]}{\Delta t}
-  \tag{3.3}
-\end{equation}\]</span></p>
-<p>Using the Bayes formula, equation <a href="3.3-probabilistic-concepts.html#eq:hazfun">(3.3)</a> can also be written as (see proof <a href="hazard-function.html#eq:hazfunproof">(5.1)</a> in the appendix):
-<span class="math display" id="eq:hazfunbis">\[\begin{equation}
-  \lambda(t) = \frac{-\text{d} \ln \big(S(t)\big)}{\text{d} t}
-  \tag{3.4}
-\end{equation}\]</span></p>
-<p>Finally, integrating the instantaneous hazard function gives the cumulative hazard function which can be more precisely estimated than the hazard function <span class="citation">(<a href="#ref-CAMERON_TRIVEDI" role="doc-biblioref">Cameron and Trivedi 2005</a>)</span> and is defined as:</p>
-<p><span class="math display" id="eq:cumhazfun">\[\begin{equation}
-  \Lambda (t) = \int_{0}^{t} \lambda(s) \text{d}s = \ln \big(S(t)\big)
-  \tag{3.5}
-\end{equation}\]</span></p>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:cumhazplot"></span>
-<p class="caption">
-Figure 3.3: Cumulative Hazard function <span class="math inline">\(\Lambda_T(t)\)</span> with <span class="math inline">\(T \sim \mathcal{E} (1)\)</span>
-</p>
-<img src="imgs/cum_haz_plot.png" alt="Cumulative Hazard function $\Lambda_T(t)$ with $T \sim \mathcal{E} (1)$" width="400pt" height="300pt" />
+<div id="parangons" class="section level3 unnumbered">
+<h3>Parangons</h3>
+<center>
+<b>Data related to cluster 1’s parangons</b>
+</center>
+<div style="border: 0px;overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:para1dat">Table 5.6: </span>
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+Senior_Citizen
+</th>
+<th style="text-align:left;">
+Dependents
+</th>
+<th style="text-align:left;">
+Internet_Service
+</th>
+<th style="text-align:left;">
+Online_Security
+</th>
+<th style="text-align:left;">
+Online_Backup
+</th>
+<th style="text-align:left;">
+Device_Protection
+</th>
+<th style="text-align:left;">
+Tech_Support
+</th>
+<th style="text-align:left;">
+Streaming_TV
+</th>
+<th style="text-align:left;">
+Streaming_Movies
+</th>
+<th style="text-align:left;">
+Contract
+</th>
+<th style="text-align:left;">
+Paperless_Billing
+</th>
+<th style="text-align:left;">
+Payment_Method
+</th>
+<th style="text-align:right;">
+Monthly_Charges
+</th>
+<th style="text-align:right;">
+Tenure_Months
+</th>
+<th style="text-align:right;">
+Churn_Value
+</th>
+<th style="text-align:right;">
+CLTV
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Month-to-month
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Mailed check
+</td>
+<td style="text-align:right;">
+20.15
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4832
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+23
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Month-to-month
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Mailed check
+</td>
+<td style="text-align:right;">
+21.05
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2604
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+144
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Month-to-month
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Mailed check
+</td>
+<td style="text-align:right;">
+19.00
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3535
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+178
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Month-to-month
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Mailed check
+</td>
+<td style="text-align:right;">
+19.55
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3556
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+190
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Month-to-month
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Mailed check
+</td>
+<td style="text-align:right;">
+19.90
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4248
+</td>
+</tr>
+</tbody>
+</table>
 </div>
-<p>Thus, <strong>the hazard, survival and cumulative hazard functions</strong> are three mathematical functions which describe the same distribution.</p>
+<center>
+<b>Data related to cluster 2’s parangons</b>
+</center>
+<div style="border: 0px;overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:para2dat">Table 5.7: </span>
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+Senior_Citizen
+</th>
+<th style="text-align:left;">
+Dependents
+</th>
+<th style="text-align:left;">
+Internet_Service
+</th>
+<th style="text-align:left;">
+Online_Security
+</th>
+<th style="text-align:left;">
+Online_Backup
+</th>
+<th style="text-align:left;">
+Device_Protection
+</th>
+<th style="text-align:left;">
+Tech_Support
+</th>
+<th style="text-align:left;">
+Streaming_TV
+</th>
+<th style="text-align:left;">
+Streaming_Movies
+</th>
+<th style="text-align:left;">
+Contract
+</th>
+<th style="text-align:left;">
+Paperless_Billing
+</th>
+<th style="text-align:left;">
+Payment_Method
+</th>
+<th style="text-align:right;">
+Monthly_Charges
+</th>
+<th style="text-align:right;">
+Tenure_Months
+</th>
+<th style="text-align:right;">
+Churn_Value
+</th>
+<th style="text-align:right;">
+CLTV
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+1405
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Fiber optic
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Month-to-month
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Electronic check
+</td>
+<td style="text-align:right;">
+84.50
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5141
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2427
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Fiber optic
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Month-to-month
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Electronic check
+</td>
+<td style="text-align:right;">
+80.45
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+5602
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4455
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Fiber optic
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Month-to-month
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Electronic check
+</td>
+<td style="text-align:right;">
+84.75
+</td>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+5157
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5025
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Fiber optic
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Month-to-month
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Electronic check
+</td>
+<td style="text-align:right;">
+88.05
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2715
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5743
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Fiber optic
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Month-to-month
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Electronic check
+</td>
+<td style="text-align:right;">
+90.65
+</td>
+<td style="text-align:right;">
+33
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4460
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<center>
+<b>Data related to cluster 3’s parangons</b>
+</center>
+<div style="border: 0px;overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:para3dat">Table 5.8: </span>
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+Senior_Citizen
+</th>
+<th style="text-align:left;">
+Dependents
+</th>
+<th style="text-align:left;">
+Internet_Service
+</th>
+<th style="text-align:left;">
+Online_Security
+</th>
+<th style="text-align:left;">
+Online_Backup
+</th>
+<th style="text-align:left;">
+Device_Protection
+</th>
+<th style="text-align:left;">
+Tech_Support
+</th>
+<th style="text-align:left;">
+Streaming_TV
+</th>
+<th style="text-align:left;">
+Streaming_Movies
+</th>
+<th style="text-align:left;">
+Contract
+</th>
+<th style="text-align:left;">
+Paperless_Billing
+</th>
+<th style="text-align:left;">
+Payment_Method
+</th>
+<th style="text-align:right;">
+Monthly_Charges
+</th>
+<th style="text-align:right;">
+Tenure_Months
+</th>
+<th style="text-align:right;">
+Churn_Value
+</th>
+<th style="text-align:right;">
+CLTV
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+5350
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+DSL
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Two year
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Electronic check
+</td>
+<td style="text-align:right;">
+49.20
+</td>
+<td style="text-align:right;">
+72
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4700
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3103
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+DSL
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Two year
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Electronic check
+</td>
+<td style="text-align:right;">
+85.25
+</td>
+<td style="text-align:right;">
+72
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+6275
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3936
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+DSL
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Two year
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Electronic check
+</td>
+<td style="text-align:right;">
+86.10
+</td>
+<td style="text-align:right;">
+58
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+5666
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1957
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+DSL
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Two year
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Electronic check
+</td>
+<td style="text-align:right;">
+54.60
+</td>
+<td style="text-align:right;">
+64
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4850
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2999
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+DSL
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Two year
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Electronic check
+</td>
+<td style="text-align:right;">
+78.95
+</td>
+<td style="text-align:right;">
+72
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+5050
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+
 </div>
 </div>
-<h3>References</h3>
-<div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-CAMERON_TRIVEDI" class="csl-entry">
-Cameron, A. Colin, and Pravin K. Trivedi. 2005. <em>Microeconometrics: Methods and Applications</em>. Edited by Cambridge University Press.
-</div>
-</div>
+<!-- </div> -->
             </section>
 
           </div>
         </div>
       </div>
-<a href="3.2-censoring-and-truncation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="3.4-nonparam.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="multiple-correspondence-analysis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
