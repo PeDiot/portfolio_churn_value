@@ -12,10 +12,6 @@ link-citations: true
 description: This research paper aims at modelling customer portfolio, churn and customer value.
 ---
 
-```{r eval=FALSE, include=FALSE}
-# setwd("C:/Users/pemma/Dropbox/M2 EE 2021 2022/COURS/3R/TEAM 2 AB PORTEFEUILLE/04 - RAPPORT/bookdown")
-```
-
 
 # Abstract{-#abstract}
 
@@ -32,8 +28,13 @@ After having defined the subject's key concepts, we apply duration models and ma
 ```{r include=FALSE}
 # automatically create a bib database for R packages
 knitr::write_bib(c(
-  .packages(), 'bookdown', 'knitr', 'rmarkdown'
-), 'packages.bib')
+  .packages(), 
+  "bookdown", 
+  "knitr", 
+  "rmarkdown", 
+  "FactoMineR", 
+  "survival"
+), "packages.bib")
 ```
 
 
