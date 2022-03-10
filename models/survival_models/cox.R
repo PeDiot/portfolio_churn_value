@@ -193,7 +193,6 @@ save(cox_metrics,
 
 # Prediction --------------------------------------------------------------
 
-
 risk_pred_tr <- predict(
   cox_signif_var, 
   type = "risk", 
@@ -217,89 +216,36 @@ c_index_te <- concordance.index(x = risk_pred_te$fit,
                   surv.event = data_test$Churn_Value)
 c_index_te$c.index
 
-# predicted churn risk
-
-p1 <- data.frame(num_months = data_train$Tenure_Months, 
-           risk = risk_pred_tr$fit, 
-           se = risk_pred_tr$se.fit) %>%
-  mutate(lower_bound = risk - 1.96*se, 
-         upper_bound = risk + 1.96*se) %>%
-  group_by(num_months) %>%
-  summarise(across(-se,
-                   mean,
-                   na.rm = T)) %>%
-  ggplot(aes(x = num_months, 
-             y = risk)) +
-  geom_line(size = .7, 
-            color = "#2E9FDF") +
-  geom_ribbon(aes(ymin = lower_bound, 
-                  ymax = upper_bound), 
-              fill = "grey70", 
-              alpha = .3) +
-  labs(x = "Number of months", 
-       y = "Churn risk", 
-       title = "Cox model estimation",
-       subtitle = "Training set")
-
-ggplotly(p1)
-
-p2 <- data.frame(num_months = data_test$Tenure_Months, 
-                 risk = risk_pred_te$fit, 
-                 se = risk_pred_te$se.fit) %>%
-  mutate(lower_bound = risk - 1.96*se, 
-         upper_bound = risk + 1.96*se) %>%
-  group_by(num_months) %>%
-  summarise(across(-se,
-                   mean,
-                   na.rm = T)) %>%
-  ggplot(aes(x = num_months, 
-             y = risk)) +
-  geom_line(size = .7, 
-            color = "#BE7970") +
-  geom_ribbon(aes(ymin = lower_bound, 
-                  ymax = upper_bound), 
-              fill = "grey70", 
-              alpha = .3) +
-  labs(x = "Number of months", 
-       y = "Churn risk",
-       title = "Cox model estimation",
-       subtitle = "Testing set")
-
-ggarrange(haz_plot,  
-          p1, p2, 
-          ncol = 3)
-
-# data set for clustering
-
-data_clust_tr <- cbind(data_train, 
-                       Churn_Risk = risk_pred_tr)
-data_clust_te <- cbind(data_test, 
-                       Churn_Risk = risk_pred_te)
-
-save(
-  data_clust_tr, data_clust_te,
-  file = paste(data_path, "train_test_data_clust.RData", sep = "")
-)
-
 # Final Cox model ---------------------------------------------------------
 
 load(file = paste(data_path, "telco_cleaned.RData", sep = "/"))
 
-formula <- Surv(Tenure_Months, Churn_Value) ~ Dependents + Phone_Service + 
-  Internet_Service + Online_Security + Online_Backup + Tech_Support + 
-  Contract + Payment_Method + Monthly_Charges
+## Fit model -----
 
-final_cox <- coxph(
-  formula = formula, 
-  data = cleaned_data
-)
+# NOT RUN {
+  formula <- Surv(Tenure_Months, Churn_Value) ~ Dependents + Phone_Service + 
+    Internet_Service + Online_Security + Online_Backup + Tech_Support + 
+    Contract + Payment_Method + Monthly_Charges
+  
+  final_cox <- coxph(
+    formula = formula, 
+    data = cleaned_data
+  )
+  
+  save(final_cox, 
+       file = paste(backup_path, "cox_final.RData", sep = "/")) 
+#}
+  
+load(file = paste(backup_path, "cox_final.RData", sep = "/"))
 
 summary(final_cox)
+
+## Data viz -----
 
 risk_preds <- predict(final_cox, 
                       se.fit = T)
 
-data.frame(num_months = cleaned_data$Tenure_Months, 
+risk_plot <- data.frame(num_months = cleaned_data$Tenure_Months, 
            risk = risk_preds$fit, 
            se = risk_preds$se.fit) %>%
   mutate(lower_bound = risk - 1.96*se, 
@@ -310,39 +256,53 @@ data.frame(num_months = cleaned_data$Tenure_Months,
                    na.rm = T)) %>%
   ggplot(aes(x = num_months, 
              y = risk)) +
-  geom_line(size = .7, 
-            color = "#2E9FDF") +
+  geom_line(size = .8, 
+            color = risk_col) +
   geom_ribbon(aes(ymin = lower_bound, 
                   ymax = upper_bound), 
               fill = "grey70", 
               alpha = .3) +
   labs(x = "Number of months", 
-       y = "Churn risk", 
-       title = "Cox model estimation")
+       y = "", 
+       title = "Churn hazard function", 
+       subtitle = "with 95% confidence interval") +
+  theme(axis.title = element_text(size = 14), 
+        axis.text = element_text(size = 14), 
+        title = element_text(size = 14))
 
 surv_plt <- ggsurvplot(fit = survfit(final_cox), 
                        data = cleaned_data, 
                        palette = surv_col, 
                        conf.int = T, 
                        ggtheme = theme_minimal())
-surv_plt$plot +
-  labs(x = "Number of months", 
-       title = "Customer survival given number of months", 
+surv_plt <- surv_plt$plot +
+  labs(x = "Number of months",
+       y = "", 
+       title = "Customer survival probability", 
        subtitle = "with 95% confidence interval") +
-  theme(legend.position = "none")
+  theme(legend.position = "none", 
+        axis.title = element_text(size = 14), 
+        axis.text = element_text(size = 14), 
+        title = element_text(size = 14))
 
 cumhaz_plt <- ggsurvplot(fit = survfit(final_cox), 
                          data = cleaned_data, 
                          fun = "cumhaz", 
-                         palette = risk_col, 
+                         palette = "steelblue", 
                          conf.int = T, 
                          ggtheme = theme_minimal())
 
-cumhaz_plt$plot +
+cumhaz_plt<- cumhaz_plt$plot +
   labs(x = "Number of months", 
-       title = "Cumulative churn hazard given number of months", 
+       y = "", 
+       title = "Cumulative churn hazard", 
        subtitle = "with 95% confidence interval") +
-  theme(legend.position = "none")
+  theme(legend.position = "none", 
+        axis.title = element_text(size = 14), 
+        axis.text = element_text(size = 14), 
+        title = element_text(size = 14)) 
 
-save(final_cox, 
-     file = paste(backup_path, "cox_final.RData", sep = "/")) 
+ggpubr::ggarrange(risk_plot, 
+          surv_plt, 
+          cumhaz_plt, 
+          nrow = 2, ncol = 2) 

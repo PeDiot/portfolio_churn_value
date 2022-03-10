@@ -206,7 +206,7 @@ process <- function(custID){
 
 # ----- Results -----
   
-file_path <- paste0(backup, "custValues_", a*100, "pct", ".RData")
+file_path <- paste0(backup, "custValues_8pct", ".RData")
 load(file = file_path)
 
 custValues %>%
@@ -227,11 +227,51 @@ subtitle <- TeX(paste("Portfolio value =",
 
 # accross all customers ---
 
+ggarrange(
+  custValues %>%
+    ggplot(aes(x = v)) +
+    geom_density(size = 1.5, 
+                 color = portfol_col) +
+    scale_x_continuous(labels = scales::comma) +
+    labs(x = "", 
+         y = "Density", 
+         title = "Density plot", 
+         subtitle = subtitle) +
+    theme(axis.title = element_text(size = 14), 
+          axis.text = element_text(size = 14), 
+          title = element_text(size = 14)), 
+  custValues %>%
+    mutate(num_months = cleaned_data$Tenure_Months) %>%
+    group_by(num_months) %>%
+    summarise(v_lower = mean(v_lower), 
+              v = mean(v), 
+              v_upper = mean(v_upper)) %>%
+    ggplot() +
+    geom_line(aes(x = num_months, 
+                  y = v), 
+              color = portfol_col, 
+              size = 1.5) +
+    geom_ribbon(aes(x = num_months, 
+                    ymin = v_lower, 
+                    ymax = v_upper),
+                fill = "grey", 
+                alpha = .5) +
+    labs(x = "Number of months", 
+         y = "", 
+         title = "Evolution through time") +
+    theme(axis.title = element_text(size = 14), 
+          axis.text = element_text(size = 14), 
+          title = element_text(size = 14)), 
+  ncol = 2
+)
+
+
+# multiple plots ---
 surv_plt <- ggsurvplot(fit = survfit(final_cox), 
-                data = cleaned_data, 
-                palette = surv_col, 
-                conf.int = T, 
-                ggtheme = theme_minimal())
+                       data = cleaned_data, 
+                       palette = surv_col, 
+                       conf.int = T, 
+                       ggtheme = theme_minimal())
 
 ggpubr::ggarrange(
   custValues %>%
@@ -278,25 +318,6 @@ ggpubr::ggarrange(
   ncol = 2, nrow = 2
 )
 
-custValues %>%
-  mutate(num_months = cleaned_data$Tenure_Months) %>%
-  group_by(num_months) %>%
-  summarise(v_lower = mean(v_lower), 
-            v = mean(v), 
-            v_upper = mean(v_upper)) %>%
-  ggplot() +
-  geom_line(aes(x = num_months, 
-                y = v), 
-            color = portfol_col, 
-            size = 1) +
-  geom_ribbon(aes(x = num_months, 
-                  ymin = v_lower, 
-                  ymax = v_upper),
-              fill = "grey", 
-              alpha = .5) +
-  labs(x = "Number of months", 
-       title = "Customer raw value given number of months in the portfolio", 
-       subtitle = "with 95% confidence interval") 
 
 
 # accross clusters ---

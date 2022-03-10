@@ -214,3 +214,14 @@ ggpubr::ggarrange(
                     }), 
   nrow = 1, ncol = 2
 )
+
+axes <- c(9, 10)
+title <- paste("Dim", axes[1], "- Dim", axes[2])
+p <- fviz_contrib(res.mca2, 
+                  choice = "var", 
+                  alpha = .5, 
+                  axes = axes) 
+p +
+  ggtitle(title) +
+  theme(axis.text = element_text(size = 14), 
+        axis.title = element_text(size = 14))
