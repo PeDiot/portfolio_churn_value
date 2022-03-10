@@ -12,6 +12,7 @@ load(paste(data_path, "telco_cleaned.RData", sep = "/"))
 
 library(tidyverse)
 library(ggplot2)
+library(ggsci)
 library(FactoMineR)
 library(factoextra)
 library(ggdendro)
@@ -31,15 +32,6 @@ theme_set(theme_minimal())
   res.hcpc$call$bw.before.consol
   res.hcpc$call$bw.after.consol
   
-  n_clust <- res.hcpc$call$t$nb.clust
-  
-  dend <- fviz_dend(x = res.hcpc, 
-                    k = n_clust, 
-                    show_labels = F, 
-                    palette = "jco", 
-                    color_labels_by_k = T, 
-                    rect = T)
-  
   save(res.hcpc, 
        file = paste0(backup_path, "res.hcpc.RData"))
 
@@ -48,6 +40,18 @@ theme_set(theme_minimal())
   
 load(file = paste0(backup_path, "res.hcpc.RData"))
 
+
+# Dendrogram -----
+
+n_clust <- res.hcpc$call$t$nb.clust
+
+
+dend <- fviz_dend(x = res.hcpc, 
+                  k = n_clust, 
+                  show_labels = F, 
+                  palette = "jco", 
+                  color_labels_by_k = T, 
+                  rect = T)
 
 # Inertia -----
 
@@ -61,9 +65,9 @@ data.frame(btw_inertia = res.hcpc$call$t$inert.gain[1:20]) %>%
   labs(title = "", 
        x = "Number of cluster", 
        y = "Inertia") +
-  theme(plot.title = element_text(size = 14),
-        axis.title = element_text(size = 14),
-        axis.text = element_text(size = 14))
+  theme(plot.title = element_text(size = 16),
+        axis.title = element_text(size = 16),
+        axis.text = element_text(size = 16))
 
 # Cluster visualization -----
 cluster_viz <- function(axes){
@@ -75,23 +79,53 @@ cluster_viz <- function(axes){
                palette = "jco",    
                ellipse = T, 
                alpha = .4, 
-               ggtheme = theme_minimal())
+               main = "", 
+               ggtheme = theme_minimal()) +
+    theme(legend.position = "bottom", 
+          legend.title = element_blank(), 
+          legend.text = element_text(size = 14),
+          axis.title = element_text(size = 14), 
+          axis.text = element_text(size = 14))
 }
 
-axes <- list(c(1, 2), 
-             c(3, 4), 
+axes <- list(c(3, 4), 
              c(5, 6), 
              c(7, 8), 
              c(9, 10))
 ggpubr::ggarrange(plotlist = lapply(axes, 
                                     cluster_viz), 
-                  ncol = 3, nrow = 2, 
-                  common.legend = T)
+                  ncol = 2, nrow = 2, 
+                  common.legend = T, 
+                  legend = "bottom")
 
+cluster_viz(axes = c(1, 2))
+
+clust_prop <- res.hcpc$data.clust %>%
+  pull(clust) %>%
+  table() %>%
+  prop.table() %>%
+  data.frame() %>%
+  select(Freq) %>%
+  mutate(Freq = 100*Freq) %>%
+  t()
+colnames(clust_prop) <- c("Cluster 1", "Cluster 2", "Cluster 3")
+rownames(clust_prop) <- "%"
+
+save(clust_prop, 
+     file = paste0(backup_path, "cluster_prop.RData"))
 
 # Cluster description -----
 
-res.hcpc$desc.var$category
+desc_var <- res.hcpc$desc.var$category
+save(desc_var, 
+     file = paste0(backup_path, 
+                   "hcpc_desc_var.Rdata"))
+
+vars <- c(res.mca2$call$X %>% 
+            colnames(), 
+          "Tenure_Months", 
+          "Churn_Value", 
+          "CLTV") 
 
 # parangons
 para1 <- res.hcpc$desc.ind$para$`1` %>%
@@ -102,16 +136,18 @@ para3 <- res.hcpc$desc.ind$para$`3` %>%
   names()
 
 # bronze customers
-cleaned_data[para1, ] %>%
-  View()
+para1_dat <- cleaned_data[para1, vars] 
 
 # silver / high value customers
-cleaned_data[para2, ] %>%
-  View()
+para2_dat <- cleaned_data[para2, vars]
 
 # gold / loyal customers
-cleaned_data[para3, ] %>%
-  View()
+para3_dat <- cleaned_data[para3, vars] 
+
+save(para1_dat, 
+     para2_dat, 
+     para3_dat, 
+     file = paste0(backup_path, "parangons_dat.RData"))
 
 desc.dat <- cleaned_data %>%
   mutate(cluster = res.hcpc$data.clust$clust)
@@ -122,40 +158,60 @@ table(desc.dat$cluster) %>%
 
 # quanti variables per cluster
 
-dens_by_cluster <- function(var){
+boxplot_by_cluster <- function(var){
   desc.dat %>%
     ggplot() +
-    geom_histogram(aes_string(x = var,
-                              fill = "cluster",
-                              color = "cluster"),
-                 alpha = .5, 
-                 bins = 30) +
-    theme(legend.position = "none") +
-    facet_grid(~cluster)
+    geom_boxplot(aes_string(x = "cluster",
+                            y = var, 
+                            fill = "cluster",
+                            color = "cluster"),
+                 alpha = .5) +
+    coord_flip() +
+    scale_fill_jco() +
+    scale_color_jco() +
+    labs(title = "", 
+         x = "", 
+         y = var) +
+    theme(legend.position = "none",
+          axis.title = element_text(size = 14),
+          axis.text = element_text(size = 14))
 }
 
 
 quanti_vars <- c("Monthly_Charges", 
-                 "Total_Charges", 
+                 "CLTV", 
                  "Churn_Score")
 
 lapply(quanti_vars, 
-       dens_by_cluster)
+       boxplot_by_cluster)
+
+boxplot_by_cluster(var = "Monthly_Charges")
 
 # cat variables per cluster
 
 barplot_by_cluster <- function(var){
   desc.dat %>%
-    ggplot() +
-    geom_bar(aes_string(x = var, 
-                        fill = "cluster"), 
-             alpha = .7) +
+    select(c(Senior_Citizen, cluster)) %>%
+    count(var = all_of(Senior_Citizen), 
+          cluster) %>% 
+    mutate(pct = prop.table(n)) %>%
+    ggplot(aes(x = var, 
+               y = pct, 
+               fill = cluster)) +
+    geom_bar(stat = "identity", 
+             alpha = .6) +
     coord_flip() +
+    scale_y_continuous(labels = scales::percent) +
+    scale_fill_jco() +
+    scale_color_jco() +
     labs(x = "", 
          y = "", 
          title = var) +
-    theme(legend.position = "top", 
-          title = element_text(size = 10))
+    theme(legend.position = "bottom", 
+          title = element_text(size = 12, face = "plain"), 
+          axis.text = element_text(size = 12), 
+          legend.title = element_blank(), 
+          legend.text = element_text(size = 12))
 }
 
 cat_vars <- cleaned_data %>%
@@ -168,5 +224,6 @@ cat_vars <- cleaned_data %>%
 
 ggpubr::ggarrange(plotlist = lapply(cat_vars, 
                                     barplot_by_cluster), 
-                  common.legend = T) 
+                  common.legend = T, 
+                  legend = "bottom") 
 

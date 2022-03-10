@@ -132,12 +132,12 @@ scree_plot <- fviz_eig(res.mca2, ncp = 12,
     sec.axis = sec_axis(~.*5, name = "Cumulative % variance")
   ) +
   ggtitle(" ") +
-  theme(axis.text = element_text(size = 14),
-        axis.title.x = element_text(size = 14), 
-        axis.title.y = element_text(color = "steelblue", size = 14),
-        axis.title.y.right = element_text(color = "purple", size = 14), 
-        axis.text.y = element_text(color = "steelblue", size = 14),
-        axis.text.y.right = element_text(color = "purple", size = 14))
+  theme(axis.text = element_text(size = 16),
+        axis.title.x = element_text(size = 16), 
+        axis.title.y = element_text(color = "steelblue", size = 16),
+        axis.title.y.right = element_text(color = "purple", size = 16), 
+        axis.text.y = element_text(color = "steelblue", size = 16),
+        axis.text.y.right = element_text(color = "purple", size = 16))
 
 
 axes <- c(1, 2)
@@ -202,12 +202,15 @@ ggpubr::ggarrange(
 
 ## contribution -----
 ggpubr::ggarrange(
-  plotlist = lapply(seq(1, ncp), 
+  plotlist = lapply(seq(9, 10), 
                     function(ax){
-                      fviz_contrib(res.mca2, 
-                                choice = "var", 
-                                axes = ax) 
+                      p <- fviz_contrib(res.mca2, 
+                                        choice = "var", 
+                                        alpha = .5, 
+                                        axes = ax) 
+                      p +
+                        ggtitle(paste("Dim", ax)) +
+                        theme(axis.text = element_text(size = 12))
                     }), 
-  nrow = 2, ncol = 5
+  nrow = 1, ncol = 2
 )
-
