@@ -114,18 +114,26 @@ The joint probability over the $k$ ordered discrete failure times then becomes:
 (\#eq:partlikproofbis)
 \end{equation}
 
-## Multiple correspondence analysis {-}
+## Multiple correspondence analysis {-#mcaappendix}
 
-```{r mcacontrib14, fig.cap="MCA -  Categories contribution to axes 1 to 4"}
-knitr::include_graphics(path = "./imgs/mca_contrib_1_4.png")
+```{r mcacontrib12, fig.cap="MCA -  Categories contribution to axes 1 and 2"}
+knitr::include_graphics(path = "./imgs/mca_contrib_12.png")
 ```
 
-```{r mcacontrib58, fig.cap="MCA -  Categories contribution to axes 5 to 8"}
-knitr::include_graphics(path = "./imgs/mca_contrib_5_8.png")
+```{r mcacontrib34, fig.cap="MCA -  Categories contribution to axes 3 and 4"}
+knitr::include_graphics(path = "./imgs/mca_contrib_34.png")
+```
+
+```{r mcacontrib56, fig.cap="MCA -  Categories contribution to axes 5 and 6"}
+knitr::include_graphics(path = "./imgs/mca_contrib_56.png")
+```
+
+```{r mcacontrib78, fig.cap="MCA -  Categories contribution to axes 7 and 8"}
+knitr::include_graphics(path = "./imgs/mca_contrib_78.png")
 ```
 
 ```{r mcacontrib910, fig.cap="MCA -  Categories contribution to axes 9 and 10"}
-knitr::include_graphics(path = "./imgs/mca_contrib_9_10.png")
+knitr::include_graphics(path = "./imgs/mca_contrib_910.png")
 ```
 
 ## Hierarchical clustering on principal components {-}
