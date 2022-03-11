@@ -59,6 +59,7 @@ tab:survtarget
 tab:lrtest
 fig:coxmarginaleffects
 fig:coxdataviz
+fig:coxclust
 fig:custrawvaldens
 eq:hazfunproof
 eq:linksurvcumhaz
@@ -117,9 +118,9 @@ transforming-qualitative-variables-into-principal-axes
 hierarchical-clustering-on-principal-components
 churn-analysis
 the-cox-model
-other-models-1
 model-comparison
 portfolio-value-estimation
 mathematical-formulation
 customer-lifetime-raw-value
 cluster-contribution-to-the-portfolio-value
+simulations
