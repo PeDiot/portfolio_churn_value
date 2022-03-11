@@ -149,10 +149,11 @@ save(para1_dat,
      para3_dat, 
      file = paste0(backup_path, "parangons_dat.RData"))
 
+# number of customers in each cluster
+
 desc.dat <- cleaned_data %>%
   mutate(cluster = res.hcpc$data.clust$clust)
 
-# number of customers in each cluster
 table(desc.dat$cluster) %>%
   prop.table()
 
@@ -191,13 +192,13 @@ boxplot_by_cluster(var = "Monthly_Charges")
 
 barplot_by_cluster <- function(var){
   desc.dat %>%
-    select(c(Senior_Citizen, cluster)) %>%
-    count(var = all_of(Senior_Citizen), 
-          cluster) %>% 
-    mutate(pct = prop.table(n)) %>%
-    ggplot(aes(x = var, 
-               y = pct, 
-               fill = cluster)) +
+    select(c(var, cluster)) %>%
+    group_by_(var, "cluster") %>%
+    summarise(count = n()) %>% 
+    mutate(perc = count/sum(count)) %>%
+    ggplot(aes_string(x = var, 
+                     y = "perc",
+                     fill = "cluster")) +
     geom_bar(stat = "identity", 
              alpha = .6) +
     coord_flip() +
