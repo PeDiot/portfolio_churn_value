@@ -243,23 +243,27 @@ summary(final_cox)
 ## Data viz -----
 
 risk_preds <- predict(final_cox, 
-                      se.fit = T)
+                      newdata = cleaned_data, 
+                      type = "risk", 
+                      se.fit = T) %>%
+  as.data.frame() %>%
+  mutate(fit_lower = fit - 1.96*se.fit, 
+         fit_upper = fit + 1.96*se.fit) %>%
+  mutate(CustomerID = rownames(.), 
+         num_months = cleaned_data$Tenure_Months)
 
-risk_plot <- data.frame(num_months = cleaned_data$Tenure_Months, 
-           risk = risk_preds$fit, 
-           se = risk_preds$se.fit) %>%
-  mutate(lower_bound = risk - 1.96*se, 
-         upper_bound = risk + 1.96*se) %>%
+risk_plot <- risk_preds %>%
   group_by(num_months) %>%
-  summarise(across(-se,
-                   mean,
-                   na.rm = T)) %>%
+  summarise_at(vars(fit, 
+                      fit_lower, 
+                      fit_upper), 
+               mean) %>%
   ggplot(aes(x = num_months, 
-             y = risk)) +
-  geom_line(size = .8, 
+             y = fit)) +
+  geom_step(size = .8, 
             color = risk_col) +
-  geom_ribbon(aes(ymin = lower_bound, 
-                  ymax = upper_bound), 
+  geom_ribbon(aes(ymin = fit_lower, 
+                  ymax = fit_upper), 
               fill = "grey70", 
               alpha = .3) +
   labs(x = "Number of months", 
@@ -278,7 +282,7 @@ surv_plt <- ggsurvplot(fit = survfit(final_cox),
 surv_plt <- surv_plt$plot +
   labs(x = "Number of months",
        y = "", 
-       title = "Customer survival probability", 
+       title = "Customer survival function", 
        subtitle = "with 95% confidence interval") +
   theme(legend.position = "none", 
         axis.title = element_text(size = 14), 
@@ -295,7 +299,7 @@ cumhaz_plt <- ggsurvplot(fit = survfit(final_cox),
 cumhaz_plt<- cumhaz_plt$plot +
   labs(x = "Number of months", 
        y = "", 
-       title = "Cumulative churn hazard", 
+       title = "Cumulative churn hazard function", 
        subtitle = "with 95% confidence interval") +
   theme(legend.position = "none", 
         axis.title = element_text(size = 14), 
@@ -306,3 +310,119 @@ ggpubr::ggarrange(risk_plot,
           surv_plt, 
           cumhaz_plt, 
           nrow = 2, ncol = 2) 
+
+
+# Survival & churn hazard by cluster --------------------------------------
+
+load(file = paste0(dir, "backup/clustering/res.hcpc.RData"))
+
+get_surv_by_cluster <- function(surv_obj, type){
+  surv_clust <- surv_obj %>% 
+    t() %>% 
+    as.data.frame() %>%
+    mutate(cluster = res.hcpc$data.clust$clust) %>%
+    group_by(cluster) %>%
+    summarise(across(everything(), mean)) %>%
+    as.data.frame() 
+  colnames(surv_clust) <- c("cluster", num_months) 
+  surv_clust %>%
+    pivot_longer(cols = "1":"72", 
+                 names_to = "num_month", 
+                 values_to = type) %>%
+    mutate(num_month = as.numeric(num_month))
+  
+}
+
+surv_clust <- merge(x = merge(x = get_surv_by_cluster(surv, 
+                                                      type = "fit"), 
+                              y = get_surv_by_cluster(surv_lower, 
+                                                      type = "lower")), 
+                    y = get_surv_by_cluster(surv_upper, 
+                                            type = "upper"))
+
+
+cumhaz <- surv_clust %>% 
+  mutate_at(vars(fit, lower, upper), function(x){-log(x)})
+
+
+ggarrange(
+  
+  risk_preds %>%
+    mutate(cluster = res.hcpc$data.clust$clust) %>%
+    group_by(cluster, num_months) %>%
+    summarise(fit = mean(fit), 
+              fit_lower = mean(fit_lower), 
+              fit_upper = mean(fit_upper)) %>%
+    ggplot() +
+    geom_step(aes(x = num_months, 
+                  y = fit, 
+                  color = cluster), 
+              size = .8) +
+    geom_ribbon(aes(x = num_months, 
+                    ymin = fit_lower, 
+                    ymax = fit_upper,
+                    fill = cluster), 
+                alpha = .1) +
+    scale_color_jco() +
+    scale_fill_jco() +
+    labs(x = "Number of months", 
+         y = "", 
+         title = "Churn hazard function", 
+         subtitle = "with 95% confidence interval") +
+    theme(legend.title = element_blank(),
+          legend.text = element_text(size = 14),
+          axis.title = element_text(size = 14), 
+          axis.text = element_text(size = 14), 
+          title = element_text(size = 14)),
+  
+  surv_clust %>%
+    ggplot() +
+    geom_step(aes(x = num_month, 
+                  y = fit, 
+                  color = cluster), 
+              size = .8) +
+    geom_ribbon(aes(x = num_month, 
+                    ymin = lower, 
+                    ymax = upper, 
+                    fill = cluster), 
+                alpha = .1) +
+    scale_color_jco() +
+    scale_fill_jco() +
+    labs(x = "Number of months", 
+         y = "", 
+         title = "Customer survival function", 
+         subtitle = "with 95% confidence interval") +
+    theme(legend.title = element_blank(),
+          legend.text = element_text(size = 14),
+          axis.title = element_text(size = 14), 
+          axis.text = element_text(size = 14), 
+          title = element_text(size = 14)), 
+  
+  cumhaz %>%
+    ggplot() +
+    geom_step(aes(x = num_month, 
+                  y = fit, 
+                  color = cluster), 
+              size = .8) +
+    geom_ribbon(aes(x = num_month, 
+                    ymin = lower, 
+                    ymax = upper, 
+                    fill = cluster), 
+                alpha = .1) +
+    scale_color_jco() +
+    scale_fill_jco() +
+    labs(x = "Number of months", 
+         y = "", 
+         title = "Cumulative churn hazard function", 
+         subtitle = "with 95% confidence interval") +
+    theme(legend.title = element_blank(),
+          legend.text = element_text(size = 14),
+          axis.title = element_text(size = 14), 
+          axis.text = element_text(size = 14), 
+          title = element_text(size = 14)), 
+  ncol = 2, nrow = 2, 
+  common.legend = T, 
+  legend = "bottom"
+)
+
+
