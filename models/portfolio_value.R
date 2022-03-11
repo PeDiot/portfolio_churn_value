@@ -78,39 +78,6 @@ surv_upper <- surv_fit$upper %>%
 colnames(surv_upper) <- custIDs
 
 
-# ----- Predictions relatively to the raw hazard / survival -----
-
-risk_preds <- predict(final_cox, 
-                    newdata = cleaned_data, 
-                    type = "risk", 
-                    se.fit = T) %>%
-  as.data.frame() %>%
-  mutate(fit_lower = fit - 1.96*se.fit, 
-       fit_upper = fit + 1.96*se.fit) %>%
-  mutate(CustomerID = rownames(.), 
-         num_months = cleaned_data$Tenure_Months)
-
-get_surv_by_cluster <- function(surv_obj, type){
-  surv_clust <- surv_obj %>% 
-    t() %>% 
-    as.data.frame() %>%
-    mutate(cluster = res.hcpc$data.clust$clust) %>%
-    group_by(cluster) %>%
-    summarise(across(everything(), mean)) %>%
-    as.data.frame() 
-  colnames(surv_clust) <- c("cluster", num_months) 
-  surv_clust %>%
-    pivot_longer(cols = "1":"72", 
-                 names_to = "num_month", 
-                 values_to = type) %>%
-    mutate(num_month = as.numeric(num_month))
-  
-}
-
-surv_clust <- merge(x = merge(x = get_surv_by_cluster(surv, type = "fit"), 
-                y = get_surv_by_cluster(surv_lower, type = "lower")), 
-      y = get_surv_by_cluster(surv_upper, type = "upper"))
-
 # ----- Functions -----
 
 get_monthly_discount_factor <- function(a){
@@ -266,123 +233,33 @@ ggarrange(
 )
 
 
-# multiple plots ---
-surv_plt <- ggsurvplot(fit = survfit(final_cox), 
-                       data = cleaned_data, 
-                       palette = surv_col, 
-                       conf.int = T, 
-                       ggtheme = theme_minimal())
-
-ggpubr::ggarrange(
-  custValues %>%
-    ggplot(aes(x = v)) +
-    geom_density(size = 1, 
-                 color = portfol_col) +
-    scale_x_continuous(labels = scales::comma) +
-    labs(x = "V", 
-         y = "Density", 
-         title = "Distribution of customer lifetime raw value", 
-         subtitle = subtitle), 
-  cleaned_data %>%
-    ggplot(aes(x = Monthly_Charges)) +
-      geom_density(size = 1, 
-                color = monthly_charges_col) +
-    labs(x = "Monthly Charges", 
-         y = "Density", 
-         title = "Distribution of monthly charges", 
-         subtitle = "Customer raw value"), 
-  risk_preds %>%
-    group_by(num_months) %>%
-    summarise(fit = mean(fit), 
-              fit_lower = mean(fit_lower), 
-              fit_upper = mean(fit_upper)) %>%
-    ggplot() +
-      geom_step(aes(x = num_months, 
-                    y = fit), 
-                size = 1, 
-                color = risk_col) +
-    geom_ribbon(aes(x = num_months, 
-                    ymin = fit_lower, 
-                    ymax = fit_upper), 
-                fill = "grey", 
-                alpha = .7) +
-    labs(x = "Number of months", 
-         y = "Hazard", 
-         title = "Customer churn given number of months", 
-         subtitle = "with 95% confidence interval"), 
-  surv_plt$plot +
-    labs(x = "Number of months", 
-         title = "Customer survival given number of months", 
-         subtitle = "with 95% confidence interval") +
-    theme(legend.position = "none"),
-  ncol = 2, nrow = 2
-)
-
-
-
 # accross clusters ---
 
-ggarrange(
-  custValues %>%
-    mutate(cluster = res.hcpc$data.clust$clust) %>%
-    ggplot(aes(x = v, 
-               y = ..density.., 
-                 fill = cluster)) +
-    geom_histogram(size = 1, 
-                   alpha = .6, 
-                   bins = 30) +
-    scale_x_continuous(labels = scales::comma) +
-    scale_fill_jco() +
-    labs(x = "V", 
-         y = "Density", 
-         title = "Distribution of customer lifetime raw value per cluster"), 
-  cleaned_data %>%
-    mutate(cluster = res.hcpc$data.clust$clust) %>%
-    ggplot(aes(x = Monthly_Charges, 
-               y = ..density.., 
-               fill = cluster))  +
-    geom_histogram(size = 1, 
-                   bins = 30, 
-                   alpha = .6) +
-    scale_fill_jco() +
-    labs(x = "Monthly Charges", 
-         y = "Density", 
-         title = "Distribution of monthly charges per cluster", 
-         subtitle = "Customer raw value"), 
-  risk_preds %>%
-    mutate(cluster = res.hcpc$data.clust$clust) %>%
-    group_by(cluster, num_months) %>%
-    summarise(fit = mean(fit), 
-              fit_lower = mean(fit_lower), 
-              fit_upper = mean(fit_upper)) %>%
-    ggplot() +
-    geom_step(aes(x = num_months, 
-                  y = fit, 
-                  color = cluster), 
-              size = .8) +
-    scale_color_jco() +
-    scale_fill_jco() +
-    labs(x = "Number of months", 
-         y = "Hazard", 
-         title = "Customer churn per cluster given number of months"), 
-  surv_clust %>%
-    ggplot() +
-    geom_step(aes(x = num_month, 
-                  y = fit, 
-                  color = cluster), 
-              size = .8) +
-    geom_ribbon(aes(x = num_month, 
-                    ymin = lower, 
-                    ymax = upper, 
-                    fill = cluster), 
-                alpha = .2) +
-    scale_color_jco() +
-    scale_fill_jco() +
-    labs(x = "Number of months", 
-         y = "Survival", 
-         title = "Customer survival per cluster given number of months", 
-         subtitle = "with 95% confidence interval"),
-  ncol = 2, nrow = 2, 
-  common.legend = T, 
-  legend = "bottom"
-)
+custValues_clust <- custValues %>%
+  mutate(cluster = res.hcpc$data.clust$clust)
+
+custValues_clust %>%
+  ggplot(aes(x = v, 
+             y = ..density.., 
+               fill = cluster)) +
+  geom_histogram(size = 1, 
+                 alpha = .6, 
+                 bins = 30) +
+  scale_x_continuous(labels = scales::comma) +
+  scale_fill_jco() +
+  labs(x = "V", 
+       y = "Density", 
+       title = "Distribution of customer lifetime raw value per cluster")
+
+cleaned_data %>%
+  mutate(cluster = res.hcpc$data.clust$clust) %>%
+  ggplot(aes(x = Monthly_Charges, 
+             y = ..density.., 
+             fill = cluster))  +
+  geom_histogram(size = 1, 
+                 bins = 30, 
+                 alpha = .6) +
+  scale_fill_jco() +
+  labs(x = "Monthly Charges", 
+       y = "Density", 
+       title = "Distribution of monthly charges per cluster") 
