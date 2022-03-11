@@ -1,10 +1,14 @@
 # Présentation 3R
 
-## Objectifs 
+## Mise en contexte
+
+### Objectifs 
+
+### Problématique 
+
+### Présentation méthode
 
 ## Rappel modèles survie 
-
-## Présentation méthode
 
 ## Segmentation portefeuille
 
