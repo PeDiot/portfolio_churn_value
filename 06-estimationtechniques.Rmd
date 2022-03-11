@@ -186,12 +186,13 @@ knitr::include_graphics(path = "./imgs/cox_ggforest.png")
 
 #### Estimating churn hazard {-}
 
-```{r coxdataviz, fig.cap="Aggregated churn hazard, survival and cumulative hazard function estimated with Cox model"}
+```{r coxdataviz, fig.cap="Aggregated churn hazard, survival and cumulative hazard functions estimated by Cox model"}
 knitr::include_graphics(path = "./imgs/cox_data_viz.png")
 ```
 
-
-### Other models 
+```{r coxclust, fig.cap="Aggregated churn hazard, survival and cumulative hazard functions for each cluster"}
+knitr::include_graphics(path = "./imgs/churn_surv_clust.png")
+```
 
 
 ### Model comparison
@@ -207,3 +208,7 @@ knitr::include_graphics(path = "./imgs/cust_lifetime_raw_value.png")
 ```
 
 ### Cluster contribution to the portfolio value
+
+### Simulations 
+
+

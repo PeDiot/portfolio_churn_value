@@ -128,7 +128,7 @@ Using the Bayes formula, equation \@ref(eq:hazfun) can also be written as (see p
 Finally, integrating the instantaneous hazard function gives the cumulative hazard function which can be more precisely estimated than the hazard function [@CAMERON_TRIVEDI] and is defined as: 
 
 \begin{equation}
-  \Lambda (t) = \int_{0}^{t} \lambda(s) \text{d}s = \ln \big(S(t)\big)
+  \Lambda (t) = \int_{0}^{t} \lambda(s) \text{d}s = - \ln \big(S(t)\big)
   (\#eq:cumhazfun)
 \end{equation}
 
