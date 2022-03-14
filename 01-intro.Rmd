@@ -12,15 +12,7 @@ knitr::opts_chunk$set(
 
 In a world in which the access to information is almost free or insignificant and where there is a real plurality of offers, churn analysis has become one of the key points a firm needs to focus on. Whoever says plurality of offers needs to introduce the term competition. Thereby, the latter is more and more fierce and cut-throat. Furthermore, switching costs have decreased significantly thanks to market regulation laws. For instance in France, when you switch TSP, the new provider pays you off cancellation fees. All of this being said, it is essential for firms to implement efficient strategies to enhance customer relationships. To that end, the development of both survival models and machine learning algorithms have enabled companies to really push-up their strategies in terms of customer *portfolio* management, monitoring of *attrition* and estimation of customer *value*. 
 
-After careful consideration of the issues at stake, it has been decided to address the following problematic: 
-
-<center>
-***How to estimate the overall value of a customer portfolio?***
-</center>
-
-<br/>
-
-Several key steps will be focused on in order to provide insights on the previous question: 
+After careful consideration of the issues at stake, the following key steps are focused on: 
 
 - Segmentation of customer portfolio as firms generally tend to partition their *portfolio* into multiple segments.
 - Estimation of customer lifetime and prediction of *attrition*.
