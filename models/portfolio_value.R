@@ -54,7 +54,7 @@ custIDs <- cleaned_data %>%
   pull(CustomerID) %>%
   as.character()                              # customer unique IDs
 
-a <- .08                                      # discount factor
+a <- .01                                      # discount factor
 
 num_months <- 1:72
 
@@ -165,7 +165,7 @@ process <- function(custID){
     as.data.frame() %>%
     mutate(CustomerID = custIDs)
   
-  file_path <- paste0(backup, "custValues_", a*100, "pct", ".RData")
+  file_path <- paste0(backup, "custValues/custValues_", a*100, "pct", ".RData")
   save(custValues, file = file_path)
   
 # } 
@@ -173,7 +173,7 @@ process <- function(custID){
 
 # ----- Results -----
   
-file_path <- paste0(backup, "custValues_8pct", ".RData")
+file_path <- paste0(backup, "custvalues/", "custValues_8pct", ".RData")
 load(file = file_path)
 
 custValues %>%
@@ -263,3 +263,75 @@ cleaned_data %>%
   labs(x = "Monthly Charges", 
        y = "Density", 
        title = "Distribution of monthly charges per cluster") 
+
+# ----- Simulations -----
+
+# based on discount factor ---
+
+load(file = paste0(backup, "custvalues/", "custValues_8pct", ".RData"))
+custValues8 <- custValues
+
+load(file = paste0(backup, "custvalues/", "custValues_4pct", ".RData"))
+custValues4 <- custValues
+
+load(file = paste0(backup, "custvalues/", "custValues_2pct", ".RData"))
+custValues2 <- custValues
+
+load(file = paste0(backup, "custvalues/", "custValues_2pct", ".RData"))
+custValues2 <- custValues
+
+load(file = paste0(backup, "custvalues/", "custValues_1pct", ".RData"))
+custValues1 <- custValues
+
+custValues <- rbind(custValues1 %>%
+                      mutate(discount = "1%"), 
+                    custValues2 %>%
+                      mutate(discount = "2%"), 
+                    custValues4 %>%
+                      mutate(discount = "4%"), 
+                    custValues8 %>%
+                      mutate(discount = "8%")) %>% 
+  mutate(discount = as.factor(discount)) 
+
+totVal <- custValues %>%
+  group_by(discount) %>%
+  summarise_at(vars(v_lower, v, v_upper), 
+               sum) ; totVal
+
+custValues %>%
+  ggplot(aes(x = v, 
+             color = discount)) +
+  geom_density(size = 1) +
+  scale_x_continuous(labels = scales::comma) +
+  scale_color_brewer(palette = "Set2") +
+  labs(x = "", 
+       y = "Density", 
+       title = "Density plot per discount factor") +
+  theme(axis.title = element_text(size = 14), 
+        axis.text = element_text(size = 14), 
+        title = element_text(size = 14), 
+        legend.position = "bottom", 
+        legend.title = element_blank())
+
+custValues %>%
+  ggplot(aes(x = v, 
+             fill = discount)) +
+  geom_histogram(size = 1, 
+                 color = "white", 
+                 alpha = .5, 
+                 bins = 30) +
+  scale_x_continuous(labels = scales::comma) +
+  scale_fill_brewer(palette = "Set2") +
+  facet_wrap(~discount, 
+             nrow = 2, 
+             ncol = 2) +
+  labs(x = "", 
+       y = "Count", 
+       title = "Histogram plot per discount factor") +
+  theme(axis.title = element_text(size = 14), 
+        axis.text = element_text(size = 14), 
+        title = element_text(size = 14), 
+        strip.text = element_text(size = 14),
+        legend.position = "none")
+
+
