@@ -6,7 +6,7 @@
 ]{book}
 \title{Portfolio, Churn \& Customer Value}
 \author{Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer}
-\date{2022-01-24}
+\date{2022-03-11}
 
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
@@ -132,11 +132,7 @@ After having defined the subject's key concepts, we apply duration models and ma
 
 In a world in which the access to information is almost free or insignificant and where there is a real plurality of offers, churn analysis has become one of the key points a firm needs to focus on. Whoever says plurality of offers needs to introduce the term competition. Thereby, the latter is more and more fierce and cut-throat. Furthermore, switching costs have decreased significantly thanks to market regulation laws. For instance in France, when you switch TSP, the new provider pays you off cancellation fees. All of this being said, it is essential for firms to implement efficient strategies to enhance customer relationships. To that end, the development of both survival models and machine learning algorithms have enabled companies to really push-up their strategies in terms of customer \emph{portfolio} management, monitoring of \emph{attrition} and estimation of customer \emph{value}.
 
-After careful consideration of the issues at stake, it has been decided to address the following problematic:
-
-\textbf{\emph{How to estimate the overall value of a customer portfolio?}}
-
-Several key steps will be focused on in order to provide insights on the previous question:
+After careful consideration of the issues at stake, the following key steps are focused on:
 
 \begin{itemize}
 \tightlist
@@ -412,7 +408,7 @@ Using the Bayes formula, equation \eqref{eq:hazfun} can also be written as (see 
 Finally, integrating the instantaneous hazard function gives the cumulative hazard function which can be more precisely estimated than the hazard function \citep{CAMERON_TRIVEDI} and is defined as:
 
 \begin{equation}
-  \Lambda (t) = \int_{0}^{t} \lambda(s) \text{d}s = \ln \big(S(t)\big)
+  \Lambda (t) = \int_{0}^{t} \lambda(s) \text{d}s = - \ln \big(S(t)\big)
   \label{eq:cumhazfun}
 \end{equation}
 
@@ -651,199 +647,16 @@ Given \(k\) discrete failure times are considered and that for each of those the
 
 The latter formulation of the partial likelihood function is explained in more details in proofs \eqref{eq:partlikproof} and \eqref{eq:partlikproofbis} in the appendix.
 
-\hypertarget{cox-ph-model}{%
-\subsection{Cox PH model}\label{cox-ph-model}}
+\hypertarget{coxph}{%
+\subsection{Cox PH model}\label{coxph}}
 
 The Cox \emph{proportional hazards} model is the most popular for the analysis of duration data. This model is said to be semi-parametric as it makes no assumption regarding the nature of the baseline hazard function \(\lambda_0(t)\). The parametric part only relies in the modelling of the effect of some covariates on the hazard function \(\lambda(t)\). The relationship between the vector of covariates and the log hazard is linear and the parameters can be estimated by maximizing the partial likelihood function. The Cox PH model solely assumes that predictors act multiplicatively on the hazard function. The model is formulated as in equation \eqref{eq:ph} with the exponential function as link between the hazard and the covariates i.e.~\(\lambda(t|\pmb{\mathrm{x}}) = \lambda_0 (t,\alpha) \text{e}^{\pmb{\mathrm{x'}} \beta}\).
 
-\hypertarget{ml}{%
-\chapter{Machine Learning}\label{ml}}
-
-\emph{A computer program is said to learn from experience \(E\) with respect to some class of tasks \(T\) and performance measure \(P\) if its performance at tasks in \(T\), as measured by \(P\), improves with experience \(E\).}
-
-\emph{-- Tom M. Mitchell --}
-
-This chapter introduces machine learning algorithms used to model customer \emph{portfolio}. We firstly explain the techniques which aim to enrich the standard survival tools defined in the previous chapter. A second part depicts some regression models that are robust to predict customer lifetime value. Finally, the prediction performance associated to predictive methods are described.
-
-\hypertarget{machine-learning-for-survival-data}{%
-\section{Machine Learning for Survival Data}\label{machine-learning-for-survival-data}}
-
-In chapter \ref{duration}, some important models for duration data have been introduced. Here, emphasize is placed on machine learning algorithms that can also be implemented to predict a time-to-event variable such as the time to churn.
-
-\hypertarget{survival-trees}{%
-\subsection{Survival Trees}\label{survival-trees}}
-
-Traditional decision trees, also called CART (Classification And Regression Trees), segment the feature space into multiple rectangles and then fit a simple model to each of these subsets as shown by figure \ref{fig:tree} \citep{ML_TREE}. The algorithm is a recursive partitioning which requires a criterion for choosing the \emph{best} split, another criterion for deciding when to stop the splits and a rule for predicting the class of an observation.
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.45\linewidth,height=260pt]{./imgs/tree1} \includegraphics[width=0.45\linewidth,height=260pt]{./imgs/tree2} 
-
-}
-
-\caption{Clasification decision tree}\label{fig:tree}
-\end{figure}
-
-Survival tree \citep{SURV_TREE} is the adapted version of CART for duration data. The objective is to use tree based binary splitting algorithm in order to predict hazard rates. To that end, survival time and censoring status are introduced as response variables. The splitting criteria used for survival trees have the same purpose than the criteria used for CART that is to say maximizing between-node heterogeneity or minimizing within-node homogeneity. Nonetheless, node purity is different in the case of survival trees as a node is considered pure if all spells in that node have similar survival duration. The most common criterion is the \textbf{logrank test} statistic to compare the two groups formed by the children nodes. For each node, every possible split on each feature is being examined. The best split is the one maximizing the survival difference between two children nodes. The test statistic is \(\chi^2\) distributed which means the higher its value, the higher between-node variability so the better the split. Let \(t_1, \dots, t_k\) be the \(k\) ordered failure times. At the \(j^{\text{th}}\) failure time, the logrank statistic is expressed as \citep{SEGAL}:
-
-\begin{equation}
-  \chi^2_{\text{logrank}} = \frac{\big[\sum_{j=1}^k \ (d_{0j} - r_{0j} \times d_j/r_j) \big]^2}{\sum_{j=1}^k \ \frac{r_{1j}r_{0j}d_j(r_j - d_j)}{r_j^2(r_j -1)}}
-  \label{eq:logrank}
-\end{equation}
-
-\hypertarget{random-survival-forests-rsf}{%
-\subsection{Random Survival Forests (RSF)}\label{random-survival-forests-rsf}}
-
-This algorithm is proposed by \citet{RSF} and is an ensemble of decision trees for the analysis of right-censored survival data. As random forests used for regression and classification, RSF are based on \textbf{bagging} which implies that \(B\) bootstrap samples are drawn from the original data with 63\(\%\) of them in the bag data and the remaining part in the out-of-bag (OOB) data. For each bootstrap sample, a survival tree is grown based on \(p\) randomly selected features. Then, the parent node is split using the feature among the selected ones that maximizes survival difference between children nodes. Each tree is grown to full size and each terminal node needs to have no less than \(d_0\) unique events. The cumulative hazard function (CHF) is computed for each tree using the Nelson-Aalen estimator such as:
-
-\begin{equation}
-  \widehat{H_l}(t) = \sum_{t_{j, l} < t} \frac{d_{j,l}}{r_{j,l}}
-  \label{eq:chf}
-\end{equation}
-
-where \(t_{j,l}\) is the \(j^{\text{th}}\) distinct event time in leaf \(l\), \(d_{j,l}\) the number of events completed at \(t_{j,l}\) and \(r_{j,l}\) the number of spells at risk at \(t_{j,l}\).
-
-All the CHFs are then averaged to obtain the bootstrap ensemble CHF and prediction error is finally computed on the OOB ensemble CHF.
-
-\hypertarget{cox-boosting}{%
-\subsection{Cox Boosting}\label{cox-boosting}}
-
-\textbf{Boosting} is an ensemble method which combines several weak predictors into a strong predictor. The idea of most boosting methods is to train predictors sequentially, each trying to correct its predecessor. Cox boosting \citep{COX_BOOSTING} is designed for high dimension survival data and has the purpose of feature selection while improving the performance of the standard Cox model. The key difference with gradient boosting is that Cox boosting does not update all coefficients at each boosting step, but only updates the coefficient that improves the overall fit the most. The loss function is a penalized version of the Cox model's log-likelihood (see equation \eqref{eq:partlik} for the likelihood function of the Cox model). Cox boosting helps measuring variable importance as the coefficients associated to more representative variables will be updated in early steps.
-
-\hypertarget{regression-methods}{%
-\section{Regression methods}\label{regression-methods}}
-
-Customer Lifetime Value being a quantitative variable, machine learning regression models are adapted to predict this quantity. Regression analysis is a fundamental concept in the field of machine learning. It falls under supervised learning wherein the algorithm is trained with both input features and output labels. It helps in establishing a relationship among the variables by estimating how one variable affects the other. In this context, we present some famous machine learning algorithms that can be implemented to estimate the relationship between several features and a continuous target variable.
-
-\hypertarget{linear-models}{%
-\subsection{Linear models}\label{linear-models}}
-
-\hypertarget{model-formulation}{%
-\subsubsection*{Model formulation}\label{model-formulation}}
-\addcontentsline{toc}{subsubsection}{Model formulation}
-
-Linear models are called that way as the target value is expected to be a linear combination of the features. Let \(\hat{\mathrm{y}}\) be the vector of predicted values, \(\beta\) the set of parameters to optimise and \(\pmb{\mathrm{x}}\) the feature vector with \(\pmb{\mathrm{x}} = [\pmb{1}, \mathrm{x}_1, \dots, \mathrm{x}_P]\). The linear relationship between \(\hat{\mathrm{y}}\) and \(\pmb{\mathrm{x}}\) can be written as follows:
-
-\begin{equation}
-  \hat{\mathrm{y}} = \beta_0 + \beta_1 \mathrm{x}_1 + \dots + \beta_P \mathrm{x}_P
-  \label{eq:linearmodel}
-\end{equation}
-
-with \(P\) the number of explanatory variables.
-
-Equation \eqref{eq:linearmodel} can be rewritten in a vectorized way such that \(\hat{\mathrm{y}} = \pmb{\mathrm{x}}\beta\).
-
-\hypertarget{ordinary-least-squares}{%
-\subsubsection*{Ordinary Least Squares}\label{ordinary-least-squares}}
-\addcontentsline{toc}{subsubsection}{Ordinary Least Squares}
-
-The most standard regression algorithm is linear regression in which the loss function is the residual sum of squares between the observed targets in the dataset \(\mathrm{y}\) and the targets predicted by the linear formulation \(\hat{\mathrm{y}}\). This method is called ordinary least squares (OLS). Mathematically, the set of parameters \(\beta\) is chosen with a view of minimizing:
-\begin{equation}
-  \mathcal{l}_{OLS} = ||\mathrm{y} - \pmb{\mathrm{x}}\beta||_2 = (\mathrm{y} - \pmb{\mathrm{x}}\beta)^{'}(\mathrm{y} - \pmb{\mathrm{x}}\beta)
-  \label{eq:ols}
-\end{equation}
-
-\hypertarget{regularization}{%
-\subsubsection*{Regularization}\label{regularization}}
-\addcontentsline{toc}{subsubsection}{Regularization}
-
-In order to address some of the problems encountered with the OLS method, regularization can be used. Regularization techniques can be employed when the explanatory variables are highly correlated.
-
-Ridge regression is a linear regression with a quadratic constraint on the coefficients. Here, the coefficients minimize a penalized residual sum of squares: the higher the penalty term, the more large coefficients are discouraged and the less risk of overfitting. Formally, the ridge loss function is based on \(l_2\)-norm and is expressed as:
-
-\begin{equation}
-  \mathcal{l}_{Ridge} = ||\mathrm{y} - \pmb{\mathrm{x}}\beta||_2 + \alpha ||\beta||_2
-  \label{eq:ridge}
-\end{equation}
-
-where \(\alpha\) is the shrinkage parameter which controls the penalization on the value of the model's coefficients.
-
-Lasso regression is another example of penalized estimation technique with this time a linear constraint on the \(\beta\) vector. It is helpful in reducing the number of features upon which the target variable is dependent. The loss function is based on \(l_1\)-norm and can be written as follows:
-
-\begin{equation}
-  \mathcal{l}_{Lasso} = ||\mathrm{y} - \pmb{\mathrm{x}}\beta||_2 + \alpha ||\beta||_1
-  \label{eq:lasso}
-\end{equation}
-
-Finally, ElasticNet is a linear regression model trained with both \(l_1\) and \(l_2\)-norm regularization of the coefficients and is useful when there are multiple features that are correlated with one another. In this context, the loss function is derived as follows:
-
-\begin{equation}
-  \mathcal{l}_{EN} = ||\mathrm{y} - \pmb{\mathrm{x}}\beta||_2 + \alpha \rho ||\beta||_1 + \alpha \frac{1-\rho}{2} ||\beta||_2
-  \label{eq:elasticnet}
-\end{equation}
-
-\hypertarget{gradient-descent}{%
-\subsubsection*{Gradient Descent}\label{gradient-descent}}
-\addcontentsline{toc}{subsubsection}{Gradient Descent}
-
-The loss functions presented above need to be optimized to obtain the optimal set of parameters that best represents the linear relationship between \(\mathrm{y}\) and \(\pmb{\mathrm{x}}\). In other words, a minimization problem needs to be solved. Gradient descent is an algorithm whose goal is to find the maximum (or minimum) of a given function \(f\). The gradient of \(f\) is defined as the vector of partial derivatives and gives the input direction in which \(f\) most quickly increases. The gradient descent approach consists in picking a random starting point, computing the gradient, taking a small step in the opposite direction of the gradient and repeating with the new starting point until some criterion is met.
-
-\hypertarget{more-advanced-regression-models}{%
-\subsection{More advanced regression models}\label{more-advanced-regression-models}}
-
-Linear models are considered the most common and easy-to-understand models when it comes to predict a quantitative variable such as customer \emph{value.} Nonetheless, more advanced techniques can sometimes be implemented in order to obtain more accurate predictions.
-
-\hypertarget{generalized-additive-model-gam}{%
-\subsubsection*{Generalized Additive Model (GAM)}\label{generalized-additive-model-gam}}
-\addcontentsline{toc}{subsubsection}{Generalized Additive Model (GAM)}
-
-GAM is a statistical model in which the response variable \(\mathrm{y}\) depends linearly on unknown smooth functions of some feature vector \(\pmb{\mathrm{x}}\), and interest focuses on inference about these smooth functions called \(f_p\). The \(f_p\) functions may be either parametric (polynomial), semi-parametric or nonparametric (smoothing splines) leading to more flexibility in the model's assumptions on the actual relationship between \(\mathrm{y}\) and \(\pmb{\mathrm{x}}\). A link function \(g\) can also be introduced to specify this relationship and the model's general formulation is as follows:
-
-\begin{equation}
-  g\big(\mathrm{E} [\mathrm{y}] \big) = \sum_{p=1}^P \ f_p(\mathrm{x}_p)
-  \label{eq:gam}
-\end{equation}
-
-\hypertarget{other-models-1}{%
-\subsubsection*{Other models}\label{other-models-1}}
-\addcontentsline{toc}{subsubsection}{Other models}
-
-State-of-the-art algorithms can also be employed to describe the relationship between the continuous variable and the feature vector. Among them, one can find random forest of regression trees, gradient boosting as well as multi-layer perceptron (MLP) regressor.
-
 \hypertarget{performance-metrics}{%
-\section{Performance Metrics}\label{performance-metrics}}
-
-Once several models have been trained, comparing their performance is an essential step to choose the right model. Statistical metrics helps in the model selection stage by providing an indication of goodness of fit. In other words, they are a measure of how well unseen samples are likely to be predicted by a given model. As two families of algorithms have been introduced, two types of statistical metrics are required.
-
-\hypertarget{metrics-for-regression-models}{%
-\subsection{Metrics for Regression models}\label{metrics-for-regression-models}}
-
-\hypertarget{notations-1}{%
-\subsubsection*{Notations}\label{notations-1}}
-\addcontentsline{toc}{subsubsection}{Notations}
-
-Let us consider a set of \(n\) samples where \(y_i\) is the true value and \(\hat{y}_i\) the predicted value related to the \(i^\text{th}\) sample.
-
-\hypertarget{coefficient-of-determination}{%
-\subsubsection*{Coefficient of determination}\label{coefficient-of-determination}}
-\addcontentsline{toc}{subsubsection}{Coefficient of determination}
-
-Historically, the \(R^2\) score or coefficient of determination is the most common tool to compare the performance of two regression models. It computes the proportion of variance in the target variable that has been explained by the independent variables in the model. Mathematically, we have:
-
-\begin{equation}
-  R^2 = 1 - \frac{\sum_{i=1}^n \ (y_i - \hat{y}_i)^2}{(y_i - \overline{y})^2}
-  \label{eq:R2}
-\end{equation}
-
-From equation \eqref{eq:R2} it can be derived that \(R^2 \in [0, 1]\). A perfect model would obtain an \(R^2\) score of 1. Conversely, a constant model that always predicts the expected value of the target, disregarding the input features, would get a score of 0. The \(R^2\) value remains to be carefully analysed as a large value does not necessarily mean a high quality model. Indeed, the \(R^2\) score being the square of the correlation coefficient, if the latter is close to 1 (or -1), the coefficient of determination will be close to 1. But if the correlation is spurious, the \(R^2\) value will be meaningless as well as the trained model (see \citet{BOUSQUET_ECONOMETRICS} for more details).
-
-\hypertarget{mean-squared-error-mse}{%
-\subsubsection*{Mean Squared Error (MSE)}\label{mean-squared-error-mse}}
-\addcontentsline{toc}{subsubsection}{Mean Squared Error (MSE)}
-
-MSE can be regarded as a risk metric corresponding to the expected value of the squared error or loss. Formally, MSE is expressed as:
-
-\begin{equation}
-  MSE = \frac{1}{n} \ \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
-  \label{eq:MSE}
-\end{equation}
-
-\hypertarget{metrics-for-survival-models}{%
-\subsection{Metrics for Survival models}\label{metrics-for-survival-models}}
+\section{Performance metrics}\label{performance-metrics}}
 
 \hypertarget{concordance-index-c-index}{%
-\subsubsection*{Concordance index (C-index)}\label{concordance-index-c-index}}
-\addcontentsline{toc}{subsubsection}{Concordance index (C-index)}
+\subsection{Concordance index (C-index)}\label{concordance-index-c-index}}
 
 C-index is a goodness of fit measure for models which produce risk scores. It is commonly used to evaluate risk models in survival analysis, where data may be censored.
 
@@ -879,8 +692,7 @@ with \(d_j\) the event indicator variable.
 The concordance index ranges between 0 and 1. A C-index below 0.5 indicates a very poor model. A C-index of 0.5 means that the model is rather a non-informative model making random predictions. A model with C-index 1 makes perfect prediction. Generally, a C-index higher than 0.7 indicates a good performance.
 
 \hypertarget{brier-score}{%
-\subsubsection*{Brier score}\label{brier-score}}
-\addcontentsline{toc}{subsubsection}{Brier score}
+\subsection{Brier score}\label{brier-score}}
 
 The Brier score is another statistical metric for evaluating duration models' performance and is defined as the mean squared error between the estimated survival probability and the observed survival at time \(t\):
 
@@ -888,6 +700,8 @@ The Brier score is another statistical metric for evaluating duration models' pe
   BS(t) = \frac{1}{N} \sum_{i=1}^{N} \Big(\pmb{1}_{\{t_i>t\}} - \hat{S}(t|\mathrm{x}_i) \Big)^2
   \label{eq:brier}
 \end{equation}
+
+The Cox \emph{proportional hazards} model is the most popular for the analysis of duration data. This model is said to be semi-parametric as it makes no assumption regarding the nature of the baseline hazard function \(\lambda_0(t)\). The parametric part only relies in the modelling of the effect of some covariates on the hazard function \(\lambda(t)\). The relationship between the vector of covariates and the log hazard is linear and the parameters can be estimated by maximizing the partial likelihood function. The Cox PH model solely assumes that predictors act multiplicatively on the hazard function. The model is formulated as in equation \eqref{eq:ph} with the exponential function as link between the hazard and the covariates i.e.~\(\lambda(t|\pmb{\mathrm{x}}) = \lambda_0 (t,\alpha) \text{e}^{\pmb{\mathrm{x'}} \beta}\).
 
 \hypertarget{data}{%
 \chapter{Data}\label{data}}
@@ -912,17 +726,17 @@ The data set used in this study contains 29 variables and 7032 customers from a 
 
 \caption{\label{tab:dataoverview}Interesting variables for the 5 first customers in the data set}
 \centering
-\begin{tabular}[t]{lrlrrr}
+\begin{tabular}[t]{rrlrrr}
 \toprule
 CustomerID & Monthly\_Charges & Internet\_Service & Tenure\_Months & Churn\_Value & CLTV\\
 \midrule
-\cellcolor{gray!6}{3668-QPYBK} & \cellcolor{gray!6}{53.85} & \cellcolor{gray!6}{DSL} & \cellcolor{gray!6}{2} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{3239}\\
-9237-HQITU & 70.70 & Fiber optic & 2 & 1 & 2701\\
-\cellcolor{gray!6}{9305-CDSKC} & \cellcolor{gray!6}{99.65} & \cellcolor{gray!6}{Fiber optic} & \cellcolor{gray!6}{8} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{5372}\\
-7892-POOKP & 104.80 & Fiber optic & 28 & 1 & 5003\\
-\cellcolor{gray!6}{0280-XJGEX} & \cellcolor{gray!6}{103.70} & \cellcolor{gray!6}{Fiber optic} & \cellcolor{gray!6}{49} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{5340}\\
+\cellcolor{gray!6}{1} & \cellcolor{gray!6}{53.85} & \cellcolor{gray!6}{DSL} & \cellcolor{gray!6}{2} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{3239}\\
+2 & 70.70 & Fiber optic & 2 & 1 & 2701\\
+\cellcolor{gray!6}{3} & \cellcolor{gray!6}{99.65} & \cellcolor{gray!6}{Fiber optic} & \cellcolor{gray!6}{8} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{5372}\\
+4 & 104.80 & Fiber optic & 28 & 1 & 5003\\
+\cellcolor{gray!6}{5} & \cellcolor{gray!6}{103.70} & \cellcolor{gray!6}{Fiber optic} & \cellcolor{gray!6}{49} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{5340}\\
 \addlinespace
-4190-MFLUW & 55.20 & DSL & 10 & 1 & 5925\\
+6 & 55.20 & DSL & 10 & 1 & 5925\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -931,8 +745,8 @@ As shown by table \ref{tab:dataoverview}, the \texttt{Churn\_Value} status varia
 
 Since the purpose of our study relies in estimating the overall value of this fictional firm's \emph{portfolio}, two groups of target variables can be considered. On the one hand \texttt{Churn\_Value} and \texttt{Tenure\_Months} permit to determine whether a customer is active in the \emph{portfolio}. They are used as response variables in the survival models. On the other hand, the \texttt{CLTV} variable represents each customer's \emph{value} through measurement of customer lifetime value and is used as target in regression models.
 
-\hypertarget{churn_value-and-tenure_months}{%
-\section{\texorpdfstring{\texttt{Churn\_Value} and \texttt{Tenure\_Months}}{Churn\_Value and Tenure\_Months}}\label{churn_value-and-tenure_months}}
+\hypertarget{churndescstats}{%
+\section{\texorpdfstring{\texttt{Churn\_Value} and \texttt{Tenure\_Months}}{Churn\_Value and Tenure\_Months}}\label{churndescstats}}
 
 As the combination of these two features form the response variable in the duration models, a relevant approach to have an overall description of the risk of \emph{attrition} may be to draw the raw survival curves depending on treatment variables. Pearson's \(\chi^2\) tests are also performed so as to test the statistical relationships between the churn indicator variable and explanatory features. Pearson's \(\chi^2\) test determines whether there is a statistically significant difference between the expected frequencies and the observed frequencies in one or more categories of a contingency table. It is thus adapted to test whether two categorical variables are statistically independent. In this context, it appears interesting to use explanatory features related demographic, customer account and services subscribed as treatment variables when fitting the Kaplan-Meier estimator and implementing the tests.
 
@@ -1196,7 +1010,7 @@ Looking at figure \ref{fig:cltvchurn}, customer lifetime value seems to have hig
 
 \begin{figure}
 
-{\centering \includegraphics[width=450pt,height=300pt]{./imgs/cltv_churn_plot} 
+{\centering \includegraphics[width=400pt,height=300pt]{./imgs/cltv_churn_plot} 
 
 }
 
@@ -1222,27 +1036,284 @@ The following histograms are interesting to the extent that the distribution of 
 
 \begin{figure}
 
-{\centering \includegraphics[width=500pt,height=300pt]{./imgs/duration_churn_plot} 
+{\centering \includegraphics[width=500pt,height=350pt]{./imgs/duration_churn_plot} 
 
 }
 
 \caption{Tenure months depending on churn status}\label{fig:churndur}
 \end{figure}
 
+Eventually, figure \ref{fig:cltvdur} depicts the average customer lifetime value per number of months in the portfolio. Two distinct groups can be identified with a threshold at 50 months. On average, the most valuable customers are those who have been in the portfolio for more than 50 months.
+
 \begin{figure}
 
-{\centering \includegraphics[width=500pt,height=300pt]{./imgs/avg_cltv_plot} 
+{\centering \includegraphics[width=450pt,height=300pt]{./imgs/avg_cltv_plot} 
 
 }
 
 \caption{Average CLTV depending on number of months in the portfolio}\label{fig:cltvdur}
 \end{figure}
 
+\hypertarget{estimation}{%
+\chapter{Estimation techniques}\label{estimation}}
+
+This chapter explains the different methods used to model a portfolio of customers as well as their related risk of attrition and the overall value of the portfolio. In a first part, clustering techniques are implemented to identify segments of customers based on services and account variables. Then, survival models are fitted to estimate each customer's survival in the firm's portfolio. The selected model can also be used to assess the effects of each variable on the risk of churn. Finally, we answer the study's problematic by computing an estimated value of the portfolio. The latter is calculated using a corporate formula and takes customers' monthly fees and survival probabilities as inputs. The estimated portfolio value is not cost-adjusted there is no information on consumers' costs in the data set.
+
+\hypertarget{featureselection}{%
+\section{Feature selection}\label{featureselection}}
+
+Before fitting any survival model or clustering algorithm to the data, the initial step consists in selecting variables that are discriminating in terms of churn hazard. Based on Kaplan-Meier analysis depicted in section \ref{churndescstats}, we have a general overview of features which influence the survival probability. In other words, our feature selection method relies on results obtained with descriptive statistics.
+
+Table \ref{tab:selectedfeatures} shows the selected variables for 5 random observations extracted from the data set. It can be noted that these features are related to account or service information, apart from \texttt{Dependents} which indicates whether the client lives with any dependents (children, parents, etc) and \texttt{Senior\_Citizen}. Furthermore, 9 out of the 10 selected variables are categorical which implies that the estimation results could be used to compare different groups of client. \texttt{Monthly\_Charges} is the only quantitative variable used to fit clustering models and survival regressions.
+
+\begin{table}[H]
+
+\caption{\label{tab:selectedfeatures}Explanatory variables used in survival models and cluster analysis}
+\centering
+\begin{tabular}[t]{lllllllllr}
+\toprule
+Senior\_Citizen & Dependents & Phone\_Service & Internet\_Service & Online\_Security & Online\_Backup & Tech\_Support & Contract & Payment\_Method & Monthly\_Charges\\
+\midrule
+\cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{DSL} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{Electronic check} & \cellcolor{gray!6}{54.45}\\
+No & Yes & Yes & Fiber optic & No & No & No & Month-to-month & Bank transfer & 70.90\\
+\cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Fiber optic} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{Credit card} & \cellcolor{gray!6}{100.15}\\
+No & No & Yes & No & No & No & No & Month-to-month & Mailed check & 20.65\\
+\cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{Mailed check} & \cellcolor{gray!6}{19.50}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\hypertarget{portfolio-segmentation}{%
+\section{Portfolio segmentation}\label{portfolio-segmentation}}
+
+Customer segmentation helps decision makers having a better understanding of their clients. It can then be used to enhance marketing strategies via personalization. In other words, segmentation can lead to target customers with offers and incentives personalized to their wants, needs and preferences. In order to make segmentation more accurate, it is more appropriate to use cluster analysis than predetermined thresholds or rules, even more when we have several variables at our disposal. In this context, this section focuses on applying clustering methods on features displayed in table \ref{tab:selectedfeatures}, apart from \texttt{Monthly\_Charges}.
+
+\hypertarget{transforming-qualitative-variables-into-principal-axes}{%
+\subsection{Transforming qualitative variables into principal axes}\label{transforming-qualitative-variables-into-principal-axes}}
+
+The variables selected to perform cluster analysis being categorical, it is needed to transform them into continuous features. To that end, multiple correspondence analysis (MCA) is performed. MCA is a dimension reducing method which takes multiple categorical variables and seeks to identify associations between levels of those variables. MCA aims at highlighting features that separate classes of individuals, while determining links between variables and categories. To that end, MCA keeps the core information by the means of principal components which are projected axes \citep{MCA}.
+
+Here, the main objective of applying MCA being to obtain continuous features, it is decided to keep as many axes as it takes to have at least 80\% cumulated variance. In other words, we want the principal components to gather enough customer-related information. After having processed the \texttt{MCA} function from the R package \texttt{FactoMineR} \citep{FactoMineR2008}, 10 principal components are required to keep more than 80\% cumulated variance as depicted by figure \ref{fig:mcascreeplot}.
+
+\begin{figure}
+
+{\centering \includegraphics[width=15.14in]{./imgs/mca_screeplot} 
+
+}
+
+\caption{Variance explained and cumulated variance after MCA}\label{fig:mcascreeplot}
+\end{figure}
+
+Now the 10 continuous axes are identified, the next step consists in retrieving the customers' coordinates onto those axes to then perform cluster analysis.
+
+\begin{table}[H]
+
+\caption{\label{tab:unnamed-chunk-26}The 10 principal axes obtained by MCA}
+\centering
+\begin{tabular}[t]{rrrrrrrrrrr}
+\toprule
+CustomerID & Dim 1 & Dim 2 & Dim 3 & Dim 4 & Dim 5 & Dim 6 & Dim 7 & Dim 8 & Dim 9 & Dim 10\\
+\midrule
+\cellcolor{gray!6}{5418} & \cellcolor{gray!6}{-0.88} & \cellcolor{gray!6}{0.04} & \cellcolor{gray!6}{-0.09} & \cellcolor{gray!6}{0.05} & \cellcolor{gray!6}{0.00} & \cellcolor{gray!6}{-0.03} & \cellcolor{gray!6}{-0.40} & \cellcolor{gray!6}{0.04} & \cellcolor{gray!6}{0.10} & \cellcolor{gray!6}{-0.17}\\
+3955 & 0.25 & 0.47 & -0.28 & 0.58 & -0.31 & 0.03 & 0.12 & -0.11 & -0.15 & -0.21\\
+\cellcolor{gray!6}{4157} & \cellcolor{gray!6}{1.00} & \cellcolor{gray!6}{0.36} & \cellcolor{gray!6}{0.35} & \cellcolor{gray!6}{-0.25} & \cellcolor{gray!6}{0.37} & \cellcolor{gray!6}{0.17} & \cellcolor{gray!6}{-0.15} & \cellcolor{gray!6}{-0.26} & \cellcolor{gray!6}{0.20} & \cellcolor{gray!6}{-0.23}\\
+5756 & -0.01 & 0.86 & -0.54 & 0.27 & 0.12 & -0.39 & 0.01 & 0.45 & 0.02 & 0.35\\
+\cellcolor{gray!6}{1638} & \cellcolor{gray!6}{-0.41} & \cellcolor{gray!6}{0.23} & \cellcolor{gray!6}{-0.64} & \cellcolor{gray!6}{-0.12} & \cellcolor{gray!6}{0.02} & \cellcolor{gray!6}{-0.01} & \cellcolor{gray!6}{-0.39} & \cellcolor{gray!6}{-0.04} & \cellcolor{gray!6}{0.06} & \cellcolor{gray!6}{0.08}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Note that a more in-depth visualisation of those 10 principal components can be found in section \ref{mcaappendix} in the appendix. This charts depict the percent contribution of each variable's categories to the principal axes, which is helpful to have a better understanding of MCA results.
+
+\hypertarget{hierarchical-clustering-on-principal-components}{%
+\subsection{Hierarchical clustering on principal components}\label{hierarchical-clustering-on-principal-components}}
+
+Multiple correspondence analysis has led us to convert the categorical variables related to account and services information into 10 numerical projected axes. The stake here is to use the customers' projections onto the MCA components in order to identify groups of individuals through clustering techniques. As a reminder, clusters are expected to discriminate between customers based on the services they use and the type of plan they are enrolled into. The method implemented in this part relies on hierarchical clustering on principal components (HCPC).
+
+\hypertarget{optimal-number-of-clusters}{%
+\subsubsection*{Optimal number of clusters}\label{optimal-number-of-clusters}}
+\addcontentsline{toc}{subsubsection}{Optimal number of clusters}
+
+The key parameter to optimize when applying clustering methods is the number of clusters \(k\). When using the \texttt{HCPC} function from \texttt{FactorMineR}, the \texttt{nb.clust} parameter is set to -1 so that the tree is automatically cut at the suggested level. More precisely, the function first builds a hierarchical tree. Then the sum of the between-cluster inertia is calculated for each partition. The suggested partition is the one with the higher relative gain in inertia. Intuitively, the underlying objective is to choose a number of clusters leading to \(k\) well distinguished groups. Here, the between-cluster inertia is the metric measuring the amount of variability between clusters.
+
+\begin{figure}
+
+{\centering \includegraphics[width=13.89in]{./imgs/btw_inertia} 
+
+}
+
+\caption{Relative gains in between-cluster inertia given the partition}\label{fig:btwinertia}
+\end{figure}
+
+\hypertarget{cluster-visualisation}{%
+\subsubsection*{Cluster visualisation}\label{cluster-visualisation}}
+\addcontentsline{toc}{subsubsection}{Cluster visualisation}
+
+\begin{table}[H]
+
+\caption{\label{tab:unnamed-chunk-27}Customer repartition across the 3 clusters}
+\centering
+\begin{tabular}[t]{lrrr}
+\toprule
+  & Cluster 1 & Cluster 2 & Cluster 3\\
+\midrule
+\cellcolor{gray!6}{\%} & \cellcolor{gray!6}{26.55} & \cellcolor{gray!6}{41.38} & \cellcolor{gray!6}{32.07}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}
+
+{\centering \includegraphics[width=12.83in]{./imgs/cluster_plot} 
+
+}
+
+\caption{Cluster visualisation onto the 2 first MCA axes}\label{fig:clusterplot}
+\end{figure}
+
+See figure \ref{fig:clusterplots} in the appendix for cluster visualisations onto the other MCA principal axes.
+
+\hypertarget{cluster-description}{%
+\subsubsection*{Cluster description}\label{cluster-description}}
+\addcontentsline{toc}{subsubsection}{Cluster description}
+
+\begin{figure}
+
+{\centering \includegraphics[width=12.5in]{./imgs/monthly_charges_clust} 
+
+}
+
+\caption{Monthly charges repartition across clusters}\label{fig:monthlychargesclust}
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics[width=20.83in]{./imgs/cat_vars_clust} 
+
+}
+
+\caption{Customer categorical features based on cluster}\label{fig:catvarsclust}
+\end{figure}
+
+\hypertarget{churn-analysis}{%
+\section{Churn analysis}\label{churn-analysis}}
+
+Estimating the risk of attrition related to each customer is an essential step to model the firm's portfolio. In this context, survival models can be implemented with a view of deriving a predicted churn risk and survival function for each client. One the one hand, these predictions can be used to identify loyal consumers and make appropriate decisions. For instance, it might be relevant to offer benefits to a high-value client with a high estimated churn risk. On the other hand, a customer's survival probability at time \(t\) represents the chance that this very customer be active in the portfolio at time \(t\). This measure is helpful to compute the estimated value of the portfolio in the last section.
+
+Before presenting the estimation results, it seems important to recall that \texttt{Tenure\_Months} and \texttt{Churn\_Value} can be seen as a pair of time and event variables used as target in survival models.
+
+\begin{table}[H]
+
+\caption{\label{tab:survtarget}Time and event variables for survival models}
+\centering
+\begin{tabular}[t]{rrr}
+\toprule
+CustomerID & Tenure\_Months & Churn\_Value\\
+\midrule
+\cellcolor{gray!6}{6791} & \cellcolor{gray!6}{28} & \cellcolor{gray!6}{0}\\
+3436 & 7 & 0\\
+\cellcolor{gray!6}{5582} & \cellcolor{gray!6}{35} & \cellcolor{gray!6}{0}\\
+5439 & 20 & 0\\
+\cellcolor{gray!6}{5212} & \cellcolor{gray!6}{62} & \cellcolor{gray!6}{0}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\hypertarget{the-cox-model}{%
+\subsection{The Cox model}\label{the-cox-model}}
+
+When it comes to choose an estimation method on survival data, the Cox PH model appears to be an interesting first choice. As explained in chapter \ref{duration}, this semi-parametric model makes no assumption regarding the nature of the baseline hazard function \(\lambda_0(t)\). The parametric part only relies in the modelling of the effect of some covariates on the hazard function \(\lambda(t)\) (see section \ref{coxph} for more details).
+
+\hypertarget{fitting-the-model-on-the-selected-features}{%
+\subsubsection*{Fitting the model on the selected features}\label{fitting-the-model-on-the-selected-features}}
+\addcontentsline{toc}{subsubsection}{Fitting the model on the selected features}
+
+Using the \texttt{coxph} function from the \texttt{survival} R library \citep{survival-book}, we are able to train a Cox model on the feature vector identified in section \ref{featureselection}. Once the model fitted, it seems relevant to evaluate its performance on the train data set. Table \ref{tab:lrtest} compares the model's log-likelihood to the constrained model's. Given the very low p-value, it can be assumed that the Cox model better fits the data than a model with only the intercept.
+
+\begin{table}[H]
+
+\caption{\label{tab:lrtest}Log-likelihood ratio test}
+\centering
+\begin{tabular}[t]{lrrr}
+\toprule
+  & Model & Constrained & pvalue\\
+\midrule
+\cellcolor{gray!6}{} & \cellcolor{gray!6}{-9228.77} & \cellcolor{gray!6}{-10448.08} & \cellcolor{gray!6}{0}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Concordance index \(c\) is another metric to assess the performance of models which produces risk scores and is defined as the probability to well predict the order of event occurring time for any pair of instances. For the Cox model, the C-index obtained on the training set is \(c \approx 0.865 \pm 0.004\), which is more than satisfying.
+
+\hypertarget{marginal-effects-1}{%
+\subsubsection*{Marginal effects}\label{marginal-effects-1}}
+\addcontentsline{toc}{subsubsection}{Marginal effects}
+
+In the Cox model, the relative hazard between two observations is assumed to be constant over time. As a consequence, the relative hazard becomes \(\exp \hat{\beta}\) for both dummy and continuous variables. For instance regarding figure \ref{fig:coxmarginaleffects}, the relative hazard ratio between customers with a two-year contract and those with a month-to-month contract is 0.046, meaning that the latter group is 22 times more prone to churn than the former. Also, month-to-month clients are about 5 times more likely to churn than customers enrolled in one-year plan.
+
+\begin{figure}
+
+{\centering \includegraphics[width=18.06in]{./imgs/cox_ggforest} 
+
+}
+
+\caption{Marginal effects obtained with the Cox PH model}\label{fig:coxmarginaleffects}
+\end{figure}
+
+\hypertarget{estimating-churn-hazard}{%
+\subsubsection*{Estimating churn hazard}\label{estimating-churn-hazard}}
+\addcontentsline{toc}{subsubsection}{Estimating churn hazard}
+
+\begin{figure}
+
+{\centering \includegraphics[width=20.83in]{./imgs/cox_data_viz} 
+
+}
+
+\caption{Aggregated churn hazard, survival and cumulative hazard functions estimated by Cox model}\label{fig:coxdataviz}
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics[width=20.83in]{./imgs/churn_surv_clust} 
+
+}
+
+\caption{Aggregated churn hazard, survival and cumulative hazard functions for each cluster}\label{fig:coxclust}
+\end{figure}
+
+\hypertarget{model-comparison}{%
+\subsection{Model comparison}\label{model-comparison}}
+
+\hypertarget{portfolio-value-estimation}{%
+\section{Portfolio value estimation}\label{portfolio-value-estimation}}
+
+\hypertarget{mathematical-formulation}{%
+\subsection{Mathematical formulation}\label{mathematical-formulation}}
+
+\hypertarget{customer-lifetime-raw-value}{%
+\subsection{Customer lifetime raw value}\label{customer-lifetime-raw-value}}
+
+\begin{figure}
+
+{\centering \includegraphics[width=19.44in]{./imgs/cust_lifetime_raw_value} 
+
+}
+
+\caption{Customer lifetime raw value - Density and evolution by number of months}\label{fig:custrawvaldens}
+\end{figure}
+
+\hypertarget{cluster-contribution-to-the-portfolio-value}{%
+\subsection{Cluster contribution to the portfolio value}\label{cluster-contribution-to-the-portfolio-value}}
+
+\hypertarget{simulations}{%
+\subsection{Simulations}\label{simulations}}
+
 \hypertarget{appendix}{%
 \chapter*{Appendix}\label{appendix}}
 \addcontentsline{toc}{chapter}{Appendix}
 
-Some proofs of the mathematical concepts used in the study are derived, specifically related to duration analysis.
+In this section some proofs of the mathematical concepts used in the study are derived, specifically related to duration analysis. It also consists of additional data visualisation related to the chapter \ref{estimation}.
 
 \hypertarget{hazard-function}{%
 \section*{Hazard function}\label{hazard-function}}
@@ -1315,6 +1386,133 @@ The joint probability over the \(k\) ordered discrete failure times then becomes
 \end{aligned}
 \label{eq:partlikproofbis}
 \end{equation}
+
+\hypertarget{mcaappendix}{%
+\section*{Multiple correspondence analysis}\label{mcaappendix}}
+\addcontentsline{toc}{section}{Multiple correspondence analysis}
+
+\begin{figure}
+
+{\centering \includegraphics[width=15.28in]{./imgs/mca_contrib_12} 
+
+}
+
+\caption{MCA -  Categories contribution to axes 1 and 2}\label{fig:mcacontrib12}
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics[width=15.28in]{./imgs/mca_contrib_34} 
+
+}
+
+\caption{MCA -  Categories contribution to axes 3 and 4}\label{fig:mcacontrib34}
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics[width=15.28in]{./imgs/mca_contrib_56} 
+
+}
+
+\caption{MCA -  Categories contribution to axes 5 and 6}\label{fig:mcacontrib56}
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics[width=15.28in]{./imgs/mca_contrib_78} 
+
+}
+
+\caption{MCA -  Categories contribution to axes 7 and 8}\label{fig:mcacontrib78}
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics[width=15.28in]{./imgs/mca_contrib_910} 
+
+}
+
+\caption{MCA -  Categories contribution to axes 9 and 10}\label{fig:mcacontrib910}
+\end{figure}
+
+\hypertarget{hierarchical-clustering-on-principal-components-1}{%
+\section*{Hierarchical clustering on principal components}\label{hierarchical-clustering-on-principal-components-1}}
+\addcontentsline{toc}{section}{Hierarchical clustering on principal components}
+
+\hypertarget{cluster-visualisation-1}{%
+\subsection*{Cluster visualisation}\label{cluster-visualisation-1}}
+\addcontentsline{toc}{subsection}{Cluster visualisation}
+
+\begin{figure}
+
+{\centering \includegraphics[width=15.28in]{./imgs/cluster_plots} 
+
+}
+
+\caption{Cluster visualisation onto MCA axes}\label{fig:clusterplots}
+\end{figure}
+
+\hypertarget{parangons}{%
+\subsection*{Parangons}\label{parangons}}
+\addcontentsline{toc}{subsection}{Parangons}
+
+Data related to cluster 1's parangons
+
+\begin{table}[H]
+
+\caption{\label{tab:para1dat}}
+\centering
+\begin{tabular}[t]{lllllllllllllrrrr}
+\toprule
+  & Senior\_Citizen & Dependents & Internet\_Service & Online\_Security & Online\_Backup & Device\_Protection & Tech\_Support & Streaming\_TV & Streaming\_Movies & Contract & Paperless\_Billing & Payment\_Method & Monthly\_Charges & Tenure\_Months & Churn\_Value & CLTV\\
+\midrule
+\cellcolor{gray!6}{8} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Mailed check} & \cellcolor{gray!6}{20.15} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{4832}\\
+23 & No & No & No & No & No & No & No & No & No & Month-to-month & No & Mailed check & 21.05 & 5 & 1 & 2604\\
+\cellcolor{gray!6}{144} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Mailed check} & \cellcolor{gray!6}{19.00} & \cellcolor{gray!6}{12} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{3535}\\
+178 & No & No & No & No & No & No & No & No & No & Month-to-month & No & Mailed check & 19.55 & 1 & 1 & 3556\\
+\cellcolor{gray!6}{190} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Mailed check} & \cellcolor{gray!6}{19.90} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{4248}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Data related to cluster 2's parangons
+
+\begin{table}[H]
+
+\caption{\label{tab:para2dat}}
+\centering
+\begin{tabular}[t]{lllllllllllllrrrr}
+\toprule
+  & Senior\_Citizen & Dependents & Internet\_Service & Online\_Security & Online\_Backup & Device\_Protection & Tech\_Support & Streaming\_TV & Streaming\_Movies & Contract & Paperless\_Billing & Payment\_Method & Monthly\_Charges & Tenure\_Months & Churn\_Value & CLTV\\
+\midrule
+\cellcolor{gray!6}{1405} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Fiber optic} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Electronic check} & \cellcolor{gray!6}{84.50} & \cellcolor{gray!6}{5} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{5141}\\
+2427 & No & No & Fiber optic & Yes & No & Yes & No & No & No & Month-to-month & Yes & Electronic check & 80.45 & 2 & 0 & 5602\\
+\cellcolor{gray!6}{4455} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Fiber optic} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Electronic check} & \cellcolor{gray!6}{84.75} & \cellcolor{gray!6}{19} & \cellcolor{gray!6}{0} & \cellcolor{gray!6}{5157}\\
+5025 & No & No & Fiber optic & Yes & No & No & No & No & Yes & Month-to-month & Yes & Electronic check & 88.05 & 9 & 0 & 2715\\
+\cellcolor{gray!6}{5743} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Fiber optic} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Electronic check} & \cellcolor{gray!6}{90.65} & \cellcolor{gray!6}{33} & \cellcolor{gray!6}{0} & \cellcolor{gray!6}{4460}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Data related to cluster 3's parangons
+
+\begin{table}[H]
+
+\caption{\label{tab:para3dat}}
+\centering
+\begin{tabular}[t]{lllllllllllllrrrr}
+\toprule
+  & Senior\_Citizen & Dependents & Internet\_Service & Online\_Security & Online\_Backup & Device\_Protection & Tech\_Support & Streaming\_TV & Streaming\_Movies & Contract & Paperless\_Billing & Payment\_Method & Monthly\_Charges & Tenure\_Months & Churn\_Value & CLTV\\
+\midrule
+\cellcolor{gray!6}{5350} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{DSL} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Two year} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Electronic check} & \cellcolor{gray!6}{49.20} & \cellcolor{gray!6}{72} & \cellcolor{gray!6}{0} & \cellcolor{gray!6}{4700}\\
+3103 & No & No & DSL & Yes & Yes & Yes & No & Yes & Yes & Two year & Yes & Electronic check & 85.25 & 72 & 0 & 6275\\
+\cellcolor{gray!6}{3936} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{DSL} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Two year} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Electronic check} & \cellcolor{gray!6}{86.10} & \cellcolor{gray!6}{58} & \cellcolor{gray!6}{0} & \cellcolor{gray!6}{5666}\\
+1957 & No & No & DSL & No & Yes & No & Yes & Yes & Yes & Two year & Yes & Electronic check & 54.60 & 64 & 0 & 4850\\
+\cellcolor{gray!6}{2999} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{DSL} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Two year} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Electronic check} & \cellcolor{gray!6}{78.95} & \cellcolor{gray!6}{72} & \cellcolor{gray!6}{0} & \cellcolor{gray!6}{5050}\\
+\bottomrule
+\end{tabular}
+\end{table}
 
   \bibliography{biblio.bib,packages.bib}
 
