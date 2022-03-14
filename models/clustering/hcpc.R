@@ -55,15 +55,26 @@ dend <- fviz_dend(x = res.hcpc,
 
 # Inertia -----
 
-data.frame(btw_inertia = res.hcpc$call$t$inert.gain[1:20]) %>% 
+btw_inertia <- res.hcpc$call$t$inert.gain[1:20]
+btw_inertia_cum <- cumsum(btw_inertia)
+text <- paste0(round(btw_inertia_cum[3]*100, 2), "% cumulated inertia \nfor 3 clusters")
+
+data.frame(btw_inertia) %>% 
   mutate(cumul_inertia = cumsum(btw_inertia)) %>%
   ggplot(aes(x = 1:20)) + 
   geom_bar(aes(y = btw_inertia), 
            stat = "identity", 
            fill = "steelblue", 
            alpha = 0.6) +
+  geom_vline(aes(xintercept = 3), 
+             linetype = "dashed", 
+             size = .7) +
+  geom_label(aes(x = 6, 
+                 y = .15, 
+                 label = text), 
+             size = 4.5) +
   labs(title = "", 
-       x = "Number of cluster", 
+       x = "Number of clusters", 
        y = "Inertia") +
   theme(plot.title = element_text(size = 16),
         axis.title = element_text(size = 16),
@@ -209,10 +220,10 @@ barplot_by_cluster <- function(var){
          y = "", 
          title = var) +
     theme(legend.position = "bottom", 
-          title = element_text(size = 12, face = "plain"), 
-          axis.text = element_text(size = 12), 
+          title = element_text(size = 14, face = "plain"), 
+          axis.text = element_text(size = 14), 
           legend.title = element_blank(), 
-          legend.text = element_text(size = 12))
+          legend.text = element_text(size = 14))
 }
 
 cat_vars <- cleaned_data %>%
@@ -223,8 +234,29 @@ cat_vars <- cleaned_data %>%
             "Churn_Reason")) %>%
   colnames() 
 
-ggpubr::ggarrange(plotlist = lapply(cat_vars, 
+ggpubr::ggarrange(plotlist = lapply(list("Senior_Citizen", 
+                                         "Dependents"), 
+                                    barplot_by_cluster), 
+                  common.legend = T, 
+                  legend = "bottom", 
+                  nrow = 2) 
+
+ggpubr::ggarrange(plotlist = lapply(list("Multiple_Lines", 
+                                         "Internet_Service", 
+                                         "Online_Security",
+                                         "Online_Backup",
+                                         "Device_Protection",
+                                         "Tech_Support",
+                                         "Streaming_TV",
+                                         "Streaming_Movies"), 
                                     barplot_by_cluster), 
                   common.legend = T, 
                   legend = "bottom") 
 
+ggpubr::ggarrange(plotlist = lapply(list("Contract",
+                                         "Paperless_Billing",
+                                         "Payment_Method",
+                                         "Churn_Label"), 
+                                    barplot_by_cluster), 
+                  common.legend = T, 
+                  legend = "bottom")
