@@ -60,7 +60,10 @@ tab:lrtest
 fig:coxmarginaleffects
 fig:coxdataviz
 fig:coxclust
+tab:custValues
 fig:custrawvaldens
+tab:totValclust
+tab:custValuesclust
 eq:hazfunproof
 eq:linksurvcumhaz
 eq:contribpartiallikproof

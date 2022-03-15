@@ -6,7 +6,7 @@
 ]{book}
 \title{Portfolio, Churn \& Customer Value}
 \author{Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer}
-\date{2022-03-11}
+\date{2022-03-15}
 
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
@@ -1074,11 +1074,11 @@ Table \ref{tab:selectedfeatures} shows the selected variables for 5 random obser
 \toprule
 Senior\_Citizen & Dependents & Phone\_Service & Internet\_Service & Online\_Security & Online\_Backup & Tech\_Support & Contract & Payment\_Method & Monthly\_Charges\\
 \midrule
-\cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{DSL} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{Electronic check} & \cellcolor{gray!6}{54.45}\\
-No & Yes & Yes & Fiber optic & No & No & No & Month-to-month & Bank transfer & 70.90\\
-\cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Fiber optic} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{Credit card} & \cellcolor{gray!6}{100.15}\\
-No & No & Yes & No & No & No & No & Month-to-month & Mailed check & 20.65\\
-\cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{Mailed check} & \cellcolor{gray!6}{19.50}\\
+\cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Fiber optic} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{Bank transfer} & \cellcolor{gray!6}{89.40}\\
+No & No & Yes & Fiber optic & No & Yes & Yes & One year & Electronic check & 109.50\\
+\cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{DSL} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Two year} & \cellcolor{gray!6}{Bank transfer} & \cellcolor{gray!6}{45.05}\\
+No & Yes & Yes & Fiber optic & No & No & Yes & Month-to-month & Bank transfer & 81.50\\
+\cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{DSL} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Two year} & \cellcolor{gray!6}{Mailed check} & \cellcolor{gray!6}{38.90}\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1114,11 +1114,11 @@ Now the 10 continuous axes are identified, the next step consists in retrieving 
 \toprule
 CustomerID & Dim 1 & Dim 2 & Dim 3 & Dim 4 & Dim 5 & Dim 6 & Dim 7 & Dim 8 & Dim 9 & Dim 10\\
 \midrule
-\cellcolor{gray!6}{5418} & \cellcolor{gray!6}{-0.88} & \cellcolor{gray!6}{0.04} & \cellcolor{gray!6}{-0.09} & \cellcolor{gray!6}{0.05} & \cellcolor{gray!6}{0.00} & \cellcolor{gray!6}{-0.03} & \cellcolor{gray!6}{-0.40} & \cellcolor{gray!6}{0.04} & \cellcolor{gray!6}{0.10} & \cellcolor{gray!6}{-0.17}\\
-3955 & 0.25 & 0.47 & -0.28 & 0.58 & -0.31 & 0.03 & 0.12 & -0.11 & -0.15 & -0.21\\
-\cellcolor{gray!6}{4157} & \cellcolor{gray!6}{1.00} & \cellcolor{gray!6}{0.36} & \cellcolor{gray!6}{0.35} & \cellcolor{gray!6}{-0.25} & \cellcolor{gray!6}{0.37} & \cellcolor{gray!6}{0.17} & \cellcolor{gray!6}{-0.15} & \cellcolor{gray!6}{-0.26} & \cellcolor{gray!6}{0.20} & \cellcolor{gray!6}{-0.23}\\
-5756 & -0.01 & 0.86 & -0.54 & 0.27 & 0.12 & -0.39 & 0.01 & 0.45 & 0.02 & 0.35\\
-\cellcolor{gray!6}{1638} & \cellcolor{gray!6}{-0.41} & \cellcolor{gray!6}{0.23} & \cellcolor{gray!6}{-0.64} & \cellcolor{gray!6}{-0.12} & \cellcolor{gray!6}{0.02} & \cellcolor{gray!6}{-0.01} & \cellcolor{gray!6}{-0.39} & \cellcolor{gray!6}{-0.04} & \cellcolor{gray!6}{0.06} & \cellcolor{gray!6}{0.08}\\
+\cellcolor{gray!6}{448} & \cellcolor{gray!6}{0.64} & \cellcolor{gray!6}{-0.09} & \cellcolor{gray!6}{0.35} & \cellcolor{gray!6}{0.69} & \cellcolor{gray!6}{-0.34} & \cellcolor{gray!6}{-0.22} & \cellcolor{gray!6}{0.11} & \cellcolor{gray!6}{-0.20} & \cellcolor{gray!6}{0.15} & \cellcolor{gray!6}{-0.28}\\
+3333 & 0.33 & 0.53 & -0.18 & -0.22 & -0.49 & 0.26 & 0.03 & -0.44 & 0.08 & 0.33\\
+\cellcolor{gray!6}{2267} & \cellcolor{gray!6}{0.15} & \cellcolor{gray!6}{-0.59} & \cellcolor{gray!6}{0.07} & \cellcolor{gray!6}{-0.09} & \cellcolor{gray!6}{-0.03} & \cellcolor{gray!6}{-0.27} & \cellcolor{gray!6}{-0.12} & \cellcolor{gray!6}{-0.20} & \cellcolor{gray!6}{-0.13} & \cellcolor{gray!6}{0.02}\\
+3919 & 0.74 & 0.73 & 0.22 & -0.48 & 0.37 & -0.15 & 0.04 & -0.11 & 0.02 & 0.64\\
+\cellcolor{gray!6}{3990} & \cellcolor{gray!6}{-0.65} & \cellcolor{gray!6}{0.37} & \cellcolor{gray!6}{0.43} & \cellcolor{gray!6}{0.05} & \cellcolor{gray!6}{-0.50} & \cellcolor{gray!6}{0.35} & \cellcolor{gray!6}{-0.14} & \cellcolor{gray!6}{-0.23} & \cellcolor{gray!6}{-0.22} & \cellcolor{gray!6}{-0.11}\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1210,11 +1210,11 @@ Before presenting the estimation results, it seems important to recall that \tex
 \toprule
 CustomerID & Tenure\_Months & Churn\_Value\\
 \midrule
-\cellcolor{gray!6}{6791} & \cellcolor{gray!6}{28} & \cellcolor{gray!6}{0}\\
-3436 & 7 & 0\\
-\cellcolor{gray!6}{5582} & \cellcolor{gray!6}{35} & \cellcolor{gray!6}{0}\\
-5439 & 20 & 0\\
-\cellcolor{gray!6}{5212} & \cellcolor{gray!6}{62} & \cellcolor{gray!6}{0}\\
+\cellcolor{gray!6}{233} & \cellcolor{gray!6}{10} & \cellcolor{gray!6}{1}\\
+3699 & 56 & 0\\
+\cellcolor{gray!6}{4324} & \cellcolor{gray!6}{66} & \cellcolor{gray!6}{0}\\
+84 & 2 & 1\\
+\cellcolor{gray!6}{893} & \cellcolor{gray!6}{3} & \cellcolor{gray!6}{1}\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1294,6 +1294,19 @@ In the Cox model, the relative hazard between two observations is assumed to be 
 \hypertarget{customer-lifetime-raw-value}{%
 \subsection{Customer lifetime raw value}\label{customer-lifetime-raw-value}}
 
+\begin{table}[H]
+
+\caption{\label{tab:custValues}CLRV Statistical summary}
+\centering
+\begin{tabular}[t]{lrrrrrr}
+\toprule
+  & Min. & 1st Qu. & Median & Mean & 3rd Qu. & Max.\\
+\midrule
+\cellcolor{gray!6}{} & \cellcolor{gray!6}{140.41} & \cellcolor{gray!6}{731.61} & \cellcolor{gray!6}{1411.27} & \cellcolor{gray!6}{2286.52} & \cellcolor{gray!6}{3752.24} & \cellcolor{gray!6}{6825.71}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \begin{figure}
 
 {\centering \includegraphics[width=19.44in]{./imgs/cust_lifetime_raw_value} 
@@ -1305,6 +1318,36 @@ In the Cox model, the relative hazard between two observations is assumed to be 
 
 \hypertarget{cluster-contribution-to-the-portfolio-value}{%
 \subsection{Cluster contribution to the portfolio value}\label{cluster-contribution-to-the-portfolio-value}}
+
+\begin{table}[H]
+
+\caption{\label{tab:totValclust}Total CLRV per cluster}
+\centering
+\begin{tabular}[t]{ccccc}
+\toprule
+Cluster & Proportion (\%) & V lower & V & V upper\\
+\midrule
+\cellcolor{gray!6}{1} & \cellcolor{gray!6}{26.55} & \cellcolor{gray!6}{1,748,207} & \cellcolor{gray!6}{1,809,489} & \cellcolor{gray!6}{1,889,476}\\
+2 & 41.38 & 4,666,325 & 4,875,438 & 5,136,889\\
+\cellcolor{gray!6}{3} & \cellcolor{gray!6}{32.07} & \cellcolor{gray!6}{9,282,801} & \cellcolor{gray!6}{9,393,895} & \cellcolor{gray!6}{9,535,978}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+
+\caption{\label{tab:custValuesclust}CLRV statistical summary for each customer segment}
+\centering
+\begin{tabular}[t]{lrrrrrr}
+\toprule
+  & Min. & 1st Qu. & Median & Mean & 3rd Qu. & Max.\\
+\midrule
+\cellcolor{gray!6}{Cluster 1} & \cellcolor{gray!6}{141.10} & \cellcolor{gray!6}{653.93} & \cellcolor{gray!6}{930.95} & \cellcolor{gray!6}{969.20} & \cellcolor{gray!6}{1138.39} & \cellcolor{gray!6}{4727.19}\\
+Cluster 2 & 140.41 & 459.49 & 1027.12 & 1675.41 & 2435.33 & 6425.49\\
+\cellcolor{gray!6}{Cluster 3} & \cellcolor{gray!6}{384.60} & \cellcolor{gray!6}{2876.69} & \cellcolor{gray!6}{4312.25} & \cellcolor{gray!6}{4165.81} & \cellcolor{gray!6}{5576.70} & \cellcolor{gray!6}{6825.71}\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \hypertarget{simulations}{%
 \subsection{Simulations}\label{simulations}}
