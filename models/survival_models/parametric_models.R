@@ -136,15 +136,12 @@ predict_hazard <- function(mod, new_dat){
                    se.fit = T, 
                    conf.int = T, 
                    type = "hazard", 
-                   times = 1:max_num_months)
+                   times = max_num_months) %>%
+    rename(num_months = .time, 
+           haz = .pred) %>%
+    mutate(CustomerID = custIDs) 
   
-  custIDs <- lapply(new_dat$CustomerID, 
-                   function(id){ rep(id, max_num_months) }) %>%
-    unlist()
-  
-  preds %>%
-    unnest(cols = .pred) %>%
-    mutate(CustomerID = custIDs)
+  return(preds)
   
 }
 
@@ -220,85 +217,6 @@ parametric_fits <- fit_surv_models(survdata = survdata_tr,
                                    dists = dists, 
                                    formula = cox_formula) ; parametric_fits
 
-## Exponential -----
-
-### Model ----- 
-
-# NOT RUN{
-  exp <- flexsurvreg(formula = formula, 
-                     data = data_train, 
-                     dist = "exp") 
-  
-  save(exp, 
-       file = paste0(backup_path, "exponential_model.RData")) 
-  
-#} 
-  
-load(file = paste0(backup_path, "exponential_model.RData"))
-
-exp$coefficients
-
-summary(exp, 
-        type = "hazard") 
-summary(exp,
-        type = "survival") 
-
-### Predictions -----
-
-# NOT RUN {
-  system.time(
-    exp.haz.predstr <- predict_hazard(mod = exp, 
-                                      new_dat = data_train)
-  ) 
-    
-  system.time(
-    exp.haz.predste <- predict_hazard(mod = exp, 
-                                      new_dat = data_test)
-  )
-  
-  system.time(
-    exp.surv.predstr <- predict_survival(mod = exp, 
-                                         new_dat = data_train)
-  ) 
-  
-  system.time(
-    exp.surv.predste <- predict_survival(mod = exp, 
-                                         new_dat = data_test)
-  )
-   
-  
-  save(exp.haz.predstr, 
-       exp.haz.predste, 
-       exp.surv.predstr, 
-       exp.surv.predste, 
-       file = paste0(backup_path, "exp_predictions.RData"))
-
-#}
-
-## Weibull -----
-
-### Model -----
-
-# NOT RUN {
-  wei <- flexsurvreg(formula = formula, 
-                     data = data_train, 
-                     dist = "weibull") 
-    
-  save(wei, 
-       file = paste0(backup_path, "weibull_model.RData"))
-
-#} 
-  
-load(file = paste0(backup_path, "weibull_model.RData"))
-
-wei$coefficients
-
-summary(wei, 
-        type = "hazard") 
-summary(wei,
-        type = "survival") 
-
-
 ### Predictions -----
 
 # NOT RUN {
@@ -309,14 +227,14 @@ summary(wei,
   clusterExport(cl = cl, 
                 varlist = list("parametric_fits", 
                                "predict_hazard", 
-                               "data_train", 
+                               "survdata_tr", 
                                "max_num_months"),
                 envir = environment()) 
   system.time(
     haz_preds_tr <- c(parLapply(cl,
                                 X = parametric_fits,
                                 fun = predict_hazard, 
-                                new_dat = data_train))
+                                new_dat = survdata_tr))
   )
   names(haz_preds_tr) <- dists
   stopCluster(cl)
@@ -334,14 +252,14 @@ summary(wei,
   clusterExport(cl = cl, 
                 varlist = list("parametric_fits", 
                                "predict_hazard", 
-                               "data_train", 
+                               "survdata_te", 
                                "max_num_months"),
                 envir = environment()) 
   system.time(
     haz_preds_tr <- c(parLapply(cl,
                                 X = parametric_fits,
                                 fun = predict_hazard, 
-                                new_dat = data_test))
+                                new_dat = survdata_te))
   )
   names(haz_preds_tr) <- dists
   stopCluster(cl)
@@ -350,35 +268,6 @@ summary(wei,
        file = paste0(backup_path, "param_haz_pred_te.RData"))
   
 #} 
-
-# NOT RUN {
-  system.time(
-    wei.haz.predstr <- predict_hazard(mod = wei, 
-                                      new_dat = data_train)
-  ) 
-  
-  system.time(
-    wei.haz.predste <- predict_hazard(mod = wei, 
-                                      new_dat = data_test)
-  )
-  
-  system.time(
-    wei.surv.predstr <- predict_survival(mod = wei, 
-                                         new_dat = data_train)
-  ) 
-  
-  system.time(
-    wei.surv.predste <- predict_survival(mod = wei, 
-                                         new_dat = data_test)
-  )
-  
-  save(wei.haz.predstr, 
-       wei.haz.predste, 
-       wei.surv.predstr, 
-       wei.surv.predste, 
-       file = paste0(backup_path, "wei_predictions.RData"))
-  
-#}
 
 # MODEL COMPARISON -----
   
@@ -416,8 +305,5 @@ visualize_estimated_hazards(models = parametric_fits,
 visualize_estimated_hazards(models = parametric_fits, 
                             dists_long = dists_long, 
                             conf.int = T)
-
-
-
 
 
