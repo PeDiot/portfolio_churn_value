@@ -203,11 +203,67 @@ knitr::include_graphics(path = "./imgs/churn_surv_clust.png")
 
 ### Customer lifetime raw value
 
+```{r}
+load(file = paste0(backup_path, "custvalues/", "custValues_8pct", ".RData"))
+load(file = paste0(backup_path, "custvalues/", "custValues_clust", ".RData"))
+```
+
+
+```{r custValues}
+tab <- custValues %>%
+  pull(v) %>%
+  summary() %>%
+  unclass() %>%
+  data.frame(check.names = FALSE, 
+             stringsAsFactors = FALSE)
+colnames(tab) <- " " 
+
+tab %>%
+  mykable(title = "CLRV Statistical summary", 
+          transp = T)
+```
+
+
 ```{r custrawvaldens, fig.cap="Customer lifetime raw value - Density and evolution by number of months"}
 knitr::include_graphics(path = "./imgs/cust_lifetime_raw_value.png")
 ```
 
 ### Cluster contribution to the portfolio value
+
+```{r totValclust}
+tab <- custValues_clust %>%
+  group_by(cluster) %>%
+  summarise_at(vars(starts_with("v")), 
+               function(v){sum(v) %>%
+                   format(big.mark = ",")})  %>%
+  mutate(prop = clust_prop[1, ]) %>%
+  relocate(prop, .after = "cluster")
+colnames(tab) <- c("Cluster", "Proportion (%)", "V lower", 
+                   "V", "V upper")
+tab %>%
+  mykable(title = "Total CLRV per cluster", 
+          align = rep("c", 5))
+```
+
+```{r custValuesclust}
+lapply(seq(1, 3), 
+       function(c){
+         tmp <- custValues_clust %>%
+           filter(cluster == c) %>%
+           pull(v) %>%
+           summary() %>%
+           unclass() %>%
+           data.frame(check.names = FALSE, 
+                       stringsAsFactors = FALSE)
+         colnames(tmp) <- paste("Cluster", as.character(c))
+         tmp %>% 
+           t() %>%
+           as.data.frame()
+       }) %>%
+  bind_rows() %>%
+  mykable(title = "CLRV statistical summary for each customer segment")
+```
+
 
 ### Simulations 
 
