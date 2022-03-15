@@ -179,6 +179,8 @@ load(file = file_path)
 custValues %>%
   View()
 
+summary(custValues$v) 
+
 portfolio_value <- custValues %>%
   select(starts_with("v")) %>%
   colSums() %>%
@@ -238,18 +240,60 @@ ggarrange(
 custValues_clust <- custValues %>%
   mutate(cluster = res.hcpc$data.clust$clust)
 
+save(custValues_clust, 
+     file = paste0(backup, "custvalues/", "custValues_clust", ".RData"))
+
 custValues_clust %>%
-  ggplot(aes(x = v, 
-             y = ..density.., 
+  group_by(cluster) %>%
+  summarise_at(vars(starts_with("v")), 
+               sum)
+
+ggarrange(
+  custValues_clust %>%
+    ggplot(aes(x = v, 
+               y = ..density.., 
                fill = cluster)) +
-  geom_histogram(size = 1, 
-                 alpha = .6, 
-                 bins = 30) +
-  scale_x_continuous(labels = scales::comma) +
-  scale_fill_jco() +
-  labs(x = "V", 
-       y = "Density", 
-       title = "Distribution of customer lifetime raw value per cluster")
+    geom_histogram(size = 1, 
+                   alpha = .5, 
+                   bins = 30) +
+    scale_x_continuous(labels = scales::comma) +
+    scale_fill_jco() +
+    labs(x = "CLRV", 
+         y = "Density", 
+         title = "Density plot per cluster") +
+    theme(legend.position = "bottom", 
+          legend.title = element_blank(), 
+          title = element_text(size = 14), 
+          axis.title = element_text(size = 14), 
+          axis.text = element_text(size = 14),
+          legend.text = element_text(size = 14)), 
+  
+  custValues_clust %>%
+    mutate(num_months = cleaned_data$Tenure_Months) %>%
+    group_by(cluster, num_months) %>%
+    summarise(v_lower = mean(v_lower), 
+              v = mean(v), 
+              v_upper = mean(v_upper)) %>%
+    ggplot() +
+    geom_line(aes(x = num_months, 
+                  y = v, 
+                  color = cluster),
+              size = 1.5) +
+    scale_color_jco() +
+    labs(x = "Number of months", 
+         y = "", 
+         title = "Evolution through time per cluster") +
+    theme(legend.position = "bottom", 
+          legend.title = element_blank(), 
+          title = element_text(size = 14), 
+          axis.title = element_text(size = 14), 
+          axis.text = element_text(size = 14),
+          legend.text = element_text(size = 14)),
+  ncol = 2, 
+  common.legend = T, 
+  legend = "bottom"
+)
+
 
 cleaned_data %>%
   mutate(cluster = res.hcpc$data.clust$clust) %>%
@@ -298,6 +342,10 @@ totVal <- custValues %>%
   summarise_at(vars(v_lower, v, v_upper), 
                sum) ; totVal
 
+custValues %>% 
+  split(.$discount) %>%
+  purrr::map(summary)
+
 custValues %>%
   ggplot(aes(x = v, 
              color = discount)) +
@@ -315,13 +363,18 @@ custValues %>%
 
 custValues %>%
   ggplot(aes(x = v, 
+             y = ..density.., 
              fill = discount)) +
   geom_histogram(size = 1, 
                  color = "white", 
                  alpha = .5, 
                  bins = 30) +
+  geom_density(aes(x = v, 
+                   color = discount), 
+               inherit.aes = F) +
   scale_x_continuous(labels = scales::comma) +
   scale_fill_brewer(palette = "Set2") +
+  scale_color_brewer(palette = "Set2") +
   facet_wrap(~discount, 
              nrow = 2, 
              ncol = 2) +
