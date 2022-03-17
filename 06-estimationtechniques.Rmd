@@ -201,7 +201,7 @@ knitr::include_graphics(path = "./imgs/churn_surv_clust.png")
 
 ### Mathematical formulation 
 
-### Customer lifetime raw value
+### Customer Lifetime Raw Value
 
 ```{r}
 load(file = paste0(backup_path, "custvalues/", "custValues_8pct", ".RData"))
@@ -224,7 +224,7 @@ tab %>%
 ```
 
 
-```{r custrawvaldens, fig.cap="Customer lifetime raw value - Density and evolution by number of months"}
+```{r custrawvaldens, fig.cap="Customer Lifetime Raw Value - Density and evolution by number of months"}
 knitr::include_graphics(path = "./imgs/cust_lifetime_raw_value.png")
 ```
 
@@ -267,4 +267,19 @@ lapply(seq(1, 3),
 
 ### Simulations 
 
+#### Influence of the discount rate on CLRV
+
+```{r portValDiscountTab}
+load(file = paste0(backup, "portVal_discount_rate.RData"))
+portVal_discount_rate %>%
+  column_to_rownames(var = "discount") %>%
+  rename(`V Lower` = v_lower, 
+         V = v, 
+         `V upper` = v_upper) %>%
+  mykable(title = "Portfolio value depending on discount rate")
+```
+
+```{r custrawvaldens, fig.cap="Customer Lifetime Raw Value depending on discount rate"}
+knitr::include_graphics(path = "./imgs/clrv_discount_rate.png")
+```
 
