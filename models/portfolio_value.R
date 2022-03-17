@@ -1,6 +1,5 @@
-# --------- Overall value of the firm's portfolio ----------
+# Method ------------------------------------------------------------------
 
-# ---- Method 
 
 # 1. With all customers
 
@@ -22,7 +21,8 @@
 # Change in portfolio value after a change in some variables 
   # ex: what portfolio value with 70% month-to-month contract customers?
 
-# ----- Setup -----
+
+# Setup -------------------------------------------------------------------
 
 setwd("./models/")
 
@@ -48,37 +48,49 @@ theme_set(theme_minimal())
 
 source(paste0(dir, "colors.R"))
 
-# ----- Requirements -----
 
 custIDs <- cleaned_data %>%
   pull(CustomerID) %>%
   as.character()                              # customer unique IDs
 
-a <- .01                                      # discount factor
+a <- .08                                      # discount factor
 
 num_months <- 1:72
 
 surv_fit <- survfit(final_cox,
                     newdata = cleaned_data)   # survfit object to estimate survival
 
-surv <- surv_fit$surv %>%
-  as.data.frame()                             # estimated survival probabilities
-colnames(surv) <- custIDs
+# 
 
-surv_lower <- surv_fit$lower %>%
-  as.data.frame() %>% 
-  mutate(across(everything(), 
-                .fns = ~replace_na(.,0)))     # estimated lower bounds
-colnames(surv_lower) <- custIDs
+# Functions ---------------------------------------------------------------
 
-surv_upper <- surv_fit$upper %>%
-  as.data.frame() %>% 
-  mutate(across(everything(), 
-                .fns = ~replace_na(.,0)))      # estimated upper bounds
-colnames(surv_upper) <- custIDs
+compute_survival <- function(surv_fit){
+  "Return estimated survival function with confidence interval."
+  
+  surv <- surv_fit$surv %>%
+    as.data.frame()                             
+  colnames(surv) <- custIDs
+  
+  surv_lower <- surv_fit$lower %>%
+    as.data.frame() %>% 
+    mutate(across(everything(), 
+                  .fns = ~replace_na(.,0)))     
+  colnames(surv_lower) <- custIDs
+  
+  surv_upper <- surv_fit$upper %>%
+    as.data.frame() %>% 
+    mutate(across(everything(), 
+                  .fns = ~replace_na(.,0)))      
+  colnames(surv_upper) <- custIDs
+  
+  return(list("surv_lower" = surv_lower, 
+              "surv" = surv, 
+              "surv_upper" = surv_upper))
+  
+}
 
-
-# ----- Functions -----
+res <- compute_survival(surv_fit)
+surv_lower <- res$surv_lower ; surv <- res$surv ; surv_upper <- res$surv_upper
 
 get_monthly_discount_factor <- function(a){
   
@@ -120,18 +132,18 @@ compute_cust_total_value <- function(surv_dat, price){
   
 }
 
-process <- function(custID){
+process <- function(custID, dat){
   "Estimate customer survival to then calculate total value and IC bounds."
   
   surv_dat <- estimate_survival(custID) 
-  price <- cleaned_data[cleaned_data$CustomerID == custID, ] %>%
+  price <- dat[dat$CustomerID == custID, ] %>%
     dplyr::pull(Monthly_Charges) 
   compute_cust_total_value(surv_dat, price)
   
 }
 
-# ----- Apply process using parallelization -----
 
+# Apply process using parallelization -------------------------------------
 
 # NOT RUN {
   num_cores <- detectCores() - 1
@@ -156,7 +168,8 @@ process <- function(custID){
   system.time(
     results <- c(parLapply(cl,
                            X = custIDs,
-                           fun = process))
+                           fun = process, 
+                           dat = cleaned_data))
   )
   
   stopCluster(cl)
@@ -171,8 +184,10 @@ process <- function(custID){
 # } 
 
 
-# ----- Results -----
-  
+# 
+
+# First results -----------------------------------------------------------
+
 file_path <- paste0(backup, "custvalues/", "custValues_8pct", ".RData")
 load(file = file_path)
 
@@ -194,7 +209,7 @@ subtitle <- TeX(paste("Portfolio value =",
                   portfolio_value[3], 
                   ")"))
 
-# accross all customers ---
+## Across all customers -----------------------------------------------------------
 
 ggarrange(
   custValues %>%
@@ -235,7 +250,7 @@ ggarrange(
 )
 
 
-# accross clusters ---
+# Accross clusters -----------------------------------------------------------
 
 custValues_clust <- custValues %>%
   mutate(cluster = res.hcpc$data.clust$clust)
@@ -308,9 +323,11 @@ cleaned_data %>%
        y = "Density", 
        title = "Distribution of monthly charges per cluster") 
 
-# ----- Simulations -----
 
-# based on discount factor ---
+
+# Simulations -------------------------------------------------------------
+
+## Based on discount factor -------------------------------------------------------------
 
 load(file = paste0(backup, "custvalues/", "custValues_8pct", ".RData"))
 custValues8 <- custValues
@@ -337,10 +354,15 @@ custValues <- rbind(custValues1 %>%
                       mutate(discount = "8%")) %>% 
   mutate(discount = as.factor(discount)) 
 
-totVal <- custValues %>%
+portVal_discount_rate <- custValues %>%
   group_by(discount) %>%
   summarise_at(vars(v_lower, v, v_upper), 
-               sum) ; totVal
+               sum) %>%
+  mutate_at(vars(starts_with("v")), 
+            function(var){ format(var, big.mark = ",") }) ; portVal_discount_rate 
+
+save(portVal_discount_rate, 
+     file = paste0(backup, "portVal_discount_rate.RData"))
 
 custValues %>% 
   split(.$discount) %>%
@@ -349,42 +371,69 @@ custValues %>%
 custValues %>%
   ggplot(aes(x = v, 
              color = discount)) +
-  geom_density(size = 1) +
+  geom_density(size = 1.3) +
   scale_x_continuous(labels = scales::comma) +
   scale_color_brewer(palette = "Set2") +
-  labs(x = "", 
+  labs(x = "CLRV", 
        y = "Density", 
-       title = "Density plot per discount factor") +
+       title = "") +
   theme(axis.title = element_text(size = 14), 
         axis.text = element_text(size = 14), 
         title = element_text(size = 14), 
         legend.position = "bottom", 
-        legend.title = element_blank())
+        legend.title = element_blank(), 
+        legend.text = element_text(size = 14))
 
-custValues %>%
-  ggplot(aes(x = v, 
-             y = ..density.., 
-             fill = discount)) +
-  geom_histogram(size = 1, 
-                 color = "white", 
-                 alpha = .5, 
-                 bins = 30) +
-  geom_density(aes(x = v, 
-                   color = discount), 
-               inherit.aes = F) +
-  scale_x_continuous(labels = scales::comma) +
-  scale_fill_brewer(palette = "Set2") +
-  scale_color_brewer(palette = "Set2") +
-  facet_wrap(~discount, 
-             nrow = 2, 
-             ncol = 2) +
-  labs(x = "", 
-       y = "Count", 
-       title = "Histogram plot per discount factor") +
-  theme(axis.title = element_text(size = 14), 
-        axis.text = element_text(size = 14), 
-        title = element_text(size = 14), 
-        strip.text = element_text(size = 14),
-        legend.position = "none")
+## Based on type of contract -------------------------------------------------------------
 
+# NOT RUN {
+          N <- nrow(cleaned_data)
+          
+          month_to_month_90 <- cleaned_data %>%
+            mutate(Contract = if_else(
+              condition = CustomerID %in% sample(x = custIDs %>% as.numeric(),
+                                                 size = .7*N), 
+              true = "Month-to-month", 
+              false = as.character(Contract)
+            ))
+          
+          surv_fit <- compute_survival(surv_fit = survfit(final_cox,
+                                                          newdata = month_to_month_90))
+          surv_lower <- res$surv_lower ; surv <- res$surv ; surv_upper <- res$surv_upper
+          
+          num_cores <- detectCores() - 1
+          cl <- makeCluster(num_cores)
+          
+          registerDoParallel(cl)  
+          clusterExport(cl = cl,
+                        varlist = list("estimate_survival",
+                                       "compute_cust_total_value", 
+                                       "get_monthly_discount_factor", 
+                                       "process", 
+                                       "month_to_month_90",
+                                       "surv",
+                                       "surv_lower", 
+                                       "surv_upper",
+                                       "custIDs", 
+                                       "a",
+                                       "num_months",  
+                                       "%>%"), 
+                        envir = environment())
+          
+          system.time(
+            results <- c(parLapply(cl,
+                                   X = custIDs,
+                                   fun = process, 
+                                   dat = month_to_month_90))
+          )
+          
+          stopCluster(cl)
+          
+          custValues_simul2 <- do.call(rbind, results) %>%
+            as.data.frame() %>%
+            mutate(CustomerID = custIDs)
+          
+          file_path <- paste0(backup, "custValues/month_to_month_90.RData")
+          save(custValues_simul2, file = file_path)
 
+#         }
