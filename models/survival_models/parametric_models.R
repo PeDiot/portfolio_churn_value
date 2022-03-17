@@ -136,10 +136,8 @@ predict_hazard <- function(mod, new_dat){
                    se.fit = T, 
                    conf.int = T, 
                    type = "hazard", 
-                   times = max_num_months) %>%
-    rename(num_months = .time, 
-           haz = .pred) %>%
-    mutate(CustomerID = custIDs) 
+                   times = max_num_months) 
+    preds$CustomerID <- custIDs
   
   return(preds)
   
@@ -256,12 +254,12 @@ parametric_fits <- fit_surv_models(survdata = survdata_tr,
                                "max_num_months"),
                 envir = environment()) 
   system.time(
-    haz_preds_tr <- c(parLapply(cl,
+    haz_preds_te <- c(parLapply(cl,
                                 X = parametric_fits,
                                 fun = predict_hazard, 
                                 new_dat = survdata_te))
   )
-  names(haz_preds_tr) <- dists
+  names(haz_preds_te) <- dists
   stopCluster(cl)
   
   save(haz_preds_te, 
