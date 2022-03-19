@@ -24,7 +24,7 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2022-03-15" />
+<meta name="date" content="2022-03-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -181,7 +181,7 @@ div.csl-indent {
 <li class="chapter" data-level="5.4" data-path="5.4-portfolio-value-estimation.html"><a href="5.4-portfolio-value-estimation.html"><i class="fa fa-check"></i><b>5.4</b> Portfolio value estimation</a>
 <ul>
 <li class="chapter" data-level="5.4.1" data-path="5.4-portfolio-value-estimation.html"><a href="5.4-portfolio-value-estimation.html#mathematical-formulation"><i class="fa fa-check"></i><b>5.4.1</b> Mathematical formulation</a></li>
-<li class="chapter" data-level="5.4.2" data-path="5.4-portfolio-value-estimation.html"><a href="5.4-portfolio-value-estimation.html#customer-lifetime-raw-value"><i class="fa fa-check"></i><b>5.4.2</b> Customer lifetime raw value</a></li>
+<li class="chapter" data-level="5.4.2" data-path="5.4-portfolio-value-estimation.html"><a href="5.4-portfolio-value-estimation.html#customer-lifetime-raw-value"><i class="fa fa-check"></i><b>5.4.2</b> Customer Lifetime Raw Value</a></li>
 <li class="chapter" data-level="5.4.3" data-path="5.4-portfolio-value-estimation.html"><a href="5.4-portfolio-value-estimation.html#cluster-contribution-to-the-portfolio-value"><i class="fa fa-check"></i><b>5.4.3</b> Cluster contribution to the portfolio value</a></li>
 <li class="chapter" data-level="5.4.4" data-path="5.4-portfolio-value-estimation.html"><a href="5.4-portfolio-value-estimation.html#simulations"><i class="fa fa-check"></i><b>5.4.4</b> Simulations</a></li>
 </ul></li>
@@ -226,10 +226,45 @@ div.csl-indent {
 <h3><span class="header-section-number">5.4.1</span> Mathematical formulation</h3>
 </div>
 <div id="customer-lifetime-raw-value" class="section level3" number="5.4.2">
-<h3><span class="header-section-number">5.4.2</span> Customer lifetime raw value</h3>
+<h3><span class="header-section-number">5.4.2</span> Customer Lifetime Raw Value</h3>
 <table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:custValues">Table 5.6: </span>CLRV Statistical summary
+<span id="tab:custValuesSum">Table 5.6: </span>Portfolio estimated value with 95<span class="math inline">\(\%\)</span> confidence interval
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+V lower
+</th>
+<th style="text-align:left;">
+V
+</th>
+<th style="text-align:left;">
+V upper
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+17,604,144
+</td>
+<td style="text-align:left;">
+18,270,000
+</td>
+<td style="text-align:left;">
+19,031,648
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:custValuesStats">Table 5.7: </span>CLRV Statistical summary
 </caption>
 <thead>
 <tr>
@@ -260,38 +295,44 @@ Max.
 <td style="text-align:left;">
 </td>
 <td style="text-align:right;">
-140.41
+323.99
 </td>
 <td style="text-align:right;">
-731.61
+1125.9
 </td>
 <td style="text-align:right;">
-1411.27
+2104.66
 </td>
 <td style="text-align:right;">
-2286.52
+2598.12
 </td>
 <td style="text-align:right;">
-3752.24
+3850.41
 </td>
 <td style="text-align:right;">
-6825.71
+6815.42
 </td>
 </tr>
 </tbody>
 </table>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:custrawvaldens"></span>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:clrvDens"></span>
 <p class="caption">
-Figure 5.9: Customer lifetime raw value - Density and evolution by number of months
+Figure 5.9: Distribution of Customer Lifetime Raw Value
 </p>
-<img src="imgs/cust_lifetime_raw_value.png" alt="Customer lifetime raw value - Density and evolution by number of months" width="700" />
+<img src="imgs/clrv_density.png" alt="Distribution of Customer Lifetime Raw Value" width="450" />
+</div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:clrvEvolution"></span>
+<p class="caption">
+Figure 5.10: Customer Lifetime Raw Value evolution based on number of months in the portfolio
+</p>
+<img src="imgs/clrv_evolution.png" alt="Customer Lifetime Raw Value evolution based on number of months in the portfolio" width="450" />
 </div>
 </div>
 <div id="cluster-contribution-to-the-portfolio-value" class="section level3" number="5.4.3">
 <h3><span class="header-section-number">5.4.3</span> Cluster contribution to the portfolio value</h3>
 <table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:totValclust">Table 5.7: </span>Total CLRV per cluster
+<span id="tab:totValclust">Table 5.8: </span>Total CLRV per cluster
 </caption>
 <thead>
 <tr>
@@ -318,16 +359,16 @@ V upper
 1
 </td>
 <td style="text-align:center;">
-26.55
+26.6
 </td>
 <td style="text-align:center;">
-1,748,207
+2,035,928
 </td>
 <td style="text-align:center;">
-1,809,489
+2,117,932
 </td>
 <td style="text-align:center;">
-1,889,476
+2,213,746
 </td>
 </tr>
 <tr>
@@ -335,16 +376,16 @@ V upper
 2
 </td>
 <td style="text-align:center;">
-41.38
+41.4
 </td>
 <td style="text-align:center;">
-4,666,325
+5,760,579
 </td>
 <td style="text-align:center;">
-4,875,438
+6,211,027
 </td>
 <td style="text-align:center;">
-5,136,889
+6,734,243
 </td>
 </tr>
 <tr>
@@ -352,23 +393,23 @@ V upper
 3
 </td>
 <td style="text-align:center;">
-32.07
+32.1
 </td>
 <td style="text-align:center;">
-9,282,801
+9,807,637
 </td>
 <td style="text-align:center;">
-9,393,895
+9,941,041
 </td>
 <td style="text-align:center;">
-9,535,978
+10,083,660
 </td>
 </tr>
 </tbody>
 </table>
 <table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:custValuesclust">Table 5.8: </span>CLRV statistical summary for each customer segment
+<span id="tab:custValuesclust">Table 5.9: </span>CLRV statistical summary for each customer segment
 </caption>
 <thead>
 <tr>
@@ -400,22 +441,22 @@ Max.
 Cluster 1
 </td>
 <td style="text-align:right;">
-141.10
+333.82
 </td>
 <td style="text-align:right;">
-653.93
+837.50
 </td>
 <td style="text-align:right;">
-930.95
+1094.51
 </td>
 <td style="text-align:right;">
-969.20
+1134.40
 </td>
 <td style="text-align:right;">
-1138.39
+1264.28
 </td>
 <td style="text-align:right;">
-4727.19
+4679.80
 </td>
 </tr>
 <tr>
@@ -423,22 +464,22 @@ Cluster 1
 Cluster 2
 </td>
 <td style="text-align:right;">
-140.41
+323.99
 </td>
 <td style="text-align:right;">
-459.49
+1194.59
 </td>
 <td style="text-align:right;">
-1027.12
+1862.16
 </td>
 <td style="text-align:right;">
-1675.41
+2134.37
 </td>
 <td style="text-align:right;">
-2435.33
+2886.02
 </td>
 <td style="text-align:right;">
-6425.49
+6009.78
 </td>
 </tr>
 <tr>
@@ -446,30 +487,129 @@ Cluster 2
 Cluster 3
 </td>
 <td style="text-align:right;">
-384.60
+1268.74
 </td>
 <td style="text-align:right;">
-2876.69
+3393.93
 </td>
 <td style="text-align:right;">
-4312.25
+4489.62
 </td>
 <td style="text-align:right;">
-4165.81
+4408.44
 </td>
 <td style="text-align:right;">
-5576.70
+5454.71
 </td>
 <td style="text-align:right;">
-6825.71
+6815.42
 </td>
 </tr>
 </tbody>
 </table>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:clrvDensClust"></span>
+<p class="caption">
+Figure 5.11: Distribution of Customer Lifetime Raw Value per cluster
+</p>
+<img src="imgs/clrv_density_per_cluster.png" alt="Distribution of Customer Lifetime Raw Value per cluster" width="450" />
+</div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:clrvEvolutionClust"></span>
+<p class="caption">
+Figure 5.12: Customer Lifetime Raw Value evolution per cluster based on number of months in the portfolio
+</p>
+<img src="imgs/clrv_evolution_per_cluster.png" alt="Customer Lifetime Raw Value evolution per cluster based on number of months in the portfolio" width="450" />
+</div>
 </div>
 <div id="simulations" class="section level3" number="5.4.4">
 <h3><span class="header-section-number">5.4.4</span> Simulations</h3>
+<div id="influence-of-the-discount-rate-on-clrv" class="section level4" number="5.4.4.1">
+<h4><span class="header-section-number">5.4.4.1</span> Influence of the discount rate on CLRV</h4>
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:portValDiscountTab">Table 5.10: </span>Portfolio value depending on discount rate
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+V Lower
+</th>
+<th style="text-align:left;">
+V
+</th>
+<th style="text-align:left;">
+V upper
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+1%
+</td>
+<td style="text-align:left;">
+20,894,006
+</td>
+<td style="text-align:left;">
+21,721,297
+</td>
+<td style="text-align:left;">
+22,674,662
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2%
+</td>
+<td style="text-align:left;">
+20,358,160
+</td>
+<td style="text-align:left;">
+21,158,861
+</td>
+<td style="text-align:left;">
+22,080,569
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4%
+</td>
+<td style="text-align:left;">
+19,357,495
+</td>
+<td style="text-align:left;">
+20,108,832
+</td>
+<td style="text-align:left;">
+20,971,852
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+8%
+</td>
+<td style="text-align:left;">
+15,697,334
+</td>
+<td style="text-align:left;">
+16,078,822
+</td>
+<td style="text-align:left;">
+16,562,344
+</td>
+</tr>
+</tbody>
+</table>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:clrvDensDiscount"></span>
+<p class="caption">
+Figure 5.13: Customer Lifetime Raw Value depending on discount rate
+</p>
+<img src="imgs/clrv_discount_rate.png" alt="Customer Lifetime Raw Value depending on discount rate" width="450" />
+</div>
 
+</div>
 </div>
 </div>
 <!-- </div> -->

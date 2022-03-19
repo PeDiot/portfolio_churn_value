@@ -6,7 +6,7 @@
 ]{book}
 \title{Portfolio, Churn \& Customer Value}
 \author{Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer}
-\date{2022-03-17}
+\date{2022-03-19}
 
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
@@ -1074,11 +1074,11 @@ Table \ref{tab:selectedfeatures} shows the selected variables for 5 random obser
 \toprule
 Senior\_Citizen & Dependents & Phone\_Service & Internet\_Service & Online\_Security & Online\_Backup & Tech\_Support & Contract & Payment\_Method & Monthly\_Charges\\
 \midrule
-\cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Fiber optic} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{Electronic check} & \cellcolor{gray!6}{96.05}\\
-No & No & Yes & No & No & No & No & Month-to-month & Mailed check & 20.40\\
-\cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Two year} & \cellcolor{gray!6}{Mailed check} & \cellcolor{gray!6}{19.75}\\
-No & No & Yes & Fiber optic & Yes & No & No & Month-to-month & Mailed check & 75.00\\
-\cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Fiber optic} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{Electronic check} & \cellcolor{gray!6}{80.85}\\
+\cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Two year} & \cellcolor{gray!6}{Bank transfer} & \cellcolor{gray!6}{19.85}\\
+No & No & Yes & DSL & No & No & No & One year & Bank transfer & 75.70\\
+\cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{DSL} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{Electronic check} & \cellcolor{gray!6}{49.45}\\
+No & Yes & Yes & No & No & No & No & Two year & Credit card & 25.15\\
+\cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Fiber optic} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{Electronic check} & \cellcolor{gray!6}{105.05}\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1114,11 +1114,11 @@ Now the 10 continuous axes are identified, the next step consists in retrieving 
 \toprule
 CustomerID & Dim 1 & Dim 2 & Dim 3 & Dim 4 & Dim 5 & Dim 6 & Dim 7 & Dim 8 & Dim 9 & Dim 10\\
 \midrule
-\cellcolor{gray!6}{854} & \cellcolor{gray!6}{-0.13} & \cellcolor{gray!6}{-0.44} & \cellcolor{gray!6}{-0.29} & \cellcolor{gray!6}{-0.20} & \cellcolor{gray!6}{-0.02} & \cellcolor{gray!6}{0.00} & \cellcolor{gray!6}{0.25} & \cellcolor{gray!6}{-0.15} & \cellcolor{gray!6}{-0.14} & \cellcolor{gray!6}{-0.07}\\
-1063 & -0.33 & -0.37 & -0.45 & -0.20 & -0.03 & -0.03 & 0.16 & -0.26 & -0.13 & 0.16\\
-\cellcolor{gray!6}{2454} & \cellcolor{gray!6}{0.59} & \cellcolor{gray!6}{0.37} & \cellcolor{gray!6}{0.09} & \cellcolor{gray!6}{-0.16} & \cellcolor{gray!6}{-0.47} & \cellcolor{gray!6}{0.11} & \cellcolor{gray!6}{-0.07} & \cellcolor{gray!6}{-0.39} & \cellcolor{gray!6}{0.24} & \cellcolor{gray!6}{-0.06}\\
-364 & 0.01 & -0.88 & 0.08 & -0.04 & -0.04 & 0.21 & -0.02 & 0.25 & 0.03 & 0.24\\
-\cellcolor{gray!6}{3606} & \cellcolor{gray!6}{-0.65} & \cellcolor{gray!6}{-0.02} & \cellcolor{gray!6}{0.05} & \cellcolor{gray!6}{0.58} & \cellcolor{gray!6}{0.08} & \cellcolor{gray!6}{-0.13} & \cellcolor{gray!6}{-0.03} & \cellcolor{gray!6}{0.01} & \cellcolor{gray!6}{-0.38} & \cellcolor{gray!6}{-0.09}\\
+\cellcolor{gray!6}{4569} & \cellcolor{gray!6}{0.16} & \cellcolor{gray!6}{0.34} & \cellcolor{gray!6}{-0.30} & \cellcolor{gray!6}{0.55} & \cellcolor{gray!6}{-0.36} & \cellcolor{gray!6}{0.06} & \cellcolor{gray!6}{0.18} & \cellcolor{gray!6}{-0.42} & \cellcolor{gray!6}{0.07} & \cellcolor{gray!6}{0.39}\\
+3658 & -0.22 & -0.84 & -0.04 & -0.06 & -0.05 & 0.36 & 0.12 & 0.26 & 0.04 & 0.19\\
+\cellcolor{gray!6}{3594} & \cellcolor{gray!6}{0.37} & \cellcolor{gray!6}{0.25} & \cellcolor{gray!6}{0.65} & \cellcolor{gray!6}{-0.22} & \cellcolor{gray!6}{-0.49} & \cellcolor{gray!6}{-0.14} & \cellcolor{gray!6}{0.35} & \cellcolor{gray!6}{0.07} & \cellcolor{gray!6}{0.19} & \cellcolor{gray!6}{-0.22}\\
+3435 & 0.44 & 0.76 & -0.09 & -0.24 & 0.37 & 0.36 & -0.37 & -0.20 & -0.36 & 0.26\\
+\cellcolor{gray!6}{188} & \cellcolor{gray!6}{-0.30} & \cellcolor{gray!6}{-0.61} & \cellcolor{gray!6}{-0.10} & \cellcolor{gray!6}{-0.15} & \cellcolor{gray!6}{-0.03} & \cellcolor{gray!6}{-0.09} & \cellcolor{gray!6}{0.16} & \cellcolor{gray!6}{-0.23} & \cellcolor{gray!6}{-0.09} & \cellcolor{gray!6}{-0.07}\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1210,11 +1210,11 @@ Before presenting the estimation results, it seems important to recall that \tex
 \toprule
 CustomerID & Tenure\_Months & Churn\_Value\\
 \midrule
-\cellcolor{gray!6}{2058} & \cellcolor{gray!6}{41} & \cellcolor{gray!6}{0}\\
-6187 & 34 & 0\\
-\cellcolor{gray!6}{4576} & \cellcolor{gray!6}{44} & \cellcolor{gray!6}{0}\\
-1564 & 47 & 1\\
-\cellcolor{gray!6}{4710} & \cellcolor{gray!6}{19} & \cellcolor{gray!6}{0}\\
+\cellcolor{gray!6}{3542} & \cellcolor{gray!6}{44} & \cellcolor{gray!6}{0}\\
+4832 & 68 & 0\\
+\cellcolor{gray!6}{954} & \cellcolor{gray!6}{29} & \cellcolor{gray!6}{1}\\
+3904 & 26 & 0\\
+\cellcolor{gray!6}{4847} & \cellcolor{gray!6}{58} & \cellcolor{gray!6}{0}\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1292,28 +1292,50 @@ In the Cox model, the relative hazard between two observations is assumed to be 
 \subsection{Mathematical formulation}\label{mathematical-formulation}}
 
 \hypertarget{customer-lifetime-raw-value}{%
-\subsection{Customer lifetime raw value}\label{customer-lifetime-raw-value}}
+\subsection{Customer Lifetime Raw Value}\label{customer-lifetime-raw-value}}
 
 \begin{table}[H]
 
-\caption{\label{tab:custValues}CLRV Statistical summary}
+\caption{\label{tab:custValuesSum}Portfolio estimated value with 95$\%$ confidence interval}
+\centering
+\begin{tabular}[t]{llll}
+\toprule
+  & V lower & V & V upper\\
+\midrule
+\cellcolor{gray!6}{} & \cellcolor{gray!6}{17,604,144} & \cellcolor{gray!6}{18,270,000} & \cellcolor{gray!6}{19,031,648}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+
+\caption{\label{tab:custValuesStats}CLRV Statistical summary}
 \centering
 \begin{tabular}[t]{lrrrrrr}
 \toprule
   & Min. & 1st Qu. & Median & Mean & 3rd Qu. & Max.\\
 \midrule
-\cellcolor{gray!6}{} & \cellcolor{gray!6}{140.41} & \cellcolor{gray!6}{731.61} & \cellcolor{gray!6}{1411.27} & \cellcolor{gray!6}{2286.52} & \cellcolor{gray!6}{3752.24} & \cellcolor{gray!6}{6825.71}\\
+\cellcolor{gray!6}{} & \cellcolor{gray!6}{323.99} & \cellcolor{gray!6}{1125.9} & \cellcolor{gray!6}{2104.66} & \cellcolor{gray!6}{2598.12} & \cellcolor{gray!6}{3850.41} & \cellcolor{gray!6}{6815.42}\\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \begin{figure}
 
-{\centering \includegraphics[width=19.44in]{./imgs/cust_lifetime_raw_value} 
+{\centering \includegraphics[width=12.5in]{./imgs/clrv_density} 
 
 }
 
-\caption{Customer lifetime raw value - Density and evolution by number of months}\label{fig:custrawvaldens}
+\caption{Distribution of Customer Lifetime Raw Value}\label{fig:clrvDens}
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics[width=12.5in]{./imgs/clrv_evolution} 
+
+}
+
+\caption{Customer Lifetime Raw Value evolution based on number of months in the portfolio}\label{fig:clrvEvolution}
 \end{figure}
 
 \hypertarget{cluster-contribution-to-the-portfolio-value}{%
@@ -1327,9 +1349,9 @@ In the Cox model, the relative hazard between two observations is assumed to be 
 \toprule
 Cluster & Proportion (\%) & V lower & V & V upper\\
 \midrule
-\cellcolor{gray!6}{1} & \cellcolor{gray!6}{26.55} & \cellcolor{gray!6}{1,748,207} & \cellcolor{gray!6}{1,809,489} & \cellcolor{gray!6}{1,889,476}\\
-2 & 41.38 & 4,666,325 & 4,875,438 & 5,136,889\\
-\cellcolor{gray!6}{3} & \cellcolor{gray!6}{32.07} & \cellcolor{gray!6}{9,282,801} & \cellcolor{gray!6}{9,393,895} & \cellcolor{gray!6}{9,535,978}\\
+\cellcolor{gray!6}{1} & \cellcolor{gray!6}{26.6} & \cellcolor{gray!6}{2,035,928} & \cellcolor{gray!6}{2,117,932} & \cellcolor{gray!6}{2,213,746}\\
+2 & 41.4 & 5,760,579 & 6,211,027 & 6,734,243\\
+\cellcolor{gray!6}{3} & \cellcolor{gray!6}{32.1} & \cellcolor{gray!6}{9,807,637} & \cellcolor{gray!6}{9,941,041} & \cellcolor{gray!6}{10,083,660}\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1342,18 +1364,37 @@ Cluster & Proportion (\%) & V lower & V & V upper\\
 \toprule
   & Min. & 1st Qu. & Median & Mean & 3rd Qu. & Max.\\
 \midrule
-\cellcolor{gray!6}{Cluster 1} & \cellcolor{gray!6}{141.10} & \cellcolor{gray!6}{653.93} & \cellcolor{gray!6}{930.95} & \cellcolor{gray!6}{969.20} & \cellcolor{gray!6}{1138.39} & \cellcolor{gray!6}{4727.19}\\
-Cluster 2 & 140.41 & 459.49 & 1027.12 & 1675.41 & 2435.33 & 6425.49\\
-\cellcolor{gray!6}{Cluster 3} & \cellcolor{gray!6}{384.60} & \cellcolor{gray!6}{2876.69} & \cellcolor{gray!6}{4312.25} & \cellcolor{gray!6}{4165.81} & \cellcolor{gray!6}{5576.70} & \cellcolor{gray!6}{6825.71}\\
+\cellcolor{gray!6}{Cluster 1} & \cellcolor{gray!6}{333.82} & \cellcolor{gray!6}{837.50} & \cellcolor{gray!6}{1094.51} & \cellcolor{gray!6}{1134.40} & \cellcolor{gray!6}{1264.28} & \cellcolor{gray!6}{4679.80}\\
+Cluster 2 & 323.99 & 1194.59 & 1862.16 & 2134.37 & 2886.02 & 6009.78\\
+\cellcolor{gray!6}{Cluster 3} & \cellcolor{gray!6}{1268.74} & \cellcolor{gray!6}{3393.93} & \cellcolor{gray!6}{4489.62} & \cellcolor{gray!6}{4408.44} & \cellcolor{gray!6}{5454.71} & \cellcolor{gray!6}{6815.42}\\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\begin{figure}
+
+{\centering \includegraphics[width=12.5in]{./imgs/clrv_density_per_cluster} 
+
+}
+
+\caption{Distribution of Customer Lifetime Raw Value per cluster}\label{fig:clrvDensClust}
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics[width=12.5in]{./imgs/clrv_evolution_per_cluster} 
+
+}
+
+\caption{Customer Lifetime Raw Value evolution per cluster based on number of months in the portfolio}\label{fig:clrvEvolutionClust}
+\end{figure}
 
 \hypertarget{simulations}{%
 \subsection{Simulations}\label{simulations}}
 
 \hypertarget{influence-of-the-discount-rate-on-clrv}{%
-\subsubsection{Influence of the discount rate on CLRV}\label{influence-of-the-discount-rate-on-clrv}}
+\subsubsection*{Influence of the discount rate on CLRV}\label{influence-of-the-discount-rate-on-clrv}}
+\addcontentsline{toc}{subsubsection}{Influence of the discount rate on CLRV}
 
 \begin{table}[H]
 
@@ -1366,10 +1407,60 @@ Cluster 2 & 140.41 & 459.49 & 1027.12 & 1675.41 & 2435.33 & 6425.49\\
 \cellcolor{gray!6}{1\%} & \cellcolor{gray!6}{20,894,006} & \cellcolor{gray!6}{21,721,297} & \cellcolor{gray!6}{22,674,662}\\
 2\% & 20,358,160 & 21,158,861 & 22,080,569\\
 \cellcolor{gray!6}{4\%} & \cellcolor{gray!6}{19,357,495} & \cellcolor{gray!6}{20,108,832} & \cellcolor{gray!6}{20,971,852}\\
-8\% & 15,697,334 & 16,078,822 & 16,562,344\\
+8\% & 17,604,144 & 18,270,000 & 19,031,648\\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\begin{figure}
+
+{\centering \includegraphics[width=12.5in]{./imgs/clrv_dens_discount_rate} 
+
+}
+
+\caption{Customer Lifetime Raw Value distribution depending on discount rate}\label{fig:clrvDensDiscount}
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics[width=12.5in]{./imgs/clrv_evolution_discount} 
+
+}
+
+\caption{Customer Lifetime Raw Value evolution depending on discount rate}\label{fig:clrvEvolDiscount}
+\end{figure}
+
+\hypertarget{influence-the-contract-type-on-clrv}{%
+\subsubsection*{Influence the contract type on CLRV}\label{influence-the-contract-type-on-clrv}}
+\addcontentsline{toc}{subsubsection}{Influence the contract type on CLRV}
+
+\textbackslash begin\{table\}{[}H{]}
+
+\textbackslash caption\{\label{tab:unnamed-chunk-32}Portfolio estimated value and 95\% confidence interval depending on proportion of `month-to-month' contracts\}
+\centering
+
+\begin{tabular}[t]{llll}
+\toprule
+\% 'month-to-month' contracts & V lower & V & V upper\\
+\midrule
+\cellcolor{gray!6}{10\%} & \cellcolor{gray!6}{22,526,500} & \cellcolor{gray!6}{23,009,290} & \cellcolor{gray!6}{23,535,331}\\
+30\% & 24,289,738 & 25,001,468 & 25,801,858\\
+\cellcolor{gray!6}{70\%} & \cellcolor{gray!6}{19,763,605} & \cellcolor{gray!6}{20,706,782} & \cellcolor{gray!6}{21,796,005}\\
+90\% & 18,266,063 & 19,369,938 & 20,646,166\\
+\cellcolor{gray!6}{55.1\% (reference)} & \cellcolor{gray!6}{17,604,144} & \cellcolor{gray!6}{18,270,000} & \cellcolor{gray!6}{19,031,648}\\
+\bottomrule
+\end{tabular}
+
+\textbackslash end\{table\}
+
+\begin{figure}
+
+{\centering \includegraphics[width=13.89in]{./imgs/clrv_month_to_month} 
+
+}
+
+\caption{Customer Lifetime Raw Value depending on the proportion of 'month-to-month' contracts}\label{fig:clrvmonthtomonth}
+\end{figure}
 
 \hypertarget{appendix}{%
 \chapter*{Appendix}\label{appendix}}
