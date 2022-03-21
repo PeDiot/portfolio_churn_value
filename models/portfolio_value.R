@@ -35,7 +35,7 @@ load(file = paste(data_path, "telco_cleaned.Rdata", sep = ""))
 load(file = paste(backup, "survival/cox_final.RData", sep = ""))
 load(file = paste0(backup, "clustering/res.hcpc.RData")) 
 
-library(tidyverse)
+library(tidyverse) 
 library(survival)
 library(ggplot2)
 library(ggsci)
@@ -44,7 +44,16 @@ library(parallel)
 library(doParallel)
 library(latex2exp)
 
-theme_set(theme_minimal())
+theme_new <- function() {
+  theme_minimal() %+replace%
+    theme(axis.title = element_text(size = 14), 
+          axis.text = element_text(size = 14), 
+          title = element_text(size = 14), 
+          legend.position = "bottom", 
+          legend.title = element_blank(), 
+          legend.text = element_text(size = 14))
+}
+theme_set(theme_new())
 
 source(paste0(dir, "colors.R"))
 
@@ -60,7 +69,6 @@ num_months <- 1:72
 surv_fit <- survfit(final_cox,
                     newdata = cleaned_data)   # survfit object to estimate survival
 
-# 
 
 # Functions ---------------------------------------------------------------
 
@@ -88,9 +96,6 @@ compute_survival <- function(surv_fit){
               "surv_upper" = surv_upper))
   
 }
-
-res <- compute_survival(surv_fit)
-surv_lower <- res$surv_lower ; surv <- res$surv ; surv_upper <- res$surv_upper
 
 get_monthly_discount_factor <- function(a){
   
@@ -127,8 +132,7 @@ compute_cust_total_value <- function(surv_dat, price){
     dplyr::mutate( v_lower = price * surv_lower / (1 + a)^num_months, 
             v = price * surv / (1 + a)^num_months,
             v_upper = price * surv_upper / (1 + a)^num_months ) %>%
-    dplyr::select(starts_with("v")) %>%
-    colSums()
+    dplyr::select(starts_with("v")) # %>% colSums()
   
 }
 
@@ -146,42 +150,47 @@ process <- function(custID, dat){
 # Apply process using parallelization -------------------------------------
 
 # NOT RUN {
-  num_cores <- detectCores() - 1
-  cl <- makeCluster(num_cores)
+          res <- compute_survival(surv_fit)
+          surv_lower <- res$surv_lower ; surv <- res$surv ; surv_upper <- res$surv_upper
+          num_cores <- detectCores() - 1
+          cl <- makeCluster(num_cores)
+          
+          registerDoParallel(cl)  
+          clusterExport(cl = cl,
+                        varlist = list("estimate_survival",
+                                       "compute_cust_total_value", 
+                                       "get_monthly_discount_factor", 
+                                       "process", 
+                                       "cleaned_data",
+                                       "surv",
+                                       "surv_lower", 
+                                       "surv_upper",
+                                       "custIDs", 
+                                       "a",
+                                       "num_months",  
+                                       "%>%"), 
+                        envir = environment())
+          
+          system.time(
+            results <- c(parLapply(cl,
+                                   X = custIDs,
+                                   fun = process, 
+                                   dat = cleaned_data))
+          )
+          
+          stopCluster(cl)
+          
+          custValues <- do.call(rbind, results) %>%
+            as.data.frame() %>% 
+            mutate( CustomerID = lapply(custIDs,
+                                        function(id){ rep(id, max(num_months)) }) %>%
+                      unlist() %>%
+                      as.factor() )
+          
+          file_path <- paste0(backup, "custValues/custValues_", a*100, "pct", ".RData") ; file_path
+          save(custValues, file = file_path)
   
-  registerDoParallel(cl)  
-  clusterExport(cl = cl,
-                varlist = list("estimate_survival",
-                               "compute_cust_total_value", 
-                               "get_monthly_discount_factor", 
-                               "process", 
-                               "cleaned_data",
-                               "surv",
-                               "surv_lower", 
-                               "surv_upper",
-                               "custIDs", 
-                               "a",
-                               "num_months",  
-                               "%>%"), 
-                envir = environment())
-  
-  system.time(
-    results <- c(parLapply(cl,
-                           X = custIDs,
-                           fun = process, 
-                           dat = cleaned_data))
-  )
-  
-  stopCluster(cl)
-  
-  custValues <- do.call(rbind, results) %>%
-    as.data.frame() %>%
-    mutate(CustomerID = custIDs)
-  
-  file_path <- paste0(backup, "custValues/custValues_", a*100, "pct", ".RData")
-  save(custValues, file = file_path)
-  
-# } 
+#         } 
 
 
 # 
@@ -191,15 +200,19 @@ process <- function(custID, dat){
 file_path <- paste0(backup, "custvalues/", "custValues_8pct", ".RData")
 load(file = file_path)
 
-custValues %>%
-  View()
+dim(custValues)
 
 summary(custValues$v) 
 
-portfolio_value <- custValues %>%
+custValuesTot <- custValues %>%
+  group_by(CustomerID) %>%
+  summarise_at(vars(starts_with("v")), 
+               sum) 
+
+portfolio_value <- custValuesTot %>%
   select(starts_with("v")) %>%
   colSums() %>%
-  format(big.mark = ",", scientific = F)  # overall value of the firm's portfolio 
+  format(big.mark = ",", scientific = F)  ; portfolio_value
 
 subtitle <- TeX(paste("Portfolio value =", 
                   portfolio_value[2],
@@ -211,117 +224,128 @@ subtitle <- TeX(paste("Portfolio value =",
 
 ## Across all customers -----------------------------------------------------------
 
-ggarrange(
-  custValues %>%
-    ggplot(aes(x = v)) +
-    geom_density(size = 1.5, 
-                 color = portfol_col) +
-    scale_x_continuous(labels = scales::comma) +
-    labs(x = "", 
-         y = "Density", 
-         title = "Density plot", 
-         subtitle = subtitle) +
-    theme(axis.title = element_text(size = 14), 
-          axis.text = element_text(size = 14), 
-          title = element_text(size = 14)), 
-  custValues %>%
-    mutate(num_months = cleaned_data$Tenure_Months) %>%
-    group_by(num_months) %>%
-    summarise(v_lower = mean(v_lower), 
-              v = mean(v), 
-              v_upper = mean(v_upper)) %>%
-    ggplot() +
-    geom_line(aes(x = num_months, 
-                  y = v), 
-              color = portfol_col, 
-              size = 1.5) +
-    geom_ribbon(aes(x = num_months, 
-                    ymin = v_lower, 
-                    ymax = v_upper),
-                fill = "grey", 
-                alpha = .5) +
-    labs(x = "Number of months", 
-         y = "", 
-         title = "Evolution through time") +
-    theme(axis.title = element_text(size = 14), 
-          axis.text = element_text(size = 14), 
-          title = element_text(size = 14)), 
-  ncol = 2
-)
+custValuesTot %>%
+  ggplot(aes(x = v)) +
+  geom_density(size = 1.5, 
+               color = portfol_col) +
+  geom_vline(aes(xintercept = custValuesTot %>%
+                   pull(v) %>%
+                   mean(),
+                 color = "Average CLRV"), 
+             linetype = "dotted", 
+             size = 1) +
+  scale_x_continuous(labels = scales::comma) +
+  scale_color_manual(values = c("black")) +
+  labs(x = "CLRV", 
+       y = "Density", 
+       title = "") +
+  theme_new()
+
+df_plot <- custValues %>%
+  group_by(CustomerID) %>%
+  mutate(num_months = num_months) %>%
+  group_by(num_months) %>%
+  summarise_at(vars(starts_with("v")), 
+               mean) %>%
+  mutate(v_cum = cumsum(v)) 
+
+coef <- 50
+
+df_plot %>%
+  ggplot() +
+  geom_line(aes(x = num_months, 
+                y = v), 
+            size = 1,linetype = "dotted",
+            color = "black") +
+  geom_line(aes(x = num_months, 
+                y = v_cum / coef), 
+            size = 1.5, 
+            color = portfol_col) +
+  scale_y_continuous(name = "Monthly Value", 
+                     sec.axis = sec_axis(~.*coef, 
+                                         name = "Cumulative Monthly Value")) + 
+  labs(x = "Number of months", 
+       y = "", 
+       title = "") +
+  theme_new() +
+  theme(axis.title.y.right = element_text(color = portfol_col), 
+        axis.text.y.right = element_text(color = portfol_col))
+
+df_plot %>%
+  ggplot() +
+  geom_segment(aes(x = num_months, xend = num_months,
+                   y = 0, yend = v), 
+               size = 1,
+               color = "grey80") +
+  geom_line(aes(x = num_months, 
+                y = v_cum / coef), 
+            size = 1.5, 
+            color = portfol_col) +
+  scale_y_continuous(name = "Monthly Contribution", 
+                     sec.axis = sec_axis(~.*coef, 
+                                         name = "Cumulative Value")) + 
+  labs(x = "Number of months", 
+       y = "", 
+       title = "") +
+  theme_new() +
+  theme(axis.title.y.right = element_text(color = portfol_col), 
+        axis.text.y.right = element_text(color = portfol_col),
+        axis.title.y.left = element_text(color = "grey50"),
+        axis.text.y.left = element_text(color = "grey50"))
 
 
 # Accross clusters -----------------------------------------------------------
 
+clusters <- res.hcpc$data.clust$clust
 custValues_clust <- custValues %>%
-  mutate(cluster = res.hcpc$data.clust$clust)
+  mutate(cluster = lapply(clusters, 
+                          function(x){ rep(x, max(num_months)) }) %>%
+           unlist())
 
 save(custValues_clust, 
-     file = paste0(backup, "custvalues/", "custValues_clust", ".RData"))
+     file = paste0(backup, "custvalues/custValues_clust.RData")) 
 
 custValues_clust %>%
   group_by(cluster) %>%
   summarise_at(vars(starts_with("v")), 
                sum)
 
-ggarrange(
-  custValues_clust %>%
-    ggplot(aes(x = v, 
-               y = ..density.., 
-               fill = cluster)) +
-    geom_histogram(size = 1, 
-                   alpha = .5, 
-                   bins = 30) +
-    scale_x_continuous(labels = scales::comma) +
-    scale_fill_jco() +
-    labs(x = "CLRV", 
-         y = "Density", 
-         title = "Density plot per cluster") +
-    theme(legend.position = "bottom", 
-          legend.title = element_blank(), 
-          title = element_text(size = 14), 
-          axis.title = element_text(size = 14), 
-          axis.text = element_text(size = 14),
-          legend.text = element_text(size = 14)), 
-  
-  custValues_clust %>%
-    mutate(num_months = cleaned_data$Tenure_Months) %>%
-    group_by(cluster, num_months) %>%
-    summarise(v_lower = mean(v_lower), 
-              v = mean(v), 
-              v_upper = mean(v_upper)) %>%
-    ggplot() +
+custValues_clust %>%
+  group_by(cluster, CustomerID) %>%
+  summarise_at(vars(starts_with("v")), 
+               sum) %>%
+  ggplot(aes(x = v, 
+             y = ..density.., 
+             fill = cluster)) +
+  geom_histogram(size = 1, 
+                 alpha = .5, 
+                 bins = 30) +
+  scale_x_continuous(labels = scales::comma) +
+  scale_fill_jco() +
+  labs(x = "CLRV", 
+       y = "Density", 
+       title = "") +
+  theme_new()
+
+
+custValues_clust %>%
+  group_by(cluster, CustomerID) %>%
+  mutate(num_months = num_months) %>%
+  group_by(cluster, num_months) %>%
+  summarise_at(vars(starts_with("v")), 
+               mean) %>%
+  group_by(cluster) %>%
+  mutate(v_cum = cumsum(v)) %>% 
+  ggplot() +
     geom_line(aes(x = num_months, 
-                  y = v, 
-                  color = cluster),
+                  y = v_cum, 
+                  color = cluster), 
               size = 1.5) +
     scale_color_jco() +
     labs(x = "Number of months", 
-         y = "", 
-         title = "Evolution through time per cluster") +
-    theme(legend.position = "bottom", 
-          legend.title = element_blank(), 
-          title = element_text(size = 14), 
-          axis.title = element_text(size = 14), 
-          axis.text = element_text(size = 14),
-          legend.text = element_text(size = 14)),
-  ncol = 2, 
-  common.legend = T, 
-  legend = "bottom"
-)
-
-
-cleaned_data %>%
-  mutate(cluster = res.hcpc$data.clust$clust) %>%
-  ggplot(aes(x = Monthly_Charges, 
-             y = ..density.., 
-             fill = cluster))  +
-  geom_histogram(size = 1, 
-                 bins = 30, 
-                 alpha = .6) +
-  scale_fill_jco() +
-  labs(x = "Monthly Charges", 
-       y = "Density", 
-       title = "Distribution of monthly charges per cluster") 
+         y = "Cumulative CLRV", 
+         title = "") +
+    theme_new()
 
 
 
@@ -369,6 +393,9 @@ custValues %>%
   purrr::map(summary)
 
 custValues %>%
+  group_by(discount, CustomerID) %>%
+  summarise_at(vars(starts_with("v")), 
+               sum) %>%
   ggplot(aes(x = v, 
              color = discount)) +
   geom_density(size = 1.3) +
@@ -377,29 +404,55 @@ custValues %>%
   labs(x = "CLRV", 
        y = "Density", 
        title = "") +
-  theme(axis.title = element_text(size = 14), 
-        axis.text = element_text(size = 14), 
-        title = element_text(size = 14), 
-        legend.position = "bottom", 
-        legend.title = element_blank(), 
-        legend.text = element_text(size = 14))
+  theme_new()
+
+custValues %>%
+  group_by(discount, CustomerID) %>%
+  mutate(num_months = num_months) %>%
+  group_by(discount, num_months) %>%
+  summarise_at(vars(starts_with("v")), 
+               mean) %>%
+  group_by(discount) %>%
+  mutate(v_cum = cumsum(v)) %>% 
+  ggplot() +
+  geom_line(aes(x = num_months, 
+                y = v_cum, 
+                color = discount), 
+            size = 1.5) +
+  scale_color_brewer(palette = "Set2") +
+  labs(x = "Number of months", 
+       y = "Cumulative CLRV", 
+       title = "") +
+  theme_new()
 
 ## Based on type of contract -------------------------------------------------------------
 
 # NOT RUN {
-          N <- nrow(cleaned_data)
+
+          N <- nrow(cleaned_data) 
+          p_ref <- sum(cleaned_data %>% 
+                        pull(Contract) == "Month-to-month") / N ; p_ref
+          p <- .8
+          cust_subset <- sample(x = cleaned_data %>%
+                                  filter(Contract != "Month-to-month") %>%
+                                  pull(CustomerID),
+                                size = (p - p_ref) * N)
+          # one_year_cust <- sample(x = cust_subset, 
+          #                         size = .5 * length(cust_subset))
           
-          month_to_month_90 <- cleaned_data %>%
+          dat <- cleaned_data %>%
             mutate(Contract = if_else(
-              condition = CustomerID %in% sample(x = custIDs %>% as.numeric(),
-                                                 size = .7*N), 
+              condition = CustomerID %in% cust_subset,
               true = "Month-to-month", 
-              false = as.character(Contract)
-            ))
+              false = Contract %>%
+                as.character()
+            )  %>% as.factor()) 
+          
+          questionr::freq(dat$Contract)
           
           surv_fit <- compute_survival(surv_fit = survfit(final_cox,
-                                                          newdata = month_to_month_90))
-          surv_lower <- res$surv_lower ; surv <- res$surv ; surv_upper <- res$surv_upper
+                                                          newdata = dat))
+          surv_lower <- surv_fit$surv_lower ; surv <- surv_fit$surv ; surv_upper <- surv_fit$surv_upper
           
           num_cores <- detectCores() - 1
           cl <- makeCluster(num_cores)
@@ -410,7 +463,7 @@ custValues %>%
                                        "compute_cust_total_value", 
                                        "get_monthly_discount_factor", 
                                        "process", 
-                                       "month_to_month_90",
+                                       "dat",
                                        "surv",
                                        "surv_lower", 
                                        "surv_upper",
@@ -424,16 +477,185 @@ custValues %>%
             results <- c(parLapply(cl,
                                    X = custIDs,
                                    fun = process, 
-                                   dat = month_to_month_90))
+                                   dat = dat))
           )
           
           stopCluster(cl)
           
-          custValues_simul2 <- do.call(rbind, results) %>%
-            as.data.frame() %>%
-            mutate(CustomerID = custIDs)
+          month_to_month_80 <- do.call(rbind, results) %>%
+            as.data.frame() %>% 
+            mutate( CustomerID = lapply(custIDs,
+                                        function(id){ rep(id, max(num_months)) }) %>%
+                      unlist() %>%
+                      as.factor() ) ; nrow(month_to_month_80) / max(num_months)
           
-          file_path <- paste0(backup, "custValues/month_to_month_90.RData")
-          save(custValues_simul2, file = file_path)
+          file_path <- paste0(backup, "custValues/month_to_month_80.RData") ; file_path
+          save(month_to_month_80, file = file_path)
 
 #         }
+          
+
+load(file = paste0(backup, "custvalues/", "custValues_8pct", ".RData"))
+custValuesref <- custValues
+
+x <- 80
+load(file = paste0(backup, 
+                   "custValues/month_to_month_", 
+                   x, 
+                   ".RData"))
+
+custValues <- rbind(custValuesref %>%
+                      mutate(month_to_month_pct = "ref"), 
+                    month_to_month_10 %>%
+                      mutate(month_to_month_pct = "10"),
+                    month_to_month_30 %>%
+                      mutate(month_to_month_pct = "30"),
+                    month_to_month_70 %>%
+                      mutate(month_to_month_pct = "70"),
+                    month_to_month_90 %>%
+                      mutate(month_to_month_pct = "90"))
+
+custVal_month_to_month <- custValues %>%
+  mutate(month_to_month_pct = month_to_month_pct %>%
+           as.factor() %>%
+           recode_factor(`10` = "10%", 
+                         `30` = "30%", 
+                         `70` = "70%", 
+                         `90` = "90%", 
+                         `ref` = "55.1% (reference)")) %>%
+  group_by(month_to_month_pct) %>%
+  summarise_at(vars(starts_with("v")), 
+               sum) %>%
+  rename(`% 'month-to-month' contracts` = month_to_month_pct,
+         `V lower` = v_lower, 
+         V = v, 
+         `V upper` = v_upper) %>%
+  mutate_at(vars(starts_with("v")), 
+            format, 
+            big.mark = ",")
+
+save(custVal_month_to_month, 
+     file = paste0(backup, "custValues/custVal_month_to_month.RData"))
+
+custValues %>%
+  filter(month_to_month_pct != "ref") %>%
+  mutate(month_to_month_pct = month_to_month_pct %>%
+           as.factor() %>%
+           recode_factor(`10` = "10%", 
+                         `30` = "30%", 
+                         `70` = "70%", 
+                         `90` = "90%")) %>%
+  group_by(month_to_month_pct, CustomerID) %>%
+  summarise_at(vars(starts_with("v")), 
+               sum) %>%
+  ggplot(aes(x = v, 
+             y = ..density.., 
+             fill = month_to_month_pct)) +
+  geom_histogram(bins = 30, 
+                 alpha = .5, 
+                 color = "white") +
+  geom_density(aes(x = v, 
+                   color = month_to_month_pct), 
+               inherit.aes = F, 
+               size = 1) +
+  labs(x = "CLRV", 
+       y  = "Density") +
+  scale_fill_brewer(palette = "Set2") +
+  scale_color_brewer(palette = "Set2") +
+  facet_wrap(~month_to_month_pct, 
+             ncol = 2, 
+             nrow = 2) +
+  theme(strip.text = element_text(size = 14), 
+        legend.position = "none")
+
+custValues <- rbind(month_to_month_10 %>%
+                      mutate(month_to_month_pct = "10"),
+                    month_to_month_20 %>%
+                      mutate(month_to_month_pct = "20"),
+                    month_to_month_30 %>%
+                      mutate(month_to_month_pct = "30"),
+                    month_to_month_40 %>%
+                      mutate(month_to_month_pct = "40"),
+                    month_to_month_50 %>%
+                      mutate(month_to_month_pct = "50"),
+                    month_to_month_60 %>%
+                      mutate(month_to_month_pct = "60"),
+                    month_to_month_70 %>%
+                      mutate(month_to_month_pct = "70"),
+                    month_to_month_80 %>%
+                      mutate(month_to_month_pct = "80"),
+                    month_to_month_90 %>%
+                      mutate(month_to_month_pct = "90")) ; nrow(custValues) / 9 / 72
+
+custValues %>%
+  group_by(month_to_month_pct) %>%
+  summarise_at(vars(starts_with("v")), sum) %>%
+  mutate(month_to_month_pct = month_to_month_pct %>%
+           as.numeric()) %>%
+  ggplot(aes(x = month_to_month_pct, 
+             y = v)) +
+  geom_point(size = 3, 
+             color = portfol_col) +
+  geom_line(size = 1.5, 
+            color = portfol_col) +
+  labs(x = "% 'month-to-month' contracts", 
+       y = "Customer Raw Equity") +
+  theme_new()
+  
+## Based on monthly charges -------------------------------------------------------------
+
+# NOT RUN {
+          
+          chargesVar <- -.1
+  
+          dat <- cleaned_data %>%
+            mutate(Monthly_Charges = Monthly_Charges * (1 + chargesVar))
+          
+          ( mean(dat$Monthly_Charges) / mean(cleaned_data$Monthly_Charges) ) - 1
+          
+          surv_fit <- compute_survival(surv_fit = survfit(final_cox,
+                                                          newdata = dat))
+          surv_lower <- surv_fit$surv_lower ; surv <- surv_fit$surv ; surv_upper <- surv_fit$surv_upper
+          
+          num_cores <- detectCores() - 1
+          cl <- makeCluster(num_cores)
+          
+          registerDoParallel(cl)  
+          clusterExport(cl = cl,
+                        varlist = list("estimate_survival",
+                                       "compute_cust_total_value", 
+                                       "get_monthly_discount_factor", 
+                                       "process", 
+                                       "dat",
+                                       "surv",
+                                       "surv_lower", 
+                                       "surv_upper",
+                                       "custIDs", 
+                                       "a",
+                                       "num_months",  
+                                       "%>%"), 
+                        envir = environment())
+          
+          system.time(
+            results <- c(parLapply(cl,
+                                   X = custIDs,
+                                   fun = process, 
+                                   dat = dat))
+          )
+          
+          stopCluster(cl)
+          
+          monthly_charges_neg10pct <- do.call(rbind, results) %>%
+            as.data.frame() %>% 
+            mutate( CustomerID = lapply(custIDs,
+                                        function(id){ rep(id, max(num_months)) }) %>%
+                      unlist() %>%
+                      as.factor() ) ; nrow(monthly_charges_neg10pct) / max(num_months)
+          
+          file_path <- paste0(backup, "custValues/monthly_charges_neg10pct.RData") ; file_path
+          save(monthly_charges_neg10pct, file = file_path)
+
+#         }
+
+
+  
