@@ -16,8 +16,16 @@ library(factoextra)
 library(FactoMineR)
 library(Factoshiny)
 
-theme_set(theme_minimal()) 
-
+theme_new <- function() {
+  theme_minimal() %+replace%
+    theme(axis.title = element_text(size = 14), 
+          axis.text = element_text(size = 14), 
+          title = element_text(size = 14), 
+          legend.position = "bottom", 
+          legend.title = element_blank(), 
+          legend.text = element_text(size = 14))
+}
+theme_set(theme_new())
 
 # data -----
 
@@ -171,9 +179,9 @@ ggpubr::ggarrange(
 )
 
 ## variables -----
+axes <- c(1, 2)
 fviz_mca_var(res.mca2,
              axes = axes,
-             choice = "mca.cor",
              repel = TRUE,
              ggtheme = theme_minimal())
 
@@ -182,27 +190,38 @@ fviz_mca_var(res.mca2,
 
 
 ## categories -----
-fviz_mca_var(res.mca2,
-             axes = axes,
-             repel = TRUE,
-             ggtheme = theme_minimal())
+ggarrange(
+  fviz_mca_var(res.mca2,
+               axes = axes,
+               repel = TRUE,
+               col.var = "#CC8079",
+               ggtheme = theme_new()), 
+  fviz_mca_var(res.mca2,
+               axes = axes,
+               choice = "var", 
+               repel = TRUE,
+               col.var = "#7FA8E9",
+               ggtheme = theme_new()), 
+  nrow = 2
+)
+
 
 ## quality of representation -----
 ncp <- res.mca2$call$ncp
 
 ggpubr::ggarrange(
-  plotlist = lapply(seq(1, ncp), 
+  plotlist = lapply(seq(1, 2), 
                     function(ax){
                       fviz_cos2(res.mca2, 
                                 choice = "var", 
                                 axes = ax) 
                     }), 
-  nrow = 2, ncol = 5
+  nrow = 2, ncol = 1
 )
 
 ## contribution -----
 ggpubr::ggarrange(
-  plotlist = lapply(seq(9, 10), 
+  plotlist = lapply(c(1, 2), 
                     function(ax){
                       p <- fviz_contrib(res.mca2, 
                                         choice = "var", 
@@ -212,7 +231,7 @@ ggpubr::ggarrange(
                         ggtitle(paste("Dim", ax)) +
                         theme(axis.text = element_text(size = 12))
                     }), 
-  nrow = 1, ncol = 2
+  nrow = 2, ncol = 1
 )
 
 axes <- c(9, 10)
