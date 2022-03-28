@@ -166,7 +166,7 @@ ggcoxdiagnostics(fit = cox_signif_var,
 
 
 sum <- summary(cox_signif_var) ; sum
-C <- cox_signif_var$concordance          # C-index ~ 93.15%
+C <- cox_signif_var$concordance          
 C["concordance"]
 
 ggforest(cox_signif_var, main = "", fontsize = 1.5)
@@ -215,6 +215,12 @@ c_index_te <- concordance.index(x = risk_pred_te$fit,
                   surv.time = data_test$Tenure_Months, 
                   surv.event = data_test$Churn_Value)
 c_index_te$c.index
+
+c_index_cox <- data.frame(Train = c_index_tr$c.index, 
+                          Test = c_index_te$c.index)
+
+save(c_index_cox, 
+     file = paste0(backup_path, "c_index_cox.RData"))
 
 # Final Cox model ---------------------------------------------------------
 

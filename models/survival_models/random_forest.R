@@ -78,13 +78,19 @@ plot.variable(x = rsf.best,
 
 ## Quality of estimation -----
 
-get.cindex(time = data_train$Tenure_Months,
+c_tr <- get.cindex(time = data_train$Tenure_Months,
            censoring = data_train$Churn_Value, 
            predicted = rsf.best$predicted.oob)
 
-get.cindex(time = data_train$Tenure_Months,
+c_te <- get.cindex(time = data_train$Tenure_Months,
            censoring = data_train$Churn_Value, 
            predicted = rsf.best$predicted)
+
+c_index_rsf <- data.frame(Train = c_tr, 
+                          Test = c_te)
+
+save(c_index_rsf, 
+     file = paste0(backup_path, "c_index_rsf.RData"))
 
 
 # Risk and survival prediction --------------------------------------------
