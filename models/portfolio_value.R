@@ -294,7 +294,7 @@ df_plot %>%
         axis.text.y.left = element_text(color = "grey50"))
 
 
-# Accross clusters -----------------------------------------------------------
+## Accross clusters -----------------------------------------------------------
 
 clusters <- res.hcpc$data.clust$clust
 custValues_clust <- custValues %>%
@@ -606,7 +606,7 @@ custValues %>%
 
 # NOT RUN {
           
-          chargesVar <- -.1
+          chargesVar <- -1
   
           dat <- cleaned_data %>%
             mutate(Monthly_Charges = Monthly_Charges * (1 + chargesVar))
@@ -645,17 +645,197 @@ custValues %>%
           
           stopCluster(cl)
           
-          monthly_charges_neg10pct <- do.call(rbind, results) %>%
+          monthly_charges_neg100pct <- do.call(rbind, results) %>%
             as.data.frame() %>% 
             mutate( CustomerID = lapply(custIDs,
                                         function(id){ rep(id, max(num_months)) }) %>%
                       unlist() %>%
-                      as.factor() ) ; nrow(monthly_charges_neg10pct) / max(num_months)
+                      as.factor() ) ; nrow(monthly_charges_neg100pct) / max(num_months)
           
-          file_path <- paste0(backup, "custValues/monthly_charges_neg10pct.RData") ; file_path
-          save(monthly_charges_neg10pct, file = file_path)
+          file_path <- paste0(backup, "custValues/monthly_charges_neg100pct.RData") ; file_path
+          save(monthly_charges_neg100pct, file = file_path)
 
 #         }
 
+### simulate multiple price changes -------------------------------------------------------------
+          
+dir_ <- paste0(backup, "custValues/")
+files <- list.files(path = dir_,
+                    pattern = "monthly_charges")
+for (file in files){ load(file = paste0(dir, file)) }  
 
+custValues <- rbind(custValuesref %>%
+                      mutate(chargesVar_pct = "ref"), 
+                    monthly_charges_10pct %>%
+                      mutate(chargesVar_pct = "10"),
+                    monthly_charges_30pct %>%
+                      mutate(chargesVar_pct = "30"),
+                    monthly_charges_50pct %>%
+                      mutate(chargesVar_pct = "50"),
+                    monthly_charges_70pct %>%
+                      mutate(chargesVar_pct = "70"),
+                    monthly_charges_100pct %>%
+                      mutate(chargesVar_pct = "100"),
+                    monthly_charges_neg10pct %>%
+                      mutate(chargesVar_pct = "-10"),
+                    monthly_charges_neg30pct %>%
+                      mutate(chargesVar_pct = "-30"),
+                    monthly_charges_neg50pct %>%
+                      mutate(chargesVar_pct = "-50"),
+                    monthly_charges_neg70pct %>%
+                      mutate(chargesVar_pct = "-70"))
+
+nrow(custValues) / length(files) / 72
+
+totVal_monthly_charges <- custValues %>%
+  select(c(chargesVar_pct, 
+           v)) %>%
+  group_by(chargesVar_pct) %>%
+  summarise_at(vars(starts_with("v")), 
+               sum) 
+
+totValref <- totVal_monthly_charges %>%
+  filter(chargesVar_pct == "ref") %>%
+  pull(v)
+
+totVal_monthly_charges <- totVal_monthly_charges %>%
+  mutate( diff_pct = paste(round(100 * (v - totValref) / totValref, 1), 
+                           "%") ) %>%
+  mutate(v = format(v, big.mark = ",")) %>%
+  dplyr::rename(`% Charges Variation` = chargesVar_pct, 
+         V = v, 
+         `% Value Difference` = diff_pct) ; totVal_monthly_charges
+
+save(totVal_monthly_charges, 
+     file = paste0(backup, "totVal_monthly_charges.RData"))  
+
+### add more services to cluster 2 customers -------------------------------------------------------------
+
+# NOT RUN {
+
+          clusters <- res.hcpc$data.clust$clust
+
+          dat <- cleaned_data %>%
+            mutate(cluster = clusters)
+          
+          dat[(
+            dat$cluster == 2 & 
+              dat$Internet_Service != "No"
+            ), ] <- dat[(
+              dat$cluster == 2 & 
+                dat$Internet_Service != "No"
+            ), ] %>%
+            mutate_at(vars(Online_Security:Streaming_Movies), 
+                      function(var){ "Yes" }) 
+          
+          surv_fit <- compute_survival(surv_fit = survfit(final_cox,
+                                                          newdata = dat))
+          surv_lower <- surv_fit$surv_lower ; surv <- surv_fit$surv ; surv_upper <- surv_fit$surv_upper
+          
+          num_cores <- detectCores() - 1
+          cl <- makeCluster(num_cores)
+          
+          registerDoParallel(cl)  
+          clusterExport(cl = cl,
+                        varlist = list("estimate_survival",
+                                       "compute_cust_total_value", 
+                                       "get_monthly_discount_factor", 
+                                       "process", 
+                                       "dat",
+                                       "surv",
+                                       "surv_lower", 
+                                       "surv_upper",
+                                       "custIDs", 
+                                       "a",
+                                       "num_months",  
+                                       "%>%"), 
+                        envir = environment())
+          
+          system.time(
+            results <- c(parLapply(cl,
+                                   X = custIDs,
+                                   fun = process, 
+                                   dat = dat))
+          )
+          
+          stopCluster(cl)
+          
+          clust2_with_options <- do.call(rbind, results) %>%
+            as.data.frame() %>% 
+            mutate( CustomerID = lapply(custIDs,
+                                        function(id){ rep(id, max(num_months)) }) %>%
+                      unlist() %>%
+                      as.factor() ) ; nrow(clust2_with_options) / max(num_months)
+          
+          file_path <- paste0(backup, "custValues/clust2_with_options.RData") ; file_path
+          save(clust2_with_options, file = file_path)
+
+#         }
+
+load(file = paste0(backup, "custValues/clust2_with_options.RData"))
+load(file = paste0(backup, "custvalues/custValues_clust.RData"))
+
+
+
+tab_clust2_portVal <- rbind(
+  custValues_clust %>%
+    group_by(cluster) %>%
+    summarise_at(vars(starts_with("v")), 
+                 sum) %>%
+    filter(cluster == 2), 
+  clust2_with_options %>%
+    mutate(cluster = lapply(clusters, 
+                            function(x){ rep(x, max(num_months)) }) %>%
+             unlist()) %>%
+    group_by(cluster) %>%
+    summarise_at(vars(starts_with("v")), 
+                 sum) %>%
+    filter(cluster == 2) 
+) %>%
+  select(v) %>%
+  as.data.frame()
+
+v_ref <- tab_clust2_portVal[1, "v"]
+tab_clust2_portVal <- tab_clust2_portVal %>%
+  mutate(pct_diff = 100 * (v - v_ref) / v_ref) %>%
+  rename(V = v, 
+         `% Variation` = pct_diff) %>%
+  mutate(V = format(V, big.mark = ","))
+
+rownames(tab_clust2_portVal) <- c("Reference", 
+                                  "With additional options") ; tab_clust2_portVal   
+
+save(tab_clust2_portVal,
+     file = paste0(backup, "custValues/tab_clust2_portVal.RData"))
+
+rbind(
+  custValues_clust %>%
+    mutate(cluster = lapply(clusters, 
+                            function(x){ rep(x, max(num_months)) }) %>%
+             unlist()) %>%
+    filter(cluster == 2) %>%
+    group_by(CustomerID) %>%
+    summarise_at(vars(starts_with("v")), 
+              sum) %>%
+    mutate(with_more_options = "No"), 
+  clust2_with_options %>%
+    mutate(cluster = lapply(clusters, 
+                            function(x){ rep(x, max(num_months)) }) %>%
+             unlist()) %>%
+    filter(cluster == 2) %>%
+    group_by(CustomerID) %>%
+    summarise_at(vars(starts_with("v")), 
+              sum) %>%
+    mutate(with_more_options = "Yes")
+) %>%
+  as.data.frame() %>%
+  mutate(with_more_options = as.factor(with_more_options)) %>%
+  ggplot(aes(x = v, 
+             color = with_more_options)) +
+  geom_density(size = 1.5) +
+  scale_color_brewer(palette = "Set2") +
+  labs(x = "CLRV", 
+       y = "Density") +
+  guides(color = guide_legend(title = "Additional options")) +
+  theme(legend.title = element_text(size = 14))
   
