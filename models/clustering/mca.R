@@ -190,21 +190,12 @@ fviz_mca_var(res.mca2,
 
 
 ## categories -----
-ggarrange(
-  fviz_mca_var(res.mca2,
-               axes = axes,
-               repel = TRUE,
-               col.var = "#CC8079",
-               ggtheme = theme_new()), 
-  fviz_mca_var(res.mca2,
-               axes = axes,
-               choice = "var", 
-               repel = TRUE,
-               col.var = "#7FA8E9",
-               ggtheme = theme_new()), 
-  nrow = 2
-)
-
+fviz_mca_var(res.mca2,
+             axes = axes,
+             repel = TRUE,
+             col.var = "#CC8079",
+             ggtheme = theme_new()) +
+  ggtitle("")
 
 ## quality of representation -----
 ncp <- res.mca2$call$ncp

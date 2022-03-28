@@ -17,7 +17,16 @@ library(FactoMineR)
 library(factoextra)
 library(ggdendro)
 
-theme_set(theme_minimal())
+theme_new <- function() {
+  theme_minimal() %+replace%
+    theme(axis.title = element_text(size = 14), 
+          axis.text = element_text(size = 14), 
+          title = element_text(size = 14), 
+          legend.position = "bottom", 
+          legend.title = element_blank(), 
+          legend.text = element_text(size = 14))
+}
+theme_set(theme_new())
 
 # Apply HCP with k-means consolidation -----
 
@@ -205,12 +214,14 @@ barplot_by_cluster <- function(var){
   desc.dat %>%
     select(c(var, cluster)) %>%
     group_by_(var, "cluster") %>%
-    summarise(count = n()) %>% 
+    dplyr::summarise(count = n()) %>% 
+    group_by_(var) %>%
     mutate(perc = count/sum(count)) %>%
     ggplot(aes_string(x = var, 
-                     y = "perc",
-                     fill = "cluster")) +
-    geom_bar(stat = "identity", 
+                      y = "perc",
+                      fill = "cluster")) +
+    geom_bar(position="fill", 
+             stat="identity",
              alpha = .6) +
     coord_flip() +
     scale_y_continuous(labels = scales::percent) +
@@ -218,12 +229,7 @@ barplot_by_cluster <- function(var){
     scale_color_jco() +
     labs(x = "", 
          y = "", 
-         title = var) +
-    theme(legend.position = "bottom", 
-          title = element_text(size = 14, face = "plain"), 
-          axis.text = element_text(size = 14), 
-          legend.title = element_blank(), 
-          legend.text = element_text(size = 14))
+         title = var) 
 }
 
 cat_vars <- cleaned_data %>%
@@ -233,6 +239,9 @@ cat_vars <- cleaned_data %>%
             "Gender",
             "Churn_Reason")) %>%
   colnames() 
+
+barplot_by_cluster(var = "Churn_Label") +
+  ggtitle("")
 
 ggpubr::ggarrange(plotlist = lapply(list("Senior_Citizen", 
                                          "Dependents"), 
