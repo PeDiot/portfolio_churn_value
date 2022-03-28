@@ -140,41 +140,9 @@ knitr::include_graphics(path = "./imgs/mca_contrib_910.png")
 
 ### Cluster visualisation {-}
 
-```{r clusterplots, fig.cap="Cluster visualisation onto MCA axes"}
+```{r clusterplots, fig.cap="Cluster visualisation onto MCA axes", out.width = "200%"}
 knitr::include_graphics(path = "./imgs/cluster_plots.png")
 ```
-
-### Parangons {-}
-
-```{r}
-load(file = paste0(backup_path, "clustering/parangons_dat.Rdata"))
-```
-
-<center><b>Data related to cluster 1's parangons</b></center>
-
-```{r para1dat}
-para1_dat %>%
-  mykable(title = "") %>%
-  scroll_box(width = "100%", box_css = "border: 0px;")
-```
-
-<center><b>Data related to cluster 2's parangons</b></center>
-
-```{r para2dat}
-para2_dat %>%
-  mykable(title = "") %>%
-  scroll_box(width = "100%", box_css = "border: 0px;")
-```
-
-<center><b>Data related to cluster 3's parangons</b></center>
-
-```{r para3dat}
-para3_dat %>%
-  mykable(title = "") %>%
-  scroll_box(width = "100%", box_css = "border: 0px;")
-```
-
-
 
 
 
