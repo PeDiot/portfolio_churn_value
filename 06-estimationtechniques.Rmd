@@ -4,6 +4,11 @@ editor_options:
   chunk_output_type: console
 ---
 
+```{r}
+# setwd("C:/Users/pemma/OneDrive - Université de Tours/Mécen/M2/S2/04 - 3R/portfolio_churn_value")
+```
+
+
 ```{r echo=FALSE}
 knitr::opts_chunk$set(
   fig.align = "center", 
@@ -220,7 +225,7 @@ Concordance index $c$ is another metric to assess the performance of models whic
 
 #### Marginal effects {-}
 
-In the Cox model, the relative hazard between two observations is assumed to be constant over time. As a consequence, the relative hazard becomes $\exp \hat{\beta}$ for both dummy and continuous variables. For instance regarding figure \@ref(fig:coxmarginaleffects), the relative hazard ratio between customers with a two-year contract and those with a month-to-month contract is 0.046, meaning that the latter group is 22 times more prone to churn than the former. Also, month-to-month clients are about 5 times more likely to churn than customers enrolled in one-year plan.
+In the Cox model, the relative hazard between two observations is assumed to be constant over time. As a consequence, the relative hazard becomes $\exp \hat{\beta}$ for both dummy and continuous variables. For instance regarding figure \@ref(fig:coxmarginaleffects), the relative hazard ratio between customers with a two-year contract and those with a month-to-month contract is 0.046, meaning that the latter group is 22 times more prone to churn than the former. Also, month-to-month clients are about 5 times more likely to churn than customers enrolled in one-year plan. When analysing the relative hazard ratios related to the payment method, it comes that clients who pay by electronic or mailed check are two times riskier to churn than those who pay by bank transfer. Furthermore, being enrolled in a plan with additional services like `Online_Security`, `Online_Backup` or `Tech_Support` tends to decrease the estimated churn risk. As for the effect of the `Internet_Service` covariate on the risk of attrition, it seems to be mitigated since clients who have a fiber optic internet connection are more than twice as likely to churn as those using a DSL internet connection. 
 
 ```{r coxmarginaleffects, fig.cap="Marginal effects obtained with the Cox PH model"}
 knitr::include_graphics(path = "./imgs/cox_ggforest.png")
@@ -236,7 +241,25 @@ knitr::include_graphics(path = "./imgs/cox_data_viz.png")
 knitr::include_graphics(path = "./imgs/churn_surv_clust.png")
 ```
 
-### Model comparison
+### Other models
+
+```{r}
+load(file = paste0(backup_path, "survival/c_index_cox.Rdata"))
+load(file = paste0(backup_path, "survival/c_index_rsf.Rdata"))
+```
+
+```{r}
+tab <- rbind(c_index_cox, 
+             c_index_rsf) %>%
+  mutate(Train = 100*Train, 
+         Test = 100*Test)
+rownames(tab) <- c("Cox", "RSF")
+tab %>% 
+  mykable(title = "Concordance index (%) obtained with Cox model and Random Survival Forest (RSF)", 
+          digits = 3)
+```
+
+
 
 ## Portfolio value estimation
 
