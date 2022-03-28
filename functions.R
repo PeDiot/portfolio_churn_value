@@ -73,7 +73,7 @@ plot_km <- function(
   return (surv_plot)
 }
 
-# --- CLTV hist/density plot depending on treatement var ---
+# --- Hist/density plot depending on treatement var ---
 
 hist_dens_plot <- function(
   data, 
@@ -106,6 +106,7 @@ hist_dens_plot <- function(
   
 }
 
+
 dens_plot <- function(
   data, 
   treatment, 
@@ -117,18 +118,41 @@ dens_plot <- function(
     ggplot() +
     geom_density(
       aes_string(x = target,
-          fill = treatment), 
-      alpha = .3
+                 color = treatment), 
+      size = 1.3
     ) +
     scale_color_jco() +
     scale_fill_jco() +
     ylab("Density") +
     theme_minimal(base_size = base_size) +
-    theme(legend.position = "top") 
+    theme(legend.position = "bottom") 
   
 }
 
-# --- Chi2 test table ---
+hist_plot <- function(
+  data, 
+  treatment, 
+  target = "CLTV",
+  base_size = 10
+) {
+  
+  data %>%
+    ggplot(aes_string(x = target)) +
+    geom_histogram(
+      aes_string(fill = treatment), 
+      color = "white", 
+      bins = 30, 
+      alpha = .5,
+    ) +
+    scale_color_jco() +
+    scale_fill_jco() +
+    scale_x_continuous(labels = scales::comma) +
+    ylab("Density") +
+    theme_minimal(base_size = base_size) +
+    theme(legend.position = "top") +
+    facet_wrap(as.formula(paste("~", treatment)))
+  
+}# --- Chi2 test table ---
 
 chi_2_test_tab <- function(data, treatment){
   
@@ -150,9 +174,9 @@ chi_2_test_tab <- function(data, treatment){
 
 # --- ANOVA test table ---
 
-aov_test_tab <- function(data, treatment){
+aov_test_tab <- function(data, target = "CLTV", treatment){
   
-  formula <- formula( paste("CLTV ~", treatment) )
+  formula <- formula( paste(target, "~", treatment) )
   anova <- aov(formula = formula, data = cleaned_data)
   sum_anova <- unlist(summary(anova))
   tab <- data.frame(
