@@ -231,11 +231,15 @@ In the Cox model, the relative hazard between two observations is assumed to be 
 knitr::include_graphics(path = "./imgs/cox_ggforest.png")
 ```
 
-#### Estimating churn hazard {-}
+#### Estimation results {-}
+
+Semi-parametric models aims at estimating the instantaneous hazard function given a baseline hazard and a set of covariates. The model outputs a risk prediction for each individual with a confidence interval. Then, the survival and cumulative hazard functions can be retrieved as explained in chapter \@ref(duration). When going deeper into the functions depicted in figure \@ref(fig:coxdataviz), it can be noticed some inconsistencies between the estimated churn hazard cumulative hazard functions. Given the cumulative churn hazard increases faster when the number of months is high and given the instantaneous hazard is supposed to be the cumulative hazard function's slope, the estimated churn hazard's shape should be convex. Thus, the Cox model does not manage to properly estimate the risk of churn. 
 
 ```{r coxdataviz, fig.cap="Aggregated churn hazard, survival and cumulative hazard functions estimated by Cox model"}
 knitr::include_graphics(path = "./imgs/cox_data_viz.png")
 ```
+
+Although the fitted model is not flawless, it can be interested to study the estimation differences between the 3 customer segments identified in the previous section. Looking at figure \@ref(fig:coxclust), one can conclude that *Gold* (cluster 2) clients are more prone to churn than others. The aggregated risk of attrition is indeed higher to such an extent that the cumulative churn hazard is exploding when the number of months is greater than 60. This being said, an efficient portfolio management would be to find strategies to reduce *Gold* customers' churn and increase their duration in the portfolio. 
 
 ```{r coxclust, fig.cap="Aggregated churn hazard, survival and cumulative hazard functions for each cluster"}
 knitr::include_graphics(path = "./imgs/churn_surv_clust.png")
