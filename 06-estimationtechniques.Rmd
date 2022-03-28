@@ -117,30 +117,72 @@ The key parameter to optimize when applying clustering methods is the number of 
 knitr::include_graphics(path = "./imgs/btw_inertia.png")
 ```
 
-#### Cluster visualisation {-}
+Once the 3 groups identified by the clustering algorithm, one can determine customer repartition within those groups. Looking at table \@ref(tab:clustRepartition), cluster 2 represents the largest share of clients. This result is illustrated on figure \@ref(fig:clusterplot).
 
-```{r}
+```{r clustRepartition}
 load(file = paste0(backup_path, "clustering/cluster_prop.RData"))
 clust_prop %>%
-  mykable(title = "Customer repartition across the 3 clusters")
+  mykable(title = "Customer repartition within the 3 clusters")
 ```
 
+#### Cluster visualisation {-}
+
+When performing hierarchical clustering on principal components, visualizing cluster repartition onto MCA axes is relevant to have a first idea on how each cluster if different from the others. Figure \@ref(fig:clusterplot) indicates that the three clusters are well separated in the $(F_1 ; F_2)$ plan. Cluster 1 is more concentrated than the others and take lower values onto dimension 1. The second group spreads over axis 1 and takes lower values on axis 2. Finally, cluster 3's position shows that its customers are characterized by categories which take positive values on both dimensions 1 and 2.
 
 ```{r clusterplot, fig.cap="Cluster visualisation onto the 2 first MCA axes"}
 knitr::include_graphics(path = "./imgs/cluster_plot.png")
 ```
 
-See figure \@ref(fig:clusterplots) in the appendix for cluster visualisations onto the other MCA principal axes.
+In the appendix, figure \@ref(fig:clusterplots) aims at visualizing clusters onto the other MCA principal components. Note that none of theses axes manages to separate the three clusters. This may be due to the low amount of variance each of these axes carries. 
 
 #### Cluster description {-}
 
-```{r monthlychargesclust, fig.cap="Monthly charges repartition across clusters"}
+Once the 3 customer segments are identified on the MCA dimensions, it seems to be interesting to describe them according to the original features. To that end, the repartition of qualitative variables' categories is depicted on the following figure. Comparing figures \@ref(fig:clusterplot) and \@ref(fig:mcaplot), one can derive the following table in order to have a more precise idea on each segment. 
+
+```{r}
+data.frame(Cluster = c(1, 2, 3), 
+           cat = c("Mailed_check, Internet_Service_No", 
+                                           "Month-to-month, Electronic check, Tech_Support_No", 
+                                           "Two year, Credit card, Tech_Support_Yes")) %>%
+  rename(`Representative Categories` = cat) %>% 
+  mykable(title = "The most representative categories for each cluster")
+```
+
+The first segment may be made up of customers having subscribed to minimum plans whith no internet service whereas segment 3 tends to represent clients with a large variety of services and long-term contracts. On the opposite, cluster 2 clients are enrolled in short-term plans with internet service but not technical options.
+
+
+```{r mcaplot, fig.cap="MCA - Categories plot onto the two first axes"}
+knitr::include_graphics(path = "./imgs/mca_plots.png")
+```
+
+Figure \@ref(fig:monthlychargesclust) depicts the differences in monthly charges paid by each customer segment. It can be observed that most of cluster 1 clients are enrolled in cheap subscriptions. On the contrary, the charges paid by the second and third clusters are higher and less homogeneous. Note that the median price is the same among these two groups.
+
+```{r monthlychargesclust, fig.cap="Monthly charges repartition across clusters", out.width="70%", out.height="60%"}
 knitr::include_graphics(path = "./imgs/monthly_charges_clust.png")
 ```
 
-```{r catvarsclust, fig.cap="Customer categorical features based on cluster"}
-knitr::include_graphics(path = "./imgs/cat_vars_clust.png")
+Since one of the study's purpose is to model customer churn, it is important to compare the churn rate across the 3 groups. Here, the striking point is that cluster 2 clients account for a large proportion of churners. Indeed, more than 75% of the clients having left the portfolio come from the second group. It can also be noted that cluster 1 and 3 are composed of more loyal customers as more than 70% of clients who did not churn are from those 2 groups.  
+
+```{r catvarsclust, fig.cap="Churn repartition per cluster",out.width="60%", out.height="60%"}
+knitr::include_graphics(path = "./imgs/churn_cluster_barplot.png")
 ```
+
+#### Concluding remarks on portfolio segmentation {-}
+
+With the aim of divide the portfolio into multiple groups based on categorical features, hierarchical clustering on principal components has led to identify three customer segments which can be broadly described as shown in the following table. 
+
+```{r}
+data.frame(Cluster = c(1, 2, 3), 
+           Loyalty = c("High", "Low", "High"), 
+           Value = c("Low", "High", "High"), 
+           name = c("Silver", "Gold", "Platinum")) %>%
+  rename(`Segment name` = name) %>% 
+  mykable(title = "Portfolio segmentation summary") %>%
+   column_spec(4, italic = T) %>%
+    row_spec(2, bold = T)
+```
+
+*Gold* customers are valuable to the firm but are not loyal, making them the target segment. The objective would be to encourage them to stay in the portfolio longer.
 
 ## Churn analysis 
 
@@ -193,7 +235,6 @@ knitr::include_graphics(path = "./imgs/cox_data_viz.png")
 ```{r coxclust, fig.cap="Aggregated churn hazard, survival and cumulative hazard functions for each cluster"}
 knitr::include_graphics(path = "./imgs/churn_surv_clust.png")
 ```
-
 
 ### Model comparison
 
@@ -313,7 +354,7 @@ knitr::include_graphics(path = "./imgs/clrv_evolution_per_cluster.png")
 #### Influence of the discount rate on CLRV {-}
 
 ```{r portValDiscountTab}
-load(file = paste0(backup_path, "portVal_discount_rate.RData"))
+load(file = paste0(backup_path, "custValues/portVal_discount_rate.RData"))
 portVal_discount_rate %>%
   column_to_rownames(var = "discount") %>%
   rename(`V Lower` = v_lower, 
@@ -347,6 +388,22 @@ knitr::include_graphics(path = "./imgs/clrv_month_to_month.png")
 ```
 
 ```{r clrvmonthtomonthEvol, fig.cap="Portfolio estimated value (Customer Raw Equity) depending on the proportion of 'month-to-month' contracts"}
-knitr::include_graphics(path = "./imgs/portVal_month_to_month_evol.png")
+knitr::include_graphics(path = "./imgs/portVal_month_to_month.png")
+```
+
+#### How to increase Customer Lifetime Raw Value? {-}
+
+```{r}
+load(file = paste0(backup_path, "custValues/tab_clust2_portVal.RData"))
+```
+
+```{r}
+tab_clust2_portVal %>%
+  dplyr::rename(`Portfolio Value` = V) %>% 
+  mykable(title = "Increase in portfolio value after having provided cluster 2 clients with additional services")
+```
+
+```{r clust2CLRV, fig.cap="Increase in cluster 2 clients' CLRV after after having provided them with additional services"}
+knitr::include_graphics(path = "./imgs/clust2_clrv.png")
 ```
 
