@@ -6,7 +6,7 @@
 ]{book}
 \title{Portfolio, Churn \& Customer Value}
 \author{Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer}
-\date{2022-03-19}
+\date{2022-03-22}
 
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
@@ -1074,11 +1074,11 @@ Table \ref{tab:selectedfeatures} shows the selected variables for 5 random obser
 \toprule
 Senior\_Citizen & Dependents & Phone\_Service & Internet\_Service & Online\_Security & Online\_Backup & Tech\_Support & Contract & Payment\_Method & Monthly\_Charges\\
 \midrule
-\cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Two year} & \cellcolor{gray!6}{Bank transfer} & \cellcolor{gray!6}{19.85}\\
-No & No & Yes & DSL & No & No & No & One year & Bank transfer & 75.70\\
-\cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{DSL} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{Electronic check} & \cellcolor{gray!6}{49.45}\\
-No & Yes & Yes & No & No & No & No & Two year & Credit card & 25.15\\
-\cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Fiber optic} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{Electronic check} & \cellcolor{gray!6}{105.05}\\
+\cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{Mailed check} & \cellcolor{gray!6}{20.50}\\
+No & Yes & Yes & No & No & No & No & One year & Bank transfer & 20.60\\
+\cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Two year} & \cellcolor{gray!6}{Bank transfer} & \cellcolor{gray!6}{26.50}\\
+No & No & Yes & Fiber optic & No & No & Yes & Month-to-month & Electronic check & 106.35\\
+\cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Fiber optic} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Two year} & \cellcolor{gray!6}{Credit card} & \cellcolor{gray!6}{69.05}\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1114,11 +1114,11 @@ Now the 10 continuous axes are identified, the next step consists in retrieving 
 \toprule
 CustomerID & Dim 1 & Dim 2 & Dim 3 & Dim 4 & Dim 5 & Dim 6 & Dim 7 & Dim 8 & Dim 9 & Dim 10\\
 \midrule
-\cellcolor{gray!6}{4569} & \cellcolor{gray!6}{0.16} & \cellcolor{gray!6}{0.34} & \cellcolor{gray!6}{-0.30} & \cellcolor{gray!6}{0.55} & \cellcolor{gray!6}{-0.36} & \cellcolor{gray!6}{0.06} & \cellcolor{gray!6}{0.18} & \cellcolor{gray!6}{-0.42} & \cellcolor{gray!6}{0.07} & \cellcolor{gray!6}{0.39}\\
-3658 & -0.22 & -0.84 & -0.04 & -0.06 & -0.05 & 0.36 & 0.12 & 0.26 & 0.04 & 0.19\\
-\cellcolor{gray!6}{3594} & \cellcolor{gray!6}{0.37} & \cellcolor{gray!6}{0.25} & \cellcolor{gray!6}{0.65} & \cellcolor{gray!6}{-0.22} & \cellcolor{gray!6}{-0.49} & \cellcolor{gray!6}{-0.14} & \cellcolor{gray!6}{0.35} & \cellcolor{gray!6}{0.07} & \cellcolor{gray!6}{0.19} & \cellcolor{gray!6}{-0.22}\\
-3435 & 0.44 & 0.76 & -0.09 & -0.24 & 0.37 & 0.36 & -0.37 & -0.20 & -0.36 & 0.26\\
-\cellcolor{gray!6}{188} & \cellcolor{gray!6}{-0.30} & \cellcolor{gray!6}{-0.61} & \cellcolor{gray!6}{-0.10} & \cellcolor{gray!6}{-0.15} & \cellcolor{gray!6}{-0.03} & \cellcolor{gray!6}{-0.09} & \cellcolor{gray!6}{0.16} & \cellcolor{gray!6}{-0.23} & \cellcolor{gray!6}{-0.09} & \cellcolor{gray!6}{-0.07}\\
+\cellcolor{gray!6}{6466} & \cellcolor{gray!6}{-0.13} & \cellcolor{gray!6}{0.62} & \cellcolor{gray!6}{-0.30} & \cellcolor{gray!6}{-0.19} & \cellcolor{gray!6}{-0.05} & \cellcolor{gray!6}{0.08} & \cellcolor{gray!6}{-0.66} & \cellcolor{gray!6}{-0.01} & \cellcolor{gray!6}{0.09} & \cellcolor{gray!6}{0.11}\\
+6511 & 0.34 & 0.21 & -0.14 & 0.20 & 0.08 & -0.65 & 0.25 & 0.07 & -0.07 & 0.57\\
+\cellcolor{gray!6}{5666} & \cellcolor{gray!6}{0.37} & \cellcolor{gray!6}{0.93} & \cellcolor{gray!6}{0.00} & \cellcolor{gray!6}{-0.49} & \cellcolor{gray!6}{0.41} & \cellcolor{gray!6}{0.13} & \cellcolor{gray!6}{0.26} & \cellcolor{gray!6}{0.22} & \cellcolor{gray!6}{-0.19} & \cellcolor{gray!6}{-0.06}\\
+3519 & 0.44 & -0.86 & 0.16 & -0.03 & -0.02 & 0.14 & -0.03 & 0.39 & 0.14 & -0.14\\
+\cellcolor{gray!6}{4943} & \cellcolor{gray!6}{-0.70} & \cellcolor{gray!6}{0.42} & \cellcolor{gray!6}{0.42} & \cellcolor{gray!6}{0.42} & \cellcolor{gray!6}{0.52} & \cellcolor{gray!6}{-0.14} & \cellcolor{gray!6}{0.40} & \cellcolor{gray!6}{0.13} & \cellcolor{gray!6}{-0.24} & \cellcolor{gray!6}{0.14}\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1210,11 +1210,11 @@ Before presenting the estimation results, it seems important to recall that \tex
 \toprule
 CustomerID & Tenure\_Months & Churn\_Value\\
 \midrule
-\cellcolor{gray!6}{3542} & \cellcolor{gray!6}{44} & \cellcolor{gray!6}{0}\\
-4832 & 68 & 0\\
-\cellcolor{gray!6}{954} & \cellcolor{gray!6}{29} & \cellcolor{gray!6}{1}\\
-3904 & 26 & 0\\
-\cellcolor{gray!6}{4847} & \cellcolor{gray!6}{58} & \cellcolor{gray!6}{0}\\
+\cellcolor{gray!6}{281} & \cellcolor{gray!6}{2} & \cellcolor{gray!6}{1}\\
+5118 & 71 & 0\\
+\cellcolor{gray!6}{1929} & \cellcolor{gray!6}{30} & \cellcolor{gray!6}{0}\\
+1897 & 70 & 0\\
+\cellcolor{gray!6}{1978} & \cellcolor{gray!6}{64} & \cellcolor{gray!6}{0}\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1459,8 +1459,35 @@ Cluster 2 & 323.99 & 1194.59 & 1862.16 & 2134.37 & 2886.02 & 6009.78\\
 
 }
 
-\caption{Customer Lifetime Raw Value depending on the proportion of 'month-to-month' contracts}\label{fig:clrvmonthtomonth}
+\caption{CLRV distribution depending on the proportion of 'month-to-month' contracts}\label{fig:clrvmonthtomonth}
 \end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics[width=12.5in]{./imgs/portVal_month_to_month} 
+
+}
+
+\caption{Portfolio estimated value (Customer Raw Equity) depending on the proportion of 'month-to-month' contracts}\label{fig:clrvmonthtomonthEvol}
+\end{figure}
+
+\hypertarget{how-to-increase-clrv}{%
+\subsubsection*{How to increase CLRV?}\label{how-to-increase-clrv}}
+\addcontentsline{toc}{subsubsection}{How to increase CLRV?}
+
+\begin{table}[H]
+
+\caption{\label{tab:unnamed-chunk-34}Increase in portfolio value after having provided cluster 2 clients with additional services}
+\centering
+\begin{tabular}[t]{llr}
+\toprule
+  & Portfolio Value & \% Variation\\
+\midrule
+\cellcolor{gray!6}{Reference} & \cellcolor{gray!6}{6,211,027} & \cellcolor{gray!6}{0.00}\\
+With additional options & 9,218,937 & 48.43\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \hypertarget{appendix}{%
 \chapter*{Appendix}\label{appendix}}

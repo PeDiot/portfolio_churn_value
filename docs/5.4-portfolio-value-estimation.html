@@ -24,7 +24,7 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2022-03-19" />
+<meta name="date" content="2022-03-28" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -196,7 +196,6 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="hierarchical-clustering-on-principal-components-1.html"><a href="hierarchical-clustering-on-principal-components-1.html"><i class="fa fa-check"></i>Hierarchical clustering on principal components</a>
 <ul>
 <li class="chapter" data-level="" data-path="hierarchical-clustering-on-principal-components-1.html"><a href="hierarchical-clustering-on-principal-components-1.html#cluster-visualisation-1"><i class="fa fa-check"></i>Cluster visualisation</a></li>
-<li class="chapter" data-level="" data-path="hierarchical-clustering-on-principal-components-1.html"><a href="hierarchical-clustering-on-principal-components-1.html#parangons"><i class="fa fa-check"></i>Parangons</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
@@ -229,7 +228,7 @@ div.csl-indent {
 <h3><span class="header-section-number">5.4.2</span> Customer Lifetime Raw Value</h3>
 <table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:custValuesSum">Table 5.6: </span>Portfolio estimated value with 95<span class="math inline">\(\%\)</span> confidence interval
+<span id="tab:custValuesSum">Table 5.8: </span>Portfolio estimated value with 95<span class="math inline">\(\%\)</span> confidence interval
 </caption>
 <thead>
 <tr>
@@ -264,7 +263,7 @@ V upper
 </table>
 <table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:custValuesStats">Table 5.7: </span>CLRV Statistical summary
+<span id="tab:custValuesStats">Table 5.9: </span>CLRV Statistical summary
 </caption>
 <thead>
 <tr>
@@ -317,13 +316,13 @@ Max.
 </table>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:clrvDens"></span>
 <p class="caption">
-Figure 5.9: Distribution of Customer Lifetime Raw Value
+Figure 5.10: Distribution of Customer Lifetime Raw Value
 </p>
 <img src="imgs/clrv_density.png" alt="Distribution of Customer Lifetime Raw Value" width="450" />
 </div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:clrvEvolution"></span>
 <p class="caption">
-Figure 5.10: Customer Lifetime Raw Value evolution based on number of months in the portfolio
+Figure 5.11: Customer Lifetime Raw Value evolution based on number of months in the portfolio
 </p>
 <img src="imgs/clrv_evolution.png" alt="Customer Lifetime Raw Value evolution based on number of months in the portfolio" width="450" />
 </div>
@@ -332,7 +331,7 @@ Figure 5.10: Customer Lifetime Raw Value evolution based on number of months in 
 <h3><span class="header-section-number">5.4.3</span> Cluster contribution to the portfolio value</h3>
 <table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:totValclust">Table 5.8: </span>Total CLRV per cluster
+<span id="tab:totValclust">Table 5.10: </span>Total CLRV per cluster
 </caption>
 <thead>
 <tr>
@@ -409,7 +408,7 @@ V upper
 </table>
 <table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:custValuesclust">Table 5.9: </span>CLRV statistical summary for each customer segment
+<span id="tab:custValuesclust">Table 5.11: </span>CLRV statistical summary for each customer segment
 </caption>
 <thead>
 <tr>
@@ -509,24 +508,24 @@ Cluster 3
 </table>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:clrvDensClust"></span>
 <p class="caption">
-Figure 5.11: Distribution of Customer Lifetime Raw Value per cluster
+Figure 5.12: Distribution of Customer Lifetime Raw Value per cluster
 </p>
 <img src="imgs/clrv_density_per_cluster.png" alt="Distribution of Customer Lifetime Raw Value per cluster" width="450" />
 </div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:clrvEvolutionClust"></span>
 <p class="caption">
-Figure 5.12: Customer Lifetime Raw Value evolution per cluster based on number of months in the portfolio
+Figure 5.13: Customer Lifetime Raw Value evolution per cluster based on number of months in the portfolio
 </p>
 <img src="imgs/clrv_evolution_per_cluster.png" alt="Customer Lifetime Raw Value evolution per cluster based on number of months in the portfolio" width="450" />
 </div>
 </div>
 <div id="simulations" class="section level3" number="5.4.4">
 <h3><span class="header-section-number">5.4.4</span> Simulations</h3>
-<div id="influence-of-the-discount-rate-on-clrv" class="section level4" number="5.4.4.1">
-<h4><span class="header-section-number">5.4.4.1</span> Influence of the discount rate on CLRV</h4>
+<div id="influence-of-the-discount-rate-on-clrv" class="section level4 unnumbered">
+<h4>Influence of the discount rate on CLRV</h4>
 <table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:portValDiscountTab">Table 5.10: </span>Portfolio value depending on discount rate
+<span id="tab:portValDiscountTab">Table 5.12: </span>Portfolio value depending on discount rate
 </caption>
 <thead>
 <tr>
@@ -591,22 +590,186 @@ V upper
 8%
 </td>
 <td style="text-align:left;">
-15,697,334
+17,604,144
 </td>
 <td style="text-align:left;">
-16,078,822
+18,270,000
 </td>
 <td style="text-align:left;">
-16,562,344
+19,031,648
 </td>
 </tr>
 </tbody>
 </table>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:clrvDensDiscount"></span>
 <p class="caption">
-Figure 5.13: Customer Lifetime Raw Value depending on discount rate
+Figure 5.14: Customer Lifetime Raw Value distribution depending on discount rate
 </p>
-<img src="imgs/clrv_discount_rate.png" alt="Customer Lifetime Raw Value depending on discount rate" width="450" />
+<img src="imgs/clrv_dens_discount_rate.png" alt="Customer Lifetime Raw Value distribution depending on discount rate" width="450" />
+</div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:clrvEvolDiscount"></span>
+<p class="caption">
+Figure 5.15: Customer Lifetime Raw Value evolution depending on discount rate
+</p>
+<img src="imgs/clrv_evolution_discount.png" alt="Customer Lifetime Raw Value evolution depending on discount rate" width="450" />
+</div>
+</div>
+<div id="influence-the-contract-type-on-clrv" class="section level4 unnumbered">
+<h4>Influence the contract type on CLRV</h4>
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-33">Table 5.13: </span>Portfolio estimated value and 95% confidence interval depending on proportion of ‘month-to-month’ contracts
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+% ‘month-to-month’ contracts
+</th>
+<th style="text-align:left;">
+V lower
+</th>
+<th style="text-align:left;">
+V
+</th>
+<th style="text-align:left;">
+V upper
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+10%
+</td>
+<td style="text-align:left;">
+22,526,500
+</td>
+<td style="text-align:left;">
+23,009,290
+</td>
+<td style="text-align:left;">
+23,535,331
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+30%
+</td>
+<td style="text-align:left;">
+24,289,738
+</td>
+<td style="text-align:left;">
+25,001,468
+</td>
+<td style="text-align:left;">
+25,801,858
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+70%
+</td>
+<td style="text-align:left;">
+19,763,605
+</td>
+<td style="text-align:left;">
+20,706,782
+</td>
+<td style="text-align:left;">
+21,796,005
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+90%
+</td>
+<td style="text-align:left;">
+18,266,063
+</td>
+<td style="text-align:left;">
+19,369,938
+</td>
+<td style="text-align:left;">
+20,646,166
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+55.1% (reference)
+</td>
+<td style="text-align:left;">
+17,604,144
+</td>
+<td style="text-align:left;">
+18,270,000
+</td>
+<td style="text-align:left;">
+19,031,648
+</td>
+</tr>
+</tbody>
+</table>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:clrvmonthtomonth"></span>
+<p class="caption">
+Figure 5.16: CLRV distribution depending on the proportion of ‘month-to-month’ contracts
+</p>
+<img src="imgs/clrv_month_to_month.png" alt="CLRV distribution depending on the proportion of 'month-to-month' contracts" width="500" />
+</div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:clrvmonthtomonthEvol"></span>
+<p class="caption">
+Figure 5.17: Portfolio estimated value (Customer Raw Equity) depending on the proportion of ‘month-to-month’ contracts
+</p>
+<img src="imgs/portVal_month_to_month.png" alt="Portfolio estimated value (Customer Raw Equity) depending on the proportion of 'month-to-month' contracts" width="450" />
+</div>
+</div>
+<div id="how-to-increase-customer-lifetime-raw-value" class="section level4 unnumbered">
+<h4>How to increase Customer Lifetime Raw Value?</h4>
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-35">Table 5.14: </span>Increase in portfolio value after having provided cluster 2 clients with additional services
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+Portfolio Value
+</th>
+<th style="text-align:right;">
+% Variation
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Reference
+</td>
+<td style="text-align:left;">
+6,211,027
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+With additional options
+</td>
+<td style="text-align:left;">
+9,218,937
+</td>
+<td style="text-align:right;">
+48.43
+</td>
+</tr>
+</tbody>
+</table>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:clust2CLRV"></span>
+<p class="caption">
+Figure 5.18: Increase in cluster 2 clients’ CLRV after after having provided them with additional services
+</p>
+<img src="imgs/clust2_clrv.png" alt="Increase in cluster 2 clients' CLRV after after having provided them with additional services" width="450" />
 </div>
 
 </div>

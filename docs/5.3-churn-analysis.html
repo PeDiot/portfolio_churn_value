@@ -24,7 +24,7 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2022-03-19" />
+<meta name="date" content="2022-03-28" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -196,7 +196,6 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="hierarchical-clustering-on-principal-components-1.html"><a href="hierarchical-clustering-on-principal-components-1.html"><i class="fa fa-check"></i>Hierarchical clustering on principal components</a>
 <ul>
 <li class="chapter" data-level="" data-path="hierarchical-clustering-on-principal-components-1.html"><a href="hierarchical-clustering-on-principal-components-1.html#cluster-visualisation-1"><i class="fa fa-check"></i>Cluster visualisation</a></li>
-<li class="chapter" data-level="" data-path="hierarchical-clustering-on-principal-components-1.html"><a href="hierarchical-clustering-on-principal-components-1.html#parangons"><i class="fa fa-check"></i>Parangons</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
@@ -226,7 +225,7 @@ div.csl-indent {
 <p>Before presenting the estimation results, it seems important to recall that <code>Tenure_Months</code> and <code>Churn_Value</code> can be seen as a pair of time and event variables used as target in survival models.</p>
 <table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:survtarget">Table 5.4: </span>Time and event variables for survival models
+<span id="tab:survtarget">Table 5.6: </span>Time and event variables for survival models
 </caption>
 <thead>
 <tr>
@@ -244,10 +243,10 @@ Churn_Value
 <tbody>
 <tr>
 <td style="text-align:right;">
-5821
+3862
 </td>
 <td style="text-align:right;">
-66
+1
 </td>
 <td style="text-align:right;">
 0
@@ -255,10 +254,10 @@ Churn_Value
 </tr>
 <tr>
 <td style="text-align:right;">
-1281
+300
 </td>
 <td style="text-align:right;">
-4
+13
 </td>
 <td style="text-align:right;">
 1
@@ -266,10 +265,21 @@ Churn_Value
 </tr>
 <tr>
 <td style="text-align:right;">
-2968
+1671
 </td>
 <td style="text-align:right;">
-64
+30
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6705
+</td>
+<td style="text-align:right;">
+43
 </td>
 <td style="text-align:right;">
 0
@@ -277,21 +287,10 @@ Churn_Value
 </tr>
 <tr>
 <td style="text-align:right;">
-5783
+3702
 </td>
 <td style="text-align:right;">
-70
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3508
-</td>
-<td style="text-align:right;">
-36
+12
 </td>
 <td style="text-align:right;">
 0
@@ -304,10 +303,10 @@ Churn_Value
 <p>When it comes to choose an estimation method on survival data, the Cox PH model appears to be an interesting first choice. As explained in chapter <a href="3-duration.html#duration">3</a>, this semi-parametric model makes no assumption regarding the nature of the baseline hazard function <span class="math inline">\(\lambda_0(t)\)</span>. The parametric part only relies in the modelling of the effect of some covariates on the hazard function <span class="math inline">\(\lambda(t)\)</span> (see section <a href="3.6-semi-parametric-estimation.html#coxph">3.6.2</a> for more details).</p>
 <div id="fitting-the-model-on-the-selected-features" class="section level4 unnumbered">
 <h4>Fitting the model on the selected features</h4>
-<p>Using the <code>coxph</code> function from the <code>survival</code> R library <span class="citation">(<a href="#ref-survival-book" role="doc-biblioref">Terry M. Therneau and Patricia M. Grambsch 2000</a>)</span>, we are able to train a Cox model on the feature vector identified in section <a href="5.1-featureselection.html#featureselection">5.1</a>. Once the model fitted, it seems relevant to evaluate its performance on the train data set. Table <a href="5.3-churn-analysis.html#tab:lrtest">5.5</a> compares the model’s log-likelihood to the constrained model’s. Given the very low p-value, it can be assumed that the Cox model better fits the data than a model with only the intercept.</p>
+<p>Using the <code>coxph</code> function from the <code>survival</code> R library <span class="citation">(<a href="#ref-survival-book" role="doc-biblioref">Terry M. Therneau and Patricia M. Grambsch 2000</a>)</span>, we are able to train a Cox model on the feature vector identified in section <a href="5.1-featureselection.html#featureselection">5.1</a>. Once the model fitted, it seems relevant to evaluate its performance on the train data set. Table <a href="5.3-churn-analysis.html#tab:lrtest">5.7</a> compares the model’s log-likelihood to the constrained model’s. Given the very low p-value, it can be assumed that the Cox model better fits the data than a model with only the intercept.</p>
 <table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:lrtest">Table 5.5: </span>Log-likelihood ratio test
+<span id="tab:lrtest">Table 5.7: </span>Log-likelihood ratio test
 </caption>
 <thead>
 <tr>
@@ -344,10 +343,10 @@ pvalue
 </div>
 <div id="marginal-effects-1" class="section level4 unnumbered">
 <h4>Marginal effects</h4>
-<p>In the Cox model, the relative hazard between two observations is assumed to be constant over time. As a consequence, the relative hazard becomes <span class="math inline">\(\exp \hat{\beta}\)</span> for both dummy and continuous variables. For instance regarding figure <a href="5.3-churn-analysis.html#fig:coxmarginaleffects">5.6</a>, the relative hazard ratio between customers with a two-year contract and those with a month-to-month contract is 0.046, meaning that the latter group is 22 times more prone to churn than the former. Also, month-to-month clients are about 5 times more likely to churn than customers enrolled in one-year plan.</p>
+<p>In the Cox model, the relative hazard between two observations is assumed to be constant over time. As a consequence, the relative hazard becomes <span class="math inline">\(\exp \hat{\beta}\)</span> for both dummy and continuous variables. For instance regarding figure <a href="5.3-churn-analysis.html#fig:coxmarginaleffects">5.7</a>, the relative hazard ratio between customers with a two-year contract and those with a month-to-month contract is 0.046, meaning that the latter group is 22 times more prone to churn than the former. Also, month-to-month clients are about 5 times more likely to churn than customers enrolled in one-year plan.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:coxmarginaleffects"></span>
 <p class="caption">
-Figure 5.6: Marginal effects obtained with the Cox PH model
+Figure 5.7: Marginal effects obtained with the Cox PH model
 </p>
 <img src="imgs/cox_ggforest.png" alt="Marginal effects obtained with the Cox PH model" width="650" />
 </div>
@@ -356,13 +355,13 @@ Figure 5.6: Marginal effects obtained with the Cox PH model
 <h4>Estimating churn hazard</h4>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:coxdataviz"></span>
 <p class="caption">
-Figure 5.7: Aggregated churn hazard, survival and cumulative hazard functions estimated by Cox model
+Figure 5.8: Aggregated churn hazard, survival and cumulative hazard functions estimated by Cox model
 </p>
 <img src="imgs/cox_data_viz.png" alt="Aggregated churn hazard, survival and cumulative hazard functions estimated by Cox model" width="750" />
 </div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:coxclust"></span>
 <p class="caption">
-Figure 5.8: Aggregated churn hazard, survival and cumulative hazard functions for each cluster
+Figure 5.9: Aggregated churn hazard, survival and cumulative hazard functions for each cluster
 </p>
 <img src="imgs/churn_surv_clust.png" alt="Aggregated churn hazard, survival and cumulative hazard functions for each cluster" width="750" />
 </div>
