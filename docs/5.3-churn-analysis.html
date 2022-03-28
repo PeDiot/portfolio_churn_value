@@ -156,14 +156,7 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="4.2-churndescstats.html"><a href="4.2-churndescstats.html#data-on-services-subscribed"><i class="fa fa-check"></i>Data on services subscribed</a></li>
 <li class="chapter" data-level="" data-path="4.2-churndescstats.html"><a href="4.2-churndescstats.html#customer-account-data"><i class="fa fa-check"></i>Customer account data</a></li>
 </ul></li>
-<li class="chapter" data-level="4.3" data-path="4.3-cltv-customer-lifetime-value.html"><a href="4.3-cltv-customer-lifetime-value.html"><i class="fa fa-check"></i><b>4.3</b> <code>CLTV</code>: Customer Lifetime Value</a>
-<ul>
-<li class="chapter" data-level="" data-path="4.3-cltv-customer-lifetime-value.html"><a href="4.3-cltv-customer-lifetime-value.html#demographic-data-1"><i class="fa fa-check"></i>Demographic data</a></li>
-<li class="chapter" data-level="" data-path="4.3-cltv-customer-lifetime-value.html"><a href="4.3-cltv-customer-lifetime-value.html#data-on-services-subscribed-1"><i class="fa fa-check"></i>Data on services subscribed</a></li>
-<li class="chapter" data-level="" data-path="4.3-cltv-customer-lifetime-value.html"><a href="4.3-cltv-customer-lifetime-value.html#customer-account-data-1"><i class="fa fa-check"></i>Customer account data</a></li>
-<li><a href="4.3-cltv-customer-lifetime-value.html#correlation-between-cltv-and-explanatory-quantitative-variables">Correlation between <code>CLTV</code> and explanatory quantitative variables</a></li>
-</ul></li>
-<li class="chapter" data-level="4.4" data-path="4.4-churn-duration-and-customer-value.html"><a href="4.4-churn-duration-and-customer-value.html"><i class="fa fa-check"></i><b>4.4</b> Churn, duration and customer <em>value</em></a></li>
+<li class="chapter" data-level="4.3" data-path="4.3-churn-duration-and-price.html"><a href="4.3-churn-duration-and-price.html"><i class="fa fa-check"></i><b>4.3</b> Churn, duration and price</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="5-estimation.html"><a href="5-estimation.html"><i class="fa fa-check"></i><b>5</b> Estimation techniques</a>
 <ul>
@@ -243,28 +236,6 @@ Churn_Value
 <tbody>
 <tr>
 <td style="text-align:right;">
-3862
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-300
-</td>
-<td style="text-align:right;">
-13
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
 1671
 </td>
 <td style="text-align:right;">
@@ -291,6 +262,28 @@ Churn_Value
 </td>
 <td style="text-align:right;">
 12
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1519
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4882
+</td>
+<td style="text-align:right;">
+50
 </td>
 <td style="text-align:right;">
 0
@@ -351,14 +344,16 @@ Figure 5.7: Marginal effects obtained with the Cox PH model
 <img src="imgs/cox_ggforest.png" alt="Marginal effects obtained with the Cox PH model" width="650" />
 </div>
 </div>
-<div id="estimating-churn-hazard" class="section level4 unnumbered">
-<h4>Estimating churn hazard</h4>
+<div id="estimation-results" class="section level4 unnumbered">
+<h4>Estimation results</h4>
+<p>Semi-parametric models aims at estimating the instantaneous hazard function given a baseline hazard and a set of covariates. The model outputs a risk prediction for each individual with a confidence interval. Then, the survival and cumulative hazard functions can be retrieved as explained in chapter <a href="3-duration.html#duration">3</a>. When going deeper into the functions depicted in figure <a href="5.3-churn-analysis.html#fig:coxdataviz">5.8</a>, it can be noticed some inconsistencies between the estimated churn hazard cumulative hazard functions. Given the cumulative churn hazard increases faster when the number of months is high and given the instantaneous hazard is supposed to be the cumulative hazard function’s slope, the estimated churn hazard’s shape should be convex. Thus, the Cox model does not manage to properly estimate the risk of churn.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:coxdataviz"></span>
 <p class="caption">
 Figure 5.8: Aggregated churn hazard, survival and cumulative hazard functions estimated by Cox model
 </p>
 <img src="imgs/cox_data_viz.png" alt="Aggregated churn hazard, survival and cumulative hazard functions estimated by Cox model" width="750" />
 </div>
+<p>Although the fitted model is not flawless, it can be interested to study the estimation differences between the 3 customer segments identified in the previous section. Looking at figure <a href="5.3-churn-analysis.html#fig:coxclust">5.9</a>, one can conclude that <em>Gold</em> (cluster 2) clients are more prone to churn than others. The aggregated risk of attrition is indeed higher to such an extent that the cumulative churn hazard is exploding when the number of months is greater than 60. This being said, an efficient portfolio management would be to find strategies to reduce <em>Gold</em> customers’ churn and increase their duration in the portfolio.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:coxclust"></span>
 <p class="caption">
 Figure 5.9: Aggregated churn hazard, survival and cumulative hazard functions for each cluster
@@ -371,7 +366,7 @@ Figure 5.9: Aggregated churn hazard, survival and cumulative hazard functions fo
 <h3><span class="header-section-number">5.3.2</span> Other models</h3>
 <table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-31">Table 5.8: </span>Concordance index (%) obtained with Cox model and Random Survival Forest (RSF)
+<span id="tab:unnamed-chunk-26">Table 5.8: </span>Concordance index (%) obtained with Cox model and Random Survival Forest (RSF)
 </caption>
 <thead>
 <tr>

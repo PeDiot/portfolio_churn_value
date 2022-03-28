@@ -156,14 +156,7 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="4.2-churndescstats.html"><a href="4.2-churndescstats.html#data-on-services-subscribed"><i class="fa fa-check"></i>Data on services subscribed</a></li>
 <li class="chapter" data-level="" data-path="4.2-churndescstats.html"><a href="4.2-churndescstats.html#customer-account-data"><i class="fa fa-check"></i>Customer account data</a></li>
 </ul></li>
-<li class="chapter" data-level="4.3" data-path="4.3-cltv-customer-lifetime-value.html"><a href="4.3-cltv-customer-lifetime-value.html"><i class="fa fa-check"></i><b>4.3</b> <code>CLTV</code>: Customer Lifetime Value</a>
-<ul>
-<li class="chapter" data-level="" data-path="4.3-cltv-customer-lifetime-value.html"><a href="4.3-cltv-customer-lifetime-value.html#demographic-data-1"><i class="fa fa-check"></i>Demographic data</a></li>
-<li class="chapter" data-level="" data-path="4.3-cltv-customer-lifetime-value.html"><a href="4.3-cltv-customer-lifetime-value.html#data-on-services-subscribed-1"><i class="fa fa-check"></i>Data on services subscribed</a></li>
-<li class="chapter" data-level="" data-path="4.3-cltv-customer-lifetime-value.html"><a href="4.3-cltv-customer-lifetime-value.html#customer-account-data-1"><i class="fa fa-check"></i>Customer account data</a></li>
-<li><a href="4.3-cltv-customer-lifetime-value.html#correlation-between-cltv-and-explanatory-quantitative-variables">Correlation between <code>CLTV</code> and explanatory quantitative variables</a></li>
-</ul></li>
-<li class="chapter" data-level="4.4" data-path="4.4-churn-duration-and-customer-value.html"><a href="4.4-churn-duration-and-customer-value.html"><i class="fa fa-check"></i><b>4.4</b> Churn, duration and customer <em>value</em></a></li>
+<li class="chapter" data-level="4.3" data-path="4.3-churn-duration-and-price.html"><a href="4.3-churn-duration-and-price.html"><i class="fa fa-check"></i><b>4.3</b> Churn, duration and price</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="5-estimation.html"><a href="5-estimation.html"><i class="fa fa-check"></i><b>5</b> Estimation techniques</a>
 <ul>
@@ -235,7 +228,7 @@ Figure 5.1: Variance explained and cumulated variance after MCA
 <p>Now the 10 continuous axes are identified, the next step consists in retrieving the customers’ coordinates onto those axes to then perform cluster analysis.</p>
 <table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-27">Table 5.2: </span>The 10 principal axes obtained by MCA
+<span id="tab:unnamed-chunk-22">Table 5.2: </span>The 10 principal axes obtained by MCA
 </caption>
 <thead>
 <tr>
@@ -275,76 +268,6 @@ Dim 10
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-2842
-</td>
-<td style="text-align:right;">
--0.60
-</td>
-<td style="text-align:right;">
--0.13
-</td>
-<td style="text-align:right;">
-0.20
-</td>
-<td style="text-align:right;">
--0.04
-</td>
-<td style="text-align:right;">
-0.39
-</td>
-<td style="text-align:right;">
-0.25
-</td>
-<td style="text-align:right;">
-0.17
-</td>
-<td style="text-align:right;">
--0.45
-</td>
-<td style="text-align:right;">
-0.11
-</td>
-<td style="text-align:right;">
-0.06
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-4669
-</td>
-<td style="text-align:right;">
--0.13
-</td>
-<td style="text-align:right;">
-0.24
-</td>
-<td style="text-align:right;">
--0.82
-</td>
-<td style="text-align:right;">
--0.24
-</td>
-<td style="text-align:right;">
-0.00
-</td>
-<td style="text-align:right;">
-0.03
-</td>
-<td style="text-align:right;">
--0.08
-</td>
-<td style="text-align:right;">
--0.17
-</td>
-<td style="text-align:right;">
-0.40
-</td>
-<td style="text-align:right;">
-0.23
-</td>
-</tr>
 <tr>
 <td style="text-align:right;">
 4197
@@ -450,6 +373,76 @@ Dim 10
 0.07
 </td>
 </tr>
+<tr>
+<td style="text-align:right;">
+3862
+</td>
+<td style="text-align:right;">
+-0.44
+</td>
+<td style="text-align:right;">
+-0.20
+</td>
+<td style="text-align:right;">
+-0.46
+</td>
+<td style="text-align:right;">
+-0.14
+</td>
+<td style="text-align:right;">
+-0.01
+</td>
+<td style="text-align:right;">
+0.01
+</td>
+<td style="text-align:right;">
+-0.05
+</td>
+<td style="text-align:right;">
+-0.04
+</td>
+<td style="text-align:right;">
+-0.52
+</td>
+<td style="text-align:right;">
+0.01
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+300
+</td>
+<td style="text-align:right;">
+0.21
+</td>
+<td style="text-align:right;">
+-0.37
+</td>
+<td style="text-align:right;">
+0.11
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+-0.41
+</td>
+<td style="text-align:right;">
+-0.54
+</td>
+<td style="text-align:right;">
+-0.13
+</td>
+<td style="text-align:right;">
+0.36
+</td>
+<td style="text-align:right;">
+0.06
+</td>
+</tr>
 </tbody>
 </table>
 <p>Note that a more in-depth visualisation of those 10 principal components can be found in section <a href="mcaappendix.html#mcaappendix"><strong>??</strong></a> in the appendix. This charts depict the percent contribution of each variable’s categories to the principal axes, which is helpful to have a better understanding of MCA results.</p>
@@ -520,7 +513,7 @@ Figure 5.3: Cluster visualisation onto the 2 first MCA axes
 <p>Once the 3 customer segments are identified on the MCA dimensions, it seems to be interesting to describe them according to the original features. To that end, the repartition of qualitative variables’ categories is depicted on the following figure. Comparing figures <a href="5.2-portfolio-segmentation.html#fig:clusterplot">5.3</a> and <a href="5.2-portfolio-segmentation.html#fig:mcaplot">5.4</a>, one can derive the following table in order to have a more precise idea on each segment.</p>
 <table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-28">Table 5.4: </span>The most representative categories for each cluster
+<span id="tab:unnamed-chunk-23">Table 5.4: </span>The most representative categories for each cluster
 </caption>
 <thead>
 <tr>
@@ -586,7 +579,7 @@ Figure 5.6: Churn repartition per cluster
 <p>With the aim of divide the portfolio into multiple groups based on categorical features, hierarchical clustering on principal components has led to identify three customer segments which can be broadly described as shown in the following table.</p>
 <table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-29">Table 5.5: </span>Portfolio segmentation summary
+<span id="tab:unnamed-chunk-24">Table 5.5: </span>Portfolio segmentation summary
 </caption>
 <thead>
 <tr>
