@@ -68,7 +68,7 @@ cleaned_data %>%
     "Internet_Service", 
     "Tenure_Months", 
     "Churn_Value", 
-    "CLTV"
+    "Monthly_Charges"
   )) %>%
   head() %>%
   mykable(title = "Interesting variables for the 5 first customers in the data set")
@@ -76,7 +76,7 @@ cleaned_data %>%
 
 As shown by table \@ref(tab:dataoverview), the `Churn_Value` status variable indicates whether the customer left the firm's *portfolio* within the last month and `Tenure_Months` is the duration variable. 
 
-Since the purpose of our study relies in estimating the overall value of this fictional firm's *portfolio*, two groups of target variables can be considered. On the one hand `Churn_Value` and `Tenure_Months` permit to determine whether a customer is active in the *portfolio*. They are used as response variables in the survival models. On the other hand, the `CLTV` variable represents each customer's *value* through measurement of customer lifetime value and is used as target in regression models. 
+Since the purpose of our study relies in estimating the overall value of this fictional firm's *portfolio*, two groups of target variables can be considered. On the one hand `Churn_Value` and `Tenure_Months` permit to determine whether a customer is active in the *portfolio*. They are used as response variables in the survival models. On the other hand, `Monthly_Charges` variable indicates the price paid by customers each month and may be used to derive a customer raw value. Even though the `CLTV` variable represents each customer's *value* through measurement of customer lifetime value, we do not have any information on its calculation. Thus, it is not used in the model developed in the next chapter. 
 
 ## `Churn_Value` and `Tenure_Months` {#churndescstats}
 
@@ -226,213 +226,32 @@ Figure \@ref(fig:kmcustaccount) enriches the $\chi^2$ tests' results as it draws
 knitr::include_graphics(path = "./imgs/account_info_plot.jpg")
 ```
 
-## `CLTV`: Customer Lifetime Value
+## Churn, duration and price
 
-In the dataset, the *value* of the fictional TSP's customers is measured by the discrete quantitative variable called `CLTV`. In this context, it is decided to draw histogram and density plots related to `CLTV` depending on the three types of explanatory variables. Anova tests are also implemented to verify whether `CLTV` has different values in the treatment variables' categories. Anova is a generalization of the Student's t test allowing to compare more than two groups. The test's statistic computes the ratio between variance between sample and variance within samples and is Fisher distributed. A low ratio indicates that there is no significant difference between the means of the samples being compared. 
+The final step in the data exploration consists in analysing the relationship between the `Monthly_Charges`, `Churn_Label` and `Tenure_Months` variables as they play an important role in the modelling strategy we adopt to estimate customer *value*.
 
-### Demographic data {-}
-
-Based on the Anova tests' results, `Partner` and `Dependents` seem to be statistically discriminant in terms of customer lifetime value which is not the case for `Gender` and `Senior_Citizen`. 
-
-```{r aovdemographics}
-aov_demographics <- lapply(
-  demographics, 
-  aov_test_tab, 
-  data = cleaned_data
-) %>%
-  bind_rows() %>%
-  arrange(as.numeric(`p-value`))
-aov_demographics %>%
-  mykable(title = "Anova test between CLTV and demographic variables")
-```
+Looking at figure \@ref(fig:cltvchurn), monthly charges seem to be higher for churners than for retained customers as the density is more right-oriented. High fees might be a driver of customer churn. 
 
 ```{r eval=FALSE}
-cltv_demographics_plots <- lapply(
-  demographics, 
-  hist_dens_plot, 
-  data = cleaned_data
-)
-
-cltv_demographics_plots <- ggarrange(
-  plotlist = cltv_demographics_plots, 
-  ncol = 2, nrow = 2
-)
-
-ggsave(
-  filename = "./imgs/cltv_demographics_plots.jpg",
-  plot = cltv_demographics_plots, 
-  height = 8, width = 12
-)
-```
-
-The figure below illustrates how different CLV is between customers with a partner and those without, as well as between those with children or other dependents and those without. To put it another way, having a partner in life of dependents tends to increase customer lifetime value as shown by the last two plots.
-
-```{r cltvdemographics, fig.cap="Histogram and density plots of customer lifetime value depending on demographic information"}
-knitr::include_graphics(path = "./imgs/cltv_demographics_plots.jpg")
-```
-
-### Data on services subscribed {-}
-
-When one wants to identify factors influencing customer lifetime value, it is relevant to consider variables related to services subscribed by customers. The Anova tests' results indicate that `CLTV` has significant different values in each group of all services related variables, except for `Internet_Service`. The most important difference can be noted for `Online_Backup` and `Online_Security` variables, whereas there is more homogeneity in the `Phone_Service` groups.
-
-```{r aovservices}
-aov_services <- lapply(
-  services, 
-  aov_test_tab, 
-  data = cleaned_data
-) %>%
-  bind_rows() %>%
-  arrange(as.numeric(`p-value`))
-aov_services %>%
-  mykable(title = "Anova test between CLTV and services information variables")
-```
-
-```{r eval=FALSE}
-cltv_services_plots <- lapply(
-  services, 
-  hist_dens_plot, 
-  data = cleaned_data, 
-  base_size = 12
-)
-
-cltv_services_plots <- ggarrange(
-  plotlist = cltv_services_plots, 
-  ncol = 3, nrow = 3
-)
-
-ggsave(
-  filename = "./imgs/cltv_services_plots.jpg",
-  plot = cltv_services_plots, 
-  height = 12, width = 18
-)
-```
-
-From figure \@ref(fig:cltvservices) one can note that subscribing to additional services like having multiple lines, online security and backup, device protection or using the streaming movie service significantly enhance customer lifetime value. These variables may be interesting predictors of `CLTV` in regression models. 
-
-```{r cltvservices, fig.cap="Histogram and density plots of customer lifetime value depending on services subscribed"}
-knitr::include_graphics(path = "./imgs/cltv_services_plots.jpg")
-```
-
-### Customer account data {-}
-
-Table \@ref(tab:aovaccountinfo) depicts that `CLTV` is statistically different according to the type of contract and the payment method. However, paperless billing does not seem to influence customer lifetime value.
-
-```{r aovaccountinfo}
-aov_account_info <- lapply(
-  account_info, 
-  aov_test_tab, 
-  data = cleaned_data
-) %>%
-  bind_rows() %>%
-  arrange(as.numeric(`p-value`))
-aov_account_info %>%
-  mykable(title = "Anova test between CLTV and customer account data")
-```
-
-```{r eval=FALSE}
-cltv_account_info_plots <- lapply(
-  account_info, 
-  hist_dens_plot, 
-  data = cleaned_data
-)
-
-cltv_account_info_plots <- ggarrange(
-  plotlist = cltv_account_info_plots, 
-  ncol = 2, nrow = 2
-)
-
-ggsave(
-  filename = "./imgs/cltv_account_info_plots.jpg",
-  plot = cltv_account_info_plots, 
-  height = 8, width = 12
-)
-```
-
-The three plots below provide details to previous results as it can be noticed that customers paying by credit card of bank transfer have higher CLV than those paying by e-check of mailed check. Besides, clients enrolled in one-year or two-year contracts have greater *value* to the firm than those who pay on a monthly basis. 
-
-
-```{r cltvaccountinfo, fig.cap="Histogram and density plots of customer lifetime value depending on customer account data"}
-knitr::include_graphics(path = "./imgs/cltv_account_info_plots.jpg")
-```
-
-### Correlation between `CLTV` and explanatory quantitative variables {-}
-
-Plotting the correlation matrix allows to have an overview on the links between the dataset's quantitative variables. The method used is the Pearson correlation coefficient which is defined as follows: 
-
-\begin{equation}
-  \rho_{XY} = \frac{\text{cov}(X, Y)}{\sigma_X \sigma_Y}
-  (\#eq:pearson)
-\end{equation}
-
-where $X$ and $Y$ are two quantitative random variables, $\text{cov}$ the covariance function and $\sigma$ the standard deviation.
-
-On figure \@ref(fig:corrplot), non-significant correlations are crossed-out. It can be noticed that `CLTV` has the strongest correlation with `Tenure_Months` ($40\%$), followed by `Total_Charges` ($34\%$) then `Monthly_Charges` ($10\%$).
-
-
-```{r eval=FALSE}
-quanti_vars <- cleaned_data %>%
-  select_if(is.numeric) %>%
-  select(-c(
-    "Churn_Score", 
-    "Churn_Value"
-  )) %>%
-  colnames()
-
-corr <- cleaned_data %>%
-  select(all_of(quanti_vars)) %>% 
-  cor()
-p_mat <- cleaned_data %>%
-  select(all_of(quanti_vars)) %>% 
-  cor_pmat()
-
-corr_plot <- ggcorrplot(
-  corr, 
-  p.mat = p_mat, 
-  hc.order = TRUE, 
-  type = "lower",
-  lab = TRUE,
-  outline.col = "white",
-  colors = c("#CA7E7E", "white", "#7595B3"), 
-  show.legend = F, 
-  tl.cex = 8, lab_size = 2.5
-)
-
-ggsave(
-  filename = "./imgs/corr_plot.jpg", 
-  plot = corr_plot, 
-  height = 4, width = 6
-)
-```
-
-```{r corrplot, fig.cap="Correlation plot"}
-knitr::include_graphics(path = "./imgs/corr_plot.jpg")
-```
-
-## Churn, duration and customer *value* 
-
-The final step in the data exploration consists in analyzing the relationship between the three target variables: `CLTV`, `Churn_Label` and `Tenure_Months`. 
-
-Looking at figure \@ref(fig:cltvchurn), customer lifetime value seems to have higher values for retained customers than for churners as the density is more right-oriented. This result makes sense as retained customers may have longer lifetime leading to higher CLV.
-
-```{r}
-cltv_churn_plot <- hist_dens_plot(
+monthly_charges_churn_plot <- dens_plot(
   data=cleaned_data, 
   treatment = "Churn_Label", 
-  base_size = 9
+  target = "Monthly_Charges",
+  base_size = 12
 ) +
   guides(fill=guide_legend(title="Churn"),
          color=guide_legend(title="Churn"))
 
 ggsave(
-  filename = "./imgs/cltv_churn_plot.jpg", 
-  plot = cltv_churn_plot, 
+  filename = "./imgs/monthly_charges_churn_plot.jpg", 
+  plot = monthly_charges_churn_plot, 
   height = 4, width = 6
 )
 ```
 
 
-```{r cltvchurn, fig.cap="Customer lifetime value depending on churn status", out.height="300pt", out.width="400pt"}
-knitr::include_graphics(path = "./imgs/cltv_churn_plot.jpg")
+```{r cltvchurn, fig.cap="Monthly charges paid by customers depending on churn status", out.height="300pt", out.width="400pt"}
+knitr::include_graphics(path = "./imgs/monthly_charges_churn_plot.jpg")
 ```
 
 Besides, the low *p value* related to the Anova test between `CLTV` and `Churn_Label` indicates that customer lifetime value is statistically different between churner and retained clients.
@@ -440,13 +259,10 @@ Besides, the low *p value* related to the Anova test between `CLTV` and `Churn_L
 ```{r aovcltvchurn}
 aov_test_tab(
   data = cleaned_data, 
+  target = "Monthly_Charges", 
   treatment = "Churn_Label"
 ) %>%
-  mykable(title = "Anova test between CLTV and churn status")
-```
-
-```{r eval=FALSE}
-cor(cleaned_data$CLTV, cleaned_data$Tenure_Months)
+  mykable(title = "Anova test between monthly fees and churn status")
 ```
 
 
@@ -464,7 +280,7 @@ duration_churn_plot <- cleaned_data %>%
   scale_fill_jco() +
   guides(fill=guide_legend(title="Churn"),
          color=guide_legend(title="Churn")) +
-  theme(legend.position = "top", 
+  theme(legend.position = "bottom", 
         axis.title = element_text(size = 11), 
         axis.text = element_text(size = 10))
 
@@ -481,35 +297,28 @@ The following histograms are interesting to the extent that the distribution of 
 knitr::include_graphics(path = "./imgs/duration_churn_plot.jpg")
 ```
 
-```{r}
-avg_cltv_plot <- cleaned_data %>%
+```{r eval=FALSE}
+monthly_charges_dur <- cleaned_data %>%
   group_by(Tenure_Months) %>%
-  summarise(avg_cltv = mean(CLTV)) %>%
-  mutate(mask = case_when(
-    avg_cltv > 5000 ~ 1, 
-    TRUE ~ 0) %>%
-      as.factor()) %>%
-  ggplot(aes(
-    x = Tenure_Months, 
-    y = avg_cltv, 
-    color = mask)) +
-  geom_point() +
-  scale_color_jco() +
+  summarise(avg_monthly_charges = mean(Monthly_Charges)) %>%
+  ggplot(aes(x = Tenure_Months, 
+             y = avg_monthly_charges)) +
+    geom_point(alpha = .5) +
+    geom_smooth(size = .6) +
   labs(x = "Number of months", 
-       y = "Average CLTV") +
-  theme(legend.position = "none")
+       y = "Average monthly fees") 
 
 ggsave(
-  filename = "./imgs/avg_cltv_plot.jpg", 
-  plot = avg_cltv_plot, 
+  filename = "./imgs/monthly_charges_dur.jpg", 
+  plot = monthly_charges_dur, 
   height = 4, width = 6
 )
 ```
 
-Eventually, figure \@ref(fig:cltvdur) depicts the average customer lifetime value per number of months in the portfolio. Two distinct groups can be identified with a threshold at 50 months. On average, the most valuable customers are those who have been in the portfolio for more than 50 months. 
+Eventually, figure \@ref(fig:monthlychargesdur) depicts the average monthly charges per number of months in the portfolio.
 
-```{r cltvdur, fig.cap="Average CLTV depending on number of months in the portfolio", out.height="300pt", out.width="450pt"}
-knitr::include_graphics(path = "./imgs/avg_cltv_plot.jpg")
+```{r monthlychargesdur, fig.cap="Average monthly fees depending on number of months in the portfolio", out.height="300pt", out.width="450pt"}
+knitr::include_graphics(path = "./imgs/monthly_charges_dur.jpg")
 ```
 
 
