@@ -233,7 +233,7 @@ knitr::include_graphics(path = "./imgs/cox_ggforest.png")
 
 #### Estimation results {-}
 
-Semi-parametric models aims at estimating the instantaneous hazard function given a baseline hazard and a set of covariates. The model outputs a risk prediction for each individual with a confidence interval. Then, the survival and cumulative hazard functions can be retrieved as explained in chapter \@ref(duration). When going deeper into the functions depicted in figure \@ref(fig:coxdataviz), it can be noticed some inconsistencies between the estimated churn hazard cumulative hazard functions. Given the cumulative churn hazard increases faster when the number of months is high and given the instantaneous hazard is supposed to be the cumulative hazard function's slope, the estimated churn hazard's shape should be convex. Thus, the Cox model does not manage to properly estimate the risk of churn. 
+Semi-parametric models aims at estimating the instantaneous hazard function given a baseline hazard and a set of covariates. The model outputs a risk prediction for each individual with a confidence interval. Then, the survival and cumulative hazard functions can be retrieved as explained in section \@ref(probabilities). When going deeper into the functions depicted in figure \@ref(fig:coxdataviz), it can be noticed some inconsistencies between the estimated churn hazard cumulative hazard functions. Given the cumulative churn hazard increases faster when the number of months is high and given the instantaneous hazard is supposed to be the cumulative hazard function's slope, the estimated churn hazard's shape should be convex. Thus, the Cox model does not manage to properly estimate the risk of churn. 
 
 ```{r coxdataviz, fig.cap="Aggregated churn hazard, survival and cumulative hazard functions estimated by Cox model"}
 knitr::include_graphics(path = "./imgs/cox_data_viz.png")
@@ -245,14 +245,16 @@ Although the fitted model is not flawless, it can be interested to study the est
 knitr::include_graphics(path = "./imgs/churn_surv_clust.png")
 ```
 
-### Other models
+### Other survival models
+
+As said in the previous part, the Cox model does not fit the data perfectly as it does not capture the churn hazard's actual shape. In this context, it seems relevant to fit other survival models and test how they perform in predicting the risk of attrition. It is firstly decided to train parametric survival models which consist in assigning a probability distribution to the hazard function (see section \@ref(parametric) for more details). To that end, one can use `flexsurv` [@flexsurv2016] which is and R package for parametric survival modelling. After having fitted the exponential, Weibull, gamma, log-logistic and log-normal models, no improvement can be observed with respect to the Cox model. Then, a machine learning approach can be adopted to model duration data using the random survival forest algorithm as explained in section \@ref(mlsurv). The `rfsrc` function from `randomForestSRC` [@randomForestSRC2008] is used to train the model after having determined the optimal node size and number of variables to try at each split with the `tune` function. Once the model trained, its performance is compared to the Cox model's as shown by table \@ref(tab:performances). One cannot but admit that the random survival forest perform poorly in terms of concordance index with respect to the Cox model. The latter manages to output a better risk scoring than the ML algorithm. It is thus decided to select the Cox PH model for the rest of the study.
 
 ```{r}
 load(file = paste0(backup_path, "survival/c_index_cox.Rdata"))
 load(file = paste0(backup_path, "survival/c_index_rsf.Rdata"))
 ```
 
-```{r}
+```{r performances}
 tab <- rbind(c_index_cox, 
              c_index_rsf) %>%
   mutate(Train = 100*Train, 
@@ -263,11 +265,27 @@ tab %>%
           digits = 3)
 ```
 
-
-
 ## Portfolio value estimation
 
-### Mathematical formulation 
+In the two previous sections, the portfolio has been partitioned into 3 customer segments and customer lifetime has been estimated by the means of the Cox model. This section's purpose consists in deriving a method to calculate the overall value of the portfolio through the computation of customer lifetime raw value. 
+
+### The model
+
+As said in chapter \@ref(data), it is decided not to use the `CLTV` variable to estimate customer lifetime value since no information has been provided on the computation method. Instead, another method is adopted to predict each client's lifetime value. For this purpose, two inputs are needed namely each customer's survival function as well as the monthly fees represented by the `Monthly_Charges` feature. Based on the CLV formulation proposed by Gupta and Lehmann [@CUSTOMERS_ASSETS], we derive a model aiming at calculating customer lifetime raw value (CLRV) as depicted in equation \@ref(eq:clrv). 
+
+\begin{equation}
+    CLRV_i = \sum_{t=0}^{T} \frac{p_i \ r_{i,t}}{(1+a)^t} 
+    (\#eq:clrv)
+\end{equation}
+
+with, 
+
+- $p_i$ the monthly fee paid by customer $i$,
+- $r_{i,t}$ the probability that customer $i$ be in the portfolio at time $t$,
+- $a$ the discount factor,
+- $T$ the time horizon. 
+
+It may be interesting to note that $p_i$ is time-invariant and corresponds to `Monthly_Charges`. $r_{i,t}$ is computed using the survival function estimated with the Cox model. $a$ is fixed at 8% and $T$ equals 72 months which is the longest lifetime in the data. 
 
 ### Customer Lifetime Raw Value
 
@@ -378,7 +396,7 @@ knitr::include_graphics(path = "./imgs/clrv_evolution_per_cluster.png")
 
 ### Simulations 
 
-#### Influence of the discount rate on CLRV {-}
+#### Influence of the discount factor on CLRV {-}
 
 ```{r portValDiscountTab}
 load(file = paste0(backup_path, "custValues/portVal_discount_rate.RData"))
@@ -398,7 +416,7 @@ knitr::include_graphics(path = "./imgs/clrv_dens_discount_rate.png")
 knitr::include_graphics(path = "./imgs/clrv_evolution_discount.png")
 ```
 
-#### Influence the contract type on CLRV {-}
+#### Influence of the contract type on CLRV {-}
 
 ```{r}
 load(file = paste0(backup_path, "custValues/custVal_month_to_month.RData")) 
