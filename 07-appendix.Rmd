@@ -114,7 +114,7 @@ The joint probability over the $k$ ordered discrete failure times then becomes:
 (\#eq:partlikproofbis)
 \end{equation}
 
-## Multiple correspondence analysis {-#mcaappendix}
+## Multiple correspondence analysis {- #mcaappendix}
 
 ```{r mcacontrib12, fig.cap="MCA -  Categories contribution to axes 1 and 2"}
 knitr::include_graphics(path = "./imgs/mca_contrib_12.png")
