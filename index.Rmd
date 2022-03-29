@@ -33,7 +33,9 @@ knitr::write_bib(c(
   "knitr", 
   "rmarkdown", 
   "FactoMineR", 
-  "survival"
+  "survival", 
+  "flexsurv", 
+  "randomForestSRC"
 ), "packages.bib")
 ```
 
