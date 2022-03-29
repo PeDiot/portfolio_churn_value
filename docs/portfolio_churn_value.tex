@@ -1190,8 +1190,8 @@ CustomerID & Tenure\_Months & Churn\_Value\\
 \end{tabular}
 \end{table}
 
-\hypertarget{the-cox-model}{%
-\subsection{The Cox model}\label{the-cox-model}}
+\hypertarget{coxmodel}{%
+\subsection{The Cox model}\label{coxmodel}}
 
 When it comes to choose an estimation method on survival data, the Cox PH model appears to be an interesting first choice. As explained in chapter \ref{duration}, this semi-parametric model makes no assumption regarding the nature of the baseline hazard function \(\lambda_0(t)\). The parametric part only relies in the modelling of the effect of some covariates on the hazard function \(\lambda(t)\) (see section \ref{coxph} for more details).
 
@@ -1311,6 +1311,23 @@ It may be interesting to note that \(p_i\) is time-invariant and corresponds to 
 
 \hypertarget{customer-lifetime-raw-value}{%
 \subsection{Customer Lifetime Raw Value}\label{customer-lifetime-raw-value}}
+
+In the literature, it is common place to measure customer lifetime value that is the overall profit brought by a client over her entire lifetime in the portfolio. In our study, the data set used does not provide any information on the costs related to each customer. Consequently, it is decided to evaluate customer value by computing the overall revenues the firm might earn during the relationship with their clients. We name this metric customer lifetime raw value (CLRV) and it is defined in equation \eqref{eq:clrv}.
+
+The process implemented to compute client \(i\)'s CLRV works as follows:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Estimate client \(i\)'s survival function over 72 months using the Cox model fitted in section \ref{coxmodel}.
+\item
+  For each month, multiply the value of the survival function by the monthly fee \(p_i\) paid by client \(i\). Then, divide the product by \((1 + a)^t\) where \(t\) is the month's index and \(a\) the discount factor.
+\item
+  Take the sum of the \(T\) ratios.
+\end{enumerate}
+
+Since the data is made up of more than 7,000 customers and given the CLRV calculation is time consuming, parallelization has been used to calculate every CLRV. Once all the CLRVs are computed, one may take the sum in order to retrieve the portfolio's global value as well as a 95\% confidence interval as shown by table \ref{custValuesSum}.
 
 \begin{table}[H]
 
