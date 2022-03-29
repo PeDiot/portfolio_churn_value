@@ -206,7 +206,7 @@ cleaned_data %>%
   mykable(title = "Time and event variables for survival models") 
 ```
 
-### The Cox model 
+### The Cox model {#coxmodel}
 
 When it comes to choose an estimation method on survival data, the Cox PH model appears to be an interesting first choice. As explained in chapter \@ref(duration), this semi-parametric model makes no assumption regarding the nature of the baseline hazard function $\lambda_0(t)$. The parametric part only relies in the modelling of the effect of some covariates on the hazard function $\lambda(t)$ (see section \@ref(coxph) for more details). 
 
@@ -289,6 +289,16 @@ It may be interesting to note that $p_i$ is time-invariant and corresponds to `M
 
 ### Customer Lifetime Raw Value
 
+In the literature, it is common place to measure customer lifetime value that is the overall profit brought by a client over her entire lifetime in the portfolio. In our study, the data set used does not provide any information on the costs related to each customer. Consequently, it is decided to evaluate customer value by computing the overall revenues the firm might earn during the relationship with their clients. We name this metric customer lifetime raw value (CLRV) and it is defined in equation \@ref(eq:clrv).
+
+The process implemented to compute client $i$'s CLRV works as follows: 
+
+1. Estimate client $i$'s survival function over 72 months using the Cox model fitted in section \@ref(coxmodel). 
+2. For each month, multiply the value of the survival function by the monthly fee $p_i$ paid by client $i$. Then, divide the product by $(1 + a)^t$ where $t$ is the month's index and $a$ the discount factor. 
+3. Take the sum of the $T$ ratios. 
+
+Since the data is made up of more than 7,000 customers and given the CLRV calculation is time consuming, parallelization has been used to calculate every CLRV. Once all the CLRVs are computed, one may take the sum in order to retrieve the portfolio's global value as well as a 95% confidence interval as shown by table \@ref(tab:custValuesSum).
+
 ```{r}
 load(file = paste0(backup_path, "custvalues/", "custValues_8pct", ".RData"))
 load(file = paste0(backup_path, "custvalues/", "custValues_clust", ".RData"))
@@ -314,6 +324,11 @@ tab %>%
           transp = T)
 ```
 
+Going deeper into the statistical analysis of customer lifetime raw value, it can be noticed from table \@ref(tab:custValuesStats) and figure \@ref(fig:clrvDens) that the clients are quite heterogeneous. The distribution of CLRV is left-skewed with a median lower than the mean. In addition, the CLRV ranges from 324 to 6815 indicating that each client does not have the same value to the firm. 
+
+```{r clrvDens, fig.cap="Distribution of Customer Lifetime Raw Value"}
+knitr::include_graphics(path = "./imgs/clrv_density.png")
+```
 
 ```{r custValuesStats}
 tab <- custValuesTot %>%
@@ -329,12 +344,9 @@ tab %>%
           transp = T)
 ```
 
+Eventually, it seems interesting to visualize the contribution of each month to customer lifetime raw value. Based on figure \@ref(fig:clrvEvolution), the montlhy contribution decreases as the number of months increases which leads to a concave cumulative value. This result may be explained by the increase in $(1+a)^t$ and the decrease in the survival probability $r_{i,t}$ as $t$ increases (see equation \@ref(eq:clrv)). In other words, customers bring in more value to the firm at the beginning of the relationship. 
 
-```{r clrvDens, fig.cap="Distribution of Customer Lifetime Raw Value"}
-knitr::include_graphics(path = "./imgs/clrv_density.png")
-```
-
-```{r clrvEvolution, fig.cap="Customer Lifetime Raw Value evolution based on number of months in the portfolio"}
+```{r clrvEvolution, fig.cap="Monthly contribution and cumulative value depending on the number of months in the portfolio"}
 knitr::include_graphics(path = "./imgs/clrv_evolution.png")
 ```
 
@@ -366,6 +378,11 @@ tab %>%
           align = rep("c", 5))
 ```
 
+
+```{r clrvDensClust, fig.cap="Distribution of Customer Lifetime Raw Value per cluster"}
+knitr::include_graphics(path = "./imgs/clrv_density_per_cluster.png")
+```
+
 ```{r custValuesclust}
 lapply(seq(1, 3), 
        function(c){
@@ -385,11 +402,8 @@ lapply(seq(1, 3),
   mykable(title = "CLRV statistical summary for each customer segment")
 ```
 
-```{r clrvDensClust, fig.cap="Distribution of Customer Lifetime Raw Value per cluster"}
-knitr::include_graphics(path = "./imgs/clrv_density_per_cluster.png")
-```
 
-```{r clrvEvolutionClust, fig.cap="Customer Lifetime Raw Value evolution per cluster based on number of months in the portfolio"}
+```{r clrvEvolutionClust, fig.cap="Monthly contribution and cumulative value through time per cluster"}
 knitr::include_graphics(path = "./imgs/clrv_evolution_per_cluster.png")
 ```
 
