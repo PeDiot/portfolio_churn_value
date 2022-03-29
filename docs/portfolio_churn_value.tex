@@ -6,7 +6,7 @@
 ]{book}
 \title{Portfolio, Churn \& Customer Value}
 \author{Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer}
-\date{2022-03-22}
+\date{2022-03-29}
 
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
@@ -365,8 +365,8 @@ Survival data suffers from a \textbf{selection bias} (or truncation) when only a
 \caption{Censored and truncated data}\label{fig:censoring}
 \end{figure}
 
-\hypertarget{probabilistic-concepts}{%
-\section{Probabilistic concepts}\label{probabilistic-concepts}}
+\hypertarget{probabilities}{%
+\section{Probabilistic concepts}\label{probabilities}}
 
 In survival analysis, the response variable denoted \(T\) is a time-to-event variable. Instead of estimating the expected failure time, survival models estimate the \textbf{survival} and \textbf{hazard rate} functions which depend on the realization of \(T\).
 
@@ -493,8 +493,8 @@ Exponentiating \(\hat{\Lambda}(t)\), one can obtain a second estimate of the sur
     \label{eq:survest}
 \end{equation}
 
-\hypertarget{parametric-models}{%
-\section{Parametric models}\label{parametric-models}}
+\hypertarget{parametric}{%
+\section{Parametric models}\label{parametric}}
 
 The nonparametric estimation is undoubtedly useful when it comes to have a general overview on the survival data. However, one may want to model the hazard and survivor functions with a functional form in which unknown parameters need to be optimized.
 
@@ -652,6 +652,51 @@ The latter formulation of the partial likelihood function is explained in more d
 
 The Cox \emph{proportional hazards} model is the most popular for the analysis of duration data. This model is said to be semi-parametric as it makes no assumption regarding the nature of the baseline hazard function \(\lambda_0(t)\). The parametric part only relies in the modelling of the effect of some covariates on the hazard function \(\lambda(t)\). The relationship between the vector of covariates and the log hazard is linear and the parameters can be estimated by maximizing the partial likelihood function. The Cox PH model solely assumes that predictors act multiplicatively on the hazard function. The model is formulated as in equation \eqref{eq:ph} with the exponential function as link between the hazard and the covariates i.e.~\(\lambda(t|\pmb{\mathrm{x}}) = \lambda_0 (t,\alpha) \text{e}^{\pmb{\mathrm{x'}} \beta}\).
 
+\hypertarget{mlsurv}{%
+\section{Machine Learning for Survival Data}\label{mlsurv}}
+
+In the previsous sections, some important models for duration data have been introduced. Here, emphasize is placed on machine learning algorithms that can also be implemented to predict a time-to-event variable such as the time to churn.
+
+\hypertarget{survival-trees}{%
+\subsection{Survival Trees}\label{survival-trees}}
+
+Traditional decision trees, also called CART (Classification And Regression Trees), segment the feature space into multiple rectangles and then fit a simple model to each of these subsets as shown by figure \ref{fig:tree} \citep{ML_TREE}. The algorithm is a recursive partitioning which requires a criterion for choosing the \emph{best} split, another criterion for deciding when to stop the splits and a rule for predicting the class of an observation.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.45\linewidth,height=260pt]{./imgs/tree1} \includegraphics[width=0.45\linewidth,height=260pt]{./imgs/tree2} 
+
+}
+
+\caption{Clasification decision tree}\label{fig:tree}
+\end{figure}
+
+Survival tree \citep{SURV_TREE} is the adapted version of CART for duration data. The objective is to use tree based binary splitting algorithm in order to predict hazard rates. To that end, survival time and censoring status are introduced as response variables. The splitting criteria used for survival trees have the same purpose than the criteria used for CART that is to say maximizing between-node heterogeneity or minimizing within-node homogeneity. Nonetheless, node purity is different in the case of survival trees as a node is considered pure if all spells in that node have similar survival duration. The most common criterion is the \textbf{logrank test} statistic to compare the two groups formed by the children nodes. For each node, every possible split on each feature is being examined. The best split is the one maximizing the survival difference between two children nodes. The test statistic is \(\chi^2\) distributed which means the higher its value, the higher between-node variability so the better the split. Let \(t_1, \dots, t_k\) be the \(k\) ordered failure times. At the \(j^{\text{th}}\) failure time, the logrank statistic is expressed as \citep{SEGAL}:
+
+\begin{equation}
+  \chi^2_{\text{logrank}} = \frac{\big[\sum_{j=1}^k \ (d_{0j} - r_{0j} \times d_j/r_j) \big]^2}{\sum_{j=1}^k \ \frac{r_{1j}r_{0j}d_j(r_j - d_j)}{r_j^2(r_j -1)}}
+  \label{eq:logrank}
+\end{equation}
+
+\hypertarget{random-survival-forests-rsf}{%
+\subsection{Random Survival Forests (RSF)}\label{random-survival-forests-rsf}}
+
+This algorithm is proposed by \citet{RSF} and is an ensemble of decision trees for the analysis of right-censored survival data. As random forests used for regression and classification, RSF are based on \textbf{bagging} which implies that \(B\) bootstrap samples are drawn from the original data with 63\(\%\) of them in the bag data and the remaining part in the out-of-bag (OOB) data. For each bootstrap sample, a survival tree is grown based on \(p\) randomly selected features. Then, the parent node is split using the feature among the selected ones that maximizes survival difference between children nodes. Each tree is grown to full size and each terminal node needs to have no less than \(d_0\) unique events. The cumulative hazard function (CHF) is computed for each tree using the Nelson-Aalen estimator such as:
+
+\begin{equation}
+  \widehat{H_l}(t) = \sum_{t_{j, l} < t} \frac{d_{j,l}}{r_{j,l}}
+  \label{eq:chf}
+\end{equation}
+
+where \(t_{j,l}\) is the \(j^{\text{th}}\) distinct event time in leaf \(l\), \(d_{j,l}\) the number of events completed at \(t_{j,l}\) and \(r_{j,l}\) the number of spells at risk at \(t_{j,l}\).
+
+All the CHFs are then averaged to obtain the bootstrap ensemble CHF and prediction error is finally computed on the OOB ensemble CHF.
+
+\hypertarget{cox-boosting}{%
+\subsection{Cox Boosting}\label{cox-boosting}}
+
+\textbf{Boosting} is an ensemble method which combines several weak predictors into a strong predictor. The idea of most boosting methods is to train predictors sequentially, each trying to correct its predecessor. Cox boosting \citep{COX_BOOSTING} is designed for high dimension survival data and has the purpose of feature selection while improving the performance of the standard Cox model. The key difference with gradient boosting is that Cox boosting does not update all coefficients at each boosting step, but only updates the coefficient that improves the overall fit the most. The loss function is a penalized version of the Cox model's log-likelihood (see equation \eqref{eq:partlik} for the likelihood function of the Cox model). Cox boosting helps measuring variable importance as the coefficients associated to more representative variables will be updated in early steps.
+
 \hypertarget{performance-metrics}{%
 \section{Performance metrics}\label{performance-metrics}}
 
@@ -726,24 +771,24 @@ The data set used in this study contains 29 variables and 7032 customers from a 
 
 \caption{\label{tab:dataoverview}Interesting variables for the 5 first customers in the data set}
 \centering
-\begin{tabular}[t]{rrlrrr}
+\begin{tabular}[t]{rrlrr}
 \toprule
-CustomerID & Monthly\_Charges & Internet\_Service & Tenure\_Months & Churn\_Value & CLTV\\
+CustomerID & Monthly\_Charges & Internet\_Service & Tenure\_Months & Churn\_Value\\
 \midrule
-\cellcolor{gray!6}{1} & \cellcolor{gray!6}{53.85} & \cellcolor{gray!6}{DSL} & \cellcolor{gray!6}{2} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{3239}\\
-2 & 70.70 & Fiber optic & 2 & 1 & 2701\\
-\cellcolor{gray!6}{3} & \cellcolor{gray!6}{99.65} & \cellcolor{gray!6}{Fiber optic} & \cellcolor{gray!6}{8} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{5372}\\
-4 & 104.80 & Fiber optic & 28 & 1 & 5003\\
-\cellcolor{gray!6}{5} & \cellcolor{gray!6}{103.70} & \cellcolor{gray!6}{Fiber optic} & \cellcolor{gray!6}{49} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{5340}\\
+\cellcolor{gray!6}{1} & \cellcolor{gray!6}{53.85} & \cellcolor{gray!6}{DSL} & \cellcolor{gray!6}{2} & \cellcolor{gray!6}{1}\\
+2 & 70.70 & Fiber optic & 2 & 1\\
+\cellcolor{gray!6}{3} & \cellcolor{gray!6}{99.65} & \cellcolor{gray!6}{Fiber optic} & \cellcolor{gray!6}{8} & \cellcolor{gray!6}{1}\\
+4 & 104.80 & Fiber optic & 28 & 1\\
+\cellcolor{gray!6}{5} & \cellcolor{gray!6}{103.70} & \cellcolor{gray!6}{Fiber optic} & \cellcolor{gray!6}{49} & \cellcolor{gray!6}{1}\\
 \addlinespace
-6 & 55.20 & DSL & 10 & 1 & 5925\\
+6 & 55.20 & DSL & 10 & 1\\
 \bottomrule
 \end{tabular}
 \end{table}
 
 As shown by table \ref{tab:dataoverview}, the \texttt{Churn\_Value} status variable indicates whether the customer left the firm's \emph{portfolio} within the last month and \texttt{Tenure\_Months} is the duration variable.
 
-Since the purpose of our study relies in estimating the overall value of this fictional firm's \emph{portfolio}, two groups of target variables can be considered. On the one hand \texttt{Churn\_Value} and \texttt{Tenure\_Months} permit to determine whether a customer is active in the \emph{portfolio}. They are used as response variables in the survival models. On the other hand, the \texttt{CLTV} variable represents each customer's \emph{value} through measurement of customer lifetime value and is used as target in regression models.
+Since the purpose of our study relies in estimating the overall value of this fictional firm's \emph{portfolio}, two groups of target variables can be considered. On the one hand \texttt{Churn\_Value} and \texttt{Tenure\_Months} permit to determine whether a customer is active in the \emph{portfolio}. They are used as response variables in the survival models. On the other hand, \texttt{Monthly\_Charges} variable indicates the price paid by customers each month and may be used to derive a customer raw value. Even though the \texttt{CLTV} variable represents each customer's \emph{value} through measurement of customer lifetime value, we do not have any information on its calculation. Thus, it is not used in the model developed in the next chapter.
 
 \hypertarget{churndescstats}{%
 \section{\texorpdfstring{\texttt{Churn\_Value} and \texttt{Tenure\_Months}}{Churn\_Value and Tenure\_Months}}\label{churndescstats}}
@@ -868,166 +913,33 @@ Figure \ref{fig:kmcustaccount} enriches the \(\chi^2\) tests' results as it draw
 \caption{Kaplan-Meier survival function depending on customer account information}\label{fig:kmcustaccount}
 \end{figure}
 
-\hypertarget{cltv-customer-lifetime-value}{%
-\section{\texorpdfstring{\texttt{CLTV}: Customer Lifetime Value}{CLTV: Customer Lifetime Value}}\label{cltv-customer-lifetime-value}}
+\hypertarget{churn-duration-and-price}{%
+\section{Churn, duration and price}\label{churn-duration-and-price}}
 
-In the dataset, the \emph{value} of the fictional TSP's customers is measured by the discrete quantitative variable called \texttt{CLTV}. In this context, it is decided to draw histogram and density plots related to \texttt{CLTV} depending on the three types of explanatory variables. Anova tests are also implemented to verify whether \texttt{CLTV} has different values in the treatment variables' categories. Anova is a generalization of the Student's t test allowing to compare more than two groups. The test's statistic computes the ratio between variance between sample and variance within samples and is Fisher distributed. A low ratio indicates that there is no significant difference between the means of the samples being compared.
+The final step in the data exploration consists in analysing the relationship between the \texttt{Monthly\_Charges}, \texttt{Churn\_Label} and \texttt{Tenure\_Months} variables as they play an important role in the modelling strategy we adopt to estimate customer \emph{value}.
 
-\hypertarget{demographic-data-1}{%
-\subsection*{Demographic data}\label{demographic-data-1}}
-\addcontentsline{toc}{subsection}{Demographic data}
-
-Based on the Anova tests' results, \texttt{Partner} and \texttt{Dependents} seem to be statistically discriminant in terms of customer lifetime value which is not the case for \texttt{Gender} and \texttt{Senior\_Citizen}.
-
-\begin{table}[H]
-
-\caption{\label{tab:aovdemographics}Anova test between CLTV and demographic variables}
-\centering
-\begin{tabular}[t]{lrrrl}
-\toprule
-  & F statistic & Df1 & Df2 & p-value\\
-\midrule
-\cellcolor{gray!6}{Partner} & \cellcolor{gray!6}{139.76} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{7030} & \cellcolor{gray!6}{6e-32}\\
-Dependents & 24.89 & 1 & 7030 & 6.2e-07\\
-\cellcolor{gray!6}{Gender} & \cellcolor{gray!6}{0.39} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{7030} & \cellcolor{gray!6}{5.3e-01}\\
-Senior\_Citizen & 0.09 & 1 & 7030 & 7.6e-01\\
-\bottomrule
-\end{tabular}
-\end{table}
-
-The figure below illustrates how different CLV is between customers with a partner and those without, as well as between those with children or other dependents and those without. To put it another way, having a partner in life of dependents tends to increase customer lifetime value as shown by the last two plots.
+Looking at figure \ref{fig:cltvchurn}, monthly charges seem to be higher for churners than for retained customers as the density is more right-oriented. High fees might be a driver of customer churn.
 
 \begin{figure}
 
-{\centering \includegraphics[width=50in]{./imgs/cltv_demographics_plots} 
+{\centering \includegraphics[width=400pt,height=300pt]{./imgs/monthly_charges_churn_plot} 
 
 }
 
-\caption{Histogram and density plots of customer lifetime value depending on demographic information}\label{fig:cltvdemographics}
-\end{figure}
-
-\hypertarget{data-on-services-subscribed-1}{%
-\subsection*{Data on services subscribed}\label{data-on-services-subscribed-1}}
-\addcontentsline{toc}{subsection}{Data on services subscribed}
-
-When one wants to identify factors influencing customer lifetime value, it is relevant to consider variables related to services subscribed by customers. The Anova tests' results indicate that \texttt{CLTV} has significant different values in each group of all services related variables, except for \texttt{Internet\_Service}. The most important difference can be noted for \texttt{Online\_Backup} and \texttt{Online\_Security} variables, whereas there is more homogeneity in the \texttt{Phone\_Service} groups.
-
-\begin{table}[H]
-
-\caption{\label{tab:aovservices}Anova test between CLTV and services information variables}
-\centering
-\begin{tabular}[t]{lrrrl}
-\toprule
-  & F statistic & Df1 & Df2 & p-value\\
-\midrule
-\cellcolor{gray!6}{Online\_Backup} & \cellcolor{gray!6}{138.57} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{7030} & \cellcolor{gray!6}{1.1e-31}\\
-Online\_Security & 138.21 & 1 & 7030 & 1.3e-31\\
-\cellcolor{gray!6}{Device\_Protection} & \cellcolor{gray!6}{105.23} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{7030} & \cellcolor{gray!6}{1.6e-24}\\
-Tech\_Support & 101.85 & 1 & 7030 & 8.7e-24\\
-\cellcolor{gray!6}{Streaming\_Movies} & \cellcolor{gray!6}{90.96} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{7030} & \cellcolor{gray!6}{2e-21}\\
-\addlinespace
-Streaming\_TV & 79.58 & 1 & 7030 & 5.8e-19\\
-\cellcolor{gray!6}{Phone\_Service} & \cellcolor{gray!6}{3.65} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{7030} & \cellcolor{gray!6}{5.6e-02}\\
-Multiple\_Lines & 3.65 & 1 & 7030 & 5.6e-02\\
-\cellcolor{gray!6}{Internet\_Service} & \cellcolor{gray!6}{0.56} & \cellcolor{gray!6}{2} & \cellcolor{gray!6}{7029} & \cellcolor{gray!6}{5.7e-01}\\
-\bottomrule
-\end{tabular}
-\end{table}
-
-From figure \ref{fig:cltvservices} one can note that subscribing to additional services like having multiple lines, online security and backup, device protection or using the streaming movie service significantly enhance customer lifetime value. These variables may be interesting predictors of \texttt{CLTV} in regression models.
-
-\begin{figure}
-
-{\centering \includegraphics[width=75in]{./imgs/cltv_services_plots} 
-
-}
-
-\caption{Histogram and density plots of customer lifetime value depending on services subscribed}\label{fig:cltvservices}
-\end{figure}
-
-\hypertarget{customer-account-data-1}{%
-\subsection*{Customer account data}\label{customer-account-data-1}}
-\addcontentsline{toc}{subsection}{Customer account data}
-
-Table \ref{tab:aovaccountinfo} depicts that \texttt{CLTV} is statistically different according to the type of contract and the payment method. However, paperless billing does not seem to influence customer lifetime value.
-
-\begin{table}[H]
-
-\caption{\label{tab:aovaccountinfo}Anova test between CLTV and customer account data}
-\centering
-\begin{tabular}[t]{lrrrl}
-\toprule
-  & F statistic & Df1 & Df2 & p-value\\
-\midrule
-\cellcolor{gray!6}{Contract} & \cellcolor{gray!6}{274.28} & \cellcolor{gray!6}{2} & \cellcolor{gray!6}{7029} & \cellcolor{gray!6}{2e-115}\\
-Payment\_Method & 52.66 & 3 & 7028 & 1.2e-33\\
-\cellcolor{gray!6}{Paperless\_Billing} & \cellcolor{gray!6}{0.77} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{7030} & \cellcolor{gray!6}{3.8e-01}\\
-\bottomrule
-\end{tabular}
-\end{table}
-
-The three plots below provide details to previous results as it can be noticed that customers paying by credit card of bank transfer have higher CLV than those paying by e-check of mailed check. Besides, clients enrolled in one-year or two-year contracts have greater \emph{value} to the firm than those who pay on a monthly basis.
-
-\begin{figure}
-
-{\centering \includegraphics[width=50in]{./imgs/cltv_account_info_plots} 
-
-}
-
-\caption{Histogram and density plots of customer lifetime value depending on customer account data}\label{fig:cltvaccountinfo}
-\end{figure}
-
-\hypertarget{correlation-between-cltv-and-explanatory-quantitative-variables}{%
-\subsection*{\texorpdfstring{Correlation between \texttt{CLTV} and explanatory quantitative variables}{Correlation between CLTV and explanatory quantitative variables}}\label{correlation-between-cltv-and-explanatory-quantitative-variables}}
-\addcontentsline{toc}{subsection}{Correlation between \texttt{CLTV} and explanatory quantitative variables}
-
-Plotting the correlation matrix allows to have an overview on the links between the dataset's quantitative variables. The method used is the Pearson correlation coefficient which is defined as follows:
-
-\begin{equation}
-  \rho_{XY} = \frac{\text{cov}(X, Y)}{\sigma_X \sigma_Y}
-  \label{eq:pearson}
-\end{equation}
-
-where \(X\) and \(Y\) are two quantitative random variables, \(\text{cov}\) the covariance function and \(\sigma\) the standard deviation.
-
-On figure \ref{fig:corrplot}, non-significant correlations are crossed-out. It can be noticed that \texttt{CLTV} has the strongest correlation with \texttt{Tenure\_Months} (\(40\%\)), followed by \texttt{Total\_Charges} (\(34\%\)) then \texttt{Monthly\_Charges} (\(10\%\)).
-
-\begin{figure}
-
-{\centering \includegraphics[width=25in]{./imgs/corr_plot} 
-
-}
-
-\caption{Correlation plot}\label{fig:corrplot}
-\end{figure}
-
-\hypertarget{churn-duration-and-customer-value}{%
-\section{\texorpdfstring{Churn, duration and customer \emph{value}}{Churn, duration and customer value}}\label{churn-duration-and-customer-value}}
-
-The final step in the data exploration consists in analyzing the relationship between the three target variables: \texttt{CLTV}, \texttt{Churn\_Label} and \texttt{Tenure\_Months}.
-
-Looking at figure \ref{fig:cltvchurn}, customer lifetime value seems to have higher values for retained customers than for churners as the density is more right-oriented. This result makes sense as retained customers may have longer lifetime leading to higher CLV.
-
-\begin{figure}
-
-{\centering \includegraphics[width=400pt,height=300pt]{./imgs/cltv_churn_plot} 
-
-}
-
-\caption{Customer lifetime value depending on churn status}\label{fig:cltvchurn}
+\caption{Monthly charges paid by customers depending on churn status}\label{fig:cltvchurn}
 \end{figure}
 
 Besides, the low \emph{p value} related to the Anova test between \texttt{CLTV} and \texttt{Churn\_Label} indicates that customer lifetime value is statistically different between churner and retained clients.
 
 \begin{table}[H]
 
-\caption{\label{tab:aovcltvchurn}Anova test between CLTV and churn status}
+\caption{\label{tab:aovcltvchurn}Anova test between monthly fees and churn status}
 \centering
 \begin{tabular}[t]{lrrrl}
 \toprule
   & F statistic & Df1 & Df2 & p-value\\
 \midrule
-\cellcolor{gray!6}{Churn\_Label} & \cellcolor{gray!6}{117.57} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{7030} & \cellcolor{gray!6}{3.5e-27}\\
+\cellcolor{gray!6}{Churn\_Label} & \cellcolor{gray!6}{271.58} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{7030} & \cellcolor{gray!6}{6.8e-60}\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1043,15 +955,15 @@ The following histograms are interesting to the extent that the distribution of 
 \caption{Tenure months depending on churn status}\label{fig:churndur}
 \end{figure}
 
-Eventually, figure \ref{fig:cltvdur} depicts the average customer lifetime value per number of months in the portfolio. Two distinct groups can be identified with a threshold at 50 months. On average, the most valuable customers are those who have been in the portfolio for more than 50 months.
+Eventually, figure \ref{fig:monthlychargesdur} depicts the average monthly charges per number of months in the portfolio.
 
 \begin{figure}
 
-{\centering \includegraphics[width=450pt,height=300pt]{./imgs/avg_cltv_plot} 
+{\centering \includegraphics[width=450pt,height=300pt]{./imgs/monthly_charges_dur} 
 
 }
 
-\caption{Average CLTV depending on number of months in the portfolio}\label{fig:cltvdur}
+\caption{Average monthly fees depending on number of months in the portfolio}\label{fig:monthlychargesdur}
 \end{figure}
 
 \hypertarget{estimation}{%
@@ -1074,11 +986,11 @@ Table \ref{tab:selectedfeatures} shows the selected variables for 5 random obser
 \toprule
 Senior\_Citizen & Dependents & Phone\_Service & Internet\_Service & Online\_Security & Online\_Backup & Tech\_Support & Contract & Payment\_Method & Monthly\_Charges\\
 \midrule
-\cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{Mailed check} & \cellcolor{gray!6}{20.50}\\
-No & Yes & Yes & No & No & No & No & One year & Bank transfer & 20.60\\
-\cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Two year} & \cellcolor{gray!6}{Bank transfer} & \cellcolor{gray!6}{26.50}\\
-No & No & Yes & Fiber optic & No & No & Yes & Month-to-month & Electronic check & 106.35\\
-\cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Fiber optic} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Two year} & \cellcolor{gray!6}{Credit card} & \cellcolor{gray!6}{69.05}\\
+\cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{DSL} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{Bank transfer} & \cellcolor{gray!6}{50.40}\\
+No & Yes & Yes & No & No & No & No & Two year & Mailed check & 19.65\\
+\cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Fiber optic} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Two year} & \cellcolor{gray!6}{Credit card} & \cellcolor{gray!6}{114.30}\\
+No & No & Yes & No & No & No & No & Month-to-month & Bank transfer & 19.95\\
+\cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{DSL} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{Mailed check} & \cellcolor{gray!6}{54.45}\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1108,17 +1020,17 @@ Now the 10 continuous axes are identified, the next step consists in retrieving 
 
 \begin{table}[H]
 
-\caption{\label{tab:unnamed-chunk-26}The 10 principal axes obtained by MCA}
+\caption{\label{tab:unnamed-chunk-22}The 10 principal axes obtained by MCA}
 \centering
 \begin{tabular}[t]{rrrrrrrrrrr}
 \toprule
 CustomerID & Dim 1 & Dim 2 & Dim 3 & Dim 4 & Dim 5 & Dim 6 & Dim 7 & Dim 8 & Dim 9 & Dim 10\\
 \midrule
-\cellcolor{gray!6}{6466} & \cellcolor{gray!6}{-0.13} & \cellcolor{gray!6}{0.62} & \cellcolor{gray!6}{-0.30} & \cellcolor{gray!6}{-0.19} & \cellcolor{gray!6}{-0.05} & \cellcolor{gray!6}{0.08} & \cellcolor{gray!6}{-0.66} & \cellcolor{gray!6}{-0.01} & \cellcolor{gray!6}{0.09} & \cellcolor{gray!6}{0.11}\\
-6511 & 0.34 & 0.21 & -0.14 & 0.20 & 0.08 & -0.65 & 0.25 & 0.07 & -0.07 & 0.57\\
-\cellcolor{gray!6}{5666} & \cellcolor{gray!6}{0.37} & \cellcolor{gray!6}{0.93} & \cellcolor{gray!6}{0.00} & \cellcolor{gray!6}{-0.49} & \cellcolor{gray!6}{0.41} & \cellcolor{gray!6}{0.13} & \cellcolor{gray!6}{0.26} & \cellcolor{gray!6}{0.22} & \cellcolor{gray!6}{-0.19} & \cellcolor{gray!6}{-0.06}\\
-3519 & 0.44 & -0.86 & 0.16 & -0.03 & -0.02 & 0.14 & -0.03 & 0.39 & 0.14 & -0.14\\
-\cellcolor{gray!6}{4943} & \cellcolor{gray!6}{-0.70} & \cellcolor{gray!6}{0.42} & \cellcolor{gray!6}{0.42} & \cellcolor{gray!6}{0.42} & \cellcolor{gray!6}{0.52} & \cellcolor{gray!6}{-0.14} & \cellcolor{gray!6}{0.40} & \cellcolor{gray!6}{0.13} & \cellcolor{gray!6}{-0.24} & \cellcolor{gray!6}{0.14}\\
+\cellcolor{gray!6}{4197} & \cellcolor{gray!6}{-0.15} & \cellcolor{gray!6}{-0.02} & \cellcolor{gray!6}{-0.30} & \cellcolor{gray!6}{-0.03} & \cellcolor{gray!6}{0.03} & \cellcolor{gray!6}{-0.29} & \cellcolor{gray!6}{-0.61} & \cellcolor{gray!6}{0.01} & \cellcolor{gray!6}{-0.04} & \cellcolor{gray!6}{0.10}\\
+3025 & 0.53 & 0.04 & 0.08 & 0.26 & 0.09 & -0.54 & 0.55 & 0.40 & -0.02 & -0.19\\
+\cellcolor{gray!6}{6585} & \cellcolor{gray!6}{-0.04} & \cellcolor{gray!6}{-0.24} & \cellcolor{gray!6}{-0.15} & \cellcolor{gray!6}{0.40} & \cellcolor{gray!6}{0.07} & \cellcolor{gray!6}{-0.20} & \cellcolor{gray!6}{0.18} & \cellcolor{gray!6}{-0.25} & \cellcolor{gray!6}{0.02} & \cellcolor{gray!6}{0.07}\\
+3862 & -0.44 & -0.20 & -0.46 & -0.14 & -0.01 & 0.01 & -0.05 & -0.04 & -0.52 & 0.01\\
+\cellcolor{gray!6}{300} & \cellcolor{gray!6}{0.21} & \cellcolor{gray!6}{-0.37} & \cellcolor{gray!6}{0.11} & \cellcolor{gray!6}{0.00} & \cellcolor{gray!6}{0.00} & \cellcolor{gray!6}{-0.41} & \cellcolor{gray!6}{-0.54} & \cellcolor{gray!6}{-0.13} & \cellcolor{gray!6}{0.36} & \cellcolor{gray!6}{0.06}\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1145,13 +1057,11 @@ The key parameter to optimize when applying clustering methods is the number of 
 \caption{Relative gains in between-cluster inertia given the partition}\label{fig:btwinertia}
 \end{figure}
 
-\hypertarget{cluster-visualisation}{%
-\subsubsection*{Cluster visualisation}\label{cluster-visualisation}}
-\addcontentsline{toc}{subsubsection}{Cluster visualisation}
+Once the 3 groups identified by the clustering algorithm, one can determine customer repartition within those groups. Looking at table \ref{tab:clustRepartition}, cluster 2 represents the largest share of clients. This result is illustrated on figure \ref{fig:clusterplot}.
 
 \begin{table}[H]
 
-\caption{\label{tab:unnamed-chunk-27}Customer repartition across the 3 clusters}
+\caption{\label{tab:clustRepartition}Customer repartition within the 3 clusters}
 \centering
 \begin{tabular}[t]{lrrr}
 \toprule
@@ -1162,6 +1072,12 @@ The key parameter to optimize when applying clustering methods is the number of 
 \end{tabular}
 \end{table}
 
+\hypertarget{cluster-visualisation}{%
+\subsubsection*{Cluster visualisation}\label{cluster-visualisation}}
+\addcontentsline{toc}{subsubsection}{Cluster visualisation}
+
+When performing hierarchical clustering on principal components, visualizing cluster repartition onto MCA axes is relevant to have a first idea on how each cluster if different from the others. Figure \ref{fig:clusterplot} indicates that the three clusters are well separated in the \((F_1 ; F_2)\) plan. Cluster 1 is more concentrated than the others and take lower values onto dimension 1. The second group spreads over axis 1 and takes lower values on axis 2. Finally, cluster 3's position shows that its customers are characterized by categories which take positive values on both dimensions 1 and 2.
+
 \begin{figure}
 
 {\centering \includegraphics[width=12.83in]{./imgs/cluster_plot} 
@@ -1171,29 +1087,84 @@ The key parameter to optimize when applying clustering methods is the number of 
 \caption{Cluster visualisation onto the 2 first MCA axes}\label{fig:clusterplot}
 \end{figure}
 
-See figure \ref{fig:clusterplots} in the appendix for cluster visualisations onto the other MCA principal axes.
+In the appendix, figure \ref{fig:clusterplots} aims at visualizing clusters onto the other MCA principal components. Note that none of theses axes manages to separate the three clusters. This may be due to the low amount of variance each of these axes carries.
 
 \hypertarget{cluster-description}{%
 \subsubsection*{Cluster description}\label{cluster-description}}
 \addcontentsline{toc}{subsubsection}{Cluster description}
 
+Once the 3 customer segments are identified on the MCA dimensions, it seems to be interesting to describe them according to the original features. To that end, the repartition of qualitative variables' categories is depicted on the following figure. Comparing figures \ref{fig:clusterplot} and \ref{fig:mcaplot}, one can derive the following table in order to have a more precise idea on each segment.
+
+\begin{table}[H]
+
+\caption{\label{tab:unnamed-chunk-23}The most representative categories for each cluster}
+\centering
+\begin{tabular}[t]{rl}
+\toprule
+Cluster & Representative Categories\\
+\midrule
+\cellcolor{gray!6}{1} & \cellcolor{gray!6}{Mailed\_check, Internet\_Service\_No}\\
+2 & Month-to-month, Electronic check, Tech\_Support\_No\\
+\cellcolor{gray!6}{3} & \cellcolor{gray!6}{Two year, Credit card, Tech\_Support\_Yes}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The first segment may be made up of customers having subscribed to minimum plans whith no internet service whereas segment 3 tends to represent clients with a large variety of services and long-term contracts. On the opposite, cluster 2 clients are enrolled in short-term plans with internet service but not technical options.
+
 \begin{figure}
 
-{\centering \includegraphics[width=12.5in]{./imgs/monthly_charges_clust} 
+{\centering \includegraphics[width=12.5in]{./imgs/mca_plots} 
+
+}
+
+\caption{MCA - Categories plot onto the two first axes}\label{fig:mcaplot}
+\end{figure}
+
+Figure \ref{fig:monthlychargesclust} depicts the differences in monthly charges paid by each customer segment. It can be observed that most of cluster 1 clients are enrolled in cheap subscriptions. On the contrary, the charges paid by the second and third clusters are higher and less homogeneous. Note that the median price is the same among these two groups.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.7\linewidth,height=0.6\textheight]{./imgs/monthly_charges_clust} 
 
 }
 
 \caption{Monthly charges repartition across clusters}\label{fig:monthlychargesclust}
 \end{figure}
 
+Since one of the study's purpose is to model customer churn, it is important to compare the churn rate across the 3 groups. Here, the striking point is that cluster 2 clients account for a large proportion of churners. Indeed, more than 75\% of the clients having left the portfolio come from the second group. It can also be noted that cluster 1 and 3 are composed of more loyal customers as more than 70\% of clients who did not churn are from those 2 groups.
+
 \begin{figure}
 
-{\centering \includegraphics[width=20.83in]{./imgs/cat_vars_clust} 
+{\centering \includegraphics[width=0.6\linewidth,height=0.6\textheight]{./imgs/churn_cluster_barplot} 
 
 }
 
-\caption{Customer categorical features based on cluster}\label{fig:catvarsclust}
+\caption{Churn repartition per cluster}\label{fig:catvarsclust}
 \end{figure}
+
+\hypertarget{concluding-remarks-on-portfolio-segmentation}{%
+\subsubsection*{Concluding remarks on portfolio segmentation}\label{concluding-remarks-on-portfolio-segmentation}}
+\addcontentsline{toc}{subsubsection}{Concluding remarks on portfolio segmentation}
+
+With the aim of divide the portfolio into multiple groups based on categorical features, hierarchical clustering on principal components has led to identify three customer segments which can be broadly described as shown in the following table.
+
+\begin{table}[H]
+
+\caption{\label{tab:unnamed-chunk-24}Portfolio segmentation summary}
+\centering
+\begin{tabular}[t]{rll>{}l}
+\toprule
+Cluster & Loyalty & Value & Segment name\\
+\midrule
+\cellcolor{gray!6}{1} & \cellcolor{gray!6}{High} & \cellcolor{gray!6}{Low} & \em{\cellcolor{gray!6}{Silver}}\\
+\textbf{2} & \textbf{Low} & \textbf{High} & \textbf{\em{Gold}}\\
+\cellcolor{gray!6}{3} & \cellcolor{gray!6}{High} & \cellcolor{gray!6}{High} & \em{\cellcolor{gray!6}{Platinum}}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\emph{Gold} customers are valuable to the firm but are not loyal, making them the target segment. The objective would be to encourage them to stay in the portfolio longer.
 
 \hypertarget{churn-analysis}{%
 \section{Churn analysis}\label{churn-analysis}}
@@ -1210,11 +1181,11 @@ Before presenting the estimation results, it seems important to recall that \tex
 \toprule
 CustomerID & Tenure\_Months & Churn\_Value\\
 \midrule
-\cellcolor{gray!6}{281} & \cellcolor{gray!6}{2} & \cellcolor{gray!6}{1}\\
-5118 & 71 & 0\\
-\cellcolor{gray!6}{1929} & \cellcolor{gray!6}{30} & \cellcolor{gray!6}{0}\\
-1897 & 70 & 0\\
-\cellcolor{gray!6}{1978} & \cellcolor{gray!6}{64} & \cellcolor{gray!6}{0}\\
+\cellcolor{gray!6}{1671} & \cellcolor{gray!6}{30} & \cellcolor{gray!6}{1}\\
+6705 & 43 & 0\\
+\cellcolor{gray!6}{3702} & \cellcolor{gray!6}{12} & \cellcolor{gray!6}{0}\\
+1519 & 1 & 1\\
+\cellcolor{gray!6}{4882} & \cellcolor{gray!6}{50} & \cellcolor{gray!6}{0}\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1249,7 +1220,7 @@ Concordance index \(c\) is another metric to assess the performance of models wh
 \subsubsection*{Marginal effects}\label{marginal-effects-1}}
 \addcontentsline{toc}{subsubsection}{Marginal effects}
 
-In the Cox model, the relative hazard between two observations is assumed to be constant over time. As a consequence, the relative hazard becomes \(\exp \hat{\beta}\) for both dummy and continuous variables. For instance regarding figure \ref{fig:coxmarginaleffects}, the relative hazard ratio between customers with a two-year contract and those with a month-to-month contract is 0.046, meaning that the latter group is 22 times more prone to churn than the former. Also, month-to-month clients are about 5 times more likely to churn than customers enrolled in one-year plan.
+In the Cox model, the relative hazard between two observations is assumed to be constant over time. As a consequence, the relative hazard becomes \(\exp \hat{\beta}\) for both dummy and continuous variables. For instance regarding figure \ref{fig:coxmarginaleffects}, the relative hazard ratio between customers with a two-year contract and those with a month-to-month contract is 0.046, meaning that the latter group is 22 times more prone to churn than the former. Also, month-to-month clients are about 5 times more likely to churn than customers enrolled in one-year plan. When analysing the relative hazard ratios related to the payment method, it comes that clients who pay by electronic or mailed check are two times riskier to churn than those who pay by bank transfer. Furthermore, being enrolled in a plan with additional services like \texttt{Online\_Security}, \texttt{Online\_Backup} or \texttt{Tech\_Support} tends to decrease the estimated churn risk. As for the effect of the \texttt{Internet\_Service} covariate on the risk of attrition, it seems to be mitigated since clients who have a fiber optic internet connection are more than twice as likely to churn as those using a DSL internet connection.
 
 \begin{figure}
 
@@ -1260,9 +1231,11 @@ In the Cox model, the relative hazard between two observations is assumed to be 
 \caption{Marginal effects obtained with the Cox PH model}\label{fig:coxmarginaleffects}
 \end{figure}
 
-\hypertarget{estimating-churn-hazard}{%
-\subsubsection*{Estimating churn hazard}\label{estimating-churn-hazard}}
-\addcontentsline{toc}{subsubsection}{Estimating churn hazard}
+\hypertarget{estimation-results}{%
+\subsubsection*{Estimation results}\label{estimation-results}}
+\addcontentsline{toc}{subsubsection}{Estimation results}
+
+Semi-parametric models aims at estimating the instantaneous hazard function given a baseline hazard and a set of covariates. The model outputs a risk prediction for each individual with a confidence interval. Then, the survival and cumulative hazard functions can be retrieved as explained in section \ref{probabilities}. When going deeper into the functions depicted in figure \ref{fig:coxdataviz}, it can be noticed some inconsistencies between the estimated churn hazard cumulative hazard functions. Given the cumulative churn hazard increases faster when the number of months is high and given the instantaneous hazard is supposed to be the cumulative hazard function's slope, the estimated churn hazard's shape should be convex. Thus, the Cox model does not manage to properly estimate the risk of churn.
 
 \begin{figure}
 
@@ -1273,6 +1246,8 @@ In the Cox model, the relative hazard between two observations is assumed to be 
 \caption{Aggregated churn hazard, survival and cumulative hazard functions estimated by Cox model}\label{fig:coxdataviz}
 \end{figure}
 
+Although the fitted model is not flawless, it can be interested to study the estimation differences between the 3 customer segments identified in the previous section. Looking at figure \ref{fig:coxclust}, one can conclude that \emph{Gold} (cluster 2) clients are more prone to churn than others. The aggregated risk of attrition is indeed higher to such an extent that the cumulative churn hazard is exploding when the number of months is greater than 60. This being said, an efficient portfolio management would be to find strategies to reduce \emph{Gold} customers' churn and increase their duration in the portfolio.
+
 \begin{figure}
 
 {\centering \includegraphics[width=20.83in]{./imgs/churn_surv_clust} 
@@ -1282,14 +1257,57 @@ In the Cox model, the relative hazard between two observations is assumed to be 
 \caption{Aggregated churn hazard, survival and cumulative hazard functions for each cluster}\label{fig:coxclust}
 \end{figure}
 
-\hypertarget{model-comparison}{%
-\subsection{Model comparison}\label{model-comparison}}
+\hypertarget{other-survival-models}{%
+\subsection{Other survival models}\label{other-survival-models}}
+
+As said in the previous part, the Cox model does not fit the data perfectly as it does not capture the churn hazard's actual shape. In this context, it seems relevant to fit other survival models and test how they perform in predicting the risk of attrition. It is firstly decided to train parametric survival models which consist in assigning a probability distribution to the hazard function (see section \ref{parametric} for more details). To that end, one can use \texttt{flexsurv} \citep{flexsurv2016} which is and R package for parametric survival modelling. After having fitted the exponential, Weibull, gamma, log-logistic and log-normal models, no improvement can be observed with respect to the Cox model. Then, a machine learning approach can be adopted to model duration data using the random survival forest algorithm as explained in section \ref{mlsurv}. The \texttt{rfsrc} function from \texttt{randomForestSRC} \citep{randomForestSRC2008} is used to train the model after having determined the optimal node size and number of variables to try at each split with the \texttt{tune} function. Once the model trained, its performance is compared to the Cox model's as shown by table \ref{tab:performances}. One cannot but admit that the random survival forest perform poorly in terms of concordance index with respect to the Cox model. The latter manages to output a better risk scoring than the ML algorithm. It is thus decided to select the Cox PH model for the rest of the study.
+
+\textbackslash begin\{table\}{[}H{]}
+
+\textbackslash caption\{\label{tab:performances}Concordance index (\%) obtained with Cox model and Random Survival Forest (RSF)\}
+\centering
+
+\begin{tabular}[t]{lrr}
+\toprule
+  & Train & Test\\
+\midrule
+\cellcolor{gray!6}{Cox} & \cellcolor{gray!6}{86.769} & \cellcolor{gray!6}{86.253}\\
+RSF & 49.273 & 49.229\\
+\bottomrule
+\end{tabular}
+
+\textbackslash end\{table\}
 
 \hypertarget{portfolio-value-estimation}{%
 \section{Portfolio value estimation}\label{portfolio-value-estimation}}
 
-\hypertarget{mathematical-formulation}{%
-\subsection{Mathematical formulation}\label{mathematical-formulation}}
+In the two previous sections, the portfolio has been partitioned into 3 customer segments and customer lifetime has been estimated by the means of the Cox model. This section's purpose consists in deriving a method to calculate the overall value of the portfolio through the computation of customer lifetime raw value.
+
+\hypertarget{the-model}{%
+\subsection{The model}\label{the-model}}
+
+As said in chapter \ref{data}, it is decided not to use the \texttt{CLTV} variable to estimate customer lifetime value since no information has been provided on the computation method. Instead, another method is adopted to predict each client's lifetime value. For this purpose, two inputs are needed namely each customer's survival function as well as the monthly fees represented by the \texttt{Monthly\_Charges} feature. Based on the CLV formulation proposed by Gupta and Lehmann \citep{CUSTOMERS_ASSETS}, we derive a model aiming at calculating customer lifetime raw value (CLRV) as depicted in equation \eqref{eq:clrv}.
+
+\begin{equation}
+    CLRV_i = \sum_{t=0}^{T} \frac{p_i \ r_{i,t}}{(1+a)^t} 
+    \label{eq:clrv}
+\end{equation}
+
+with,
+
+\begin{itemize}
+\tightlist
+\item
+  \(p_i\) the monthly fee paid by customer \(i\),
+\item
+  \(r_{i,t}\) the probability that customer \(i\) be in the portfolio at time \(t\),
+\item
+  \(a\) the discount factor,
+\item
+  \(T\) the time horizon.
+\end{itemize}
+
+It may be interesting to note that \(p_i\) is time-invariant and corresponds to \texttt{Monthly\_Charges}. \(r_{i,t}\) is computed using the survival function estimated with the Cox model. \(a\) is fixed at 8\% and \(T\) equals 72 months which is the longest lifetime in the data.
 
 \hypertarget{customer-lifetime-raw-value}{%
 \subsection{Customer Lifetime Raw Value}\label{customer-lifetime-raw-value}}
@@ -1392,9 +1410,9 @@ Cluster 2 & 323.99 & 1194.59 & 1862.16 & 2134.37 & 2886.02 & 6009.78\\
 \hypertarget{simulations}{%
 \subsection{Simulations}\label{simulations}}
 
-\hypertarget{influence-of-the-discount-rate-on-clrv}{%
-\subsubsection*{Influence of the discount rate on CLRV}\label{influence-of-the-discount-rate-on-clrv}}
-\addcontentsline{toc}{subsubsection}{Influence of the discount rate on CLRV}
+\hypertarget{influence-of-the-discount-factor-on-clrv}{%
+\subsubsection*{Influence of the discount factor on CLRV}\label{influence-of-the-discount-factor-on-clrv}}
+\addcontentsline{toc}{subsubsection}{Influence of the discount factor on CLRV}
 
 \begin{table}[H]
 
@@ -1430,13 +1448,13 @@ Cluster 2 & 323.99 & 1194.59 & 1862.16 & 2134.37 & 2886.02 & 6009.78\\
 \caption{Customer Lifetime Raw Value evolution depending on discount rate}\label{fig:clrvEvolDiscount}
 \end{figure}
 
-\hypertarget{influence-the-contract-type-on-clrv}{%
-\subsubsection*{Influence the contract type on CLRV}\label{influence-the-contract-type-on-clrv}}
-\addcontentsline{toc}{subsubsection}{Influence the contract type on CLRV}
+\hypertarget{influence-of-the-contract-type-on-clrv}{%
+\subsubsection*{Influence of the contract type on CLRV}\label{influence-of-the-contract-type-on-clrv}}
+\addcontentsline{toc}{subsubsection}{Influence of the contract type on CLRV}
 
 \textbackslash begin\{table\}{[}H{]}
 
-\textbackslash caption\{\label{tab:unnamed-chunk-32}Portfolio estimated value and 95\% confidence interval depending on proportion of `month-to-month' contracts\}
+\textbackslash caption\{\label{tab:unnamed-chunk-30}Portfolio estimated value and 95\% confidence interval depending on proportion of `month-to-month' contracts\}
 \centering
 
 \begin{tabular}[t]{llll}
@@ -1471,13 +1489,13 @@ Cluster 2 & 323.99 & 1194.59 & 1862.16 & 2134.37 & 2886.02 & 6009.78\\
 \caption{Portfolio estimated value (Customer Raw Equity) depending on the proportion of 'month-to-month' contracts}\label{fig:clrvmonthtomonthEvol}
 \end{figure}
 
-\hypertarget{how-to-increase-clrv}{%
-\subsubsection*{How to increase CLRV?}\label{how-to-increase-clrv}}
-\addcontentsline{toc}{subsubsection}{How to increase CLRV?}
+\hypertarget{how-to-increase-customer-lifetime-raw-value}{%
+\subsubsection*{How to increase Customer Lifetime Raw Value?}\label{how-to-increase-customer-lifetime-raw-value}}
+\addcontentsline{toc}{subsubsection}{How to increase Customer Lifetime Raw Value?}
 
 \begin{table}[H]
 
-\caption{\label{tab:unnamed-chunk-34}Increase in portfolio value after having provided cluster 2 clients with additional services}
+\caption{\label{tab:unnamed-chunk-32}Increase in portfolio value after having provided cluster 2 clients with additional services}
 \centering
 \begin{tabular}[t]{llr}
 \toprule
@@ -1488,6 +1506,15 @@ With additional options & 9,218,937 & 48.43\\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\begin{figure}
+
+{\centering \includegraphics[width=12.5in]{./imgs/clust2_clrv} 
+
+}
+
+\caption{Increase in cluster 2 clients' CLRV after after having provided them with additional services}\label{fig:clust2CLRV}
+\end{figure}
 
 \hypertarget{appendix}{%
 \chapter*{Appendix}\label{appendix}}
@@ -1626,73 +1653,12 @@ The joint probability over the \(k\) ordered discrete failure times then becomes
 
 \begin{figure}
 
-{\centering \includegraphics[width=15.28in]{./imgs/cluster_plots} 
+{\centering \includegraphics[width=2\linewidth]{./imgs/cluster_plots} 
 
 }
 
 \caption{Cluster visualisation onto MCA axes}\label{fig:clusterplots}
 \end{figure}
-
-\hypertarget{parangons}{%
-\subsection*{Parangons}\label{parangons}}
-\addcontentsline{toc}{subsection}{Parangons}
-
-Data related to cluster 1's parangons
-
-\begin{table}[H]
-
-\caption{\label{tab:para1dat}}
-\centering
-\begin{tabular}[t]{lllllllllllllrrrr}
-\toprule
-  & Senior\_Citizen & Dependents & Internet\_Service & Online\_Security & Online\_Backup & Device\_Protection & Tech\_Support & Streaming\_TV & Streaming\_Movies & Contract & Paperless\_Billing & Payment\_Method & Monthly\_Charges & Tenure\_Months & Churn\_Value & CLTV\\
-\midrule
-\cellcolor{gray!6}{8} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Mailed check} & \cellcolor{gray!6}{20.15} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{4832}\\
-23 & No & No & No & No & No & No & No & No & No & Month-to-month & No & Mailed check & 21.05 & 5 & 1 & 2604\\
-\cellcolor{gray!6}{144} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Mailed check} & \cellcolor{gray!6}{19.00} & \cellcolor{gray!6}{12} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{3535}\\
-178 & No & No & No & No & No & No & No & No & No & Month-to-month & No & Mailed check & 19.55 & 1 & 1 & 3556\\
-\cellcolor{gray!6}{190} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Mailed check} & \cellcolor{gray!6}{19.90} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{4248}\\
-\bottomrule
-\end{tabular}
-\end{table}
-
-Data related to cluster 2's parangons
-
-\begin{table}[H]
-
-\caption{\label{tab:para2dat}}
-\centering
-\begin{tabular}[t]{lllllllllllllrrrr}
-\toprule
-  & Senior\_Citizen & Dependents & Internet\_Service & Online\_Security & Online\_Backup & Device\_Protection & Tech\_Support & Streaming\_TV & Streaming\_Movies & Contract & Paperless\_Billing & Payment\_Method & Monthly\_Charges & Tenure\_Months & Churn\_Value & CLTV\\
-\midrule
-\cellcolor{gray!6}{1405} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Fiber optic} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Electronic check} & \cellcolor{gray!6}{84.50} & \cellcolor{gray!6}{5} & \cellcolor{gray!6}{1} & \cellcolor{gray!6}{5141}\\
-2427 & No & No & Fiber optic & Yes & No & Yes & No & No & No & Month-to-month & Yes & Electronic check & 80.45 & 2 & 0 & 5602\\
-\cellcolor{gray!6}{4455} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Fiber optic} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Electronic check} & \cellcolor{gray!6}{84.75} & \cellcolor{gray!6}{19} & \cellcolor{gray!6}{0} & \cellcolor{gray!6}{5157}\\
-5025 & No & No & Fiber optic & Yes & No & No & No & No & Yes & Month-to-month & Yes & Electronic check & 88.05 & 9 & 0 & 2715\\
-\cellcolor{gray!6}{5743} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Fiber optic} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Month-to-month} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Electronic check} & \cellcolor{gray!6}{90.65} & \cellcolor{gray!6}{33} & \cellcolor{gray!6}{0} & \cellcolor{gray!6}{4460}\\
-\bottomrule
-\end{tabular}
-\end{table}
-
-Data related to cluster 3's parangons
-
-\begin{table}[H]
-
-\caption{\label{tab:para3dat}}
-\centering
-\begin{tabular}[t]{lllllllllllllrrrr}
-\toprule
-  & Senior\_Citizen & Dependents & Internet\_Service & Online\_Security & Online\_Backup & Device\_Protection & Tech\_Support & Streaming\_TV & Streaming\_Movies & Contract & Paperless\_Billing & Payment\_Method & Monthly\_Charges & Tenure\_Months & Churn\_Value & CLTV\\
-\midrule
-\cellcolor{gray!6}{5350} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{DSL} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Two year} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Electronic check} & \cellcolor{gray!6}{49.20} & \cellcolor{gray!6}{72} & \cellcolor{gray!6}{0} & \cellcolor{gray!6}{4700}\\
-3103 & No & No & DSL & Yes & Yes & Yes & No & Yes & Yes & Two year & Yes & Electronic check & 85.25 & 72 & 0 & 6275\\
-\cellcolor{gray!6}{3936} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{DSL} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Two year} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Electronic check} & \cellcolor{gray!6}{86.10} & \cellcolor{gray!6}{58} & \cellcolor{gray!6}{0} & \cellcolor{gray!6}{5666}\\
-1957 & No & No & DSL & No & Yes & No & Yes & Yes & Yes & Two year & Yes & Electronic check & 54.60 & 64 & 0 & 4850\\
-\cellcolor{gray!6}{2999} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{DSL} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{No} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Two year} & \cellcolor{gray!6}{Yes} & \cellcolor{gray!6}{Electronic check} & \cellcolor{gray!6}{78.95} & \cellcolor{gray!6}{72} & \cellcolor{gray!6}{0} & \cellcolor{gray!6}{5050}\\
-\bottomrule
-\end{tabular}
-\end{table}
 
   \bibliography{biblio.bib,packages.bib}
 

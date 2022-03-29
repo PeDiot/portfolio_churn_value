@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>1.2 What is attrition? | Portfolio, Churn &amp; Customer Value</title>
+  <title>3.7 Machine Learning for Survival Data | Portfolio, Churn &amp; Customer Value</title>
   <meta name="description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="1.2 What is attrition? | Portfolio, Churn &amp; Customer Value" />
+  <meta property="og:title" content="3.7 Machine Learning for Survival Data | Portfolio, Churn &amp; Customer Value" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="1.2 What is attrition? | Portfolio, Churn &amp; Customer Value" />
+  <meta name="twitter:title" content="3.7 Machine Learning for Survival Data | Portfolio, Churn &amp; Customer Value" />
   
   <meta name="twitter:description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="1.1-portfoliodef.html"/>
-<link rel="next" href="1.3-valuedef.html"/>
+<link rel="prev" href="3.6-semi-parametric-estimation.html"/>
+<link rel="next" href="3.8-performance-metrics.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -218,17 +218,64 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="attritiondef" class="section level2" number="1.2">
-<h2><span class="header-section-number">1.2</span> What is attrition?</h2>
-<p>Customer <em>attrition</em> or churn occurs when a client discontinues using a service or a product offered by a firm. Churn analysis corresponds to both measurement and prediction of the <em>attrition</em> rate in the customer base of the company. Evaluating <em>attrition</em> depends on the type of relationship between the firm and its clients. When it is defined by a contract, the customer has to inform the firm about their service termination. In the telecom industry, a consumer is required to notify their TSP before going to a competing company. In an opposite way, the firm/client relationship can be non-contractual. In that case, the service termination does not need to be notified. <em>Attrition</em> then becomes a latent variable and more advanced models are used to make forecasts.</p>
+<div id="mlsurv" class="section level2" number="3.7">
+<h2><span class="header-section-number">3.7</span> Machine Learning for Survival Data</h2>
+<p>In the previsous sections, some important models for duration data have been introduced. Here, emphasize is placed on machine learning algorithms that can also be implemented to predict a time-to-event variable such as the time to churn.</p>
+<div id="survival-trees" class="section level3" number="3.7.1">
+<h3><span class="header-section-number">3.7.1</span> Survival Trees</h3>
+<p>Traditional decision trees, also called CART (Classification And Regression Trees), segment the feature space into multiple rectangles and then fit a simple model to each of these subsets as shown by figure <a href="3.7-mlsurv.html#fig:tree">3.5</a> <span class="citation">(<a href="#ref-ML_TREE" role="doc-biblioref">Scholler 2021b</a>)</span>. The algorithm is a recursive partitioning which requires a criterion for choosing the <em>best</em> split, another criterion for deciding when to stop the splits and a rule for predicting the class of an observation.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:tree"></span>
+<p class="caption">
+Figure 3.5: Clasification decision tree
+</p>
+<img src="imgs/tree1.png" alt="Clasification decision tree" width="45%" height="260pt" /><img src="imgs/tree2.png" alt="Clasification decision tree" width="45%" height="260pt" />
+</div>
+<p>Survival tree <span class="citation">(<a href="#ref-SURV_TREE" role="doc-biblioref">LeBlanc and Crowley 1993</a>)</span> is the adapted version of CART for duration data. The objective is to use tree based binary splitting algorithm in order to predict hazard rates. To that end, survival time and censoring status are introduced as response variables. The splitting criteria used for survival trees have the same purpose than the criteria used for CART that is to say maximizing between-node heterogeneity or minimizing within-node homogeneity. Nonetheless, node purity is different in the case of survival trees as a node is considered pure if all spells in that node have similar survival duration. The most common criterion is the <strong>logrank test</strong> statistic to compare the two groups formed by the children nodes. For each node, every possible split on each feature is being examined. The best split is the one maximizing the survival difference between two children nodes. The test statistic is <span class="math inline">\(\chi^2\)</span> distributed which means the higher its value, the higher between-node variability so the better the split. Let <span class="math inline">\(t_1, \dots, t_k\)</span> be the <span class="math inline">\(k\)</span> ordered failure times. At the <span class="math inline">\(j^{\text{th}}\)</span> failure time, the logrank statistic is expressed as <span class="citation">(<a href="#ref-SEGAL" role="doc-biblioref">Segal 1988</a>)</span>:</p>
+<p><span class="math display" id="eq:logrank">\[\begin{equation}
+  \chi^2_{\text{logrank}} = \frac{\big[\sum_{j=1}^k \ (d_{0j} - r_{0j} \times d_j/r_j) \big]^2}{\sum_{j=1}^k \ \frac{r_{1j}r_{0j}d_j(r_j - d_j)}{r_j^2(r_j -1)}}
+  \tag{3.20}
+\end{equation}\]</span></p>
+</div>
+<div id="random-survival-forests-rsf" class="section level3" number="3.7.2">
+<h3><span class="header-section-number">3.7.2</span> Random Survival Forests (RSF)</h3>
+<p>This algorithm is proposed by <span class="citation"><a href="#ref-RSF" role="doc-biblioref">Hemant Ishwaran and al.</a> (<a href="#ref-RSF" role="doc-biblioref">2011</a>)</span> and is an ensemble of decision trees for the analysis of right-censored survival data. As random forests used for regression and classification, RSF are based on <strong>bagging</strong> which implies that <span class="math inline">\(B\)</span> bootstrap samples are drawn from the original data with 63<span class="math inline">\(\%\)</span> of them in the bag data and the remaining part in the out-of-bag (OOB) data. For each bootstrap sample, a survival tree is grown based on <span class="math inline">\(p\)</span> randomly selected features. Then, the parent node is split using the feature among the selected ones that maximizes survival difference between children nodes. Each tree is grown to full size and each terminal node needs to have no less than <span class="math inline">\(d_0\)</span> unique events. The cumulative hazard function (CHF) is computed for each tree using the Nelson-Aalen estimator such as:</p>
+<p><span class="math display" id="eq:chf">\[\begin{equation}
+  \widehat{H_l}(t) = \sum_{t_{j, l} &lt; t} \frac{d_{j,l}}{r_{j,l}}
+  \tag{3.21}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(t_{j,l}\)</span> is the <span class="math inline">\(j^{\text{th}}\)</span> distinct event time in leaf <span class="math inline">\(l\)</span>, <span class="math inline">\(d_{j,l}\)</span> the number of events completed at <span class="math inline">\(t_{j,l}\)</span> and <span class="math inline">\(r_{j,l}\)</span> the number of spells at risk at <span class="math inline">\(t_{j,l}\)</span>.</p>
+<p>All the CHFs are then averaged to obtain the bootstrap ensemble CHF and prediction error is finally computed on the OOB ensemble CHF.</p>
+</div>
+<div id="cox-boosting" class="section level3" number="3.7.3">
+<h3><span class="header-section-number">3.7.3</span> Cox Boosting</h3>
+<p><strong>Boosting</strong> is an ensemble method which combines several weak predictors into a strong predictor. The idea of most boosting methods is to train predictors sequentially, each trying to correct its predecessor. Cox boosting <span class="citation">(<a href="#ref-COX_BOOSTING" role="doc-biblioref">Binder and Schumacher 2008</a>)</span> is designed for high dimension survival data and has the purpose of feature selection while improving the performance of the standard Cox model. The key difference with gradient boosting is that Cox boosting does not update all coefficients at each boosting step, but only updates the coefficient that improves the overall fit the most. The loss function is a penalized version of the Cox model’s log-likelihood (see equation <a href="3.6-semi-parametric-estimation.html#eq:partlik">(3.19)</a> for the likelihood function of the Cox model). Cox boosting helps measuring variable importance as the coefficients associated to more representative variables will be updated in early steps.</p>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-COX_BOOSTING" class="csl-entry">
+Binder, and Schumacher. 2008. <span>“Allowing for Mandatory Covariates in Boosting Estimation of Sparse High-Dimensional Survival Models.”</span> <em>BMC Bioinformatics</em> 9(14).
+</div>
+<div id="ref-RSF" class="csl-entry">
+Ishwaran, Hemant, and al. 2011. <span>“Random Survival Forests for High-Dimensional Data.”</span> <a href="https://onlinelibrary.wiley.com/doi/10.1002/sam.10103">https://onlinelibrary.wiley.com/doi/10.1002/sam.10103</a>.
+</div>
+<div id="ref-SURV_TREE" class="csl-entry">
+LeBlanc, M., and J. Crowley. 1993. <span>“Survival Trees by Goodness of Split.”</span> <em>Journal of the American Statistical Association</em> 88: 457–67.
+</div>
+<div id="ref-ML_TREE" class="csl-entry">
+———. 2021b. <em>M1 Data Mining - Decision Trees</em>. Université de Tours. <a href="https://juliescholler.gitlab.io/files/M1/2021/M1-CM-decision_tree.html">https://juliescholler.gitlab.io/files/M1/2021/M1-CM-decision_tree.html</a>.
+</div>
+<div id="ref-SEGAL" class="csl-entry">
+Segal, Mark Robert. 1988. <span>“Regression Trees for Censored Data.”</span> <em>Biometrics</em> 44(1): 35–47.
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="1.1-portfoliodef.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="1.3-valuedef.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="3.6-semi-parametric-estimation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="3.8-performance-metrics.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
