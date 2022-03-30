@@ -189,7 +189,7 @@ data.frame(Cluster = c(1, 2, 3),
 
 *Gold* customers are valuable to the firm but are not loyal, making them the target segment. The objective would be to encourage them to stay in the portfolio longer.
 
-## Churn analysis 
+## Churn analysis {#churnAnalysis}
 
 Estimating the risk of attrition related to each customer is an essential step to model the firm's portfolio. In this context, survival models can be implemented with a view of deriving a predicted churn risk and survival function for each client. One the one hand, these predictions can be used to identify loyal consumers and make appropriate decisions. For instance, it might be relevant to offer benefits to a high-value client with a high estimated churn risk. On the other hand, a customer's survival probability at time $t$ represents the chance that this very customer be active in the portfolio at time $t$. This measure is helpful to compute the estimated value of the portfolio in the last section.
 
@@ -506,7 +506,7 @@ knitr::include_graphics(path = "./imgs/clrv_evolution_discount.png")
 
 #### Influence of month-to-month contracts on CLRV {-}
 
-While it is obviously doable to simulate new customer lifetime raw values by playing with the model's parameters, one can also change the values of covariates used to estimate the survival probabilities $r_{i,t}$. In this part, the analysis is centred on the proportion of month-to-month contracts in the portfolio. The method consists in computing each client's CLRV and the portfolio value V for proportions of monthly contracts ranging from 10 to 90%. Table \@ref(tab:portValmonthToMonth) examines the portfolio value for 4 interesting scenarios and compare them with the actual share of month-to-month contracts in the data. The results are quite counter-intuitive as V is not maximum for a 10% proportion whereas it has been demonstrated in figure @\ref(fig:coxmarginaleffects) that clients enrolled in month-to-month contracts are 22 times more prone to churn than those with two-year contracts. Hence one might think that the lower share of those customers, the higher value of the portfolio. 
+While it is obviously doable to simulate new customer lifetime raw values by playing with the model's parameters, one can also change the values of covariates used to estimate the survival probabilities $r_{i,t}$. In this part, the analysis is centred on the proportion of month-to-month contracts in the portfolio. The method consists in computing each client's CLRV and the portfolio value V for proportions of monthly contracts ranging from 10 to 90%. Table \@ref(tab:portValmonthToMonth) examines the portfolio value for 4 interesting scenarios and compare them with the actual share of month-to-month contracts in the data. The results are quite counter-intuitive as V is not maximum for a 10% proportion whereas it has been demonstrated in figure \@ref(fig:coxmarginaleffects) that clients enrolled in month-to-month contracts are 22 times more prone to churn than those with two-year contracts. Hence one might think that the lower share of those customers, the higher value of the portfolio. 
 
 ```{r}
 load(file = paste0(backup_path, "custValues/custVal_month_to_month.RData")) 
@@ -515,23 +515,27 @@ load(file = paste0(backup_path, "custValues/custVal_month_to_month.RData"))
 ```{r portValmonthToMonth}
 custVal_month_to_month %>% 
   rename(`% month-to-month contracts` = `% 'month-to-month' contracts`) %>% 
-  mykable(title = "Portfolio estimated value and 95% confidence interval depending on proportion of 'month-to-month' contracts")
+  mykable(title = "Portfolio estimated value and 95% confidence interval depending on proportion of month-to-month contracts")
 ```
 
 The following figure illustrates the CLRV distribution for 4 scenarios depending on the proportion of month-to-month contracts. The results are closer to our expectations than those presented in the previous table since CLRV tends to be higher when there are 10% month-to-month contracts in the portfolio. 
 
 
-```{r clrvmonthtomonth, fig.cap="CLRV distribution depending on the proportion of 'month-to-month' contracts"}
+```{r clrvmonthtomonth, fig.cap="CLRV distribution depending on the proportion of month-to-month contracts"}
 knitr::include_graphics(path = "./imgs/clrv_month_to_month.png")
 ```
 
-Ultimately when representing the evolution of customer raw equity, i.e. the portfolio value, according to the share of month-to-month contracts, a decreasing trend is identified which appears to be a rationnal result. 
+Ultimately when representing the evolution of customer raw equity, i.e. the portfolio value, according to the share of month-to-month contracts, a decreasing trend is identified which appears to be a rational result. 
 
-```{r clrvmonthtomonthEvol, fig.cap="Portfolio estimated value (Customer Raw Equity) depending on the proportion of 'month-to-month' contracts"}
+```{r clrvmonthtomonthEvol, fig.cap="Portfolio estimated value (Customer Raw Equity) depending on the proportion of month-to-month contracts"}
 knitr::include_graphics(path = "./imgs/portVal_month_to_month.png")
 ```
 
 #### How to increase Customer Lifetime Raw Value? {-}
+
+At this point of the study, a consistent method to evaluate the firm's portfolio value through the computation of customer lifetime raw value has been implemented. In section \@ref(churnAnalysis) it has been shown that customers from the *Gold* cluster are characterized by a higher churn rate and lower survival probabilities. This lesser loyalty to the firm has a negative impact on the portfolio value. Furthermore, cluster 2 clients amount to 34% in the customer raw equity which proves their strong potential in terms of CLRV. Therefore, a method to increase *Gold* customers' lifetime is proposed in this last section. To that end, it is decided to offer additional services for free to every cluster 2 client. These services are represented by the following variables: `Online_Security`, `Online_Backup` and `Tech_Support`. The underlying purpose is to increase the survival probabilities estimated by the Cox model as it has been proved that they have a negative impact on the churn hazard (see figure \@ref(fig:coxmarginaleffects)).
+
+The results presented in the table below support our hypothesis since the *Gold* cluster total value increases by almost 50% after having provided the clients with free additional options. 
 
 ```{r}
 load(file = paste0(backup_path, "custValues/tab_clust2_portVal.RData"))
@@ -539,11 +543,12 @@ load(file = paste0(backup_path, "custValues/tab_clust2_portVal.RData"))
 
 ```{r}
 tab_clust2_portVal %>%
-  dplyr::rename(`Portfolio Value` = V) %>% 
+  dplyr::rename(`Cluster 2 Value` = V) %>% 
   mykable(title = "Increase in portfolio value after having provided cluster 2 clients with additional services")
 ```
+
+Figure \@ref(fig:clust2CLRV) illustrates the mechanism that leads to an increase in the portfolio value after the "gift" to cluster 2 clients. One can notice a significant shift to the right of the CLRV distribution. This shift is the consequence of an increase in $r_{i,t}$ - client $i$'s survival probability at time $t$ - which is a positive driver of customer value. We are thus able to propose a marketing strategy which aims at boosting the firm's lifetime revenues. Note, however, that our methodology does not take costs into account which implies that the highlighted points should be mitigated.
 
 ```{r clust2CLRV, fig.cap="Increase in cluster 2 clients' CLRV after after having provided them with additional services"}
 knitr::include_graphics(path = "./imgs/clust2_clrv.png")
 ```
-
