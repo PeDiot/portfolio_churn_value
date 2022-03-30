@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>3.8 Performance metrics | Portfolio, Churn &amp; Customer Value</title>
+  <title>6.3 Churn analysis | Portfolio, Churn &amp; Customer Value</title>
   <meta name="description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="3.8 Performance metrics | Portfolio, Churn &amp; Customer Value" />
+  <meta property="og:title" content="6.3 Churn analysis | Portfolio, Churn &amp; Customer Value" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="3.8 Performance metrics | Portfolio, Churn &amp; Customer Value" />
+  <meta name="twitter:title" content="6.3 Churn analysis | Portfolio, Churn &amp; Customer Value" />
   
   <meta name="twitter:description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="3.7-mlsurv.html"/>
-<link rel="next" href="4-dataMining.html"/>
+<link rel="prev" href="6.2-segmentation.html"/>
+<link rel="next" href="6.4-portfolio-value-estimation.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -234,51 +234,221 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="performance-metrics" class="section level2" number="3.8">
-<h2><span class="header-section-number">3.8</span> Performance metrics</h2>
-<div id="concordance-index-c-index" class="section level3" number="3.8.1">
-<h3><span class="header-section-number">3.8.1</span> Concordance index (C-index)</h3>
-<p>C-index is a goodness of fit measure for models which produce risk scores. It is commonly used to evaluate risk models in survival analysis, where data may be censored.</p>
-<p>Consider both the observations and prediction values of two instances <span class="math inline">\((y_1; \hat{y}_1)\)</span> and <span class="math inline">\((y_2; \hat{y}_2)\)</span>. <span class="math inline">\(y_i\)</span> and <span class="math inline">\(\hat{y}_i\)</span> represent respectively the actual observation time and the predicted time. Mathematically, the C-index is defined as the probability to well predict the order of event occurring time for any pair of instances.</p>
-<p><span class="math display" id="eq:cindex">\[\begin{equation}
-  c = \mathbb{P}\big(\hat{y}_1 &gt; \hat{y}_2 | y_1 &gt; y_2\big)
-  \tag{3.22}
-\end{equation}\]</span></p>
-<p>Another way to write the C-index metric is to compute the ratio between concordant pairs and the total number of pairs. Consider individual <span class="math inline">\(i\)</span> and let <span class="math inline">\(T\)</span> be the time-to-event variable and <span class="math inline">\(\eta_i\)</span> the risk score assigned to <span class="math inline">\(i\)</span> by the model. We say that the pair <span class="math inline">\((i, j)\)</span> is a concordant pair if <span class="math inline">\(\eta_i &gt; \eta_j\)</span> and <span class="math inline">\(T_i &lt; T_j\)</span>, and it is a discordant pair if <span class="math inline">\(\eta_i &gt; \eta_j\)</span> and <span class="math inline">\(T_i &gt; T_j\)</span>. If both <span class="math inline">\(T_i\)</span> and <span class="math inline">\(T_j\)</span> are censored, then this pair is not taken into account in the computation. If <span class="math inline">\(T_j\)</span> is censored, then:</p>
-<ul>
-<li>If <span class="math inline">\(T_j &lt; T_i\)</span> the pair <span class="math inline">\((i, j)\)</span> is not considered in the computation since the order cannot be determined.</li>
-<li>If <span class="math inline">\(T_j &gt; T_i\)</span>, the order can be determined and <span class="math inline">\((i, j)\)</span> is concordant if <span class="math inline">\(\eta_i &gt; \eta_j\)</span>, discordant otherwise.</li>
-</ul>
-<p>Equation <a href="3.8-performance-metrics.html#eq:cindex">(3.22)</a> can then be rewritten as follows:</p>
-<p><span class="math display" id="eq:cindex2">\[\begin{equation}
-\begin{aligned}
-c &amp; = \frac{\# \text{concordant pairs}}{\# \text{concordant pairs} + \# \text{discordant pairs}} \\\\
-c &amp; = \frac{\sum_{i \neq j} \pmb{1}_{\eta_i &lt; \eta_j} \pmb{1}_{T_i &gt; T_j}d_j}{\sum_{i \neq j} \pmb{1}_{T_i &gt; T_j}d_j}
-\end{aligned}
-\tag{3.23}
-\end{equation}\]</span></p>
-<p>with <span class="math inline">\(d_j\)</span> the event indicator variable.</p>
-<p>The concordance index ranges between 0 and 1. A C-index below 0.5 indicates a very poor model. A C-index of 0.5 means that the model is rather a non-informative model making random predictions. A model with C-index 1 makes perfect prediction. Generally, a C-index higher than 0.7 indicates a good performance.</p>
+<div id="churn-analysis" class="section level2" number="6.3">
+<h2><span class="header-section-number">6.3</span> Churn analysis</h2>
+<p>Estimating the risk of attrition related to each customer is an essential step to model the firm’s portfolio. In this context, survival models can be implemented with a view of deriving a predicted churn risk and survival function for each client. One the one hand, these predictions can be used to identify loyal consumers and make appropriate decisions. For instance, it might be relevant to offer benefits to a high-value client with a high estimated churn risk. On the other hand, a customer’s survival probability at time <span class="math inline">\(t\)</span> represents the chance that this very customer be active in the portfolio at time <span class="math inline">\(t\)</span>. This measure is helpful to compute the estimated value of the portfolio in the last section.</p>
+<p>Before presenting the estimation results, it seems important to recall that <code>Tenure_Months</code> and <code>Churn_Value</code> can be seen as a pair of time and event variables used as target in survival models.</p>
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:survtarget">Table 6.6: </span>Time and event variables for survival models
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+CustomerID
+</th>
+<th style="text-align:right;">
+Tenure_Months
+</th>
+<th style="text-align:right;">
+Churn_Value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1671
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6705
+</td>
+<td style="text-align:right;">
+43
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3702
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1519
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4882
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+<div id="coxmodel" class="section level3" number="6.3.1">
+<h3><span class="header-section-number">6.3.1</span> The Cox model</h3>
+<p>When it comes to choose an estimation method on survival data, the Cox PH model appears to be an interesting first choice. As explained in chapter <a href="3-duration.html#duration">3</a>, this semi-parametric model makes no assumption regarding the nature of the baseline hazard function <span class="math inline">\(\lambda_0(t)\)</span>. The parametric part only relies in the modelling of the effect of some covariates on the hazard function <span class="math inline">\(\lambda(t)\)</span> (see section <a href="3.6-semi-parametric-estimation.html#coxph">3.6.2</a> for more details).</p>
+<div id="fitting-the-model-on-the-selected-features" class="section level4 unnumbered">
+<h4>Fitting the model on the selected features</h4>
+<p>Using the <code>coxph</code> function from the <code>survival</code> R library <span class="citation">(<a href="#ref-survival-book" role="doc-biblioref">Terry M. Therneau and Patricia M. Grambsch 2000</a>)</span>, we are able to train a Cox model on the feature vector identified in section <a href="6.1-featureselection.html#featureselection">6.1</a>. Once the model fitted, it seems relevant to evaluate its performance on the train data set. Table <a href="6.3-churn-analysis.html#tab:lrtest">6.7</a> compares the model’s log-likelihood to the constrained model’s. Given the very low p-value, it can be assumed that the Cox model better fits the data than a model with only the intercept.</p>
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:lrtest">Table 6.7: </span>Log-likelihood ratio test
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Model
+</th>
+<th style="text-align:right;">
+Constrained
+</th>
+<th style="text-align:right;">
+pvalue
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+-9228.77
+</td>
+<td style="text-align:right;">
+-10448.08
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+<p>Concordance index <span class="math inline">\(c\)</span> is another metric to assess the performance of models which produces risk scores and is defined as the probability to well predict the order of event occurring time for any pair of instances. For the Cox model, the C-index obtained on the training set is <span class="math inline">\(c \approx 0.865 \pm 0.004\)</span>, which is more than satisfying.</p>
 </div>
-<div id="brier-score" class="section level3" number="3.8.2">
-<h3><span class="header-section-number">3.8.2</span> Brier score</h3>
-<p>The Brier score is another statistical metric for evaluating duration models’ performance and is defined as the mean squared error between the estimated survival probability and the observed survival at time <span class="math inline">\(t\)</span>:</p>
-<p><span class="math display" id="eq:brier">\[\begin{equation}
-  BS(t) = \frac{1}{N} \sum_{i=1}^{N} \Big(\pmb{1}_{\{t_i&gt;t\}} - \hat{S}(t|\mathrm{x}_i) \Big)^2
-  \tag{3.24}
-\end{equation}\]</span></p>
-<p>The Cox <em>proportional hazards</em> model is the most popular for the analysis of duration data. This model is said to be semi-parametric as it makes no assumption regarding the nature of the baseline hazard function <span class="math inline">\(\lambda_0(t)\)</span>. The parametric part only relies in the modelling of the effect of some covariates on the hazard function <span class="math inline">\(\lambda(t)\)</span>. The relationship between the vector of covariates and the log hazard is linear and the parameters can be estimated by maximizing the partial likelihood function. The Cox PH model solely assumes that predictors act multiplicatively on the hazard function. The model is formulated as in equation <a href="3.6-semi-parametric-estimation.html#eq:ph">(3.15)</a> with the exponential function as link between the hazard and the covariates i.e. <span class="math inline">\(\lambda(t|\pmb{\mathrm{x}}) = \lambda_0 (t,\alpha) \text{e}^{\pmb{\mathrm{x&#39;}} \beta}\)</span>.</p>
-
+<div id="marginal-effects-1" class="section level4 unnumbered">
+<h4>Marginal effects</h4>
+<p>In the Cox model, the relative hazard between two observations is assumed to be constant over time. As a consequence, the relative hazard becomes <span class="math inline">\(\exp \hat{\beta}\)</span> for both dummy and continuous variables. For instance regarding figure <a href="6.3-churn-analysis.html#fig:coxmarginaleffects">6.7</a>, the relative hazard ratio between customers with a two-year contract and those with a month-to-month contract is 0.046, meaning that the latter group is 22 times more prone to churn than the former. Also, month-to-month clients are about 5 times more likely to churn than customers enrolled in one-year plan. When analysing the relative hazard ratios related to the payment method, it comes that clients who pay by electronic or mailed check are two times riskier to churn than those who pay by bank transfer. Furthermore, being enrolled in a plan with additional services like <code>Online_Security</code>, <code>Online_Backup</code> or <code>Tech_Support</code> tends to decrease the estimated churn risk. As for the effect of the <code>Internet_Service</code> covariate on the risk of attrition, it seems to be mitigated since clients who have a fiber optic internet connection are more than twice as likely to churn as those using a DSL internet connection.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:coxmarginaleffects"></span>
+<p class="caption">
+Figure 6.7: Marginal effects obtained with the Cox PH model
+</p>
+<img src="imgs/cox_ggforest.png" alt="Marginal effects obtained with the Cox PH model" width="650" />
 </div>
 </div>
-<!-- </div> -->
+<div id="estimation-results" class="section level4 unnumbered">
+<h4>Estimation results</h4>
+<p>Semi-parametric models aims at estimating the instantaneous hazard function given a baseline hazard and a set of covariates. The model outputs a risk prediction for each individual with a confidence interval. Then, the survival and cumulative hazard functions can be retrieved as explained in section <a href="3.3-probabilities.html#probabilities">3.3</a>. When going deeper into the functions depicted in figure <a href="6.3-churn-analysis.html#fig:coxdataviz">6.8</a>, it can be noticed some inconsistencies between the estimated churn hazard cumulative hazard functions. Given the cumulative churn hazard increases faster when the number of months is high and given the instantaneous hazard is supposed to be the cumulative hazard function’s slope, the estimated churn hazard’s shape should be convex. Thus, the Cox model does not manage to properly estimate the risk of churn.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:coxdataviz"></span>
+<p class="caption">
+Figure 6.8: Aggregated churn hazard, survival and cumulative hazard functions estimated by Cox model
+</p>
+<img src="imgs/cox_data_viz.png" alt="Aggregated churn hazard, survival and cumulative hazard functions estimated by Cox model" width="750" />
+</div>
+<p>Although the fitted model is not flawless, it can be interested to study the estimation differences between the 3 customer segments identified in the previous section. Looking at figure <a href="6.3-churn-analysis.html#fig:coxclust">6.9</a>, one can conclude that <em>Gold</em> (cluster 2) clients are more prone to churn than others. The aggregated risk of attrition is indeed higher to such an extent that the cumulative churn hazard is exploding when the number of months is greater than 60. This being said, an efficient portfolio management would be to find strategies to reduce <em>Gold</em> customers’ churn and increase their duration in the portfolio.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:coxclust"></span>
+<p class="caption">
+Figure 6.9: Aggregated churn hazard, survival and cumulative hazard functions for each cluster
+</p>
+<img src="imgs/churn_surv_clust.png" alt="Aggregated churn hazard, survival and cumulative hazard functions for each cluster" width="750" />
+</div>
+</div>
+</div>
+<div id="other-survival-models" class="section level3" number="6.3.2">
+<h3><span class="header-section-number">6.3.2</span> Other survival models</h3>
+<p>As said in the previous part, the Cox model does not fit the data perfectly as it does not capture the churn hazard’s actual shape. In this context, it seems relevant to fit other survival models and test how they perform in predicting the risk of attrition. It is firstly decided to train parametric survival models which consist in assigning a probability distribution to the hazard function (see section <a href="3.5-parametric.html#parametric">3.5</a> for more details). To that end, one can use <code>flexsurv</code> <span class="citation">(<a href="#ref-flexsurv2016" role="doc-biblioref">Jackson 2016</a>)</span> which is and R package for parametric survival modelling. After having fitted the exponential, Weibull, gamma, log-logistic and log-normal models, no improvement can be observed with respect to the Cox model. Then, a machine learning approach can be adopted to model duration data using the random survival forest algorithm as explained in section <a href="3.7-mlsurv.html#mlsurv">3.7</a>. The <code>rfsrc</code> function from <code>randomForestSRC</code> <span class="citation">(<a href="#ref-randomForestSRC2008" role="doc-biblioref">H. Ishwaran et al. 2008</a>)</span> is used to train the model after having determined the optimal node size and number of variables to try at each split with the <code>tune</code> function. Once the model trained, its performance is compared to the Cox model’s as shown by table <a href="6.3-churn-analysis.html#tab:performances">6.8</a>. One cannot but admit that the random survival forest perform poorly in terms of concordance index with respect to the Cox model. The latter manages to output a better risk scoring than the ML algorithm. It is thus decided to select the Cox PH model for the rest of the study.</p>
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:performances">Table 6.8: </span>Concordance index (%) obtained with Cox model and Random Survival Forest (RSF)
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Train
+</th>
+<th style="text-align:right;">
+Test
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Cox
+</td>
+<td style="text-align:right;">
+86.769
+</td>
+<td style="text-align:right;">
+86.253
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RSF
+</td>
+<td style="text-align:right;">
+49.273
+</td>
+<td style="text-align:right;">
+49.229
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-randomForestSRC2008" class="csl-entry">
+Ishwaran, H., U. B. Kogalur, E. H. Blackstone, and M. S. Lauer. 2008. <span>“Random Survival Forests.”</span> <em>Ann. Appl. Statist.</em> 2 (3): 841–60. <a href="https://arXiv.org/abs/0811.1645v1">https://arXiv.org/abs/0811.1645v1</a>.
+</div>
+<div id="ref-flexsurv2016" class="csl-entry">
+Jackson, Christopher. 2016. <span>“<span class="nocase">flexsurv</span>: A Platform for Parametric Survival Modeling in <span>R</span>.”</span> <em>Journal of Statistical Software</em> 70 (8): 1–33. <a href="https://doi.org/10.18637/jss.v070.i08">https://doi.org/10.18637/jss.v070.i08</a>.
+</div>
+<div id="ref-survival-book" class="csl-entry">
+Terry M. Therneau, and Patricia M. Grambsch. 2000. <em>Modeling Survival Data: Extending the <span>C</span>ox Model</em>. New York: Springer.
+</div>
+</div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="3.7-mlsurv.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="4-dataMining.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="6.2-segmentation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="6.4-portfolio-value-estimation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

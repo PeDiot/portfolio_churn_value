@@ -24,7 +24,7 @@
 <meta name="author" content="Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer" />
 
 
-<meta name="date" content="2022-03-02" />
+<meta name="date" content="2022-03-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="5-data.html"/>
-<link rel="next" href="5.2-churn_value-and-tenure_months.html"/>
+<link rel="next" href="5.2-churndescstats.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -118,10 +118,10 @@ div.csl-indent {
 <li class="chapter" data-level="3.2.1" data-path="3.2-censoring-and-truncation.html"><a href="3.2-censoring-and-truncation.html#censoring-mechanisms"><i class="fa fa-check"></i><b>3.2.1</b> Censoring mechanisms</a></li>
 <li class="chapter" data-level="3.2.2" data-path="3.2-censoring-and-truncation.html"><a href="3.2-censoring-and-truncation.html#selection-bias"><i class="fa fa-check"></i><b>3.2.2</b> Selection bias</a></li>
 </ul></li>
-<li class="chapter" data-level="3.3" data-path="3.3-probabilistic-concepts.html"><a href="3.3-probabilistic-concepts.html"><i class="fa fa-check"></i><b>3.3</b> Probabilistic concepts</a>
+<li class="chapter" data-level="3.3" data-path="3.3-probabilities.html"><a href="3.3-probabilities.html"><i class="fa fa-check"></i><b>3.3</b> Probabilistic concepts</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="3.3-probabilistic-concepts.html"><a href="3.3-probabilistic-concepts.html#survival-function"><i class="fa fa-check"></i><b>3.3.1</b> Survival function</a></li>
-<li class="chapter" data-level="3.3.2" data-path="3.3-probabilistic-concepts.html"><a href="3.3-probabilistic-concepts.html#hazard-and-cumulative-hazard-functions"><i class="fa fa-check"></i><b>3.3.2</b> Hazard and Cumulative Hazard functions</a></li>
+<li class="chapter" data-level="3.3.1" data-path="3.3-probabilities.html"><a href="3.3-probabilities.html#survival-function"><i class="fa fa-check"></i><b>3.3.1</b> Survival function</a></li>
+<li class="chapter" data-level="3.3.2" data-path="3.3-probabilities.html"><a href="3.3-probabilities.html#hazard-and-cumulative-hazard-functions"><i class="fa fa-check"></i><b>3.3.2</b> Hazard and Cumulative Hazard functions</a></li>
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="3.4-nonparam.html"><a href="3.4-nonparam.html"><i class="fa fa-check"></i><b>3.4</b> Nonparametric models</a>
 <ul>
@@ -130,60 +130,76 @@ div.csl-indent {
 <li class="chapter" data-level="3.4.3" data-path="3.4-nonparam.html"><a href="3.4-nonparam.html#kaplan-meier-estimator"><i class="fa fa-check"></i><b>3.4.3</b> Kaplan-Meier estimator</a></li>
 <li class="chapter" data-level="3.4.4" data-path="3.4-nonparam.html"><a href="3.4-nonparam.html#nelson-aalen-estimator"><i class="fa fa-check"></i><b>3.4.4</b> Nelson-Aalen estimator</a></li>
 </ul></li>
-<li class="chapter" data-level="3.5" data-path="3.5-parametric-models.html"><a href="3.5-parametric-models.html"><i class="fa fa-check"></i><b>3.5</b> Parametric models</a>
+<li class="chapter" data-level="3.5" data-path="3.5-parametric.html"><a href="3.5-parametric.html"><i class="fa fa-check"></i><b>3.5</b> Parametric models</a>
 <ul>
-<li class="chapter" data-level="3.5.1" data-path="3.5-parametric-models.html"><a href="3.5-parametric-models.html#constant-hazard-exponential-model"><i class="fa fa-check"></i><b>3.5.1</b> Constant hazard (exponential model)</a></li>
-<li class="chapter" data-level="3.5.2" data-path="3.5-parametric-models.html"><a href="3.5-parametric-models.html#monotone-hazard"><i class="fa fa-check"></i><b>3.5.2</b> Monotone hazard</a></li>
-<li class="chapter" data-level="3.5.3" data-path="3.5-parametric-models.html"><a href="3.5-parametric-models.html#concave-and-convex-hazard"><i class="fa fa-check"></i><b>3.5.3</b> Concave and convex hazard</a></li>
+<li class="chapter" data-level="3.5.1" data-path="3.5-parametric.html"><a href="3.5-parametric.html#constant-hazard-exponential-model"><i class="fa fa-check"></i><b>3.5.1</b> Constant hazard (exponential model)</a></li>
+<li class="chapter" data-level="3.5.2" data-path="3.5-parametric.html"><a href="3.5-parametric.html#monotone-hazard"><i class="fa fa-check"></i><b>3.5.2</b> Monotone hazard</a></li>
+<li class="chapter" data-level="3.5.3" data-path="3.5-parametric.html"><a href="3.5-parametric.html#concave-and-convex-hazard"><i class="fa fa-check"></i><b>3.5.3</b> Concave and convex hazard</a></li>
 </ul></li>
 <li class="chapter" data-level="3.6" data-path="3.6-semi-parametric-estimation.html"><a href="3.6-semi-parametric-estimation.html"><i class="fa fa-check"></i><b>3.6</b> Semi-parametric estimation</a>
 <ul>
 <li class="chapter" data-level="3.6.1" data-path="3.6-semi-parametric-estimation.html"><a href="3.6-semi-parametric-estimation.html#proportional-hazards-models"><i class="fa fa-check"></i><b>3.6.1</b> <em>Proportional Hazards</em> models</a></li>
-<li class="chapter" data-level="3.6.2" data-path="3.6-semi-parametric-estimation.html"><a href="3.6-semi-parametric-estimation.html#cox-ph-model"><i class="fa fa-check"></i><b>3.6.2</b> Cox PH model</a></li>
+<li class="chapter" data-level="3.6.2" data-path="3.6-semi-parametric-estimation.html"><a href="3.6-semi-parametric-estimation.html#coxph"><i class="fa fa-check"></i><b>3.6.2</b> Cox PH model</a></li>
+</ul></li>
+<li class="chapter" data-level="3.7" data-path="3.7-mlsurv.html"><a href="3.7-mlsurv.html"><i class="fa fa-check"></i><b>3.7</b> Machine Learning for Survival Data</a>
+<ul>
+<li class="chapter" data-level="3.7.1" data-path="3.7-mlsurv.html"><a href="3.7-mlsurv.html#survival-trees"><i class="fa fa-check"></i><b>3.7.1</b> Survival Trees</a></li>
+<li class="chapter" data-level="3.7.2" data-path="3.7-mlsurv.html"><a href="3.7-mlsurv.html#random-survival-forests-rsf"><i class="fa fa-check"></i><b>3.7.2</b> Random Survival Forests (RSF)</a></li>
+<li class="chapter" data-level="3.7.3" data-path="3.7-mlsurv.html"><a href="3.7-mlsurv.html#cox-boosting"><i class="fa fa-check"></i><b>3.7.3</b> Cox Boosting</a></li>
+</ul></li>
+<li class="chapter" data-level="3.8" data-path="3.8-performance-metrics.html"><a href="3.8-performance-metrics.html"><i class="fa fa-check"></i><b>3.8</b> Performance metrics</a>
+<ul>
+<li class="chapter" data-level="3.8.1" data-path="3.8-performance-metrics.html"><a href="3.8-performance-metrics.html#concordance-index-c-index"><i class="fa fa-check"></i><b>3.8.1</b> Concordance index (C-index)</a></li>
+<li class="chapter" data-level="3.8.2" data-path="3.8-performance-metrics.html"><a href="3.8-performance-metrics.html#brier-score"><i class="fa fa-check"></i><b>3.8.2</b> Brier score</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="4-ml.html"><a href="4-ml.html"><i class="fa fa-check"></i><b>4</b> Machine Learning</a>
+<li class="chapter" data-level="4" data-path="4-dataMining.html"><a href="4-dataMining.html"><i class="fa fa-check"></i><b>4</b> Data Mining methods</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="4.1-machine-learning-for-survival-data.html"><a href="4.1-machine-learning-for-survival-data.html"><i class="fa fa-check"></i><b>4.1</b> Machine Learning for Survival Data</a>
+<li class="chapter" data-level="4.1" data-path="4.1-mutliple-correspondence-analysis-mca.html"><a href="4.1-mutliple-correspondence-analysis-mca.html"><i class="fa fa-check"></i><b>4.1</b> Mutliple Correspondence Analysis (MCA)</a>
 <ul>
-<li class="chapter" data-level="4.1.1" data-path="4.1-machine-learning-for-survival-data.html"><a href="4.1-machine-learning-for-survival-data.html#survival-trees"><i class="fa fa-check"></i><b>4.1.1</b> Survival Trees</a></li>
-<li class="chapter" data-level="4.1.2" data-path="4.1-machine-learning-for-survival-data.html"><a href="4.1-machine-learning-for-survival-data.html#random-survival-forests-rsf"><i class="fa fa-check"></i><b>4.1.2</b> Random Survival Forests (RSF)</a></li>
-<li class="chapter" data-level="4.1.3" data-path="4.1-machine-learning-for-survival-data.html"><a href="4.1-machine-learning-for-survival-data.html#cox-boosting"><i class="fa fa-check"></i><b>4.1.3</b> Cox Boosting</a></li>
+<li class="chapter" data-level="4.1.1" data-path="4.1-mutliple-correspondence-analysis-mca.html"><a href="4.1-mutliple-correspondence-analysis-mca.html#definition-1"><i class="fa fa-check"></i><b>4.1.1</b> Definition</a></li>
+<li class="chapter" data-level="4.1.2" data-path="4.1-mutliple-correspondence-analysis-mca.html"><a href="4.1-mutliple-correspondence-analysis-mca.html#complete-disjunctive-table"><i class="fa fa-check"></i><b>4.1.2</b> Complete disjunctive table</a></li>
+<li class="chapter" data-level="4.1.3" data-path="4.1-mutliple-correspondence-analysis-mca.html"><a href="4.1-mutliple-correspondence-analysis-mca.html#distances"><i class="fa fa-check"></i><b>4.1.3</b> Distances</a></li>
+<li class="chapter" data-level="4.1.4" data-path="4.1-mutliple-correspondence-analysis-mca.html"><a href="4.1-mutliple-correspondence-analysis-mca.html#algorithm"><i class="fa fa-check"></i><b>4.1.4</b> Algorithm</a></li>
 </ul></li>
-<li class="chapter" data-level="4.2" data-path="4.2-regression-methods.html"><a href="4.2-regression-methods.html"><i class="fa fa-check"></i><b>4.2</b> Regression methods</a>
+<li class="chapter" data-level="4.2" data-path="4.2-unsupervised-classification.html"><a href="4.2-unsupervised-classification.html"><i class="fa fa-check"></i><b>4.2</b> Unsupervised classification</a>
 <ul>
-<li class="chapter" data-level="4.2.1" data-path="4.2-regression-methods.html"><a href="4.2-regression-methods.html#linear-models"><i class="fa fa-check"></i><b>4.2.1</b> Linear models</a></li>
-<li class="chapter" data-level="4.2.2" data-path="4.2-regression-methods.html"><a href="4.2-regression-methods.html#more-advanced-regression-models"><i class="fa fa-check"></i><b>4.2.2</b> More advanced regression models</a></li>
-</ul></li>
-<li class="chapter" data-level="4.3" data-path="4.3-performance-metrics.html"><a href="4.3-performance-metrics.html"><i class="fa fa-check"></i><b>4.3</b> Performance Metrics</a>
-<ul>
-<li class="chapter" data-level="4.3.1" data-path="4.3-performance-metrics.html"><a href="4.3-performance-metrics.html#metrics-for-regression-models"><i class="fa fa-check"></i><b>4.3.1</b> Metrics for Regression models</a></li>
-<li class="chapter" data-level="4.3.2" data-path="4.3-performance-metrics.html"><a href="4.3-performance-metrics.html#metrics-for-survival-models"><i class="fa fa-check"></i><b>4.3.2</b> Metrics for Survival models</a></li>
+<li class="chapter" data-level="4.2.1" data-path="4.2-unsupervised-classification.html"><a href="4.2-unsupervised-classification.html#hierarchical-clustering-on-principal-components-hcpc"><i class="fa fa-check"></i><b>4.2.1</b> Hierarchical Clustering on Principal Components (HCPC)</a></li>
+<li class="chapter" data-level="4.2.2" data-path="4.2-unsupervised-classification.html"><a href="4.2-unsupervised-classification.html#agglomerative-hierarchical-clustering-ahc"><i class="fa fa-check"></i><b>4.2.2</b> Agglomerative Hierarchical Clustering (AHC)</a></li>
+<li class="chapter" data-level="4.2.3" data-path="4.2-unsupervised-classification.html"><a href="4.2-unsupervised-classification.html#the-k-means-algorithm"><i class="fa fa-check"></i><b>4.2.3</b> The k-means algorithm</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="5-data.html"><a href="5-data.html"><i class="fa fa-check"></i><b>5</b> Data</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="5.1-general-overview.html"><a href="5.1-general-overview.html"><i class="fa fa-check"></i><b>5.1</b> General Overview</a></li>
-<li class="chapter" data-level="5.2" data-path="5.2-churn_value-and-tenure_months.html"><a href="5.2-churn_value-and-tenure_months.html"><i class="fa fa-check"></i><b>5.2</b> <code>Churn_Value</code> and <code>Tenure_Months</code></a>
+<li class="chapter" data-level="5.2" data-path="5.2-churndescstats.html"><a href="5.2-churndescstats.html"><i class="fa fa-check"></i><b>5.2</b> <code>Churn_Value</code> and <code>Tenure_Months</code></a>
 <ul>
-<li class="chapter" data-level="" data-path="5.2-churn_value-and-tenure_months.html"><a href="5.2-churn_value-and-tenure_months.html#demographic-data"><i class="fa fa-check"></i>Demographic data</a></li>
-<li class="chapter" data-level="" data-path="5.2-churn_value-and-tenure_months.html"><a href="5.2-churn_value-and-tenure_months.html#data-on-services-subscribed"><i class="fa fa-check"></i>Data on services subscribed</a></li>
-<li class="chapter" data-level="" data-path="5.2-churn_value-and-tenure_months.html"><a href="5.2-churn_value-and-tenure_months.html#customer-account-data"><i class="fa fa-check"></i>Customer account data</a></li>
+<li class="chapter" data-level="" data-path="5.2-churndescstats.html"><a href="5.2-churndescstats.html#demographic-data"><i class="fa fa-check"></i>Demographic data</a></li>
+<li class="chapter" data-level="" data-path="5.2-churndescstats.html"><a href="5.2-churndescstats.html#data-on-services-subscribed"><i class="fa fa-check"></i>Data on services subscribed</a></li>
+<li class="chapter" data-level="" data-path="5.2-churndescstats.html"><a href="5.2-churndescstats.html#customer-account-data"><i class="fa fa-check"></i>Customer account data</a></li>
 </ul></li>
-<li class="chapter" data-level="5.3" data-path="5.3-cltv-customer-lifetime-value.html"><a href="5.3-cltv-customer-lifetime-value.html"><i class="fa fa-check"></i><b>5.3</b> <code>CLTV</code>: Customer Lifetime Value</a>
+<li class="chapter" data-level="5.3" data-path="5.3-churn-duration-and-price.html"><a href="5.3-churn-duration-and-price.html"><i class="fa fa-check"></i><b>5.3</b> Churn, duration and price</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="6-estimation.html"><a href="6-estimation.html"><i class="fa fa-check"></i><b>6</b> Estimation techniques</a>
 <ul>
-<li class="chapter" data-level="" data-path="5.3-cltv-customer-lifetime-value.html"><a href="5.3-cltv-customer-lifetime-value.html#demographic-data-1"><i class="fa fa-check"></i>Demographic data</a></li>
-<li class="chapter" data-level="" data-path="5.3-cltv-customer-lifetime-value.html"><a href="5.3-cltv-customer-lifetime-value.html#data-on-services-subscribed-1"><i class="fa fa-check"></i>Data on services subscribed</a></li>
-<li class="chapter" data-level="" data-path="5.3-cltv-customer-lifetime-value.html"><a href="5.3-cltv-customer-lifetime-value.html#customer-account-data-1"><i class="fa fa-check"></i>Customer account data</a></li>
-<li><a href="5.3-cltv-customer-lifetime-value.html#correlation-between-cltv-and-explanatory-quantitative-variables">Correlation between <code>CLTV</code> and explanatory quantitative variables</a></li>
-</ul></li>
-<li class="chapter" data-level="5.4" data-path="5.4-churn-duration-and-customer-value.html"><a href="5.4-churn-duration-and-customer-value.html"><i class="fa fa-check"></i><b>5.4</b> Churn, duration and customer <em>value</em></a></li>
-</ul></li>
-<li class="chapter" data-level="6" data-path="6-estimation-techniques.html"><a href="6-estimation-techniques.html"><i class="fa fa-check"></i><b>6</b> Estimation techniques</a>
+<li class="chapter" data-level="6.1" data-path="6.1-featureselection.html"><a href="6.1-featureselection.html"><i class="fa fa-check"></i><b>6.1</b> Feature selection</a></li>
+<li class="chapter" data-level="6.2" data-path="6.2-segmentation.html"><a href="6.2-segmentation.html"><i class="fa fa-check"></i><b>6.2</b> Portfolio segmentation</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="6.1-portfolio-segmentation.html"><a href="6.1-portfolio-segmentation.html"><i class="fa fa-check"></i><b>6.1</b> Portfolio segmentation</a></li>
-<li class="chapter" data-level="6.2" data-path="6.2-churn-prediction.html"><a href="6.2-churn-prediction.html"><i class="fa fa-check"></i><b>6.2</b> Churn prediction</a></li>
-<li class="chapter" data-level="6.3" data-path="6.3-estimation-of-portfolio-value.html"><a href="6.3-estimation-of-portfolio-value.html"><i class="fa fa-check"></i><b>6.3</b> Estimation of portfolio value</a></li>
+<li class="chapter" data-level="6.2.1" data-path="6.2-segmentation.html"><a href="6.2-segmentation.html#transforming-qualitative-variables-into-principal-axes"><i class="fa fa-check"></i><b>6.2.1</b> Transforming qualitative variables into principal axes</a></li>
+<li class="chapter" data-level="6.2.2" data-path="6.2-segmentation.html"><a href="6.2-segmentation.html#hierarchical-clustering-on-principal-components"><i class="fa fa-check"></i><b>6.2.2</b> Hierarchical clustering on principal components</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="6.3-churn-analysis.html"><a href="6.3-churn-analysis.html"><i class="fa fa-check"></i><b>6.3</b> Churn analysis</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="6.3-churn-analysis.html"><a href="6.3-churn-analysis.html#coxmodel"><i class="fa fa-check"></i><b>6.3.1</b> The Cox model</a></li>
+<li class="chapter" data-level="6.3.2" data-path="6.3-churn-analysis.html"><a href="6.3-churn-analysis.html#other-survival-models"><i class="fa fa-check"></i><b>6.3.2</b> Other survival models</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="6.4-portfolio-value-estimation.html"><a href="6.4-portfolio-value-estimation.html"><i class="fa fa-check"></i><b>6.4</b> Portfolio value estimation</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="6.4-portfolio-value-estimation.html"><a href="6.4-portfolio-value-estimation.html#the-model"><i class="fa fa-check"></i><b>6.4.1</b> The model</a></li>
+<li class="chapter" data-level="6.4.2" data-path="6.4-portfolio-value-estimation.html"><a href="6.4-portfolio-value-estimation.html#customer-lifetime-raw-value"><i class="fa fa-check"></i><b>6.4.2</b> Customer Lifetime Raw Value</a></li>
+<li class="chapter" data-level="6.4.3" data-path="6.4-portfolio-value-estimation.html"><a href="6.4-portfolio-value-estimation.html#cluster-contribution-to-the-portfolio-value"><i class="fa fa-check"></i><b>6.4.3</b> Cluster contribution to the portfolio value</a></li>
+<li class="chapter" data-level="6.4.4" data-path="6.4-portfolio-value-estimation.html"><a href="6.4-portfolio-value-estimation.html#simulations"><i class="fa fa-check"></i><b>6.4.4</b> Simulations</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html"><i class="fa fa-check"></i>Appendix</a>
 <ul>
@@ -191,6 +207,11 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="link-between-cumulative-hazard-and-survivor-functions.html"><a href="link-between-cumulative-hazard-and-survivor-functions.html"><i class="fa fa-check"></i>Link between cumulative hazard and survivor functions</a></li>
 <li class="chapter" data-level="" data-path="contribution-to-the-partial-likelihood-function-in-ph-models.html"><a href="contribution-to-the-partial-likelihood-function-in-ph-models.html"><i class="fa fa-check"></i>Contribution to the partial likelihood function in PH models</a></li>
 <li class="chapter" data-level="" data-path="partial-likelihood-function-in-ph-models.html"><a href="partial-likelihood-function-in-ph-models.html"><i class="fa fa-check"></i>Partial likelihood function in PH models</a></li>
+<li class="chapter" data-level="" data-path="mcaappendix.html"><a href="mcaappendix.html"><i class="fa fa-check"></i>Multiple correspondence analysis</a></li>
+<li class="chapter" data-level="" data-path="hierarchical-clustering-on-principal-components-1.html"><a href="hierarchical-clustering-on-principal-components-1.html"><i class="fa fa-check"></i>Hierarchical clustering on principal components</a>
+<ul>
+<li class="chapter" data-level="" data-path="hierarchical-clustering-on-principal-components-1.html"><a href="hierarchical-clustering-on-principal-components-1.html#cluster-visualisation-1"><i class="fa fa-check"></i>Cluster visualisation</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -242,9 +263,6 @@ Tenure_Months
 <th style="text-align:right;">
 Churn_Value
 </th>
-<th style="text-align:right;">
-CLTV
-</th>
 </tr>
 </thead>
 <tbody>
@@ -264,9 +282,6 @@ DSL
 <td style="text-align:right;">
 1
 </td>
-<td style="text-align:right;">
-3239
-</td>
 </tr>
 <tr>
 <td style="text-align:right;">
@@ -283,9 +298,6 @@ Fiber optic
 </td>
 <td style="text-align:right;">
 1
-</td>
-<td style="text-align:right;">
-2701
 </td>
 </tr>
 <tr>
@@ -304,9 +316,6 @@ Fiber optic
 <td style="text-align:right;">
 1
 </td>
-<td style="text-align:right;">
-5372
-</td>
 </tr>
 <tr>
 <td style="text-align:right;">
@@ -323,9 +332,6 @@ Fiber optic
 </td>
 <td style="text-align:right;">
 1
-</td>
-<td style="text-align:right;">
-5003
 </td>
 </tr>
 <tr>
@@ -344,9 +350,6 @@ Fiber optic
 <td style="text-align:right;">
 1
 </td>
-<td style="text-align:right;">
-5340
-</td>
 </tr>
 <tr>
 <td style="text-align:right;">
@@ -364,14 +367,11 @@ DSL
 <td style="text-align:right;">
 1
 </td>
-<td style="text-align:right;">
-5925
-</td>
 </tr>
 </tbody>
 </table>
 <p>As shown by table <a href="5.1-general-overview.html#tab:dataoverview">5.1</a>, the <code>Churn_Value</code> status variable indicates whether the customer left the firm’s <em>portfolio</em> within the last month and <code>Tenure_Months</code> is the duration variable.</p>
-<p>Since the purpose of our study relies in estimating the overall value of this fictional firm’s <em>portfolio</em>, two groups of target variables can be considered. On the one hand <code>Churn_Value</code> and <code>Tenure_Months</code> permit to determine whether a customer is active in the <em>portfolio</em>. They are used as response variables in the survival models. On the other hand, the <code>CLTV</code> variable represents each customer’s <em>value</em> through measurement of customer lifetime value and is used as target in regression models.</p>
+<p>Since the purpose of our study relies in estimating the overall value of this fictional firm’s <em>portfolio</em>, two groups of target variables can be considered. On the one hand <code>Churn_Value</code> and <code>Tenure_Months</code> permit to determine whether a customer is active in the <em>portfolio</em>. They are used as response variables in the survival models. On the other hand, <code>Monthly_Charges</code> variable indicates the price paid by customers each month and may be used to derive a customer raw value. Even though the <code>CLTV</code> variable represents each customer’s <em>value</em> through measurement of customer lifetime value, we do not have any information on its calculation. Thus, it is not used in the model developed in the next chapter.</p>
 </div>
             </section>
 
@@ -379,7 +379,7 @@ DSL
         </div>
       </div>
 <a href="5-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="5.2-churn_value-and-tenure_months.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="5.2-churndescstats.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

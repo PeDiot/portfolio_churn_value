@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>3.8 Performance metrics | Portfolio, Churn &amp; Customer Value</title>
+  <title>6.2 Portfolio segmentation | Portfolio, Churn &amp; Customer Value</title>
   <meta name="description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="3.8 Performance metrics | Portfolio, Churn &amp; Customer Value" />
+  <meta property="og:title" content="6.2 Portfolio segmentation | Portfolio, Churn &amp; Customer Value" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="3.8 Performance metrics | Portfolio, Churn &amp; Customer Value" />
+  <meta name="twitter:title" content="6.2 Portfolio segmentation | Portfolio, Churn &amp; Customer Value" />
   
   <meta name="twitter:description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="3.7-mlsurv.html"/>
-<link rel="next" href="4-dataMining.html"/>
+<link rel="prev" href="6.1-featureselection.html"/>
+<link rel="next" href="6.3-churn-analysis.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -234,51 +234,456 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="performance-metrics" class="section level2" number="3.8">
-<h2><span class="header-section-number">3.8</span> Performance metrics</h2>
-<div id="concordance-index-c-index" class="section level3" number="3.8.1">
-<h3><span class="header-section-number">3.8.1</span> Concordance index (C-index)</h3>
-<p>C-index is a goodness of fit measure for models which produce risk scores. It is commonly used to evaluate risk models in survival analysis, where data may be censored.</p>
-<p>Consider both the observations and prediction values of two instances <span class="math inline">\((y_1; \hat{y}_1)\)</span> and <span class="math inline">\((y_2; \hat{y}_2)\)</span>. <span class="math inline">\(y_i\)</span> and <span class="math inline">\(\hat{y}_i\)</span> represent respectively the actual observation time and the predicted time. Mathematically, the C-index is defined as the probability to well predict the order of event occurring time for any pair of instances.</p>
-<p><span class="math display" id="eq:cindex">\[\begin{equation}
-  c = \mathbb{P}\big(\hat{y}_1 &gt; \hat{y}_2 | y_1 &gt; y_2\big)
-  \tag{3.22}
-\end{equation}\]</span></p>
-<p>Another way to write the C-index metric is to compute the ratio between concordant pairs and the total number of pairs. Consider individual <span class="math inline">\(i\)</span> and let <span class="math inline">\(T\)</span> be the time-to-event variable and <span class="math inline">\(\eta_i\)</span> the risk score assigned to <span class="math inline">\(i\)</span> by the model. We say that the pair <span class="math inline">\((i, j)\)</span> is a concordant pair if <span class="math inline">\(\eta_i &gt; \eta_j\)</span> and <span class="math inline">\(T_i &lt; T_j\)</span>, and it is a discordant pair if <span class="math inline">\(\eta_i &gt; \eta_j\)</span> and <span class="math inline">\(T_i &gt; T_j\)</span>. If both <span class="math inline">\(T_i\)</span> and <span class="math inline">\(T_j\)</span> are censored, then this pair is not taken into account in the computation. If <span class="math inline">\(T_j\)</span> is censored, then:</p>
-<ul>
-<li>If <span class="math inline">\(T_j &lt; T_i\)</span> the pair <span class="math inline">\((i, j)\)</span> is not considered in the computation since the order cannot be determined.</li>
-<li>If <span class="math inline">\(T_j &gt; T_i\)</span>, the order can be determined and <span class="math inline">\((i, j)\)</span> is concordant if <span class="math inline">\(\eta_i &gt; \eta_j\)</span>, discordant otherwise.</li>
-</ul>
-<p>Equation <a href="3.8-performance-metrics.html#eq:cindex">(3.22)</a> can then be rewritten as follows:</p>
-<p><span class="math display" id="eq:cindex2">\[\begin{equation}
-\begin{aligned}
-c &amp; = \frac{\# \text{concordant pairs}}{\# \text{concordant pairs} + \# \text{discordant pairs}} \\\\
-c &amp; = \frac{\sum_{i \neq j} \pmb{1}_{\eta_i &lt; \eta_j} \pmb{1}_{T_i &gt; T_j}d_j}{\sum_{i \neq j} \pmb{1}_{T_i &gt; T_j}d_j}
-\end{aligned}
-\tag{3.23}
-\end{equation}\]</span></p>
-<p>with <span class="math inline">\(d_j\)</span> the event indicator variable.</p>
-<p>The concordance index ranges between 0 and 1. A C-index below 0.5 indicates a very poor model. A C-index of 0.5 means that the model is rather a non-informative model making random predictions. A model with C-index 1 makes perfect prediction. Generally, a C-index higher than 0.7 indicates a good performance.</p>
+<div id="segmentation" class="section level2" number="6.2">
+<h2><span class="header-section-number">6.2</span> Portfolio segmentation</h2>
+<p>Customer segmentation helps decision makers having a better understanding of their clients. It can then be used to enhance marketing strategies via personalization. In other words, segmentation can lead to target customers with offers and incentives personalized to their wants, needs and preferences. In order to make segmentation more accurate, it is more appropriate to use cluster analysis than predetermined thresholds or rules, even more when we have several variables at our disposal. In this context, this section focuses on applying clustering methods on features displayed in table <a href="6.1-featureselection.html#tab:selectedfeatures">6.1</a>, apart from <code>Monthly_Charges</code>.</p>
+<div id="transforming-qualitative-variables-into-principal-axes" class="section level3" number="6.2.1">
+<h3><span class="header-section-number">6.2.1</span> Transforming qualitative variables into principal axes</h3>
+<p>The variables selected to perform cluster analysis being categorical, it is needed to transform them into continuous features. To that end, multiple correspondence analysis (MCA) is performed. MCA is a dimension reducing method which takes multiple categorical variables and seeks to identify associations between levels of those variables. MCA aims at highlighting features that separate classes of individuals, while determining links between variables and categories. To that end, MCA keeps the core information by the means of principal components which are projected axes <span class="citation">(<a href="#ref-MCA" role="doc-biblioref">Scholler 2021a</a>)</span>.</p>
+<p>Here, the main objective of applying MCA being to obtain continuous features, it is decided to keep as many axes as it takes to have at least 80% cumulated variance. In other words, we want the principal components to gather enough customer-related information. After having processed the <code>MCA</code> function from the R package <code>FactoMineR</code> <span class="citation">(<a href="#ref-FactoMineR2008" role="doc-biblioref">Lê, Josse, and Husson 2008</a>)</span>, 10 principal components are required to keep more than 80% cumulated variance as depicted by figure <a href="6.2-segmentation.html#fig:mcascreeplot">6.1</a>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:mcascreeplot"></span>
+<p class="caption">
+Figure 6.1: Variance explained and cumulated variance after MCA
+</p>
+<img src="imgs/mca_screeplot.png" alt="Variance explained and cumulated variance after MCA" width="545" />
 </div>
-<div id="brier-score" class="section level3" number="3.8.2">
-<h3><span class="header-section-number">3.8.2</span> Brier score</h3>
-<p>The Brier score is another statistical metric for evaluating duration models’ performance and is defined as the mean squared error between the estimated survival probability and the observed survival at time <span class="math inline">\(t\)</span>:</p>
-<p><span class="math display" id="eq:brier">\[\begin{equation}
-  BS(t) = \frac{1}{N} \sum_{i=1}^{N} \Big(\pmb{1}_{\{t_i&gt;t\}} - \hat{S}(t|\mathrm{x}_i) \Big)^2
-  \tag{3.24}
-\end{equation}\]</span></p>
-<p>The Cox <em>proportional hazards</em> model is the most popular for the analysis of duration data. This model is said to be semi-parametric as it makes no assumption regarding the nature of the baseline hazard function <span class="math inline">\(\lambda_0(t)\)</span>. The parametric part only relies in the modelling of the effect of some covariates on the hazard function <span class="math inline">\(\lambda(t)\)</span>. The relationship between the vector of covariates and the log hazard is linear and the parameters can be estimated by maximizing the partial likelihood function. The Cox PH model solely assumes that predictors act multiplicatively on the hazard function. The model is formulated as in equation <a href="3.6-semi-parametric-estimation.html#eq:ph">(3.15)</a> with the exponential function as link between the hazard and the covariates i.e. <span class="math inline">\(\lambda(t|\pmb{\mathrm{x}}) = \lambda_0 (t,\alpha) \text{e}^{\pmb{\mathrm{x&#39;}} \beta}\)</span>.</p>
-
+<p>Now the 10 continuous axes are identified, the next step consists in retrieving the customers’ coordinates onto those axes to then perform cluster analysis.</p>
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-23">Table 6.2: </span>The 10 principal axes obtained by MCA
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+CustomerID
+</th>
+<th style="text-align:right;">
+Dim 1
+</th>
+<th style="text-align:right;">
+Dim 2
+</th>
+<th style="text-align:right;">
+Dim 3
+</th>
+<th style="text-align:right;">
+Dim 4
+</th>
+<th style="text-align:right;">
+Dim 5
+</th>
+<th style="text-align:right;">
+Dim 6
+</th>
+<th style="text-align:right;">
+Dim 7
+</th>
+<th style="text-align:right;">
+Dim 8
+</th>
+<th style="text-align:right;">
+Dim 9
+</th>
+<th style="text-align:right;">
+Dim 10
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+4197
+</td>
+<td style="text-align:right;">
+-0.15
+</td>
+<td style="text-align:right;">
+-0.02
+</td>
+<td style="text-align:right;">
+-0.30
+</td>
+<td style="text-align:right;">
+-0.03
+</td>
+<td style="text-align:right;">
+0.03
+</td>
+<td style="text-align:right;">
+-0.29
+</td>
+<td style="text-align:right;">
+-0.61
+</td>
+<td style="text-align:right;">
+0.01
+</td>
+<td style="text-align:right;">
+-0.04
+</td>
+<td style="text-align:right;">
+0.10
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3025
+</td>
+<td style="text-align:right;">
+0.53
+</td>
+<td style="text-align:right;">
+0.04
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.26
+</td>
+<td style="text-align:right;">
+0.09
+</td>
+<td style="text-align:right;">
+-0.54
+</td>
+<td style="text-align:right;">
+0.55
+</td>
+<td style="text-align:right;">
+0.40
+</td>
+<td style="text-align:right;">
+-0.02
+</td>
+<td style="text-align:right;">
+-0.19
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6585
+</td>
+<td style="text-align:right;">
+-0.04
+</td>
+<td style="text-align:right;">
+-0.24
+</td>
+<td style="text-align:right;">
+-0.15
+</td>
+<td style="text-align:right;">
+0.40
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+<td style="text-align:right;">
+-0.20
+</td>
+<td style="text-align:right;">
+0.18
+</td>
+<td style="text-align:right;">
+-0.25
+</td>
+<td style="text-align:right;">
+0.02
+</td>
+<td style="text-align:right;">
+0.07
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3862
+</td>
+<td style="text-align:right;">
+-0.44
+</td>
+<td style="text-align:right;">
+-0.20
+</td>
+<td style="text-align:right;">
+-0.46
+</td>
+<td style="text-align:right;">
+-0.14
+</td>
+<td style="text-align:right;">
+-0.01
+</td>
+<td style="text-align:right;">
+0.01
+</td>
+<td style="text-align:right;">
+-0.05
+</td>
+<td style="text-align:right;">
+-0.04
+</td>
+<td style="text-align:right;">
+-0.52
+</td>
+<td style="text-align:right;">
+0.01
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+300
+</td>
+<td style="text-align:right;">
+0.21
+</td>
+<td style="text-align:right;">
+-0.37
+</td>
+<td style="text-align:right;">
+0.11
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+-0.41
+</td>
+<td style="text-align:right;">
+-0.54
+</td>
+<td style="text-align:right;">
+-0.13
+</td>
+<td style="text-align:right;">
+0.36
+</td>
+<td style="text-align:right;">
+0.06
+</td>
+</tr>
+</tbody>
+</table>
+<p>Note that a more in-depth visualisation of those 10 principal components can be found in figures <a href="mcaappendix.html#fig:mcacontrib12">6.18</a> to <a href="mcaappendix.html#fig:mcacontrib910">6.22</a> in the appendix. This charts depict the percent contribution of each variable’s categories to the principal axes, which is helpful to have a better understanding of MCA results.</p>
+</div>
+<div id="hierarchical-clustering-on-principal-components" class="section level3" number="6.2.2">
+<h3><span class="header-section-number">6.2.2</span> Hierarchical clustering on principal components</h3>
+<p>Multiple correspondence analysis has led us to convert the categorical variables related to account and services information into 10 numerical projected axes. The stake here is to use the customers’ projections onto the MCA components in order to identify groups of individuals through clustering techniques. As a reminder, clusters are expected to discriminate between customers based on the services they use and the type of plan they are enrolled into. The method implemented in this part relies on hierarchical clustering on principal components (HCPC).</p>
+<div id="optimal-number-of-clusters" class="section level4 unnumbered">
+<h4>Optimal number of clusters</h4>
+<p>The key parameter to optimize when applying clustering methods is the number of clusters <span class="math inline">\(k\)</span>. When using the <code>HCPC</code> function from <code>FactorMineR</code>, the <code>nb.clust</code> parameter is set to -1 so that the tree is automatically cut at the suggested level. More precisely, the function first builds a hierarchical tree. Then the sum of the between-cluster inertia is calculated for each partition. The suggested partition is the one with the higher relative gain in inertia. Intuitively, the underlying objective is to choose a number of clusters leading to <span class="math inline">\(k\)</span> well distinguished groups. Here, the between-cluster inertia is the metric measuring the amount of variability between clusters.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:btwinertia"></span>
+<p class="caption">
+Figure 6.2: Relative gains in between-cluster inertia given the partition
+</p>
+<img src="imgs/btw_inertia.png" alt="Relative gains in between-cluster inertia given the partition" width="500" />
+</div>
+<p>Once the 3 groups identified by the clustering algorithm, one can determine customer repartition within those groups. Looking at table <a href="6.2-segmentation.html#tab:clustRepartition">6.3</a>, cluster 2 represents the largest share of clients. This result is illustrated on figure <a href="6.2-segmentation.html#fig:clusterplot">6.3</a>.</p>
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:clustRepartition">Table 6.3: </span>Customer repartition within the 3 clusters
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Cluster 1
+</th>
+<th style="text-align:right;">
+Cluster 2
+</th>
+<th style="text-align:right;">
+Cluster 3
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+%
+</td>
+<td style="text-align:right;">
+26.55
+</td>
+<td style="text-align:right;">
+41.38
+</td>
+<td style="text-align:right;">
+32.07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="cluster-visualisation" class="section level4 unnumbered">
+<h4>Cluster visualisation</h4>
+<p>When performing hierarchical clustering on principal components, visualizing cluster repartition onto MCA axes is relevant to have a first idea on how each cluster if different from the others. Figure <a href="6.2-segmentation.html#fig:clusterplot">6.3</a> indicates that the three clusters are well separated in the <span class="math inline">\((F_1 ; F_2)\)</span> plan. Cluster 1 is more concentrated than the others and take lower values onto dimension 1. The second group spreads over axis 1 and takes lower values on axis 2. Finally, cluster 3’s position shows that its customers are characterized by categories which take positive values on both dimensions 1 and 2.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:clusterplot"></span>
+<p class="caption">
+Figure 6.3: Cluster visualisation onto the 2 first MCA axes
+</p>
+<img src="imgs/cluster_plot.png" alt="Cluster visualisation onto the 2 first MCA axes" width="462" />
+</div>
+<p>In the appendix, figure <a href="hierarchical-clustering-on-principal-components-1.html#fig:clusterplots">6.23</a> aims at visualizing clusters onto the other MCA principal components. Note that none of theses axes manages to separate the three clusters. This may be due to the low amount of variance each of these axes carries.</p>
+</div>
+<div id="cluster-description" class="section level4 unnumbered">
+<h4>Cluster description</h4>
+<p>Once the 3 customer segments are identified on the MCA dimensions, it seems to be interesting to describe them according to the original features. To that end, the repartition of qualitative variables’ categories is depicted on the following figure. Comparing figures <a href="6.2-segmentation.html#fig:clusterplot">6.3</a> and <a href="6.2-segmentation.html#fig:mcaplot">6.4</a>, one can derive the following table in order to have a more precise idea on each segment.</p>
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-24">Table 6.4: </span>The most representative categories for each cluster
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+Cluster
+</th>
+<th style="text-align:left;">
+Representative Categories
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+Mailed_check, Internet_Service_No
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Month-to-month, Electronic check, Tech_Support_No
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+Two year, Credit card, Tech_Support_Yes
+</td>
+</tr>
+</tbody>
+</table>
+<p>The first segment may be made up of customers having subscribed to minimum plans whith no internet service whereas segment 3 tends to represent clients with a large variety of services and long-term contracts. On the opposite, cluster 2 clients are enrolled in short-term plans with internet service but not technical options.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:mcaplot"></span>
+<p class="caption">
+Figure 6.4: MCA - Categories plot onto the two first axes
+</p>
+<img src="imgs/mca_plots.png" alt="MCA - Categories plot onto the two first axes" width="450" />
+</div>
+<p>Figure <a href="6.2-segmentation.html#fig:monthlychargesclust">6.5</a> depicts the differences in monthly charges paid by each customer segment. It can be observed that most of cluster 1 clients are enrolled in cheap subscriptions. On the contrary, the charges paid by the second and third clusters are higher and less homogeneous. Note that the median price is the same among these two groups.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:monthlychargesclust"></span>
+<p class="caption">
+Figure 6.5: Monthly charges repartition across clusters
+</p>
+<img src="imgs/monthly_charges_clust.png" alt="Monthly charges repartition across clusters" width="70%" height="60%" />
+</div>
+<p>Since one of the study’s purpose is to model customer churn, it is important to compare the churn rate across the 3 groups. Here, the striking point is that cluster 2 clients account for a large proportion of churners. Indeed, more than 75% of the clients having left the portfolio come from the second group. It can also be noted that cluster 1 and 3 are composed of more loyal customers as more than 70% of clients who did not churn are from those 2 groups.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:catvarsclust"></span>
+<p class="caption">
+Figure 6.6: Churn repartition per cluster
+</p>
+<img src="imgs/churn_cluster_barplot.png" alt="Churn repartition per cluster" width="60%" height="60%" />
 </div>
 </div>
-<!-- </div> -->
+<div id="concluding-remarks-on-portfolio-segmentation" class="section level4 unnumbered">
+<h4>Concluding remarks on portfolio segmentation</h4>
+<p>With the aim of divide the portfolio into multiple groups based on categorical features, hierarchical clustering on principal components has led to identify three customer segments which can be broadly described as shown in the following table.</p>
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-25">Table 6.5: </span>Portfolio segmentation summary
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+Cluster
+</th>
+<th style="text-align:left;">
+Loyalty
+</th>
+<th style="text-align:left;">
+Value
+</th>
+<th style="text-align:left;">
+Segment name
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+High
+</td>
+<td style="text-align:left;">
+Low
+</td>
+<td style="text-align:left;font-style: italic;">
+Silver
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;">
+2
+</td>
+<td style="text-align:left;font-weight: bold;">
+Low
+</td>
+<td style="text-align:left;font-weight: bold;">
+High
+</td>
+<td style="text-align:left;font-style: italic;font-weight: bold;">
+Gold
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+High
+</td>
+<td style="text-align:left;">
+High
+</td>
+<td style="text-align:left;font-style: italic;">
+Platinum
+</td>
+</tr>
+</tbody>
+</table>
+<p><em>Gold</em> customers are valuable to the firm but are not loyal, making them the target segment. The objective would be to encourage them to stay in the portfolio longer.</p>
+</div>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-FactoMineR2008" class="csl-entry">
+Lê, Sébastien, Julie Josse, and François Husson. 2008. <span>“<span>FactoMineR</span>: A Package for Multivariate Analysis.”</span> <em>Journal of Statistical Software</em> 25 (1): 1–18. <a href="https://doi.org/10.18637/jss.v025.i01">https://doi.org/10.18637/jss.v025.i01</a>.
+</div>
+<div id="ref-MCA" class="csl-entry">
+———. 2021a. <em>M1 Analyse de Données Exploratoire - ACM</em>. Université de Tours. <a href="https://juliescholler.gitlab.io/publication/m1ade-2021/M1-AnaExpl-ACM.pdf">https://juliescholler.gitlab.io/publication/m1ade-2021/M1-AnaExpl-ACM.pdf</a>.
+</div>
+</div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="3.7-mlsurv.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="4-dataMining.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="6.1-featureselection.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="6.3-churn-analysis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
