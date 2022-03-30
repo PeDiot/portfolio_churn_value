@@ -6,7 +6,7 @@
 ]{book}
 \title{Portfolio, Churn \& Customer Value}
 \author{Hugo Cornet, Pierre-Emmanuel Diot, Guillaume Le Halper, Djawed Mancer}
-\date{2022-03-29}
+\date{2022-03-30}
 
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
@@ -748,6 +748,162 @@ The Brier score is another statistical metric for evaluating duration models' pe
 
 The Cox \emph{proportional hazards} model is the most popular for the analysis of duration data. This model is said to be semi-parametric as it makes no assumption regarding the nature of the baseline hazard function \(\lambda_0(t)\). The parametric part only relies in the modelling of the effect of some covariates on the hazard function \(\lambda(t)\). The relationship between the vector of covariates and the log hazard is linear and the parameters can be estimated by maximizing the partial likelihood function. The Cox PH model solely assumes that predictors act multiplicatively on the hazard function. The model is formulated as in equation \eqref{eq:ph} with the exponential function as link between the hazard and the covariates i.e.~\(\lambda(t|\pmb{\mathrm{x}}) = \lambda_0 (t,\alpha) \text{e}^{\pmb{\mathrm{x'}} \beta}\).
 
+\hypertarget{dataMining}{%
+\chapter{Data Mining methods}\label{dataMining}}
+
+While the previous chapter introduces the fundamentals related to survival analysis, this part focuses on data mining techniques used in our modelling approach. On the on hand, multiple correspondence analysis is introduced as it is used in the following chapter with a view of converting categorical features into continuous principal axes. On the other hand, this section centers on unsupervised classification which is a useful method when it comes to segmentation.
+
+\hypertarget{mutliple-correspondence-analysis-mca}{%
+\section{Mutliple Correspondence Analysis (MCA)}\label{mutliple-correspondence-analysis-mca}}
+
+\hypertarget{definition-1}{%
+\subsection{Definition}\label{definition-1}}
+
+Multiple Correspondence Analysis is a dimension reducing method which takes multiple categorical variables and seeks to identify associations between levels of those variables. MCA aims at highlighting features that separate classes of individuals, while determining links between variables and categories. To that end, MCA keeps the core information by the means of principal components which are projected axes \citep{MCA}.
+
+\hypertarget{complete-disjunctive-table}{%
+\subsection{Complete disjunctive table}\label{complete-disjunctive-table}}
+
+MCA can be applied on data stored in a complete disjunctive table which is an indicator matrix.
+
+\begin{figure}
+
+{\centering \includegraphics[width=20.76in]{./imgs/TDC} 
+
+}
+
+\caption{Complete disjunctive table}\label{fig:tdc}
+\end{figure}
+
+with,
+
+\begin{itemize}
+\tightlist
+\item
+  \(I\) the number of individuals,
+\item
+  \(J\) the number of variables,
+\item
+  \(K_j\) the number of categories in the \(j^{th}\) variable,
+\item
+  \(I_k\) the number of individuals with the \(k^{th}\) category.
+\end{itemize}
+
+\hypertarget{distances}{%
+\subsection{Distances}\label{distances}}
+
+The individuals' analysis processed by MCA relies on the distance between individuals which is computed as follows for 2 data points \(i\) and \(l\):
+
+\begin{equation}
+  d^2(i;l) = \frac{1}{J}\sum_{k=1}^K \frac{I}{I_k}(x_{ik} - x_{lk})^2
+  \label{eq:mcaDist1}
+\end{equation}
+
+The distance between two categories \(j\) and \(k\) allows to determine how close they are and is calculated as follows:
+
+\begin{equation}
+  d^2(j;k) = \frac{I}{I_k I_j}\times I_{k\neq j}
+  \label{eq:mcaDist2}
+\end{equation}
+
+with \(I_{k\neq j}\) the number of individuals with one and only one of the \(j\) or \(k\) categories.
+
+\hypertarget{algorithm}{%
+\subsection{Algorithm}\label{algorithm}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  The axes' origin is placed at the individuals point cloud's barycenter;
+\item
+  A sequence of orthogonal axes is seeked so as to maximize the data's projected inertia;
+\item
+  These orthogonal projections are represented onto a plan made up of principal components, \((F_1, F_2)\) being the first projected plan.
+\end{enumerate}
+
+\hypertarget{unsupervised-classification}{%
+\section{Unsupervised classification}\label{unsupervised-classification}}
+
+Clustering is an unsupervised learning technique that groups similar data points such that the points in the same group are more similar to each other than the points in the other groups. The group of similar data points is called a cluster. It is said to be unsupervised as the groups are not labeled but discovered by the algorithm. Consequently, it may not be possible to find separate clusters of data points.
+
+\hypertarget{hierarchical-clustering-on-principal-components-hcpc}{%
+\subsection{Hierarchical Clustering on Principal Components (HCPC)}\label{hierarchical-clustering-on-principal-components-hcpc}}
+
+The HCPC approach combines the three standard methods used in multivariate data analysis:
+
+\begin{itemize}
+\tightlist
+\item
+  Principal Components methods such as MCA,
+\item
+  Agglomerative hierarchical clustering,
+\item
+  Consolidation by k-means partitioning.
+\end{itemize}
+
+\hypertarget{agglomerative-hierarchical-clustering-ahc}{%
+\subsection{Agglomerative Hierarchical Clustering (AHC)}\label{agglomerative-hierarchical-clustering-ahc}}
+
+\hypertarget{algorithm-1}{%
+\subsubsection*{Algorithm}\label{algorithm-1}}
+\addcontentsline{toc}{subsubsection}{Algorithm}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Each data point is initially considered an individual cluster;
+\item
+  Compute the proximity matrix which represents the distances, taken pairwise, between the elements of a set;
+\item
+  Merge the two closest clusters and update the proximity matrix until only a single cluster remains.
+\end{enumerate}
+
+\hypertarget{distance-between-two-observations}{%
+\subsubsection*{Distance between two observations}\label{distance-between-two-observations}}
+\addcontentsline{toc}{subsubsection}{Distance between two observations}
+
+The choice of the distance metric is a critical step in clustering. It defines how the similarity of two elements \((x, y)\) is calculated and it will influence the shape of the clusters. There are several distance measures such as \emph{Euclidean}, \emph{Manhattan}, \(\chi^2\), etc. In our study the classical \emph{Euclidean} distance metric is chosen and is defined as follows:
+
+\begin{equation}
+  d_{euc}(x,y) = \sqrt{\sum_{i=1}^n(x_i - y_i)^2}
+  \label{eq:euclidean}
+\end{equation}
+
+\hypertarget{similarities-between-clusters---ward-method}{%
+\subsubsection*{Similarities between clusters - Ward method}\label{similarities-between-clusters---ward-method}}
+\addcontentsline{toc}{subsubsection}{Similarities between clusters - Ward method}
+
+Calculating the similarity between two clusters is determining to merge the clusters. Here, the Ward method \citep{UNSUPERVISED_CLASSIF} is chosen and it consists in merging groups which drive down as little as possible the within inertia, ie the homogeneity of clusters. Mathematically, Ward criterion is defined as follows:
+
+\begin{equation}
+  \Delta (A, B) = \frac{1}{n} \times \frac{n_A n_B}{n_A + n_B}d^2(g_A, g_B)
+  \label{eq:ward}
+\end{equation}
+
+with \(g_A\) et \(g_B\) the clusters' barycenters (the mean point) et \(n_A\) et \(n_B\) the clusters' frequencies.
+
+Ward method needs to be minimized and tends to group together clusters which are close to each other in terms of barycenters, as well as small frequency clusters.
+
+Ward method leads to choose the optimal number of clusters. Let \(\Delta k\) be the increase in within inertia when going from \(k+1\) groups to \(k\) groups. Then, the proper number of classes \(k^*\) can be such that \(\frac{\Delta k-1}{\Delta k}\) is as little as possible.
+
+\hypertarget{the-k-means-algorithm}{%
+\subsection{The k-means algorithm}\label{the-k-means-algorithm}}
+
+\(k\) data points are chosen as initial centers.The following steps are repeated until the clusters identified are homogeneous enough or until a fixed number of iterations:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  The distances between the data points and the centers are computed;
+\item
+  Each data point is assigned to the nearest center, ;
+\item
+  The \(k\) previous centers are replaced by the barycenters of the \(k\) classes identified during the previous step.
+\end{enumerate}
+
 \hypertarget{data}{%
 \chapter{Data}\label{data}}
 
@@ -955,7 +1111,7 @@ The following histograms are interesting to the extent that the distribution of 
 \caption{Tenure months depending on churn status}\label{fig:churndur}
 \end{figure}
 
-Eventually, figure \ref{fig:monthlychargesdur} depicts the average monthly charges per number of months in the portfolio.
+Eventually, figure \ref{fig:monthlychargesdur} depicts the average monthly charges per number of months in the portfolio. One can notice an increasing evolution between the average monthly fees and the number of months. In other words, it might be assumed that customers with longer lifetimes bring in more money to the firm.
 
 \begin{figure}
 
@@ -995,8 +1151,8 @@ No & No & Yes & No & No & No & No & Month-to-month & Bank transfer & 19.95\\
 \end{tabular}
 \end{table}
 
-\hypertarget{portfolio-segmentation}{%
-\section{Portfolio segmentation}\label{portfolio-segmentation}}
+\hypertarget{segmentation}{%
+\section{Portfolio segmentation}\label{segmentation}}
 
 Customer segmentation helps decision makers having a better understanding of their clients. It can then be used to enhance marketing strategies via personalization. In other words, segmentation can lead to target customers with offers and incentives personalized to their wants, needs and preferences. In order to make segmentation more accurate, it is more appropriate to use cluster analysis than predetermined thresholds or rules, even more when we have several variables at our disposal. In this context, this section focuses on applying clustering methods on features displayed in table \ref{tab:selectedfeatures}, apart from \texttt{Monthly\_Charges}.
 
@@ -1020,7 +1176,7 @@ Now the 10 continuous axes are identified, the next step consists in retrieving 
 
 \begin{table}[H]
 
-\caption{\label{tab:unnamed-chunk-22}The 10 principal axes obtained by MCA}
+\caption{\label{tab:unnamed-chunk-23}The 10 principal axes obtained by MCA}
 \centering
 \begin{tabular}[t]{rrrrrrrrrrr}
 \toprule
@@ -1035,7 +1191,7 @@ CustomerID & Dim 1 & Dim 2 & Dim 3 & Dim 4 & Dim 5 & Dim 6 & Dim 7 & Dim 8 & Dim
 \end{tabular}
 \end{table}
 
-Note that a more in-depth visualisation of those 10 principal components can be found in section \ref{mcaappendix} in the appendix. This charts depict the percent contribution of each variable's categories to the principal axes, which is helpful to have a better understanding of MCA results.
+Note that a more in-depth visualisation of those 10 principal components can be found in figures \ref{fig:mcacontrib12} to \ref{fig:mcacontrib910} in the appendix. This charts depict the percent contribution of each variable's categories to the principal axes, which is helpful to have a better understanding of MCA results.
 
 \hypertarget{hierarchical-clustering-on-principal-components}{%
 \subsection{Hierarchical clustering on principal components}\label{hierarchical-clustering-on-principal-components}}
@@ -1097,7 +1253,7 @@ Once the 3 customer segments are identified on the MCA dimensions, it seems to b
 
 \begin{table}[H]
 
-\caption{\label{tab:unnamed-chunk-23}The most representative categories for each cluster}
+\caption{\label{tab:unnamed-chunk-24}The most representative categories for each cluster}
 \centering
 \begin{tabular}[t]{rl}
 \toprule
@@ -1151,7 +1307,7 @@ With the aim of divide the portfolio into multiple groups based on categorical f
 
 \begin{table}[H]
 
-\caption{\label{tab:unnamed-chunk-24}Portfolio segmentation summary}
+\caption{\label{tab:unnamed-chunk-25}Portfolio segmentation summary}
 \centering
 \begin{tabular}[t]{rll>{}l}
 \toprule
@@ -1166,8 +1322,8 @@ Cluster & Loyalty & Value & Segment name\\
 
 \emph{Gold} customers are valuable to the firm but are not loyal, making them the target segment. The objective would be to encourage them to stay in the portfolio longer.
 
-\hypertarget{churn-analysis}{%
-\section{Churn analysis}\label{churn-analysis}}
+\hypertarget{churnAnalysis}{%
+\section{Churn analysis}\label{churnAnalysis}}
 
 Estimating the risk of attrition related to each customer is an essential step to model the firm's portfolio. In this context, survival models can be implemented with a view of deriving a predicted churn risk and survival function for each client. One the one hand, these predictions can be used to identify loyal consumers and make appropriate decisions. For instance, it might be relevant to offer benefits to a high-value client with a high estimated churn risk. On the other hand, a customer's survival probability at time \(t\) represents the chance that this very customer be active in the portfolio at time \(t\). This measure is helpful to compute the estimated value of the portfolio in the last section.
 
@@ -1289,7 +1445,7 @@ In the two previous sections, the portfolio has been partitioned into 3 customer
 As said in chapter \ref{data}, it is decided not to use the \texttt{CLTV} variable to estimate customer lifetime value since no information has been provided on the computation method. Instead, another method is adopted to predict each client's lifetime value. For this purpose, two inputs are needed namely each customer's survival function as well as the monthly fees represented by the \texttt{Monthly\_Charges} feature. Based on the CLV formulation proposed by Gupta and Lehmann \citep{CUSTOMERS_ASSETS}, we derive a model aiming at calculating customer lifetime raw value (CLRV) as depicted in equation \eqref{eq:clrv}.
 
 \begin{equation}
-    CLRV_i = \sum_{t=0}^{T} \frac{p_i \ r_{i,t}}{(1+a)^t} 
+    \text{CLRV}_i = \sum_{t=0}^{T} \frac{p_i \ r_{i,t}}{(1+a)^t} 
     \label{eq:clrv}
 \end{equation}
 
@@ -1309,6 +1465,13 @@ with,
 
 It may be interesting to note that \(p_i\) is time-invariant and corresponds to \texttt{Monthly\_Charges}. \(r_{i,t}\) is computed using the survival function estimated with the Cox model. \(a\) is fixed at 8\% and \(T\) equals 72 months which is the longest lifetime in the data.
 
+Summing over the \(N\) CLRVs, one can derive customer raw equity which is the portfolio raw value (V) and may be a good proxy for the firm's overall revenues.
+
+\begin{equation}
+    \text{V} = \sum_{i=1}^{N} \text{CLRV}_i = \sum_{i=1}^{N} \sum_{t=0}^{T} \frac{p_i \ r_{i,t}}{(1+a)^t} 
+    \label{eq:cre}
+\end{equation}
+
 \hypertarget{customer-lifetime-raw-value}{%
 \subsection{Customer Lifetime Raw Value}\label{customer-lifetime-raw-value}}
 
@@ -1327,7 +1490,7 @@ The process implemented to compute client \(i\)'s CLRV works as follows:
   Take the sum of the \(T\) ratios.
 \end{enumerate}
 
-Since the data is made up of more than 7,000 customers and given the CLRV calculation is time consuming, parallelization has been used to calculate every CLRV. Once all the CLRVs are computed, one may take the sum in order to retrieve the portfolio's global value as well as a 95\% confidence interval as shown by table \ref{custValuesSum}.
+Since the data is made up of more than 7,000 customers and given the CLRV calculation is time consuming, parallelization has been used to calculate every CLRV. Once all the CLRVs are computed, one may take the sum in order to retrieve the portfolio's global value as well as a 95\% confidence interval as shown by table \ref{tab:custValuesSum}.
 
 \begin{table}[H]
 
@@ -1342,6 +1505,17 @@ Since the data is made up of more than 7,000 customers and given the CLRV calcul
 \end{tabular}
 \end{table}
 
+Going deeper into the statistical analysis of customer lifetime raw value, it can be noticed from table \ref{tab:custValuesStats} and figure \ref{fig:clrvDens} that the clients are quite heterogeneous. The distribution of CLRV is left-skewed with a median lower than the mean. In addition, the CLRV ranges from 324 to 6815 indicating that each client does not have the same value to the firm.
+
+\begin{figure}
+
+{\centering \includegraphics[width=12.5in]{./imgs/clrv_density} 
+
+}
+
+\caption{Distribution of Customer Lifetime Raw Value}\label{fig:clrvDens}
+\end{figure}
+
 \begin{table}[H]
 
 \caption{\label{tab:custValuesStats}CLRV Statistical summary}
@@ -1355,14 +1529,7 @@ Since the data is made up of more than 7,000 customers and given the CLRV calcul
 \end{tabular}
 \end{table}
 
-\begin{figure}
-
-{\centering \includegraphics[width=12.5in]{./imgs/clrv_density} 
-
-}
-
-\caption{Distribution of Customer Lifetime Raw Value}\label{fig:clrvDens}
-\end{figure}
+Eventually, it seems interesting to visualize the contribution of each month to customer lifetime raw value. Based on figure \ref{fig:clrvEvolution}, the montlhy contribution decreases as the number of months increases which leads to a concave cumulative value. This result may be explained by the increase in \((1+a)^t\) and the decrease in the survival probability \(r_{i,t}\) as \(t\) increases (see equation \eqref{eq:clrv}). In other words, customers bring in more value to the firm at the beginning of the relationship.
 
 \begin{figure}
 
@@ -1370,41 +1537,30 @@ Since the data is made up of more than 7,000 customers and given the CLRV calcul
 
 }
 
-\caption{Customer Lifetime Raw Value evolution based on number of months in the portfolio}\label{fig:clrvEvolution}
+\caption{Monthly contribution and cumulative value depending on the number of months in the portfolio}\label{fig:clrvEvolution}
 \end{figure}
 
 \hypertarget{cluster-contribution-to-the-portfolio-value}{%
 \subsection{Cluster contribution to the portfolio value}\label{cluster-contribution-to-the-portfolio-value}}
 
+In section \ref{segmentation}, 3 clusters of customers have been identified using hierarchical clustering. This being said, it is undoubtedly necessary to calculate the value of each group using the method presented above. The following table depicts each cluster's CLRV with 95\% confidence interval as well as the \% proportion in terms of number of clients and \% contribution in terms of value. One can notice that the \emph{Platinum} cluster accounts for more than half the portfolio total value even if it represents barely a third of the number of clients. Besides, \emph{Silver} customers are the less valuable to the firm as their contribution barely amounts to a 12\%. Recall that this group is characterized by a minimum subscription with no internet connection or additional services. Finally, the \emph{Gold} segment's contribution is \(\approx\) 40\% lower than cluster 3's. It may be explained by cluster 2 client's higher propensity to churn.
+
 \begin{table}[H]
 
 \caption{\label{tab:totValclust}Total CLRV per cluster}
 \centering
-\begin{tabular}[t]{ccccc}
+\begin{tabular}[t]{>{}cccccc}
 \toprule
-Cluster & Proportion (\%) & V lower & V & V upper\\
+Cluster & Proportion (\%) & V lower & V & V upper & Contribution (\%)\\
 \midrule
-\cellcolor{gray!6}{1} & \cellcolor{gray!6}{26.6} & \cellcolor{gray!6}{2,035,928} & \cellcolor{gray!6}{2,117,932} & \cellcolor{gray!6}{2,213,746}\\
-2 & 41.4 & 5,760,579 & 6,211,027 & 6,734,243\\
-\cellcolor{gray!6}{3} & \cellcolor{gray!6}{32.1} & \cellcolor{gray!6}{9,807,637} & \cellcolor{gray!6}{9,941,041} & \cellcolor{gray!6}{10,083,660}\\
+\em{\cellcolor{gray!6}{Silver (1)}} & \cellcolor{gray!6}{26.6} & \cellcolor{gray!6}{2,035,928} & \cellcolor{gray!6}{2,117,932} & \cellcolor{gray!6}{2,213,746} & \cellcolor{gray!6}{11.59}\\
+\em{Gold (2)} & 41.4 & 5,760,579 & 6,211,027 & 6,734,243 & 34.00\\
+\em{\cellcolor{gray!6}{Platinum (3)}} & \cellcolor{gray!6}{32.1} & \cellcolor{gray!6}{9,807,637} & \cellcolor{gray!6}{9,941,041} & \cellcolor{gray!6}{10,083,660} & \cellcolor{gray!6}{54.41}\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\begin{table}[H]
-
-\caption{\label{tab:custValuesclust}CLRV statistical summary for each customer segment}
-\centering
-\begin{tabular}[t]{lrrrrrr}
-\toprule
-  & Min. & 1st Qu. & Median & Mean & 3rd Qu. & Max.\\
-\midrule
-\cellcolor{gray!6}{Cluster 1} & \cellcolor{gray!6}{333.82} & \cellcolor{gray!6}{837.50} & \cellcolor{gray!6}{1094.51} & \cellcolor{gray!6}{1134.40} & \cellcolor{gray!6}{1264.28} & \cellcolor{gray!6}{4679.80}\\
-Cluster 2 & 323.99 & 1194.59 & 1862.16 & 2134.37 & 2886.02 & 6009.78\\
-\cellcolor{gray!6}{Cluster 3} & \cellcolor{gray!6}{1268.74} & \cellcolor{gray!6}{3393.93} & \cellcolor{gray!6}{4489.62} & \cellcolor{gray!6}{4408.44} & \cellcolor{gray!6}{5454.71} & \cellcolor{gray!6}{6815.42}\\
-\bottomrule
-\end{tabular}
-\end{table}
+Once the value differences across clusters identified, let us dig into a more detailed analysis of customer value based on the group they belong to. On figure \ref{fig:clrvDensClust}, the 3 CLRV distributions indicate large disparities between each client segment. While cluster 1 customers are defined an inflation of values located before 2,000, the two other groups are more homogeneous. The CLRV of cluster 2 (respectively 3) clients seems evenly distributed between 0 (respectively 1,500) and 6,000 (respectively 7,000).
 
 \begin{figure}
 
@@ -1415,21 +1571,58 @@ Cluster 2 & 323.99 & 1194.59 & 1862.16 & 2134.37 & 2886.02 & 6009.78\\
 \caption{Distribution of Customer Lifetime Raw Value per cluster}\label{fig:clrvDensClust}
 \end{figure}
 
+\begin{table}[H]
+
+\caption{\label{tab:custValuesclust}CLRV statistical summary for each customer segment}
+\centering
+\begin{tabular}[t]{>{}lcccccc}
+\toprule
+  & Min. & 1st Qu. & Median & Mean & 3rd Qu. & Max.\\
+\midrule
+\em{\cellcolor{gray!6}{Silver (1)}} & \cellcolor{gray!6}{333.82} & \cellcolor{gray!6}{837.50} & \cellcolor{gray!6}{1094.51} & \cellcolor{gray!6}{1134.40} & \cellcolor{gray!6}{1264.28} & \cellcolor{gray!6}{4679.80}\\
+\em{Gold (2)} & 323.99 & 1194.59 & 1862.16 & 2134.37 & 2886.02 & 6009.78\\
+\em{\cellcolor{gray!6}{Platinum (3)}} & \cellcolor{gray!6}{1268.74} & \cellcolor{gray!6}{3393.93} & \cellcolor{gray!6}{4489.62} & \cellcolor{gray!6}{4408.44} & \cellcolor{gray!6}{5454.71} & \cellcolor{gray!6}{6815.42}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+When looking at table \ref{tab:custValuesclust}, large variations appear between each cluster's average CLRV. With a view of testing whether these differences are significant, the ANOVA test is performed between the \texttt{CLRV} and \texttt{cluster} variables. The very low p-value depicted in the table below indicates significant different means across the 3 groups. Hence, it can be affirmed that the contribution of each client segment to the portfolio value is statistically different.
+
+\begin{table}[H]
+
+\caption{\label{tab:aov}Results of the ANOVA test between CLRV and cluster}
+\centering
+\begin{tabular}[t]{lccccc}
+\toprule
+  & Df & Sum of squares & MSE & F value & P value\\
+\midrule
+\cellcolor{gray!6}{Cluster} & \cellcolor{gray!6}{2} & \cellcolor{gray!6}{12,016,055,579} & \cellcolor{gray!6}{6,008,027,789} & \cellcolor{gray!6}{5,205.39} & \cellcolor{gray!6}{0}\\
+Residuals & 7029 & 8,112,831,034 & 1,154,194 &  & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+With the objective of determining how each group's representative customer differ one from another in terms of CLRV, it seems a good idea to visualize the evolution of their respective cumulative value as the number of months in the portfolio increases. Figure \ref{fig:clrvEvolutionClust} shows that the lower value to the firm, the flatter curve. To put it another way, \emph{Silver} clients' monthly contribution to CLRV decreases rapidly and becomes constantly low after 30 months. On the contrary, \emph{Platinum} customers bring in a larger monthly value and the latter decreases to a lesser extent. As for \emph{Gold} customers, their cumulative value becomes nearly constant from month 40 which may be due to their lower loyalty to the firm.
+
 \begin{figure}
 
 {\centering \includegraphics[width=12.5in]{./imgs/clrv_evolution_per_cluster} 
 
 }
 
-\caption{Customer Lifetime Raw Value evolution per cluster based on number of months in the portfolio}\label{fig:clrvEvolutionClust}
+\caption{Customer cumulative value through time per cluster}\label{fig:clrvEvolutionClust}
 \end{figure}
 
 \hypertarget{simulations}{%
 \subsection{Simulations}\label{simulations}}
 
+The final step in our study aims at simulating different multiple scenarios to determine how customer lifetime raw value and the portfolio value might evolve \emph{ceteris paribus}. This section is not exhaustive in inasmuch as only a few parameters have been selected to perform the simulations.
+
 \hypertarget{influence-of-the-discount-factor-on-clrv}{%
 \subsubsection*{Influence of the discount factor on CLRV}\label{influence-of-the-discount-factor-on-clrv}}
 \addcontentsline{toc}{subsubsection}{Influence of the discount factor on CLRV}
+
+In the CLRV formula (equation \eqref{eq:clrv}), the discount factor \(a\) plays a central role since it monitors the importance of future values in the customer value. In this context, it is decided to analyse the evolution of both CLRV and portfolio value after a change in \(a\). The simulation results reproduced in table \ref{tab:portValDiscountTab} lead us to suppose that the portfolio overall value decreases as the discount factor increases. V is indeed reduced by almost 16\% when \(a\) goes from 1\% to 8\%.
 
 \begin{table}[H]
 
@@ -1447,14 +1640,7 @@ Cluster 2 & 323.99 & 1194.59 & 1862.16 & 2134.37 & 2886.02 & 6009.78\\
 \end{tabular}
 \end{table}
 
-\begin{figure}
-
-{\centering \includegraphics[width=12.5in]{./imgs/clrv_dens_discount_rate} 
-
-}
-
-\caption{Customer Lifetime Raw Value distribution depending on discount rate}\label{fig:clrvDensDiscount}
-\end{figure}
+The reduction in V after an increase in the discount rate is actually the direct consequence of a decrease in every customer lifetime raw value. The monthly contribution to CLRV being negatively influenced by \(a\) as the number of months \(t\) increases, this phenomenon is all the more pronounced when \(a\) is large. On figure \ref{fig:clrvEvolDiscount}, one can observe that the higherthe discount factor, the more concave the shape of the cumulative value. In other words the higher the discount factor, the lower gain in CLRV when the number of months is high.
 
 \begin{figure}
 
@@ -1465,18 +1651,20 @@ Cluster 2 & 323.99 & 1194.59 & 1862.16 & 2134.37 & 2886.02 & 6009.78\\
 \caption{Customer Lifetime Raw Value evolution depending on discount rate}\label{fig:clrvEvolDiscount}
 \end{figure}
 
-\hypertarget{influence-of-the-contract-type-on-clrv}{%
-\subsubsection*{Influence of the contract type on CLRV}\label{influence-of-the-contract-type-on-clrv}}
-\addcontentsline{toc}{subsubsection}{Influence of the contract type on CLRV}
+\hypertarget{influence-of-month-to-month-contracts-on-clrv}{%
+\subsubsection*{Influence of month-to-month contracts on CLRV}\label{influence-of-month-to-month-contracts-on-clrv}}
+\addcontentsline{toc}{subsubsection}{Influence of month-to-month contracts on CLRV}
+
+While it is obviously doable to simulate new customer lifetime raw values by playing with the model's parameters, one can also change the values of covariates used to estimate the survival probabilities \(r_{i,t}\). In this part, the analysis is centred on the proportion of month-to-month contracts in the portfolio. The method consists in computing each client's CLRV and the portfolio value V for proportions of monthly contracts ranging from 10 to 90\%. Table \ref{tab:portValmonthToMonth} examines the portfolio value for 4 interesting scenarios and compare them with the actual share of month-to-month contracts in the data. The results are quite counter-intuitive as V is not maximum for a 10\% proportion whereas it has been demonstrated in figure \ref{fig:coxmarginaleffects} that clients enrolled in month-to-month contracts are 22 times more prone to churn than those with two-year contracts. Hence one might think that the lower share of those customers, the higher value of the portfolio.
 
 \textbackslash begin\{table\}{[}H{]}
 
-\textbackslash caption\{\label{tab:unnamed-chunk-30}Portfolio estimated value and 95\% confidence interval depending on proportion of `month-to-month' contracts\}
+\textbackslash caption\{\label{tab:portValmonthToMonth}Portfolio estimated value and 95\% confidence interval depending on proportion of month-to-month contracts\}
 \centering
 
 \begin{tabular}[t]{llll}
 \toprule
-\% 'month-to-month' contracts & V lower & V & V upper\\
+\% month-to-month contracts & V lower & V & V upper\\
 \midrule
 \cellcolor{gray!6}{10\%} & \cellcolor{gray!6}{22,526,500} & \cellcolor{gray!6}{23,009,290} & \cellcolor{gray!6}{23,535,331}\\
 30\% & 24,289,738 & 25,001,468 & 25,801,858\\
@@ -1488,14 +1676,18 @@ Cluster 2 & 323.99 & 1194.59 & 1862.16 & 2134.37 & 2886.02 & 6009.78\\
 
 \textbackslash end\{table\}
 
+The following figure illustrates the CLRV distribution for 4 scenarios depending on the proportion of month-to-month contracts. The results are closer to our expectations than those presented in the previous table since CLRV tends to be higher when there are 10\% month-to-month contracts in the portfolio.
+
 \begin{figure}
 
 {\centering \includegraphics[width=13.89in]{./imgs/clrv_month_to_month} 
 
 }
 
-\caption{CLRV distribution depending on the proportion of 'month-to-month' contracts}\label{fig:clrvmonthtomonth}
+\caption{CLRV distribution depending on the proportion of month-to-month contracts}\label{fig:clrvmonthtomonth}
 \end{figure}
+
+Ultimately when representing the evolution of customer raw equity, i.e.~the portfolio value, according to the share of month-to-month contracts, a decreasing trend is identified which appears to be a rational result.
 
 \begin{figure}
 
@@ -1503,12 +1695,16 @@ Cluster 2 & 323.99 & 1194.59 & 1862.16 & 2134.37 & 2886.02 & 6009.78\\
 
 }
 
-\caption{Portfolio estimated value (Customer Raw Equity) depending on the proportion of 'month-to-month' contracts}\label{fig:clrvmonthtomonthEvol}
+\caption{Portfolio estimated value (Customer Raw Equity) depending on the proportion of month-to-month contracts}\label{fig:clrvmonthtomonthEvol}
 \end{figure}
 
 \hypertarget{how-to-increase-customer-lifetime-raw-value}{%
 \subsubsection*{How to increase Customer Lifetime Raw Value?}\label{how-to-increase-customer-lifetime-raw-value}}
 \addcontentsline{toc}{subsubsection}{How to increase Customer Lifetime Raw Value?}
+
+At this point of the study, a consistent method to evaluate the firm's portfolio value through the computation of customer lifetime raw value has been implemented. In section \ref{churnAnalysis} it has been shown that customers from the \emph{Gold} cluster are characterized by a higher churn rate and lower survival probabilities. This lesser loyalty to the firm has a negative impact on the portfolio value. Furthermore, cluster 2 clients amount to 34\% in the customer raw equity which proves their strong potential in terms of CLRV. Therefore, a method to increase \emph{Gold} customers' lifetime is proposed in this last section. To that end, it is decided to offer additional services for free to every cluster 2 client. These services are represented by the following variables: \texttt{Online\_Security}, \texttt{Online\_Backup} and \texttt{Tech\_Support}. The underlying purpose is to increase the survival probabilities estimated by the Cox model as it has been proved that they have a negative impact on the churn hazard (see figure \ref{fig:coxmarginaleffects}).
+
+The results presented in the table below support our hypothesis since the \emph{Gold} cluster total value increases by almost 50\% after having provided the clients with free additional options.
 
 \begin{table}[H]
 
@@ -1516,13 +1712,15 @@ Cluster 2 & 323.99 & 1194.59 & 1862.16 & 2134.37 & 2886.02 & 6009.78\\
 \centering
 \begin{tabular}[t]{llr}
 \toprule
-  & Portfolio Value & \% Variation\\
+  & Cluster 2 Value & \% Variation\\
 \midrule
 \cellcolor{gray!6}{Reference} & \cellcolor{gray!6}{6,211,027} & \cellcolor{gray!6}{0.00}\\
 With additional options & 9,218,937 & 48.43\\
 \bottomrule
 \end{tabular}
 \end{table}
+
+Figure \ref{fig:clust2CLRV} illustrates the mechanism that leads to an increase in the portfolio value after the ``gift'' to cluster 2 clients. One can notice a significant shift to the right of the CLRV distribution. This shift is the consequence of an increase in \(r_{i,t}\) - client \(i\)'s survival probability at time \(t\) - which is a positive driver of customer value. We are thus able to propose a marketing strategy which aims at boosting the firm's lifetime revenues. Note, however, that our methodology does not take costs into account which implies that the highlighted points should be mitigated.
 
 \begin{figure}
 
@@ -1532,6 +1730,14 @@ With additional options & 9,218,937 & 48.43\\
 
 \caption{Increase in cluster 2 clients' CLRV after after having provided them with additional services}\label{fig:clust2CLRV}
 \end{figure}
+
+\hypertarget{conclusion}{%
+\chapter*{Conclusion}\label{conclusion}}
+\addcontentsline{toc}{chapter}{Conclusion}
+
+Our study on customer \emph{portfolio}, \emph{attrition} and customer \emph{value} has a threefold purpose. To begin with, the literature review helps the readers to understand the important notions behind the topic's key points. Although it is far from being exhaustive, it summarizes the important Econometrics and Data Science improvements that have been made in terms of portfolio management, churn analysis and customer value estimation. Secondly, a large part of the study centers on the theoretical foundations of duration models which are essential to predict the risk of churn. Finally, chapter \ref{estimation} explains the ins and outs of a decision support tool whose goal is to manage a portfolio of customers. The method consists in identifying groups of customers who have similar consumption habits, then estimating customer lifetime by the means of duration models to eventually calculate the overall lifetime value of the portfolio based on the computation of customer lifetime raw value.
+
+Nevertheless, some improvements need to be made in order to make our project more consistent to be applied in a business context. The Cox model introduced in section \ref{churnAnalysis} presents some limitations since it does not manage to properly estimate the risk of churn. A more reliable estimation method might be adopted such as more complex parametric models or machine learning algorithms for survival data. In addition, it could be relevant to determine the churn reason using competing risk models. As for the data, we think our study would be more impactful with time-varying covariates and more observations. Eventually, as said at the end of the previous chapter, costs are not taken into account in the estimation method. An area for improvement might be to add simulated costs to the data set or retrieving online data on the costs of telecommunication service providers.
 
 \hypertarget{appendix}{%
 \chapter*{Appendix}\label{appendix}}

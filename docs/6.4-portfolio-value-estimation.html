@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="6.3-churn-analysis.html"/>
-<link rel="next" href="appendix.html"/>
+<link rel="prev" href="6.3-churnAnalysis.html"/>
+<link rel="next" href="conclusion.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -188,10 +188,10 @@ div.csl-indent {
 <li class="chapter" data-level="6.2.1" data-path="6.2-segmentation.html"><a href="6.2-segmentation.html#transforming-qualitative-variables-into-principal-axes"><i class="fa fa-check"></i><b>6.2.1</b> Transforming qualitative variables into principal axes</a></li>
 <li class="chapter" data-level="6.2.2" data-path="6.2-segmentation.html"><a href="6.2-segmentation.html#hierarchical-clustering-on-principal-components"><i class="fa fa-check"></i><b>6.2.2</b> Hierarchical clustering on principal components</a></li>
 </ul></li>
-<li class="chapter" data-level="6.3" data-path="6.3-churn-analysis.html"><a href="6.3-churn-analysis.html"><i class="fa fa-check"></i><b>6.3</b> Churn analysis</a>
+<li class="chapter" data-level="6.3" data-path="6.3-churnAnalysis.html"><a href="6.3-churnAnalysis.html"><i class="fa fa-check"></i><b>6.3</b> Churn analysis</a>
 <ul>
-<li class="chapter" data-level="6.3.1" data-path="6.3-churn-analysis.html"><a href="6.3-churn-analysis.html#coxmodel"><i class="fa fa-check"></i><b>6.3.1</b> The Cox model</a></li>
-<li class="chapter" data-level="6.3.2" data-path="6.3-churn-analysis.html"><a href="6.3-churn-analysis.html#other-survival-models"><i class="fa fa-check"></i><b>6.3.2</b> Other survival models</a></li>
+<li class="chapter" data-level="6.3.1" data-path="6.3-churnAnalysis.html"><a href="6.3-churnAnalysis.html#coxmodel"><i class="fa fa-check"></i><b>6.3.1</b> The Cox model</a></li>
+<li class="chapter" data-level="6.3.2" data-path="6.3-churnAnalysis.html"><a href="6.3-churnAnalysis.html#other-survival-models"><i class="fa fa-check"></i><b>6.3.2</b> Other survival models</a></li>
 </ul></li>
 <li class="chapter" data-level="6.4" data-path="6.4-portfolio-value-estimation.html"><a href="6.4-portfolio-value-estimation.html"><i class="fa fa-check"></i><b>6.4</b> Portfolio value estimation</a>
 <ul>
@@ -201,6 +201,7 @@ div.csl-indent {
 <li class="chapter" data-level="6.4.4" data-path="6.4-portfolio-value-estimation.html"><a href="6.4-portfolio-value-estimation.html#simulations"><i class="fa fa-check"></i><b>6.4.4</b> Simulations</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i>Conclusion</a></li>
 <li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html"><i class="fa fa-check"></i>Appendix</a>
 <ul>
 <li class="chapter" data-level="" data-path="hazard-function.html"><a href="hazard-function.html"><i class="fa fa-check"></i>Hazard function</a></li>
@@ -215,7 +216,7 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
-<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+<li><a href="https://github.com/PeDiot/portfolio_churn_value" target="blank">Get the source code on Github.</a></li>
 
 </ul>
 
@@ -263,7 +264,7 @@ div.csl-indent {
 <p>In the literature, it is common place to measure customer lifetime value that is the overall profit brought by a client over her entire lifetime in the portfolio. In our study, the data set used does not provide any information on the costs related to each customer. Consequently, it is decided to evaluate customer value by computing the overall revenues the firm might earn during the relationship with their clients. We name this metric customer lifetime raw value (CLRV) and it is defined in equation <a href="6.4-portfolio-value-estimation.html#eq:clrv">(6.1)</a>.</p>
 <p>The process implemented to compute client <span class="math inline">\(i\)</span>’s CLRV works as follows:</p>
 <ol style="list-style-type: decimal">
-<li>Estimate client <span class="math inline">\(i\)</span>’s survival function over 72 months using the Cox model fitted in section <a href="6.3-churn-analysis.html#coxmodel">6.3.1</a>.</li>
+<li>Estimate client <span class="math inline">\(i\)</span>’s survival function over 72 months using the Cox model fitted in section <a href="6.3-churnAnalysis.html#coxmodel">6.3.1</a>.</li>
 <li>For each month, multiply the value of the survival function by the monthly fee <span class="math inline">\(p_i\)</span> paid by client <span class="math inline">\(i\)</span>. Then, divide the product by <span class="math inline">\((1 + a)^t\)</span> where <span class="math inline">\(t\)</span> is the month’s index and <span class="math inline">\(a\)</span> the discount factor.</li>
 <li>Take the sum of the <span class="math inline">\(T\)</span> ratios.</li>
 </ol>
@@ -739,10 +740,10 @@ Figure 6.14: Customer Lifetime Raw Value evolution depending on discount rate
 </div>
 <div id="influence-of-month-to-month-contracts-on-clrv" class="section level4 unnumbered">
 <h4>Influence of month-to-month contracts on CLRV</h4>
-<p>While it is obviously doable to simulate new customer lifetime raw values by playing with the model’s parameters, one can also change the values of covariates used to estimate the survival probabilities <span class="math inline">\(r_{i,t}\)</span>. In this part, the analysis is centred on the proportion of month-to-month contracts in the portfolio. The method consists in computing each client’s CLRV and the portfolio value V for proportions of monthly contracts ranging from 10 to 90%. Table <a href="6.4-portfolio-value-estimation.html#tab:portValmonthToMonth">6.15</a> examines the portfolio value for 4 interesting scenarios and compare them with the actual share of month-to-month contracts in the data. The results are quite counter-intuitive as V is not maximum for a 10% proportion whereas it has been demonstrated in figure @(fig:coxmarginaleffects) that clients enrolled in month-to-month contracts are 22 times more prone to churn than those with two-year contracts. Hence one might think that the lower share of those customers, the higher value of the portfolio.</p>
+<p>While it is obviously doable to simulate new customer lifetime raw values by playing with the model’s parameters, one can also change the values of covariates used to estimate the survival probabilities <span class="math inline">\(r_{i,t}\)</span>. In this part, the analysis is centred on the proportion of month-to-month contracts in the portfolio. The method consists in computing each client’s CLRV and the portfolio value V for proportions of monthly contracts ranging from 10 to 90%. Table <a href="6.4-portfolio-value-estimation.html#tab:portValmonthToMonth">6.15</a> examines the portfolio value for 4 interesting scenarios and compare them with the actual share of month-to-month contracts in the data. The results are quite counter-intuitive as V is not maximum for a 10% proportion whereas it has been demonstrated in figure <a href="6.3-churnAnalysis.html#fig:coxmarginaleffects">6.7</a> that clients enrolled in month-to-month contracts are 22 times more prone to churn than those with two-year contracts. Hence one might think that the lower share of those customers, the higher value of the portfolio.</p>
 <table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:portValmonthToMonth">Table 6.15: </span>Portfolio estimated value and 95% confidence interval depending on proportion of ‘month-to-month’ contracts
+<span id="tab:portValmonthToMonth">Table 6.15: </span>Portfolio estimated value and 95% confidence interval depending on proportion of month-to-month contracts
 </caption>
 <thead>
 <tr>
@@ -836,20 +837,22 @@ V upper
 <p>The following figure illustrates the CLRV distribution for 4 scenarios depending on the proportion of month-to-month contracts. The results are closer to our expectations than those presented in the previous table since CLRV tends to be higher when there are 10% month-to-month contracts in the portfolio.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:clrvmonthtomonth"></span>
 <p class="caption">
-Figure 6.15: CLRV distribution depending on the proportion of ‘month-to-month’ contracts
+Figure 6.15: CLRV distribution depending on the proportion of month-to-month contracts
 </p>
-<img src="imgs/clrv_month_to_month.png" alt="CLRV distribution depending on the proportion of 'month-to-month' contracts" width="500" />
+<img src="imgs/clrv_month_to_month.png" alt="CLRV distribution depending on the proportion of month-to-month contracts" width="500" />
 </div>
-<p>Ultimately when representing the evolution of customer raw equity, i.e. the portfolio value, according to the share of month-to-month contracts, a decreasing trend is identified which appears to be a rationnal result.</p>
+<p>Ultimately when representing the evolution of customer raw equity, i.e. the portfolio value, according to the share of month-to-month contracts, a decreasing trend is identified which appears to be a rational result.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:clrvmonthtomonthEvol"></span>
 <p class="caption">
-Figure 6.16: Portfolio estimated value (Customer Raw Equity) depending on the proportion of ‘month-to-month’ contracts
+Figure 6.16: Portfolio estimated value (Customer Raw Equity) depending on the proportion of month-to-month contracts
 </p>
-<img src="imgs/portVal_month_to_month.png" alt="Portfolio estimated value (Customer Raw Equity) depending on the proportion of 'month-to-month' contracts" width="450" />
+<img src="imgs/portVal_month_to_month.png" alt="Portfolio estimated value (Customer Raw Equity) depending on the proportion of month-to-month contracts" width="450" />
 </div>
 </div>
 <div id="how-to-increase-customer-lifetime-raw-value" class="section level4 unnumbered">
 <h4>How to increase Customer Lifetime Raw Value?</h4>
+<p>At this point of the study, a consistent method to evaluate the firm’s portfolio value through the computation of customer lifetime raw value has been implemented. In section <a href="6.3-churnAnalysis.html#churnAnalysis">6.3</a> it has been shown that customers from the <em>Gold</em> cluster are characterized by a higher churn rate and lower survival probabilities. This lesser loyalty to the firm has a negative impact on the portfolio value. Furthermore, cluster 2 clients amount to 34% in the customer raw equity which proves their strong potential in terms of CLRV. Therefore, a method to increase <em>Gold</em> customers’ lifetime is proposed in this last section. To that end, it is decided to offer additional services for free to every cluster 2 client. These services are represented by the following variables: <code>Online_Security</code>, <code>Online_Backup</code> and <code>Tech_Support</code>. The underlying purpose is to increase the survival probabilities estimated by the Cox model as it has been proved that they have a negative impact on the churn hazard (see figure <a href="6.3-churnAnalysis.html#fig:coxmarginaleffects">6.7</a>).</p>
+<p>The results presented in the table below support our hypothesis since the <em>Gold</em> cluster total value increases by almost 50% after having provided the clients with free additional options.</p>
 <table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:unnamed-chunk-32">Table 6.16: </span>Increase in portfolio value after having provided cluster 2 clients with additional services
@@ -859,7 +862,7 @@ Figure 6.16: Portfolio estimated value (Customer Raw Equity) depending on the pr
 <th style="text-align:left;">
 </th>
 <th style="text-align:left;">
-Portfolio Value
+Cluster 2 Value
 </th>
 <th style="text-align:right;">
 % Variation
@@ -891,6 +894,7 @@ With additional options
 </tr>
 </tbody>
 </table>
+<p>Figure <a href="6.4-portfolio-value-estimation.html#fig:clust2CLRV">6.17</a> illustrates the mechanism that leads to an increase in the portfolio value after the “gift” to cluster 2 clients. One can notice a significant shift to the right of the CLRV distribution. This shift is the consequence of an increase in <span class="math inline">\(r_{i,t}\)</span> - client <span class="math inline">\(i\)</span>’s survival probability at time <span class="math inline">\(t\)</span> - which is a positive driver of customer value. We are thus able to propose a marketing strategy which aims at boosting the firm’s lifetime revenues. Note, however, that our methodology does not take costs into account which implies that the highlighted points should be mitigated.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:clust2CLRV"></span>
 <p class="caption">
 Figure 6.17: Increase in cluster 2 clients’ CLRV after after having provided them with additional services
@@ -913,8 +917,8 @@ Gupta, and Donald R. Lehmann. 2003. <span>“Customers as Assets.”</span> <em>
           </div>
         </div>
       </div>
-<a href="6.3-churn-analysis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="appendix.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="6.3-churnAnalysis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="conclusion.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
