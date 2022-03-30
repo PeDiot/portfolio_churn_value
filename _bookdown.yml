@@ -10,8 +10,9 @@ rmd_files: [
   "04-dataMining.Rmd", 
   "05-data.Rmd", 
   "06-estimationtechniques.Rmd", 
-  "07-appendix.Rmd", 
-  "08-references.Rmd"
+  "07-conclusion.Rmd", 
+  "08-appendix.Rmd", 
+  "09-references.Rmd"
 ]
 language:
   ui:
