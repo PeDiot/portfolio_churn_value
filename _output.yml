@@ -6,7 +6,7 @@ bookdown::gitbook:
       before: |
         <li><a href="./">Portfolio, Churn & Customer Value</a></li>
       after: |
-        <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+        <li><a href="https://github.com/PeDiot/portfolio_churn_value" target="blank">Get the source code on Github.</a></li>
     download: ["pdf"]
   
 bookdown::pdf_book:
