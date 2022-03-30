@@ -1,0 +1,27 @@
+---
+output: html_document2
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+# setwd("C:/Users/pemma/OneDrive - Université de Tours/Mécen/M2/S2/04 - 3R/portfolio_churn_value")
+```
+
+
+```{r echo=FALSE}
+knitr::opts_chunk$set(
+  fig.align = "center", 
+  echo = FALSE, 
+  message = FALSE, 
+  comment = FALSE, 
+  warning = FALSE, 
+  fig.topcaption = TRUE
+)
+```
+
+# Conclusion {-}
+
+Our study on customer *portfolio*, *attrition* and customer *value* has a threefold purpose. To begin with, the literature review helps the readers to understand the important notions behind the topic's key points. Although it is far from being exhaustive, it summarizes the important Econometrics and Data Science improvements that have been made in terms of portfolio management, churn analysis and customer value estimation. Secondly, a large part of the study centers on the theoretical foundations of duration models which are essential to predict the risk of churn. Finally, chapter \@ref(estimation) explains the ins and outs of a decision support tool whose goal is to manage a portfolio of customers. The method consists in identifying groups of customers who have similar consumption habits, then estimating customer lifetime by the means of duration models to eventually calculate the overall lifetime value of the portfolio based on the computation of customer lifetime raw value. 
+
+Nevertheless, some improvements need to be made in order to make our project more consistent to be applied in a business context. The Cox model introduced in section \@ref(churnAnalysis) presents some limitations since it does not manage to properly estimate the risk of churn. A more reliable estimation method might be adopted such as more complex parametric models or machine learning algorithms for survival data. In addition, it could be relevant to determine the churn reason using competing risk models. As for the data, we think our study would be more impactful with time-varying covariates and more observations. Eventually, as said at the end of the previous chapter, costs are not taken into account in the estimation method. An area for improvement might be to add simulated costs to the data set or retrieving online data on the costs of telecommunication service providers. 
