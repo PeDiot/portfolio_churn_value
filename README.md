@@ -10,5 +10,5 @@ After having defined the subject's key concepts, we apply duration models and ma
 
 ***Keywords***: *customer portfolio management (CPM), churn, customer value, duration models, machine learning, telecom.* 
 
-The book can be viewed [here](https://pediot.github.io/portfolio_churn_value/). It can also be downloaded to pdf file even though some issues can be noted in image display. 
+The book can be viewed <a href="https://pediot.github.io/portfolio_churn_value/" target="_blank">here</a>. It can also be downloaded to pdf file even though some issues can be noted in image display.
 
