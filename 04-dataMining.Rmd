@@ -1,0 +1,112 @@
+```{r echo=FALSE}
+knitr::opts_chunk$set(
+  fig.align = "center", 
+  echo = FALSE, 
+  message = FALSE, 
+  comment = FALSE, 
+  warning = FALSE, 
+  fig.topcaption = TRUE
+)
+```
+
+# Data Mining methods {#dataMining}
+
+While the previous chapter introduces the fundamentals related to survival analysis, this part focuses on data mining techniques used in our modelling approach. On the on hand, multiple correspondence analysis is introduced as it is used in the following chapter with a view of converting categorical features into continuous principal axes. On the other hand, this section centers on unsupervised classification which is a useful method when it comes to segmentation. 
+
+## Mutliple Correspondence Analysis (MCA) 
+
+### Definition 
+
+Multiple Correspondence Analysis is a dimension reducing method which takes multiple categorical variables and seeks to identify associations between levels of those variables. MCA aims at highlighting features that separate classes of individuals, while determining links between variables and categories. To that end, MCA keeps the core information by the means of principal components which are projected axes [@MCA]. 
+
+### Complete disjunctive table 
+
+MCA can be applied on data stored in a complete disjunctive table which is an indicator matrix. 
+
+```{r tdc, fig.cap="Complete disjunctive table"}
+knitr::include_graphics(path = "./imgs/TDC.png")
+```
+
+with, 
+
+- $I$ the number of individuals,
+- $J$ the number of variables,
+- $K_j$ the number of categories in the $j^{th}$ variable,
+- $I_k$ the number of individuals with the $k^{th}$ category. 
+
+### Distances 
+
+The individuals' analysis processed by MCA relies on the distance between individuals which is computed as follows for 2 data points $i$ and $l$: 
+
+\begin{equation}
+  d^2(i;l) = \frac{1}{J}\sum_{k=1}^K \frac{I}{I_k}(x_{ik} - x_{lk})^2
+  (\#eq:mcaDist1)
+\end{equation}
+
+The distance between two categories $j$ and $k$ allows to determine how close they are and is calculated as follows: 
+
+\begin{equation}
+  d^2(j;k) = \frac{I}{I_k I_j}\times I_{k\neq j}
+  (\#eq:mcaDist2)
+\end{equation}
+
+with $I_{k\neq j}$ the number of individuals with one and only one of the $j$ or $k$ categories.
+
+### Algorithm
+
+1. The axes' origin is placed at the individuals point cloud's barycenter; 
+2. A sequence of orthogonal axes is seeked so as to maximize the data's projected inertia; 
+3. These orthogonal projections are represented onto a plan made up of principal components, $(F_1, F_2)$ being the first projected plan.
+
+## Unsupervised classification
+
+Clustering is an unsupervised learning technique that groups similar data points such that the points in the same group are more similar to each other than the points in the other groups. The group of similar data points is called a cluster. It is said to be unsupervised as the groups are not labeled but discovered by the algorithm. Consequently, it may not be possible to find separate clusters of data points.
+
+### Hierarchical Clustering on Principal Components (HCPC)
+
+The HCPC approach combines the three standard methods used in multivariate data analysis:
+
+- Principal Components methods such as MCA,
+- Agglomerative hierarchical clustering,
+- Consolidation by k-means partitioning.
+
+### Agglomerative Hierarchical Clustering (AHC)
+
+#### Algorithm {-}
+
+1. Each data point  is initially considered an individual cluster;
+2. Compute the proximity matrix which represents the distances, taken pairwise, between the elements of a set;
+3. Merge the two closest clusters and update the proximity matrix until only a single cluster remains.
+
+#### Distance between two observations {-}
+
+The choice of the distance metric is a critical step in clustering. It defines how the similarity of two elements $(x, y)$ is calculated and it will influence the shape of the clusters. There are several distance measures such as *Euclidean*, *Manhattan*, $\chi^2$, etc. In our study the classical *Euclidean* distance metric is chosen and is defined as follows: 
+
+\begin{equation}
+  d_{euc}(x,y) = \sqrt{\sum_{i=1}^n(x_i - y_i)^2}
+  (\#eq:euclidean)
+\end{equation}
+
+#### Similarities between clusters - Ward method {-}
+
+Calculating the similarity between two clusters is determining to merge the clusters. Here, the Ward method [@UNSUPERVISED_CLASSIF] is chosen and it consists in merging groups which drive down as little as possible the within inertia, ie the homogeneity of clusters. Mathematically, Ward criterion is defined as follows:
+
+\begin{equation}
+  \Delta (A, B) = \frac{1}{n} \times \frac{n_A n_B}{n_A + n_B}d^2(g_A, g_B)
+  (\#eq:ward)
+\end{equation}
+
+with $g_A$ et $g_B$ the clusters' barycenters (the mean point) et $n_A$ et $n_B$ the clusters' frequencies.
+
+Ward method needs to be minimized and tends to group together clusters which are close to each other in terms of barycenters, as well as small frequency clusters. 
+
+Ward method leads to choose the optimal number of clusters. Let $\Delta k$ be the increase in within inertia when going from $k+1$ groups to $k$ groups. Then, the proper number of classes $k^*$ can be such that $\frac{\Delta k-1}{\Delta k}$ is as little as possible. 
+
+
+### The k-means algorithm
+
+$k$ data points are chosen as initial centers.The following steps are repeated until the clusters identified are homogeneous enough or until a fixed number of iterations:
+
+1. The distances between the data points and the centers are computed;
+2. Each data point is assigned to the nearest center, ;
+3. The $k$ previous centers are replaced by the barycenters of the $k$ classes identified during the previous step. 
