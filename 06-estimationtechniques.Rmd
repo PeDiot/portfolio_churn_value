@@ -80,7 +80,7 @@ cleaned_data %>%
   scroll_box(width = "100%", box_css = "border: 0px;")
 ```
 
-## Portfolio segmentation 
+## Portfolio segmentation {#segmentation}
 
 Customer segmentation helps decision makers having a better understanding of their clients. It can then be used to enhance marketing strategies via personalization. In other words, segmentation can lead to target customers with offers and incentives personalized to their wants, needs and preferences. In order to make segmentation more accurate, it is more appropriate to use cluster analysis than predetermined thresholds or rules, even more when we have several variables at our disposal. In this context, this section focuses on applying clustering methods on features displayed in table \@ref(tab:selectedfeatures), apart from `Monthly_Charges`. 
 
@@ -107,7 +107,7 @@ mca_df%>%
   mykable(title = "The 10 principal axes obtained by MCA")
 ```
 
-Note that a more in-depth visualisation of those 10 principal components can be found in section \@ref(mcaappendix) in the appendix. This charts depict the percent contribution of each variable's categories to the principal axes, which is helpful to have a better understanding of MCA results.
+Note that a more in-depth visualisation of those 10 principal components can be found in figures \@ref(fig:mcacontrib12) to \@ref(fig:mcacontrib910) in the appendix. This charts depict the percent contribution of each variable's categories to the principal axes, which is helpful to have a better understanding of MCA results.
 
 
 ### Hierarchical clustering on principal components
@@ -274,7 +274,7 @@ In the two previous sections, the portfolio has been partitioned into 3 customer
 As said in chapter \@ref(data), it is decided not to use the `CLTV` variable to estimate customer lifetime value since no information has been provided on the computation method. Instead, another method is adopted to predict each client's lifetime value. For this purpose, two inputs are needed namely each customer's survival function as well as the monthly fees represented by the `Monthly_Charges` feature. Based on the CLV formulation proposed by Gupta and Lehmann [@CUSTOMERS_ASSETS], we derive a model aiming at calculating customer lifetime raw value (CLRV) as depicted in equation \@ref(eq:clrv). 
 
 \begin{equation}
-    CLRV_i = \sum_{t=0}^{T} \frac{p_i \ r_{i,t}}{(1+a)^t} 
+    \text{CLRV}_i = \sum_{t=0}^{T} \frac{p_i \ r_{i,t}}{(1+a)^t} 
     (\#eq:clrv)
 \end{equation}
 
@@ -286,6 +286,13 @@ with,
 - $T$ the time horizon. 
 
 It may be interesting to note that $p_i$ is time-invariant and corresponds to `Monthly_Charges`. $r_{i,t}$ is computed using the survival function estimated with the Cox model. $a$ is fixed at 8% and $T$ equals 72 months which is the longest lifetime in the data. 
+
+Summing over the $N$ CLRVs, one can derive customer raw equity which is the portfolio raw value (V) and may be a good proxy for the firm's overall revenues. 
+
+\begin{equation}
+    \text{V} = \sum_{i=1}^{N} \text{CLRV}_i = \sum_{i=1}^{N} \sum_{t=0}^{T} \frac{p_i \ r_{i,t}}{(1+a)^t} 
+    (\#eq:cre)
+\end{equation}
 
 ### Customer Lifetime Raw Value
 
@@ -307,8 +314,8 @@ load(file = paste0(backup_path, "custvalues/", "custValues_clust", ".RData"))
 ```{r}
 custValuesTot <- custValues %>%
   group_by(CustomerID) %>%
-  summarise_at(vars(starts_with("v")), 
-               sum) 
+  summarise_at( vars(starts_with("v")), 
+                function(x){sum(x)} ) 
 ```
 
 ```{r custValuesSum}
@@ -352,39 +359,61 @@ knitr::include_graphics(path = "./imgs/clrv_evolution.png")
 
 ### Cluster contribution to the portfolio value
 
+In section \@ref(segmentation), 3 clusters of customers have been identified using hierarchical clustering. This being said, it is undoubtedly necessary to calculate the value of each group using the method presented above. The following table depicts each cluster's CLRV with 95% confidence interval as well as the % proportion in terms of number of clients and % contribution in terms of value. One can notice that the *Platinum* cluster accounts for more than half the portfolio total value even if it represents barely a third of the number of clients. Besides, *Silver* customers are the less valuable to the firm as their contribution barely amounts to a 12%. Recall that this group is characterized by a minimum subscription with no internet connection or additional services. Finally, the *Gold* segment's contribution is $\approx$ 40% lower than cluster 3's. It may be explained by cluster 2 client's higher propensity to churn. 
+
 ```{r}
 cluster_prop <- questionr::freq(custValues_clust$cluster) %>%
   pull(`%`)
 
 custValues_clustTot <- custValues_clust %>%
   group_by(cluster, CustomerID) %>%
-  summarise_at(vars(starts_with("v")), 
-               sum)
+  summarise_at( vars(starts_with("v")), 
+                function(x){sum(x)} ) 
 ```
 
 
 ```{r totValclust}
+portfol_val <- custValuesTot %>%
+  select(v) %>%
+  sum() 
+
 tab <- custValues_clustTot %>%
   group_by(cluster) %>%
-  summarise_at(vars(starts_with("v")), 
-               function(v){sum(v) %>%
-                   format(big.mark = ",")})  %>%
+  summarise_at( vars(starts_with("v")),
+                function(x){sum(x)} )  %>%
   mutate(prop = cluster_prop) %>%
-  relocate(prop, .after = "cluster")
-colnames(tab) <- c("Cluster", "Proportion (%)", "V lower", 
-                   "V", "V upper")
+  mutate( val_prop = round(100 * as.numeric(v) / portfol_val, 2) ) %>%
+  mutate_at(vars(starts_with("v")), 
+            format, 
+            big.mark = ",") %>%
+  mutate(cluster = fct_recode(cluster, 
+                              `Silver (1)` = "1", 
+                              `Gold (2)` = "2", 
+                              `Platinum (3)` = "3")) %>% 
+  relocate(prop, .after = "cluster") 
+
+colnames(tab) <- c("Cluster", 
+                   "Proportion (%)", 
+                   "V lower", 
+                   "V", 
+                   "V upper", 
+                   "Contribution (%)")
+
 tab %>%
   mykable(title = "Total CLRV per cluster", 
-          align = rep("c", 5))
+          align = "c", 
+          digits = 2) %>%
+  column_spec(1, italic = T)
 ```
 
+Once the value differences across clusters identified, let us dig into a more detailed analysis of customer value based on the group they belong to. On figure \@ref(fig:clrvDensClust), the 3 CLRV distributions indicate large disparities between each client segment. While cluster 1 customers are defined an inflation of values located before 2,000, the two other groups are more homogeneous. The CLRV of cluster 2 (respectively 3) clients seems evenly distributed between 0 (respectively 1,500) and 6,000 (respectively 7,000).
 
 ```{r clrvDensClust, fig.cap="Distribution of Customer Lifetime Raw Value per cluster"}
 knitr::include_graphics(path = "./imgs/clrv_density_per_cluster.png")
 ```
 
 ```{r custValuesclust}
-lapply(seq(1, 3), 
+tab <- lapply(seq(1, 3), 
        function(c){
          tmp <- custValues_clustTot %>%
            filter(cluster == c) %>%
@@ -398,19 +427,66 @@ lapply(seq(1, 3),
            t() %>%
            as.data.frame()
        }) %>%
-  bind_rows() %>%
-  mykable(title = "CLRV statistical summary for each customer segment")
+  bind_rows()
+
+rownames(tab) <- c("Silver (1)", 
+                   "Gold (2)", 
+                   "Platinum (3)")
+
+tab %>%
+  mykable(title = "CLRV statistical summary for each customer segment", 
+          align = "c") %>%
+  column_spec(1, italic = T)
 ```
 
+When looking at table \@ref(tab:custValuesclust), large variations appear between each cluster's average CLRV. With a view of testing whether these differences are significant, the ANOVA test is performed between the `CLRV` and `cluster` variables. The very low p-value depicted in the table below indicates significant different means across the 3 groups. Hence, it can be affirmed that the contribution of each client segment to the portfolio value is statistically different. 
 
-```{r clrvEvolutionClust, fig.cap="Monthly contribution and cumulative value through time per cluster"}
+```{r aov}
+aov <- aov(formula = v ~ cluster, 
+           data = custValues_clustTot)
+tab <- summary(aov) %>% 
+  unclass() %>% 
+  as.data.frame() %>% 
+  mutate_at(vars(contains(".Sq")), 
+            format, 
+            big.mark = ",") %>%
+  mutate( F.value = if_else(is.na(F.value), 
+                                 " ", 
+                                 F.value %>% 
+                                   round(2) %>% 
+                                   format(big.mark = ",") %>% 
+                                   as.character()),
+          Pr..F. = if_else(is.na(Pr..F.), 
+                                 " ", 
+                                 Pr..F. %>% 
+                                   round(2) %>% 
+                                   as.character()))
+
+colnames(tab) <- c("Df", 
+                   "Sum of squares", 
+                   "MSE", 
+                   "F value", 
+                   "P value")
+rownames(tab)[1] <- "Cluster"
+
+tab %>% 
+  mykable(title = "Results of the ANOVA test between CLRV and cluster", 
+          align = "c")
+```
+
+With the objective of determining how each group's representative customer differ one from another in terms of CLRV, it seems a good idea to visualize the evolution of their respective cumulative value as the number of months in the portfolio increases. Figure \@ref(fig:clrvEvolutionClust) shows that the lower value to the firm, the flatter curve. To put it another way, *Silver* clients' monthly contribution to CLRV decreases rapidly and becomes constantly low after 30 months. On the contrary, *Platinum* customers bring in a larger monthly value and the latter decreases to a lesser extent. As for *Gold* customers, their cumulative value becomes nearly constant from month 40 which may be due to their lower loyalty to the firm.
+
+```{r clrvEvolutionClust, fig.cap="Customer cumulative value through time per cluster"}
 knitr::include_graphics(path = "./imgs/clrv_evolution_per_cluster.png")
 ```
 
-
 ### Simulations 
 
+The final step in our study aims at simulating different multiple scenarios to determine how customer lifetime raw value and the portfolio value might evolve *ceteris paribus*. This section is not exhaustive in inasmuch as only a few parameters have been selected to perform the simulations.  
+
 #### Influence of the discount factor on CLRV {-}
+
+In the CLRV formula (equation \@ref(eq:clrv)), the discount factor $a$ plays a central role since it monitors the importance of future values in the customer value. In this context, it is decided to analyse the evolution of both CLRV and portfolio value after a change in $a$. The simulation results reproduced in table \@ref(tab:portValDiscountTab) lead us to suppose that the portfolio overall value decreases as the discount factor increases. V is indeed reduced by almost 16% when $a$ goes from 1% to 8%. 
 
 ```{r portValDiscountTab}
 load(file = paste0(backup_path, "custValues/portVal_discount_rate.RData"))
@@ -422,29 +498,34 @@ portVal_discount_rate %>%
   mykable(title = "Portfolio value depending on discount rate")
 ```
 
-```{r clrvDensDiscount, fig.cap="Customer Lifetime Raw Value distribution depending on discount rate"}
-knitr::include_graphics(path = "./imgs/clrv_dens_discount_rate.png")
-```
+The reduction in V after an increase in the discount rate is actually the direct consequence of a decrease in every customer lifetime raw value. The monthly contribution to CLRV being negatively influenced by $a$ as the number of months $t$ increases, this phenomenon is all the more pronounced when $a$ is large. On figure \@ref(fig:clrvEvolDiscount), one can observe that the higherthe discount factor, the more concave the shape of the cumulative value. In other words the higher the discount factor, the lower gain in CLRV when the number of months is high. 
 
 ```{r clrvEvolDiscount, fig.cap="Customer Lifetime Raw Value evolution depending on discount rate"}
 knitr::include_graphics(path = "./imgs/clrv_evolution_discount.png")
 ```
 
-#### Influence of the contract type on CLRV {-}
+#### Influence of month-to-month contracts on CLRV {-}
+
+While it is obviously doable to simulate new customer lifetime raw values by playing with the model's parameters, one can also change the values of covariates used to estimate the survival probabilities $r_{i,t}$. In this part, the analysis is centred on the proportion of month-to-month contracts in the portfolio. The method consists in computing each client's CLRV and the portfolio value V for proportions of monthly contracts ranging from 10 to 90%. Table \@ref(tab:portValmonthToMonth) examines the portfolio value for 4 interesting scenarios and compare them with the actual share of month-to-month contracts in the data. The results are quite counter-intuitive as V is not maximum for a 10% proportion whereas it has been demonstrated in figure @\ref(fig:coxmarginaleffects) that clients enrolled in month-to-month contracts are 22 times more prone to churn than those with two-year contracts. Hence one might think that the lower share of those customers, the higher value of the portfolio. 
 
 ```{r}
 load(file = paste0(backup_path, "custValues/custVal_month_to_month.RData")) 
 ```
 
-```{r}
-custVal_month_to_month %>%
+```{r portValmonthToMonth}
+custVal_month_to_month %>% 
+  rename(`% month-to-month contracts` = `% 'month-to-month' contracts`) %>% 
   mykable(title = "Portfolio estimated value and 95% confidence interval depending on proportion of 'month-to-month' contracts")
 ```
+
+The following figure illustrates the CLRV distribution for 4 scenarios depending on the proportion of month-to-month contracts. The results are closer to our expectations than those presented in the previous table since CLRV tends to be higher when there are 10% month-to-month contracts in the portfolio. 
 
 
 ```{r clrvmonthtomonth, fig.cap="CLRV distribution depending on the proportion of 'month-to-month' contracts"}
 knitr::include_graphics(path = "./imgs/clrv_month_to_month.png")
 ```
+
+Ultimately when representing the evolution of customer raw equity, i.e. the portfolio value, according to the share of month-to-month contracts, a decreasing trend is identified which appears to be a rationnal result. 
 
 ```{r clrvmonthtomonthEvol, fig.cap="Portfolio estimated value (Customer Raw Equity) depending on the proportion of 'month-to-month' contracts"}
 knitr::include_graphics(path = "./imgs/portVal_month_to_month.png")
