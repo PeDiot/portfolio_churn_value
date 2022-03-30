@@ -305,6 +305,8 @@ custValues_clust <- custValues %>%
 save(custValues_clust, 
      file = paste0(backup, "custvalues/custValues_clust.RData")) 
 
+load(file = paste0(backup, "custvalues/custValues_clust.RData"))
+
 custValues_clust %>%
   group_by(cluster) %>%
   summarise_at(vars(starts_with("v")), 
@@ -343,7 +345,7 @@ custValues_clust %>%
               size = 1.5) +
     scale_color_jco() +
     labs(x = "Number of months", 
-         y = "Cumulative CLRV", 
+         y = "Cumulative Value", 
          title = "") +
     theme_new()
 
