@@ -7,6 +7,7 @@ rmd_files: [
   "01-intro.Rmd", 
   "02-literature.Rmd", 
   "03-duration.Rmd", 
+  "04-dataMining.Rmd", 
   "05-data.Rmd", 
   "06-estimationtechniques.Rmd", 
   "07-appendix.Rmd", 
