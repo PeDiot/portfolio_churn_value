@@ -315,7 +315,7 @@ ggsave(
 )
 ```
 
-Eventually, figure \@ref(fig:monthlychargesdur) depicts the average monthly charges per number of months in the portfolio.
+Eventually, figure \@ref(fig:monthlychargesdur) depicts the average monthly charges per number of months in the portfolio. One can notice an increasing evolution between the average monthly fees and the number of months. In other words, it might be assumed that customers with longer lifetimes bring in more money to the firm. 
 
 ```{r monthlychargesdur, fig.cap="Average monthly fees depending on number of months in the portfolio", out.height="300pt", out.width="450pt"}
 knitr::include_graphics(path = "./imgs/monthly_charges_dur.jpg")
