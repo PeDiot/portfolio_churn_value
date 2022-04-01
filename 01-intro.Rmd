@@ -10,49 +10,49 @@ knitr::opts_chunk$set(
 
 # Introduction {#intro}
 
-In a world in which the access to information is almost free or insignificant and where there is a real plurality of offers, churn analysis has become one of the key points a firm needs to focus on. Whoever says plurality of offers needs to introduce the term competition. Thereby, the latter is more and more fierce and cut-throat. Furthermore, switching costs have decreased significantly thanks to market regulation laws. For instance in France, when you switch TSP, the new provider pays you off cancellation fees. All of this being said, it is essential for firms to implement efficient strategies to enhance customer relationships. To that end, the development of both survival models and machine learning algorithms have enabled companies to really push-up their strategies in terms of customer *portfolio* management, monitoring of *attrition* and estimation of customer *value*. 
+In a world in which the access to information is almost free or insignificant and where there is a real plurality of offers, churn analysis has become one of the key points a firm needs to focus on. Whoever says plurality of offers needs to introduce the term competition. Thereby, the latter is more and more fierce and cut-throat. Furthermore, switching costs have decreased significantly thanks to market regulation laws. For instance in France when you switch TSP, the new provider pays you off cancellation fees. All of this being said, it is essential for firms to implement efficient strategies to enhance customer relationships. To that end, the development of both survival models and machine learning algorithms have enabled companies to really push-up their strategies in terms of customer *portfolio* management, monitoring of *attrition* and estimation of customer *value*. 
 
 After careful consideration of the issues at stake, the following key steps are focused on: 
 
-- Segmentation of customer portfolio as firms generally tend to partition their *portfolio* into multiple segments.
+- Segmentation of customer *portfolio* as firms generally tend to partition their *portfolio* into multiple segments.
 - Estimation of customer lifetime and prediction of *attrition*.
 - Measurement of customer *value.*
 
-In the following sections, the concepts of *portfolio*, *attrition* and customer *value* are defined. Then, some pieces of literature review are provided. Before embarking on data analysis and modelling, we present the theoretical basis of the models used in the study. We finally introduce the dataset and implement the methodology with the aim of estimating the overall value related to a fictional customer portfolio of a telecommunications service provider. 
+In the following sections, the concepts of *portfolio*, *attrition* and customer *value* are defined. Then, some pieces of literature review are provided. Before embarking on data analysis and modelling, we present the theoretical basis of the models used in the study. We finally introduce the dataset and implement the methodology with the aim of estimating the overall value related to a fictional customer *portfolio* of a telecommunications service provider. 
 
-## How to define a customer portfolio? {#portfoliodef}
+## How to define a customer *portfolio*? {#portfoliodef}
 
 The notion of *portfolio* has greatly evolved before the firms' consumer base was considered as a *portfolio*. In chapter \@ref(literature) a part of the literature review depicts an evolution of the *portfolio* management notion. A customer *portfolio* can be defined as a set of customers divided into several segments (or clusters) based on similar attributes. These discriminant features can be both economic (willingness to pay, budget constraint, etc.) and sociological (gender, age, socio-professional category, etc.). The underlying objective of this segmentation is to optimally allocate the company's resources. 
 
 When dealing with customer *portfolio* management (CPM), two dimensions can be considered. On the one hand, it can be assumed that a customer stays in the same segment throughout their life in the firm's *portfolio*. On the other hand, a dynamic approach can be adopted as suggested by @MANAGING_DYNAMICS_CUSTOMER_PORTFOLIO on dynamics in customer portfolio. In their article, the authors question the static analysis by assuming that a customer can switch between segments. They explain that one of the firm's objectives is to convert less valuable customers into more valuable ones. 
 
-## What is attrition? {#attritiondef}
+## What is *attrition*? {#attritiondef}
 
 Customer *attrition* or churn occurs when a client discontinues using a service or a product offered by a firm. Churn analysis corresponds to both measurement and prediction of the *attrition* rate in the customer base of the company. Evaluating *attrition* depends on the type of relationship between the firm and its clients. When it is defined by a contract, the customer has to inform the firm about their service termination. In the telecom industry, a consumer is required to notify their TSP before going to a competing company. In an opposite way, the firm/client relationship can be non-contractual. In that case, the service termination does not need to be notified. *Attrition* then becomes a latent variable and more advanced models are used to make forecasts. 
 
-## What does customer "value" mean? {#valuedef}
+## What does customer *value* mean? {#valuedef}
 
-In customer *portfolio* management, one client's *value* is represented by the **customer lifetime value** (CLV). CLV is the present *value* of all future purchases made by a customer over their lifetime in the firm's portfolio, taking into account the *attrition* risk. CLV depends both on the purchase recency as well as on the purchasing rate and aims at identifying the most valuable customer groups. Formally, @CUSTOMERS_ASSETS define CLV for customer $i$ as follows: 
+In customer the field of *portfolio* management, one client's *value* is represented by the **customer lifetime value** (CLV). CLV is the present *value* of all future purchases made by a customer over their lifetime in the firm's portfolio, taking into account the *attrition* risk. CLV depends both on the purchase recency as well as on the purchasing rate and aims at identifying the most valuable customer groups. Formally, @CUSTOMERS_ASSETS define CLV for customer $i$ as follows: 
 
 \begin{equation}
-  CLV_i = \sum_{t=0}^{T} \frac{(p_t - c_t)r_{i,t}}{(1+a)^t} - AC_i
+  \text{CLV}_i = \sum_{t=0}^{T} \frac{(p_{i,t} - c_t)r_{i,t}}{(1+a)^t} - \text{AC}_i
   (\#eq:clv)
 \end{equation}
 
 with, 
 
-- $p_t$ the price paid by customer $i$ at time $t$
+- $p_{i,t}$ the price paid by customer $i$ at time $t$
 - $c_t$ the marginal cost at time $t$
 - $r_{i,t}$ the **probability that customer $i$ be active** at time $t$
 - $a$ the discount rate
-- $AC_i$ the acquisition cost of customer $i$
+- $\text{AC}_i$ the acquisition cost of customer $i$
 - $T$ the duration of observation
 
-An estimation of the portfolio's overall value can be calculated through **customer equity** (CE) which amounts to the sum of all the CLVs. Since CE appears to be a good proxy of the firm's value, the firm's profit-maximization program can be written as: 
+An estimation of the portfolio's overall *value* can be calculated through **customer equity** (CE) which amounts to the sum of all the CLVs. Since CE appears to be a good proxy of the firm's value, the firm's profit-maximization program can be written as: 
 
 \begin{equation}
 \begin{aligned}
-\max_{\mathrm{p}} \quad & \textrm{CE} = \sum_{i=1}^{N} \sum_{t=0}^{T} \frac{(p_t - c_t)r_{i,t}}{(1+a)^t} - AC_i\\
+\max_{\mathrm{p}} \quad & \textrm{CE} = \sum_{i=1}^{N} \sum_{t=0}^{T} \frac{(p_{i,t} - c_t)r_{i,t}}{(1+a)^t} - AC_i\\
 \textrm{s.t.} \quad & r_{i,t} \in [0, 1]\\
   &p_t > c_t    \\
 \end{aligned}
@@ -60,6 +60,3 @@ An estimation of the portfolio's overall value can be calculated through **custo
 \end{equation}
 
 where $\mathrm{p}$ is the vector of prices over all periods that the firm needs to optimize. 
-
-
-

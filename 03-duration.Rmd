@@ -516,7 +516,7 @@ All the CHFs are then averaged to obtain the bootstrap ensemble CHF and predicti
 
 **Boosting** is an ensemble method which combines several weak predictors into a strong predictor. The idea of most boosting methods is to train predictors sequentially, each trying to correct its predecessor. Cox boosting [@COX_BOOSTING] is designed for high dimension survival data and has the purpose of feature selection while improving the performance of the standard Cox model. The key difference with gradient boosting is that Cox boosting does not update all coefficients at each boosting step, but only updates the coefficient that improves the overall fit the most. The loss function is a penalized version of the Cox model's log-likelihood (see equation \@ref(eq:partlik) for the likelihood function of the Cox model). Cox boosting helps measuring variable importance as the coefficients associated to more representative variables will be updated in early steps.
 
-## Performance metrics
+## Performance metrics {#metrics}
 
 ### Concordance index (C-index)
 

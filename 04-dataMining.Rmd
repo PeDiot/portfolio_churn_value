@@ -11,9 +11,9 @@ knitr::opts_chunk$set(
 
 # Data Mining methods {#dataMining}
 
-While the previous chapter introduces the fundamentals related to survival analysis, this part focuses on data mining techniques used in our modelling approach. On the on hand, multiple correspondence analysis is introduced as it is used in the following chapter with a view of converting categorical features into continuous principal axes. On the other hand, this section centers on unsupervised classification which is a useful method when it comes to segmentation. 
+While the previous chapter introduces the fundamentals related to survival analysis, this part focuses on data mining techniques used in our modelling approach. On the one hand, multiple correspondence analysis is introduced as it is used in the following chapter with a view of converting categorical features into continuous principal axes. On the other hand, this section centers on unsupervised classification which is useful when it comes to segmentation. 
 
-## Mutliple Correspondence Analysis (MCA) 
+## Mutliple Correspondence Analysis (MCA) {#mca}
 
 ### Definition 
 
@@ -62,7 +62,7 @@ with $I_{k\neq j}$ the number of individuals with one and only one of the $j$ or
 
 Clustering is an unsupervised learning technique that groups similar data points such that the points in the same group are more similar to each other than the points in the other groups. The group of similar data points is called a cluster. It is said to be unsupervised as the groups are not labeled but discovered by the algorithm. Consequently, it may not be possible to find separate clusters of data points.
 
-### Hierarchical Clustering on Principal Components (HCPC)
+### Hierarchical Clustering on Principal Components (HCPC) {#hcpc}
 
 The HCPC approach combines the three standard methods used in multivariate data analysis:
 

@@ -5,7 +5,7 @@ editor_options:
 ---
 
 ```{r}
-# setwd("C:/Users/pemma/OneDrive - Université de Tours/Mécen/M2/S2/04 - 3R/portfolio_churn_value")
+# setwd("C:/Users/pemma/OneDrive - Université de Tours/Mécen/M2/S2/04 - 3R/*portfolio*_churn_value")
 ```
 
 
@@ -51,7 +51,7 @@ theme_set(theme_minimal())
 
 # Estimation techniques {#estimation}
 
-This chapter explains the different methods used to model a portfolio of customers as well as their related risk of attrition and the overall value of the portfolio. In a first part, clustering techniques are implemented to identify segments of customers based on services and account variables. Then, survival models are fitted to estimate each customer's survival in the firm's portfolio. The selected model can also be used to assess the effects of each variable on the risk of churn. Finally, we answer the study's problematic by computing an estimated value of the portfolio. The latter is calculated using a corporate formula and takes customers' monthly fees and survival probabilities as inputs. The estimated portfolio value is not cost-adjusted there is no information on consumers' costs in the data set.
+This chapter explains the different methods used to model a *portfolio* of customers as well as their related risk of *attrition* and the overall *value* of the *portfolio*. In a first part, clustering techniques are implemented to identify segments of customers based on services and account variables. Then, survival models are fitted to estimate each customer's survival in the firm's *portfolio*. The selected model can also be used to assess the effects of each variable on the risk of churn. Finally, we answer the study's problematic by computing an estimated *value* of the *portfolio*. The latter is calculated using a corporate formula and takes customers' monthly fees and survival probabilities as inputs. The estimated *portfolio* *value* is not cost-adjusted as there is no information on consumers' costs in the data set.
 
 ## Feature selection {#featureselection}
 
@@ -80,13 +80,13 @@ cleaned_data %>%
   scroll_box(width = "100%", box_css = "border: 0px;")
 ```
 
-## Portfolio segmentation {#segmentation}
+## *Portfolio* segmentation {#segmentation}
 
 Customer segmentation helps decision makers having a better understanding of their clients. It can then be used to enhance marketing strategies via personalization. In other words, segmentation can lead to target customers with offers and incentives personalized to their wants, needs and preferences. In order to make segmentation more accurate, it is more appropriate to use cluster analysis than predetermined thresholds or rules, even more when we have several variables at our disposal. In this context, this section focuses on applying clustering methods on features displayed in table \@ref(tab:selectedfeatures), apart from `Monthly_Charges`. 
 
 ### Transforming qualitative variables into principal axes
 
-The variables selected to perform cluster analysis being categorical, it is needed to transform them into continuous features. To that end, multiple correspondence analysis (MCA) is performed. MCA is a dimension reducing method which takes multiple categorical variables and seeks to identify associations between levels of those variables. MCA aims at highlighting features that separate classes of individuals, while determining links between variables and categories. To that end, MCA keeps the core information by the means of principal components which are projected axes [@MCA].
+The variables selected to perform cluster analysis being categorical, it is needed to transform them into continuous features. To that end, multiple correspondence analysis (MCA) is performed. MCA is a dimension reducing method which takes multiple categorical variables and seeks to identify associations between levels of those variables. MCA aims at highlighting features that separate classes of individuals, while determining links between variables and categories. To that end, MCA keeps the core information by the means of principal components which are projected axes (see section \@ref(mca) for more details).
 
 Here, the main objective of applying MCA being to obtain continuous features, it is decided to keep as many axes as it takes to have at least 80% cumulated variance. In other words, we want the principal components to gather enough customer-related information. After having processed the `MCA` function from the R package `FactoMineR` [@FactoMineR2008], 10 principal components are required to keep more than 80% cumulated variance as depicted by figure \@ref(fig:mcascreeplot).
 
@@ -107,16 +107,16 @@ mca_df%>%
   mykable(title = "The 10 principal axes obtained by MCA")
 ```
 
-Note that a more in-depth visualisation of those 10 principal components can be found in figures \@ref(fig:mcacontrib12) to \@ref(fig:mcacontrib910) in the appendix. This charts depict the percent contribution of each variable's categories to the principal axes, which is helpful to have a better understanding of MCA results.
+Note that a more in-depth visualisation of those 10 principal components can be found in figures \@ref(fig:mcacontrib12) to \@ref(fig:mcacontrib910) in the appendix. This charts depict the percent contribution of each variable's category to the principal axes, which is helpful to have a better understanding of MCA results.
 
 
 ### Hierarchical clustering on principal components
 
-Multiple correspondence analysis has led us to convert the categorical variables related to account and services information into 10 numerical projected axes. The stake here is to use the customers' projections onto the MCA components in order to identify groups of individuals through clustering techniques. As a reminder, clusters are expected to discriminate between customers based on the services they use and the type of plan they are enrolled into. The method implemented in this part relies on hierarchical clustering on principal components (HCPC).
+Multiple correspondence analysis has led us to convert the categorical variables related to account and services information into 10 numerical projected axes. The stake here is to use the customers' projections onto the MCA components in order to identify groups of individuals through clustering techniques. As a reminder, clusters are expected to discriminate between customers based on the services they use and the type of plan they are enrolled into. The method implemented in this part relies on hierarchical clustering on principal components (HCPC) which is presented in section \@ref(hcpc).
 
 #### Optimal number of clusters {-}
 
-The key parameter to optimize when applying clustering methods is the number of clusters $k$. When using the `HCPC` function from `FactorMineR`, the `nb.clust` parameter is set to -1 so that the tree is automatically cut at the suggested level. More precisely, the function first builds a hierarchical tree. Then the sum of the between-cluster inertia is calculated for each partition. The suggested partition is the one with the higher relative gain in inertia. Intuitively, the underlying objective is to choose a number of clusters leading to $k$ well distinguished groups. Here, the between-cluster inertia is the metric measuring the amount of variability between clusters.
+The key parameter to optimize when applying clustering methods is the number of clusters $k$. When using the `HCPC` function from `FactorMineR`, the `nb.clust` parameter is set to -1 so that the tree is automatically cut at the suggested level. More precisely, the function first builds a hierarchical tree. Then the sum of between-cluster inertia is calculated for each partition. The suggested partition is the one with the higher relative gain in inertia. Intuitively, the underlying objective is to choose a number of clusters leading to $k$ well distinguished groups. Here, between-cluster inertia is the metric measuring the amount of variability between clusters.
 
 ```{r btwinertia, fig.cap="Relative gains in between-cluster inertia given the partition"}
 knitr::include_graphics(path = "./imgs/btw_inertia.png")
@@ -132,7 +132,7 @@ clust_prop %>%
 
 #### Cluster visualisation {-}
 
-When performing hierarchical clustering on principal components, visualizing cluster repartition onto MCA axes is relevant to have a first idea on how each cluster if different from the others. Figure \@ref(fig:clusterplot) indicates that the three clusters are well separated in the $(F_1 ; F_2)$ plan. Cluster 1 is more concentrated than the others and take lower values onto dimension 1. The second group spreads over axis 1 and takes lower values on axis 2. Finally, cluster 3's position shows that its customers are characterized by categories which take positive values on both dimensions 1 and 2.
+When performing hierarchical clustering on principal components, visualizing cluster repartition onto MCA axes is relevant to have a first idea on how each cluster is different from the others. Figure \@ref(fig:clusterplot) indicates that the three clusters are well separated in the $(F_1 ; F_2)$ plan. Cluster 1 is more concentrated than the others and take lower values onto dimension 1. The second group spreads over axis 1 and takes lower values on axis 2. Finally, cluster 3's position shows that its customers are characterized by categories which take positive values on both dimensions 1 and 2.
 
 ```{r clusterplot, fig.cap="Cluster visualisation onto the 2 first MCA axes"}
 knitr::include_graphics(path = "./imgs/cluster_plot.png")
@@ -166,15 +166,15 @@ Figure \@ref(fig:monthlychargesclust) depicts the differences in monthly charges
 knitr::include_graphics(path = "./imgs/monthly_charges_clust.png")
 ```
 
-Since one of the study's purpose is to model customer churn, it is important to compare the churn rate across the 3 groups. Here, the striking point is that cluster 2 clients account for a large proportion of churners. Indeed, more than 75% of the clients having left the portfolio come from the second group. It can also be noted that cluster 1 and 3 are composed of more loyal customers as more than 70% of clients who did not churn are from those 2 groups.  
+Since one of the study's purpose is to model customer churn, it is important to compare the *attrition* rate across the 3 groups. Here, the striking point is that cluster 2 clients account for a large proportion of churners. Indeed, more than 75% of the clients having left the *portfolio* come from the second group. It can also be noted that cluster 1 and 3 are composed of more loyal customers as more than 70% of clients who did not churn are from those 2 groups.  
 
 ```{r catvarsclust, fig.cap="Churn repartition per cluster",out.width="60%", out.height="60%"}
 knitr::include_graphics(path = "./imgs/churn_cluster_barplot.png")
 ```
 
-#### Concluding remarks on portfolio segmentation {-}
+#### Concluding remarks on *portfolio* segmentation {-}
 
-With the aim of divide the portfolio into multiple groups based on categorical features, hierarchical clustering on principal components has led to identify three customer segments which can be broadly described as shown in the following table. 
+With the aim of dividing the *portfolio* into multiple groups based on categorical features, hierarchical clustering on principal components has led to identify three customer segments which can be broadly described by the following table. 
 
 ```{r}
 data.frame(Cluster = c(1, 2, 3), 
@@ -182,16 +182,16 @@ data.frame(Cluster = c(1, 2, 3),
            Value = c("Low", "High", "High"), 
            name = c("Silver", "Gold", "Platinum")) %>%
   rename(`Segment name` = name) %>% 
-  mykable(title = "Portfolio segmentation summary") %>%
+  mykable(title = "*portfolio* segmentation summary") %>%
    column_spec(4, italic = T) %>%
     row_spec(2, bold = T)
 ```
 
-*Gold* customers are valuable to the firm but are not loyal, making them the target segment. The objective would be to encourage them to stay in the portfolio longer.
+*Gold* customers are valuable to the firm but are not loyal, making them the target segment. The objective would be to encourage them to stay longer in the *portfolio*.
 
 ## Churn analysis {#churnAnalysis}
 
-Estimating the risk of attrition related to each customer is an essential step to model the firm's portfolio. In this context, survival models can be implemented with a view of deriving a predicted churn risk and survival function for each client. One the one hand, these predictions can be used to identify loyal consumers and make appropriate decisions. For instance, it might be relevant to offer benefits to a high-value client with a high estimated churn risk. On the other hand, a customer's survival probability at time $t$ represents the chance that this very customer be active in the portfolio at time $t$. This measure is helpful to compute the estimated value of the portfolio in the last section.
+Estimating the risk of *attrition* related to each customer is an essential step to model the firm's *portfolio*. In this context, survival models can be implemented with a view of deriving a predicted churn risk and survival function for each client. On the one hand, these predictions can be used to identify loyal consumers and make appropriate decisions. For instance, it might be relevant to offer benefits to a high-value client with a high estimated churn risk. On the other hand, a customer's survival probability at time $t$ represents the chance that this very customer be active in the *portfolio* at time $t$. This measure is helpful to compute the estimated *value* of the *portfolio* in section \@ref(portfoliovalue).
 
 Before presenting the estimation results, it seems important to recall that `Tenure_Months` and `Churn_Value` can be seen as a pair of time and event variables used as target in survival models. 
 
@@ -203,7 +203,7 @@ cleaned_data %>%
     "Churn_Value"
   )) %>%
   sample_n(5) %>%
-  mykable(title = "Time and event variables for survival models") 
+  mykable(title = "Time and event variables used in survival models") 
 ```
 
 ### The Cox model {#coxmodel}
@@ -220,12 +220,12 @@ cox_metrics$lrtest %>%
   mykable(title = "Log-likelihood ratio test")
 ```
 
-Concordance index $c$ is another metric to assess the performance of models which produces risk scores and is defined as the probability to well predict the order of event occurring time for any pair of instances. For the Cox model, the C-index obtained on the training set is $c \approx 0.865 \pm 0.004$, which is more than satisfying.
+Concordance index $c$ is another metric to assess the performance of models which produces risk scores. It is defined as the probability to well predict the order of event occurring time for any pair of instances (see section \@ref(metrics) for more details). For the Cox model, the C-index obtained on the training set is $c \approx 0.865 \pm 0.004$, which is more than satisfying.
 
 
 #### Marginal effects {-}
 
-In the Cox model, the relative hazard between two observations is assumed to be constant over time. As a consequence, the relative hazard becomes $\exp \hat{\beta}$ for both dummy and continuous variables. For instance regarding figure \@ref(fig:coxmarginaleffects), the relative hazard ratio between customers with a two-year contract and those with a month-to-month contract is 0.046, meaning that the latter group is 22 times more prone to churn than the former. Also, month-to-month clients are about 5 times more likely to churn than customers enrolled in one-year plan. When analysing the relative hazard ratios related to the payment method, it comes that clients who pay by electronic or mailed check are two times riskier to churn than those who pay by bank transfer. Furthermore, being enrolled in a plan with additional services like `Online_Security`, `Online_Backup` or `Tech_Support` tends to decrease the estimated churn risk. As for the effect of the `Internet_Service` covariate on the risk of attrition, it seems to be mitigated since clients who have a fiber optic internet connection are more than twice as likely to churn as those using a DSL internet connection. 
+In the Cox model, the relative hazard between two observations is assumed to be constant over time. As a consequence, the relative hazard becomes $\exp \hat{\beta}$ for both dummy and continuous variables. For instance regarding figure \@ref(fig:coxmarginaleffects), the relative hazard ratio between customers with a two-year contract and those with a month-to-month contract is 0.046, meaning that the latter group is 22 times more prone to churn than the former. Also, month-to-month clients are about 5 times more likely to churn than customers enrolled in one-year plan. When analysing the relative hazard ratios related to the payment method, it comes that clients who pay by electronic or mailed check are two times riskier to churn than those who pay by bank transfer. Furthermore, being enrolled in a plan with additional services like `Online_Security`, `Online_Backup` or `Tech_Support` tends to decrease the estimated churn risk. As for the effect of the `Internet_Service` covariate on the risk of *attrition*, it seems to be mitigated since clients who have a fiber optic internet connection are more than twice as likely to churn as those using a DSL internet connection. 
 
 ```{r coxmarginaleffects, fig.cap="Marginal effects obtained with the Cox PH model"}
 knitr::include_graphics(path = "./imgs/cox_ggforest.png")
@@ -233,13 +233,13 @@ knitr::include_graphics(path = "./imgs/cox_ggforest.png")
 
 #### Estimation results {-}
 
-Semi-parametric models aims at estimating the instantaneous hazard function given a baseline hazard and a set of covariates. The model outputs a risk prediction for each individual with a confidence interval. Then, the survival and cumulative hazard functions can be retrieved as explained in section \@ref(probabilities). When going deeper into the functions depicted in figure \@ref(fig:coxdataviz), it can be noticed some inconsistencies between the estimated churn hazard cumulative hazard functions. Given the cumulative churn hazard increases faster when the number of months is high and given the instantaneous hazard is supposed to be the cumulative hazard function's slope, the estimated churn hazard's shape should be convex. Thus, the Cox model does not manage to properly estimate the risk of churn. 
+Semi-parametric models aims at estimating the instantaneous hazard function given a baseline hazard and a set of covariates. The model outputs a risk prediction for each individual with a confidence interval. Then, the survival and cumulative hazard functions can be retrieved as explained in section \@ref(probabilities). When going deeper into the functions depicted in figure \@ref(fig:coxdataviz), it can be noticed some inconsistencies between the instantaneous hazard and cumulative hazard estimated functions. Given the cumulative churn hazard increases faster when the number of months is high and given the instantaneous churn hazard is supposed to be the cumulative hazard function's slope, the estimated instantaneous hazard's shape should be convex. One may deduce that the Cox model does not manage to properly estimate the risk of churn. 
 
 ```{r coxdataviz, fig.cap="Aggregated churn hazard, survival and cumulative hazard functions estimated by Cox model"}
 knitr::include_graphics(path = "./imgs/cox_data_viz.png")
 ```
 
-Although the fitted model is not flawless, it can be interested to study the estimation differences between the 3 customer segments identified in the previous section. Looking at figure \@ref(fig:coxclust), one can conclude that *Gold* (cluster 2) clients are more prone to churn than others. The aggregated risk of attrition is indeed higher to such an extent that the cumulative churn hazard is exploding when the number of months is greater than 60. This being said, an efficient portfolio management would be to find strategies to reduce *Gold* customers' churn and increase their duration in the portfolio. 
+Although the fitted model is not flawless, it can be interesting to study the estimation differences between the 3 customer segments identified in the previous section. Looking at figure \@ref(fig:coxclust), one can conclude that *Gold* (cluster 2) clients are more prone to churn than others. Their aggregated risk of *attrition* is indeed higher to such an extent that the cumulative churn hazard is exploding when the number of months is greater than 60. This being said, an efficient *portfolio* management would be to find strategies to reduce *Gold* customers' churn and increase their duration in the *portfolio*. 
 
 ```{r coxclust, fig.cap="Aggregated churn hazard, survival and cumulative hazard functions for each cluster"}
 knitr::include_graphics(path = "./imgs/churn_surv_clust.png")
@@ -247,7 +247,7 @@ knitr::include_graphics(path = "./imgs/churn_surv_clust.png")
 
 ### Other survival models
 
-As said in the previous part, the Cox model does not fit the data perfectly as it does not capture the churn hazard's actual shape. In this context, it seems relevant to fit other survival models and test how they perform in predicting the risk of attrition. It is firstly decided to train parametric survival models which consist in assigning a probability distribution to the hazard function (see section \@ref(parametric) for more details). To that end, one can use `flexsurv` [@flexsurv2016] which is and R package for parametric survival modelling. After having fitted the exponential, Weibull, gamma, log-logistic and log-normal models, no improvement can be observed with respect to the Cox model. Then, a machine learning approach can be adopted to model duration data using the random survival forest algorithm as explained in section \@ref(mlsurv). The `rfsrc` function from `randomForestSRC` [@randomForestSRC2008] is used to train the model after having determined the optimal node size and number of variables to try at each split with the `tune` function. Once the model trained, its performance is compared to the Cox model's as shown by table \@ref(tab:performances). One cannot but admit that the random survival forest perform poorly in terms of concordance index with respect to the Cox model. The latter manages to output a better risk scoring than the ML algorithm. It is thus decided to select the Cox PH model for the rest of the study.
+As said in the previous part, the Cox model does not fit the data perfectly as it does not capture the churn hazard's actual shape. In this context, it seems relevant to fit other survival models and test how they perform in predicting the risk of *attrition*. It is firstly decided to train parametric survival models which consist in assigning a probability distribution to the hazard function (see section \@ref(parametric) for more details). To that end, one can use `flexsurv` [@flexsurv2016] which is and R package for parametric survival modelling. After having fitted the exponential, Weibull, gamma, log-logistic and log-normal models, no improvement can be observed with respect to the Cox model. Then, a machine learning approach can be adopted to model duration data using the random survival forest algorithm which is detailed in section \@ref(mlsurv). The `rfsrc` function from `randomForestSRC` [@randomForestSRC2008] is used to train the model after having determined the optimal node size and number of variables to try at each split with the `tune` function. Once the model trained, its performance is compared to the Cox model's as shown by table \@ref(tab:performances). One cannot but admit that the random survival forest perform poorly in terms of concordance index with respect to the Cox model. The latter manages to output a better risk scoring than the ML algorithm.
 
 ```{r}
 load(file = paste0(backup_path, "survival/c_index_cox.Rdata"))
@@ -265,13 +265,15 @@ tab %>%
           digits = 3)
 ```
 
-## Portfolio value estimation
+It is thus decided to select the Cox PH model for the rest of the study.
 
-In the two previous sections, the portfolio has been partitioned into 3 customer segments and customer lifetime has been estimated by the means of the Cox model. This section's purpose consists in deriving a method to calculate the overall value of the portfolio through the computation of customer lifetime raw value. 
+## *Portfolio* *value* estimation {#portfoliovalue}
+
+In the two previous sections, the *portfolio* has been partitioned into 3 customer segments and customer lifetime has been estimated by the means of the Cox model. This section's purpose consists in deriving a method to calculate the overall *value* of the *portfolio* through the computation of customer lifetime raw value. 
 
 ### The model
 
-As said in chapter \@ref(data), it is decided not to use the `CLTV` variable to estimate customer lifetime value since no information has been provided on the computation method. Instead, another method is adopted to predict each client's lifetime value. For this purpose, two inputs are needed namely each customer's survival function as well as the monthly fees represented by the `Monthly_Charges` feature. Based on the CLV formulation proposed by Gupta and Lehmann [@CUSTOMERS_ASSETS], we derive a model aiming at calculating customer lifetime raw value (CLRV) as depicted in equation \@ref(eq:clrv). 
+As said in chapter \@ref(data), it is decided not to use the `CLTV` variable to estimate customer lifetime value since no information has been provided on the computation method. Instead, another method is adopted to predict each client's *value.* For this purpose, two inputs are needed namely each customer's survival function as well as the monthly fees represented by the `Monthly_Charges` feature. Based on the CLV formulation proposed by @CUSTOMERS_ASSETS, we derive a model aiming at calculating customer lifetime raw value (CLRV) as defined in equation \@ref(eq:clrv). 
 
 \begin{equation}
     \text{CLRV}_i = \sum_{t=0}^{T} \frac{p_i \ r_{i,t}}{(1+a)^t} 
@@ -281,13 +283,13 @@ As said in chapter \@ref(data), it is decided not to use the `CLTV` variable to 
 with, 
 
 - $p_i$ the monthly fee paid by customer $i$,
-- $r_{i,t}$ the probability that customer $i$ be in the portfolio at time $t$,
+- $r_{i,t}$ the probability that customer $i$ be in the *portfolio* at time $t$,
 - $a$ the discount factor,
 - $T$ the time horizon. 
 
-It may be interesting to note that $p_i$ is time-invariant and corresponds to `Monthly_Charges`. $r_{i,t}$ is computed using the survival function estimated with the Cox model. $a$ is fixed at 8% and $T$ equals 72 months which is the longest lifetime in the data. 
+It may be interesting to note that $p_i$ is time-invariant and corresponds to `Monthly_Charges`. $r_{i,t}$ is computed using the survival function estimated with the Cox model. $a$ is fixed at 8% and $T$ equals 72 months which is the longest lifetime observed in the data set. 
 
-Summing over the $N$ CLRVs, one can derive customer raw equity which is the portfolio raw value (V) and may be a good proxy for the firm's overall revenues. 
+Summing over the $N$ CLRVs, one can derive customer raw equity which is the *portfolio* raw *value* (V) and may be a good proxy of the firm's overall revenues. 
 
 \begin{equation}
     \text{V} = \sum_{i=1}^{N} \text{CLRV}_i = \sum_{i=1}^{N} \sum_{t=0}^{T} \frac{p_i \ r_{i,t}}{(1+a)^t} 
@@ -296,15 +298,15 @@ Summing over the $N$ CLRVs, one can derive customer raw equity which is the port
 
 ### Customer Lifetime Raw Value
 
-In the literature, it is common place to measure customer lifetime value that is the overall profit brought by a client over her entire lifetime in the portfolio. In our study, the data set used does not provide any information on the costs related to each customer. Consequently, it is decided to evaluate customer value by computing the overall revenues the firm might earn during the relationship with their clients. We name this metric customer lifetime raw value (CLRV) and it is defined in equation \@ref(eq:clrv).
+In the literature, it is common place to consider customer lifetime value the overall profit brought by a client over her entire lifetime in the *portfolio*. In our study, the data set used does not provide any information on the costs related to each customer. Consequently, it is decided to evaluate customer *value* by computing the overall revenues the firm might earn during the relationship with their clients. We name this metric customer lifetime raw value (CLRV) and it is defined in equation \@ref(eq:clrv).
 
 The process implemented to compute client $i$'s CLRV works as follows: 
 
 1. Estimate client $i$'s survival function over 72 months using the Cox model fitted in section \@ref(coxmodel). 
-2. For each month, multiply the value of the survival function by the monthly fee $p_i$ paid by client $i$. Then, divide the product by $(1 + a)^t$ where $t$ is the month's index and $a$ the discount factor. 
+2. For each month, multiply the value of the survival function by the monthly fee $p_i$ - the observation of the `Monthly_Charges` variable - paid by client $i$. Then, divide the product by $(1 + a)^t$ where $t$ is the month's index and $a$ the discount factor. 
 3. Take the sum of the $T$ ratios. 
 
-Since the data is made up of more than 7,000 customers and given the CLRV calculation is time consuming, parallelization has been used to calculate every CLRV. Once all the CLRVs are computed, one may take the sum in order to retrieve the portfolio's global value as well as a 95% confidence interval as shown by table \@ref(tab:custValuesSum).
+Since the data is made up of more than 7,000 customers and given the CLRV calculation is time consuming, parallelization has been used to calculate every CLRV. Once all the CLRVs are computed, one may take the sum in order to retrieve the *portfolio*'s global *value* as well as a 95% confidence interval as shown by table \@ref(tab:custValuesSum).
 
 ```{r}
 load(file = paste0(backup_path, "custvalues/", "custValues_8pct", ".RData"))
@@ -327,11 +329,11 @@ tab <- custValuesTot %>%
 rownames(tab) <- c("V lower", "V", "V upper")
 colnames(tab) <- ""
 tab %>%
-  mykable(title = "Portfolio estimated value with 95$\\%$ confidence interval", 
+  mykable(title = "*Portfolio* estimated *value* with 95$\\%$ confidence interval", 
           transp = T)
 ```
 
-Going deeper into the statistical analysis of customer lifetime raw value, it can be noticed from table \@ref(tab:custValuesStats) and figure \@ref(fig:clrvDens) that the clients are quite heterogeneous. The distribution of CLRV is left-skewed with a median lower than the mean. In addition, the CLRV ranges from 324 to 6815 indicating that each client does not have the same value to the firm. 
+Going deeper into the statistical analysis of customer lifetime raw value, it can be noticed from table \@ref(tab:custValuesStats) and figure \@ref(fig:clrvDens) that the clients are quite heterogeneous. The distribution of CLRV is left-skewed with a median lower than the mean. In addition, the CLRV ranges from 324 to 6815 indicating that each client does not have the same *value* to the firm. 
 
 ```{r clrvDens, fig.cap="Distribution of Customer Lifetime Raw Value"}
 knitr::include_graphics(path = "./imgs/clrv_density.png")
@@ -351,15 +353,15 @@ tab %>%
           transp = T)
 ```
 
-Eventually, it seems interesting to visualize the contribution of each month to customer lifetime raw value. Based on figure \@ref(fig:clrvEvolution), the montlhy contribution decreases as the number of months increases which leads to a concave cumulative value. This result may be explained by the increase in $(1+a)^t$ and the decrease in the survival probability $r_{i,t}$ as $t$ increases (see equation \@ref(eq:clrv)). In other words, customers bring in more value to the firm at the beginning of the relationship. 
+Eventually, it seems interesting to visualize the contribution of each month to customer lifetime raw value. Based on figure \@ref(fig:clrvEvolution), the montlhy contribution decreases as the number of months increases which leads to a concave cumulative *value.* This result may be explained by the increase in $(1+a)^t$ and the decrease in the survival probability $r_{i,t}$ as $t$ increases (see equation \@ref(eq:clrv)). In other words, customers bring in more *value* to the firm at the beginning of the relationship. 
 
-```{r clrvEvolution, fig.cap="Monthly contribution and cumulative value depending on the number of months in the portfolio"}
+```{r clrvEvolution, fig.cap="Monthly contribution and cumulative *value* depending on the number of months in the *portfolio*"}
 knitr::include_graphics(path = "./imgs/clrv_evolution.png")
 ```
 
-### Cluster contribution to the portfolio value
+### Cluster contribution to the *portfolio* *value*
 
-In section \@ref(segmentation), 3 clusters of customers have been identified using hierarchical clustering. This being said, it is undoubtedly necessary to calculate the value of each group using the method presented above. The following table depicts each cluster's CLRV with 95% confidence interval as well as the % proportion in terms of number of clients and % contribution in terms of value. One can notice that the *Platinum* cluster accounts for more than half the portfolio total value even if it represents barely a third of the number of clients. Besides, *Silver* customers are the less valuable to the firm as their contribution barely amounts to a 12%. Recall that this group is characterized by a minimum subscription with no internet connection or additional services. Finally, the *Gold* segment's contribution is $\approx$ 40% lower than cluster 3's. It may be explained by cluster 2 client's higher propensity to churn. 
+In section \@ref(segmentation), 3 clusters of customers have been identified using hierarchical clustering. This being said, it is undoubtedly necessary to calculate the *value* of each group using the method presented above. The following table depicts each cluster's CLRV with 95% confidence interval as well as the percent proportion in terms of number of clients and percent contribution in terms of *value.* One can notice that the *Platinum* cluster accounts for more than half the *portfolio* total *value* even if it barely represents a third of the number of clients. Besides, *Silver* customers are the less valuable to the firm as their contribution amounts to less than 12%. Recall that this group is characterized by a minimum subscription with no internet connection or additional services. Finally, the *Gold* segment's contribution is $\approx$ 40% lower than cluster 3's. It may be explained by cluster 2 client's higher propensity to churn. 
 
 ```{r}
 cluster_prop <- questionr::freq(custValues_clust$cluster) %>%
@@ -406,7 +408,7 @@ tab %>%
   column_spec(1, italic = T)
 ```
 
-Once the value differences across clusters identified, let us dig into a more detailed analysis of customer value based on the group they belong to. On figure \@ref(fig:clrvDensClust), the 3 CLRV distributions indicate large disparities between each client segment. While cluster 1 customers are defined an inflation of values located before 2,000, the two other groups are more homogeneous. The CLRV of cluster 2 (respectively 3) clients seems evenly distributed between 0 (respectively 1,500) and 6,000 (respectively 7,000).
+Once the *value* differences across clusters identified, let us dig into a more detailed analysis of customer *value* based on the group they belong to. On figure \@ref(fig:clrvDensClust), the 3 CLRV distributions indicate large disparities between each client segment. While cluster 1 customers are defined by an inflation of values located before 2,000, the two other groups are more homogeneous. The CLRV of cluster 2 (respectively 3) clients seems evenly distributed between 0 (respectively 1,500) and 6,000 (respectively 7,000).
 
 ```{r clrvDensClust, fig.cap="Distribution of Customer Lifetime Raw Value per cluster"}
 knitr::include_graphics(path = "./imgs/clrv_density_per_cluster.png")
@@ -439,7 +441,7 @@ tab %>%
   column_spec(1, italic = T)
 ```
 
-When looking at table \@ref(tab:custValuesclust), large variations appear between each cluster's average CLRV. With a view of testing whether these differences are significant, the ANOVA test is performed between the `CLRV` and `cluster` variables. The very low p-value depicted in the table below indicates significant different means across the 3 groups. Hence, it can be affirmed that the contribution of each client segment to the portfolio value is statistically different. 
+When looking at table \@ref(tab:custValuesclust), large variations appear between each cluster's average CLRV. With a view of testing whether these differences are significant, the ANOVA test is performed between the `CLRV` and `cluster` variables. The very low p-value depicted in the table below indicates significant different means across the 3 groups. Hence, it can be affirmed that the contribution of each customer segment to the *portfolio* *value* is statistically different. 
 
 ```{r aov}
 aov <- aov(formula = v ~ cluster, 
@@ -474,19 +476,19 @@ tab %>%
           align = "c")
 ```
 
-With the objective of determining how each group's representative customer differ one from another in terms of CLRV, it seems a good idea to visualize the evolution of their respective cumulative value as the number of months in the portfolio increases. Figure \@ref(fig:clrvEvolutionClust) shows that the lower value to the firm, the flatter curve. To put it another way, *Silver* clients' monthly contribution to CLRV decreases rapidly and becomes constantly low after 30 months. On the contrary, *Platinum* customers bring in a larger monthly value and the latter decreases to a lesser extent. As for *Gold* customers, their cumulative value becomes nearly constant from month 40 which may be due to their lower loyalty to the firm.
+With the objective of determining how each group's representative customer differs one from another in terms of CLRV, it seems a good idea to visualize the evolution of their respective cumulative *value* with respect to the number of months in the *portfolio*. Figure \@ref(fig:clrvEvolutionClust) shows that the lower *value* to the firm, the flatter curve. To put it another way, *Silver* clients' monthly contribution to CLRV decreases rapidly and becomes constantly low after 30 months. On the contrary, *Platinum* customers bring in a larger monthly *value* and the latter decreases to a lesser extent. As for *Gold* customers, their cumulative *value* becomes nearly constant from month 40 which may be due to their lower loyalty to the firm.
 
-```{r clrvEvolutionClust, fig.cap="Customer cumulative value through time per cluster"}
+```{r clrvEvolutionClust, fig.cap="Customer cumulative *value* through time per cluster"}
 knitr::include_graphics(path = "./imgs/clrv_evolution_per_cluster.png")
 ```
 
 ### Simulations 
 
-The final step in our study aims at simulating different multiple scenarios to determine how customer lifetime raw value and the portfolio value might evolve *ceteris paribus*. This section is not exhaustive in inasmuch as only a few parameters have been selected to perform the simulations.  
+The final step in our study aims at simulating different multiple scenarios to determine how customer lifetime raw value and the *portfolio* *value* might evolve *ceteris paribus*. This section is not exhaustive inasmuch as only a few parameters have been selected to perform the simulations.  
 
 #### Influence of the discount factor on CLRV {-}
 
-In the CLRV formula (equation \@ref(eq:clrv)), the discount factor $a$ plays a central role since it monitors the importance of future values in the customer value. In this context, it is decided to analyse the evolution of both CLRV and portfolio value after a change in $a$. The simulation results reproduced in table \@ref(tab:portValDiscountTab) lead us to suppose that the portfolio overall value decreases as the discount factor increases. V is indeed reduced by almost 16% when $a$ goes from 1% to 8%. 
+In the CLRV formula (see equation \@ref(eq:clrv)), the discount factor $a$ plays a central role since it monitors the importance of each month in the customer *value.* In this context, it is decided to analyse the evolution of both CLRV and *portfolio* *value* after a change in $a$. The simulation results reproduced in table \@ref(tab:portValDiscountTab) lead us to suppose that the *portfolio* overall *value* decreases as the discount factor increases. V is indeed reduced by almost 16% when $a$ goes from 1% to 8%. 
 
 ```{r portValDiscountTab}
 load(file = paste0(backup_path, "custValues/portVal_discount_rate.RData"))
@@ -495,18 +497,18 @@ portVal_discount_rate %>%
   rename(`V Lower` = v_lower, 
          V = v, 
          `V upper` = v_upper) %>%
-  mykable(title = "Portfolio value depending on discount rate")
+  mykable(title = "*Portfolio* *value* depending on discount rate")
 ```
 
 The reduction in V after an increase in the discount rate is actually the direct consequence of a decrease in every customer lifetime raw value. The monthly contribution to CLRV being negatively influenced by $a$ as the number of months $t$ increases, this phenomenon is all the more pronounced when $a$ is large. On figure \@ref(fig:clrvEvolDiscount), one can observe that the higherthe discount factor, the more concave the shape of the cumulative value. In other words the higher the discount factor, the lower gain in CLRV when the number of months is high. 
 
-```{r clrvEvolDiscount, fig.cap="Customer Lifetime Raw Value evolution depending on discount rate"}
+```{r clrvEvolDiscount, fig.cap="Customer cumulative *value* through time depending on discount rate"}
 knitr::include_graphics(path = "./imgs/clrv_evolution_discount.png")
 ```
 
 #### Influence of month-to-month contracts on CLRV {-}
 
-While it is obviously doable to simulate new customer lifetime raw values by playing with the model's parameters, one can also change the values of covariates used to estimate the survival probabilities $r_{i,t}$. In this part, the analysis is centred on the proportion of month-to-month contracts in the portfolio. The method consists in computing each client's CLRV and the portfolio value V for proportions of monthly contracts ranging from 10 to 90%. Table \@ref(tab:portValmonthToMonth) examines the portfolio value for 4 interesting scenarios and compare them with the actual share of month-to-month contracts in the data. The results are quite counter-intuitive as V is not maximum for a 10% proportion whereas it has been demonstrated in figure \@ref(fig:coxmarginaleffects) that clients enrolled in month-to-month contracts are 22 times more prone to churn than those with two-year contracts. Hence one might think that the lower share of those customers, the higher value of the portfolio. 
+While it is obviously relevant to simulate new customer lifetime raw values by playing with the model's parameters, one can also change the values of covariates used to estimate the survival probabilities $r_{i,t}$. In this part, the analysis is centred on the proportion of month-to-month contracts in the *portfolio*. The method consists in computing each client's CLRV and the *portfolio* *value* V for proportions of monthly contracts ranging from 10 to 90%. Table \@ref(tab:portValmonthToMonth) examines the *portfolio* *value* for 4 interesting scenarios and compare them with the actual share of month-to-month contracts in the data. The results are quite counter-intuitive as V is not maximum for a 10% proportion whereas it has been demonstrated in figure \@ref(fig:coxmarginaleffects) that clients enrolled in month-to-month contracts are 22 times more prone to churn than those with two-year contracts. Hence one might think that the lower share of those customers, the higher *value* of the *portfolio*. 
 
 ```{r}
 load(file = paste0(backup_path, "custValues/custVal_month_to_month.RData")) 
@@ -515,27 +517,27 @@ load(file = paste0(backup_path, "custValues/custVal_month_to_month.RData"))
 ```{r portValmonthToMonth}
 custVal_month_to_month %>% 
   rename(`% month-to-month contracts` = `% 'month-to-month' contracts`) %>% 
-  mykable(title = "Portfolio estimated value and 95% confidence interval depending on proportion of month-to-month contracts")
+  mykable(title = "*Portfolio* estimated *value* and 95% confidence interval depending on proportion of month-to-month contracts")
 ```
 
-The following figure illustrates the CLRV distribution for 4 scenarios depending on the proportion of month-to-month contracts. The results are closer to our expectations than those presented in the previous table since CLRV tends to be higher when there are 10% month-to-month contracts in the portfolio. 
+The following figure illustrates the CLRV distribution for 4 scenarios depending on the proportion of month-to-month contracts. The results are closer to our expectations than those presented in the previous table since CLRV tends to be higher when there are 10% month-to-month contracts in the *portfolio*. 
 
 
 ```{r clrvmonthtomonth, fig.cap="CLRV distribution depending on the proportion of month-to-month contracts"}
 knitr::include_graphics(path = "./imgs/clrv_month_to_month.png")
 ```
 
-Ultimately when representing the evolution of customer raw equity, i.e. the portfolio value, according to the share of month-to-month contracts, a decreasing trend is identified which appears to be a rational result. 
+Ultimately when representing the evolution of customer raw equity, i.e. the *portfolio* *value*, according to the share of month-to-month contracts, a decreasing trend is identified which appears to be a rational result. 
 
-```{r clrvmonthtomonthEvol, fig.cap="Portfolio estimated value (Customer Raw Equity) depending on the proportion of month-to-month contracts"}
+```{r clrvmonthtomonthEvol, fig.cap="*Portfolio* estimated *value* (Customer Raw Equity) depending on the proportion of month-to-month contracts"}
 knitr::include_graphics(path = "./imgs/portVal_month_to_month.png")
 ```
 
 #### How to increase Customer Lifetime Raw Value? {-}
 
-At this point of the study, a consistent method to evaluate the firm's portfolio value through the computation of customer lifetime raw value has been implemented. In section \@ref(churnAnalysis) it has been shown that customers from the *Gold* cluster are characterized by a higher churn rate and lower survival probabilities. This lesser loyalty to the firm has a negative impact on the portfolio value. Furthermore, cluster 2 clients amount to 34% in the customer raw equity which proves their strong potential in terms of CLRV. Therefore, a method to increase *Gold* customers' lifetime is proposed in this last section. To that end, it is decided to offer additional services for free to every cluster 2 client. These services are represented by the following variables: `Online_Security`, `Online_Backup` and `Tech_Support`. The underlying purpose is to increase the survival probabilities estimated by the Cox model as it has been proved that they have a negative impact on the churn hazard (see figure \@ref(fig:coxmarginaleffects)).
+At this point of the study, a consistent method to evaluate the firm's *portfolio* *value* through the computation of customer lifetime raw value has been implemented. In section \@ref(churnAnalysis) it has been shown that customers from the *Gold* cluster are characterized by a higher *attrition* rate and lower survival probabilities. This lesser loyalty to the firm has a negative impact on the *portfolio* value. Furthermore, cluster 2 clients amount to 34% in the customer raw equity which proves their strong potential in terms of CLRV. Therefore, a method to increase *Gold* customers' lifetime is proposed in this last section. To that end, it is decided to offer additional services for free to every cluster 2 client. These services are represented by the following variables: `Online_Security`, `Online_Backup` and `Tech_Support`. The underlying purpose is to increase the survival probabilities estimated by the Cox model as it has been proved that these options have a negative impact on the churn hazard (see figure \@ref(fig:coxmarginaleffects)).
 
-The results presented in the table below support our hypothesis since the *Gold* cluster total value increases by almost 50% after having provided the clients with free additional options. 
+The results presented in the table below support our hypothesis since the *Gold* cluster total *value* increases by almost 50% after having provided the clients with free additional options. 
 
 ```{r}
 load(file = paste0(backup_path, "custValues/tab_clust2_portVal.RData"))
@@ -544,10 +546,10 @@ load(file = paste0(backup_path, "custValues/tab_clust2_portVal.RData"))
 ```{r}
 tab_clust2_portVal %>%
   dplyr::rename(`Cluster 2 Value` = V) %>% 
-  mykable(title = "Increase in portfolio value after having provided cluster 2 clients with additional services")
+  mykable(title = "Increase in *portfolio* *value* after having provided cluster 2 clients with additional services")
 ```
 
-Figure \@ref(fig:clust2CLRV) illustrates the mechanism that leads to an increase in the portfolio value after the "gift" to cluster 2 clients. One can notice a significant shift to the right of the CLRV distribution. This shift is the consequence of an increase in $r_{i,t}$ - client $i$'s survival probability at time $t$ - which is a positive driver of customer value. We are thus able to propose a marketing strategy which aims at boosting the firm's lifetime revenues. Note, however, that our methodology does not take costs into account which implies that the highlighted points should be mitigated.
+Figure \@ref(fig:clust2CLRV) illustrates the mechanism that leads to an increase in the *portfolio* *value* after the "gift" to cluster 2 clients. One can notice a significant shift to the right in the CLRV distribution. This shift is the consequence of an increase in $r_{i,t}$ - client $i$'s survival probability at time $t$ - which is a positive driver of customer *value.* We are thus able to propose a marketing strategy which aims at boosting the firm's lifetime revenues. Note, however, that our methodology does not take costs into account which implies that the highlighted points should be nuanced.
 
 ```{r clust2CLRV, fig.cap="Increase in cluster 2 clients' CLRV after after having provided them with additional services"}
 knitr::include_graphics(path = "./imgs/clust2_clrv.png")
