@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>3.7 Machine Learning for Survival Data | Portfolio, Churn &amp; Customer Value</title>
+  <title>3.8 Performance metrics | Portfolio, Churn &amp; Customer Value</title>
   <meta name="description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="3.7 Machine Learning for Survival Data | Portfolio, Churn &amp; Customer Value" />
+  <meta property="og:title" content="3.8 Performance metrics | Portfolio, Churn &amp; Customer Value" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="3.7 Machine Learning for Survival Data | Portfolio, Churn &amp; Customer Value" />
+  <meta name="twitter:title" content="3.8 Performance metrics | Portfolio, Churn &amp; Customer Value" />
   
   <meta name="twitter:description" content="This research paper aims at modelling customer portfolio, churn and customer value." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="3.6-semi-parametric-estimation.html"/>
-<link rel="next" href="3.8-metrics.html"/>
+<link rel="prev" href="3.7-mlsurv.html"/>
+<link rel="next" href="4-dataMining.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -240,64 +240,51 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="mlsurv" class="section level2" number="3.7">
-<h2><span class="header-section-number">3.7</span> Machine Learning for Survival Data</h2>
-<p>In the previsous sections, some important models for duration data have been introduced. Here, emphasize is placed on machine learning algorithms that can also be implemented to predict a time-to-event variable such as the time to churn.</p>
-<div id="survival-trees" class="section level3" number="3.7.1">
-<h3><span class="header-section-number">3.7.1</span> Survival Trees</h3>
-<p>Traditional decision trees, also called CART (Classification And Regression Trees), segment the feature space into multiple rectangles and then fit a simple model to each of these subsets as shown by figure <a href="3.7-mlsurv.html#fig:tree">3.5</a> <span class="citation">(<a href="#ref-ML_TREE" role="doc-biblioref">Scholler 2021b</a>)</span>. The algorithm is a recursive partitioning which requires a criterion for choosing the <em>best</em> split, another criterion for deciding when to stop the splits and a rule for predicting the class of an observation.</p>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:tree"></span>
-<p class="caption">
-Figure 3.5: Clasification decision tree
-</p>
-<img src="imgs/tree1.png" alt="Clasification decision tree" width="45%" height="260pt" /><img src="imgs/tree2.png" alt="Clasification decision tree" width="45%" height="260pt" />
-</div>
-<p>Survival tree <span class="citation">(<a href="#ref-SURV_TREE" role="doc-biblioref">LeBlanc and Crowley 1993</a>)</span> is the adapted version of CART for duration data. The objective is to use tree based binary splitting algorithm in order to predict hazard rates. To that end, survival time and censoring status are introduced as response variables. The splitting criteria used for survival trees have the same purpose than the criteria used for CART that is to say maximizing between-node heterogeneity or minimizing within-node homogeneity. Nonetheless, node purity is different in the case of survival trees as a node is considered pure if all spells in that node have similar survival duration. The most common criterion is the <strong>logrank test</strong> statistic to compare the two groups formed by the children nodes. For each node, every possible split on each feature is being examined. The best split is the one maximizing the survival difference between two children nodes. The test statistic is <span class="math inline">\(\chi^2\)</span> distributed which means the higher its value, the higher between-node variability so the better the split. Let <span class="math inline">\(t_1, \dots, t_k\)</span> be the <span class="math inline">\(k\)</span> ordered failure times. At the <span class="math inline">\(j^{\text{th}}\)</span> failure time, the logrank statistic is expressed as <span class="citation">(<a href="#ref-SEGAL" role="doc-biblioref">Segal 1988</a>)</span>:</p>
-<p><span class="math display" id="eq:logrank">\[\begin{equation}
-  \chi^2_{\text{logrank}} = \frac{\big[\sum_{j=1}^k \ (d_{0j} - r_{0j} \times d_j/r_j) \big]^2}{\sum_{j=1}^k \ \frac{r_{1j}r_{0j}d_j(r_j - d_j)}{r_j^2(r_j -1)}}
-  \tag{3.20}
+<div id="metrics" class="section level2" number="3.8">
+<h2><span class="header-section-number">3.8</span> Performance metrics</h2>
+<div id="concordance-index-c-index" class="section level3" number="3.8.1">
+<h3><span class="header-section-number">3.8.1</span> Concordance index (C-index)</h3>
+<p>C-index is a goodness of fit measure for models which produce risk scores. It is commonly used to evaluate risk models in survival analysis, where data may be censored.</p>
+<p>Consider both the observations and prediction values of two instances <span class="math inline">\((y_1; \hat{y}_1)\)</span> and <span class="math inline">\((y_2; \hat{y}_2)\)</span>. <span class="math inline">\(y_i\)</span> and <span class="math inline">\(\hat{y}_i\)</span> represent respectively the actual observation time and the predicted time. Mathematically, the C-index is defined as the probability to well predict the order of event occurring time for any pair of instances.</p>
+<p><span class="math display" id="eq:cindex">\[\begin{equation}
+  c = \mathbb{P}\big(\hat{y}_1 &gt; \hat{y}_2 | y_1 &gt; y_2\big)
+  \tag{3.22}
 \end{equation}\]</span></p>
-</div>
-<div id="random-survival-forests-rsf" class="section level3" number="3.7.2">
-<h3><span class="header-section-number">3.7.2</span> Random Survival Forests (RSF)</h3>
-<p>This algorithm is proposed by <span class="citation"><a href="#ref-RSF" role="doc-biblioref">Hemant Ishwaran and al.</a> (<a href="#ref-RSF" role="doc-biblioref">2011</a>)</span> and is an ensemble of decision trees for the analysis of right-censored survival data. As random forests used for regression and classification, RSF are based on <strong>bagging</strong> which implies that <span class="math inline">\(B\)</span> bootstrap samples are drawn from the original data with 63<span class="math inline">\(\%\)</span> of them in the bag data and the remaining part in the out-of-bag (OOB) data. For each bootstrap sample, a survival tree is grown based on <span class="math inline">\(p\)</span> randomly selected features. Then, the parent node is split using the feature among the selected ones that maximizes survival difference between children nodes. Each tree is grown to full size and each terminal node needs to have no less than <span class="math inline">\(d_0\)</span> unique events. The cumulative hazard function (CHF) is computed for each tree using the Nelson-Aalen estimator such as:</p>
-<p><span class="math display" id="eq:chf">\[\begin{equation}
-  \widehat{H_l}(t) = \sum_{t_{j, l} &lt; t} \frac{d_{j,l}}{r_{j,l}}
-  \tag{3.21}
+<p>Another way to write the C-index metric is to compute the ratio between concordant pairs and the total number of pairs. Consider individual <span class="math inline">\(i\)</span> and let <span class="math inline">\(T\)</span> be the time-to-event variable and <span class="math inline">\(\eta_i\)</span> the risk score assigned to <span class="math inline">\(i\)</span> by the model. We say that the pair <span class="math inline">\((i, j)\)</span> is a concordant pair if <span class="math inline">\(\eta_i &gt; \eta_j\)</span> and <span class="math inline">\(T_i &lt; T_j\)</span>, and it is a discordant pair if <span class="math inline">\(\eta_i &gt; \eta_j\)</span> and <span class="math inline">\(T_i &gt; T_j\)</span>. If both <span class="math inline">\(T_i\)</span> and <span class="math inline">\(T_j\)</span> are censored, then this pair is not taken into account in the computation. If <span class="math inline">\(T_j\)</span> is censored, then:</p>
+<ul>
+<li>If <span class="math inline">\(T_j &lt; T_i\)</span> the pair <span class="math inline">\((i, j)\)</span> is not considered in the computation since the order cannot be determined.</li>
+<li>If <span class="math inline">\(T_j &gt; T_i\)</span>, the order can be determined and <span class="math inline">\((i, j)\)</span> is concordant if <span class="math inline">\(\eta_i &gt; \eta_j\)</span>, discordant otherwise.</li>
+</ul>
+<p>Equation <a href="3.8-metrics.html#eq:cindex">(3.22)</a> can then be rewritten as follows:</p>
+<p><span class="math display" id="eq:cindex2">\[\begin{equation}
+\begin{aligned}
+c &amp; = \frac{\# \text{concordant pairs}}{\# \text{concordant pairs} + \# \text{discordant pairs}} \\\\
+c &amp; = \frac{\sum_{i \neq j} \pmb{1}_{\eta_i &lt; \eta_j} \pmb{1}_{T_i &gt; T_j}d_j}{\sum_{i \neq j} \pmb{1}_{T_i &gt; T_j}d_j}
+\end{aligned}
+\tag{3.23}
 \end{equation}\]</span></p>
-<p>where <span class="math inline">\(t_{j,l}\)</span> is the <span class="math inline">\(j^{\text{th}}\)</span> distinct event time in leaf <span class="math inline">\(l\)</span>, <span class="math inline">\(d_{j,l}\)</span> the number of events completed at <span class="math inline">\(t_{j,l}\)</span> and <span class="math inline">\(r_{j,l}\)</span> the number of spells at risk at <span class="math inline">\(t_{j,l}\)</span>.</p>
-<p>All the CHFs are then averaged to obtain the bootstrap ensemble CHF and prediction error is finally computed on the OOB ensemble CHF.</p>
+<p>with <span class="math inline">\(d_j\)</span> the event indicator variable.</p>
+<p>The concordance index ranges between 0 and 1. A C-index below 0.5 indicates a very poor model. A C-index of 0.5 means that the model is rather a non-informative model making random predictions. A model with C-index 1 makes perfect prediction. Generally, a C-index higher than 0.7 indicates a good performance.</p>
 </div>
-<div id="cox-boosting" class="section level3" number="3.7.3">
-<h3><span class="header-section-number">3.7.3</span> Cox Boosting</h3>
-<p><strong>Boosting</strong> is an ensemble method which combines several weak predictors into a strong predictor. The idea of most boosting methods is to train predictors sequentially, each trying to correct its predecessor. Cox boosting <span class="citation">(<a href="#ref-COX_BOOSTING" role="doc-biblioref">Binder and Schumacher 2008</a>)</span> is designed for high dimension survival data and has the purpose of feature selection while improving the performance of the standard Cox model. The key difference with gradient boosting is that Cox boosting does not update all coefficients at each boosting step, but only updates the coefficient that improves the overall fit the most. The loss function is a penalized version of the Cox model’s log-likelihood (see equation <a href="3.6-semi-parametric-estimation.html#eq:partlik">(3.19)</a> for the likelihood function of the Cox model). Cox boosting helps measuring variable importance as the coefficients associated to more representative variables will be updated in early steps.</p>
-</div>
-</div>
-<h3>References</h3>
-<div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-COX_BOOSTING" class="csl-entry">
-Binder, and Schumacher. 2008. <span>“Allowing for Mandatory Covariates in Boosting Estimation of Sparse High-Dimensional Survival Models.”</span> <em>BMC Bioinformatics</em> 9(14).
-</div>
-<div id="ref-RSF" class="csl-entry">
-Ishwaran, Hemant, and al. 2011. <span>“Random Survival Forests for High-Dimensional Data.”</span> <a href="https://onlinelibrary.wiley.com/doi/10.1002/sam.10103">https://onlinelibrary.wiley.com/doi/10.1002/sam.10103</a>.
-</div>
-<div id="ref-SURV_TREE" class="csl-entry">
-LeBlanc, M., and J. Crowley. 1993. <span>“Survival Trees by Goodness of Split.”</span> <em>Journal of the American Statistical Association</em> 88: 457–67.
-</div>
-<div id="ref-ML_TREE" class="csl-entry">
-———. 2021b. <em>M1 Data Mining - Decision Trees</em>. Université de Tours. <a href="https://juliescholler.gitlab.io/files/M1/2021/M1-CM-decision_tree.html">https://juliescholler.gitlab.io/files/M1/2021/M1-CM-decision_tree.html</a>.
-</div>
-<div id="ref-SEGAL" class="csl-entry">
-Segal, Mark Robert. 1988. <span>“Regression Trees for Censored Data.”</span> <em>Biometrics</em> 44(1): 35–47.
+<div id="brier-score" class="section level3" number="3.8.2">
+<h3><span class="header-section-number">3.8.2</span> Brier score</h3>
+<p>The Brier score is another statistical metric for evaluating duration models’ performance and is defined as the mean squared error between the estimated survival probability and the observed survival at time <span class="math inline">\(t\)</span>:</p>
+<p><span class="math display" id="eq:brier">\[\begin{equation}
+  BS(t) = \frac{1}{N} \sum_{i=1}^{N} \Big(\pmb{1}_{\{t_i&gt;t\}} - \hat{S}(t|\mathrm{x}_i) \Big)^2
+  \tag{3.24}
+\end{equation}\]</span></p>
+<p>The Cox <em>proportional hazards</em> model is the most popular for the analysis of duration data. This model is said to be semi-parametric as it makes no assumption regarding the nature of the baseline hazard function <span class="math inline">\(\lambda_0(t)\)</span>. The parametric part only relies in the modelling of the effect of some covariates on the hazard function <span class="math inline">\(\lambda(t)\)</span>. The relationship between the vector of covariates and the log hazard is linear and the parameters can be estimated by maximizing the partial likelihood function. The Cox PH model solely assumes that predictors act multiplicatively on the hazard function. The model is formulated as in equation <a href="3.6-semi-parametric-estimation.html#eq:ph">(3.15)</a> with the exponential function as link between the hazard and the covariates i.e. <span class="math inline">\(\lambda(t|\pmb{\mathrm{x}}) = \lambda_0 (t,\alpha) \text{e}^{\pmb{\mathrm{x&#39;}} \beta}\)</span>.</p>
+
 </div>
 </div>
+<!-- </div> -->
             </section>
 
           </div>
         </div>
       </div>
-<a href="3.6-semi-parametric-estimation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="3.8-metrics.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="3.7-mlsurv.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="4-dataMining.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
